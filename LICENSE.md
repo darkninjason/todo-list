@@ -1,0 +1,1 @@
+Copyright 2013 [BLITZ Agency](http://blitzagency.com)
