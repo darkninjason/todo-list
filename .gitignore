@@ -63,4 +63,11 @@ deploy/
 .coverage
 nosetests.xml
 *.sublime-*
+
+# Personal TODOs
 __TODO__.md
+
+# Ignore Exceptions
+# ========================================================================== #
+
+!/tests/lib/jasmine/jasmine.css
