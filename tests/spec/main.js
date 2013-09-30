@@ -1,64 +1,42 @@
-require(['jquery', 'spec/index'], function($, index) {
+require(
 
-  var jasmineEnv = jasmine.getEnv();
+[
+    'vendor/jquery',
+    'jasmine/jasmine',
+    'spec/index',
 
-  // jquery-jasmine
-  jasmine.getFixtures().fixturesPath = 'fixtures';
+    // jasmine augmenters, they return nothing useful.
+    'jasmine/jasmine-html',
+    'jasmine/jasmine-jquery',
+    'jasmine/console-runner'
+],
 
-  // phantom-jasmine
-  // var console_reporter = new jasmine.ConsoleReporter();
-  // jasmineEnv.addReporter(new jasmine.TrivialReporter());
-  // jasmineEnv.addReporter(console_reporter);
+function($, Jasmine, index) {
 
-  jasmineEnv.updateInterval = 1000;
+    var jasmineEnv = Jasmine.getEnv();
 
-  var htmlReporter = new jasmine.HtmlReporter();
-  jasmineEnv.addReporter(htmlReporter);
+    // jquery-jasmine
+    Jasmine.getFixtures().fixturesPath = 'fixtures';
 
-  jasmineEnv.specFilter = function(spec) {
-    return htmlReporter.specFilter(spec);
-  };
+    // phantom-jasmine
+    // var console_reporter = new Jasmine.ConsoleReporter();
+    // jasmineEnv.addReporter(new Jasmine.TrivialReporter());
+    // jasmineEnv.addReporter(console_reporter);
 
-  // var jasmineEnv = jasmine.getEnv();
-  //     htmlReporter = new jasmine.HtmlReporter();
+    jasmineEnv.updateInterval = 1000;
 
-  // jasmineEnv.addReporter(htmlReporter);
+    var htmlReporter = new Jasmine.HtmlReporter();
+    jasmineEnv.addReporter(htmlReporter);
 
-  // jasmineEnv.specFilter = function(spec) {
-  //   return htmlReporter.specFilter(spec);
-  // };
+    jasmineEnv.specFilter = function(spec) {
+        return htmlReporter.specFilter(spec);
+    };
 
-  $(function() {
-    require(index.specs, function() {
-      jasmineEnv.execute();
+    $(function() {
+        require(index.specs, function() {
+            jasmineEnv.execute();
+        });
     });
-  });
-});
 
-
-
-
-
-// var jasmineEnv = jasmine.getEnv();
-//       jasmineEnv.updateInterval = 1000;
-
-//       var htmlReporter = new jasmine.HtmlReporter();
-
-//       jasmineEnv.addReporter(htmlReporter);
-
-//       jasmineEnv.specFilter = function(spec) {
-//         return htmlReporter.specFilter(spec);
-//       };
-
-//       var currentWindowOnload = window.onload;
-
-//       window.onload = function() {
-//         if (currentWindowOnload) {
-//           currentWindowOnload();
-//         }
-//         execJasmine();
-//       };
-
-//       function execJasmine() {
-//         jasmineEnv.execute();
-//       }
+}  // eof callback
+); // eof require

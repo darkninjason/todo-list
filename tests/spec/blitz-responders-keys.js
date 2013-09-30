@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-    var keys = require('blitz/ui/responders/keys');
+    var keys = require('auf/ui/responders/keys');
 
     describe('Key Responder', function() {
 

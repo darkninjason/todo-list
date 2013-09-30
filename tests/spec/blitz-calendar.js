@@ -1,8 +1,8 @@
 // todo mouseresponder tests!
 
 define(function(require, exports, module) {
-    var calendar = require('blitz/calendar/calendar');
-    var _ = require('underscore');
+    var calendar = require('auf/calendar/calendar');
+    var _ = require('vendor/underscore');
 
 
     describe('Calendar', function() {

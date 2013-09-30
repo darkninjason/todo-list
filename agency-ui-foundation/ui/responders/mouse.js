@@ -1,6 +1,6 @@
 define(function(require, exports, module){
-    var Marionette = require('marionette'),
-        _ = require('underscore');
+    var Marionette = require('vendor/marionette'),
+        _ = require('vendor/underscore');
 
     var MouseResponder = Marionette.Controller.extend({
         el: null,

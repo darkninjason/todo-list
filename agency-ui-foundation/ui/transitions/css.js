@@ -1,7 +1,7 @@
 define(function(require, exports, module){
-    var Marionette = require('marionette'),
-        _ = require('underscore'),
-        Modernizr = require('modernizr');
+    var Marionette = require('vendor/marionette'),
+        _ = require('vendor/underscore'),
+        Modernizr = require('vendor/modernizr');
 
     function cssTransition($el, transitionClass){
 
@@ -55,8 +55,8 @@ define(function(require, exports, module){
 // transEndEventName = transEndEventNames[ Modernizr.prefixed('transition') ];
 
 // define([
-//     'marionette',
-//     'underscore'
+//     'vendor/marionette',
+//     'vendor/underscore'
 // ],
 // function(Marionette, _){
 

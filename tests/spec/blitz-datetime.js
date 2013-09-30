@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
-    var datetime = require('blitz/datetime/datetime');
-    var calendar = require('blitz/calendar/calendar');
+    var datetime = require('auf/datetime/datetime');
+    var calendar = require('auf/calendar/calendar');
 
     describe('Datetime', function() {
 

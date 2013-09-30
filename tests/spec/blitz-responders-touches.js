@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-    var touches = require('blitz/ui/responders/touches');
+    var touches = require('auf/ui/responders/touches');
 
     describe('Touch Responder', function() {
 

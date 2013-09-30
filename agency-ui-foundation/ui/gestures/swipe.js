@@ -1,7 +1,7 @@
 define(function(require, exports, module){
-    var Marionette = require('marionette'),
-        _ = require('underscore');
-        touches = require('blitz/ui/responders/touches');
+    var Marionette = require('vendor/marionette'),
+        _ = require('vendor/underscore');
+        touches = require('auf/ui/responders/touches');
 
     return Marionette.Controller.extend({
         numberOfTouchesRequired: 1,

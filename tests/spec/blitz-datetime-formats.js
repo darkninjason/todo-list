@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
-    var formats = require('blitz/datetime/datetime-formats'),
-        datetime = require('blitz/datetime/datetime');
+    var formats = require('auf/datetime/datetime-formats'),
+        datetime = require('auf/datetime/datetime');
 
     describe('Datetime Formats', function() {
         // [WARNING] these tests assume you are in PDT!

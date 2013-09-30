@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-    var SwipeGesture = require('blitz/ui/gestures/swipe');
+    var SwipeGesture = require('auf/ui/gestures/swipe');
 
     describe('Swipe Gesture', function() {
 

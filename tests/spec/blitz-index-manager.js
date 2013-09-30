@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-    var index = require('blitz/ui/managers/index');
+    var index = require('auf/ui/managers/index');
 
     describe('Index Manager', function() {
         var manager = null;

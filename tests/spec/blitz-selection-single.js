@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-    var selections = require('blitz/ui/managers/selection');
+    var selections = require('auf/ui/managers/selection');
 
     describe('Single Selection Manager', function() {
 

@@ -1,6 +1,6 @@
 define(function(require){
 
-    var datetime = require('blitz/datetime/datetime');
+    var datetime = require('auf/datetime/datetime');
 
     var months = ['January', 'February', 'March', 'April', 'May',
                   'June', 'July', 'August', 'September', 'October',

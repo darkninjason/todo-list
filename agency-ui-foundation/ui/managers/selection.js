@@ -1,7 +1,7 @@
 define(function(require, exports, module){
-    var Marionette = require('marionette'),
-        stickit = require('stickit'),
-        _ = require('underscore');
+    var Marionette = require('vendor/marionette'),
+        stickit = require('vendor/stickit'),
+        _ = require('vendor/underscore');
 
     var SelectionManager =  Marionette.ItemView.extend({
         selectedClass: null,

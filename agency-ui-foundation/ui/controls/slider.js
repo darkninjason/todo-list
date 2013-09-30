@@ -1,10 +1,10 @@
 define(function(require, exports, module){
 
-    var Marionette = require('marionette'),
-        _ = require('underscore');
-        mouse = require('blitz/ui/responders/mouse');
-        touches = require('blitz/ui/responders/touches');
-        OrientationResponder = require('blitz/ui/responders/orientation').OrientationResponder;
+    var Marionette = require('vendor/marionette'),
+        _ = require('vendor/underscore');
+        mouse = require('auf/ui/responders/mouse');
+        touches = require('auf/ui/responders/touches');
+        OrientationResponder = require('auf/ui/responders/orientation').OrientationResponder;
 
     var HorizontalSlider = Marionette.Controller.extend({
         $handleView: null,
