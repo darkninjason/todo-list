@@ -9,7 +9,7 @@ describe('Selection Manager', function() {
     // ==================================================================== //
 
     beforeEach(function() {
-        loadFixtures('selection-manager.html');
+        loadFixtures('manager-selection.html');
         $items = $('.option');
     });
 

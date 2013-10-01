@@ -10,7 +10,7 @@ describe('Single Selection Manager', function() {
     // ==================================================================== //
 
     beforeEach(function() {
-        loadFixtures('selection-manager-single.html');
+        loadFixtures('manager-selection-single.html');
         $items = $('.option');
     });
 

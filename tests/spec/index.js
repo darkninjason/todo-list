@@ -1,16 +1,18 @@
 define(function() {
   return {
     specs: [
-      'spec/blitz-calendar',
-      'spec/blitz-datetime',
-      'spec/blitz-datetime-formats',
-      'spec/blitz-responders-keys',
-      'spec/blitz-responders-touches',
-      'spec/blitz-responders-mouse',
-      'spec/blitz-responders-touches-swipe',
-      'spec/blitz-index-manager',
-      'spec/blitz-selection',
-      'spec/blitz-selection-single'
+      'spec/auf-calendar',
+      'spec/auf-datetime',
+      'spec/auf-datetime-formats',
+      'spec/auf-responders-keys',
+      'spec/auf-responders-touches',
+      'spec/auf-responders-mouse',
+      'spec/auf-responders-touches-swipe',
+      'spec/auf-managers-index',
+      'spec/auf-managers-selection',
+      'spec/auf-managers-selection-single',
+      'spec/auf-control-slider-horizontal',
+      'spec/auf-control-slider-horizontal-range',
     ]
   };
 });
