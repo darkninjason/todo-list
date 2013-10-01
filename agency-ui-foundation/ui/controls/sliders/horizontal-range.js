@@ -1,72 +1,83 @@
 define(function(require, exports, module){
 
-    var Marionette = require('vendor/marionette'),
-        _ = require('vendor/underscore');
-        HorizontalSlider = require('auf/ui/controls/sliders/horizontal');
+// Imports
 
+var Marionette       = require('vendor/marionette');
+var _                = require('vendor/underscore');
+var HorizontalSlider = require('auf/ui/controls/sliders/horizontal');
 
-    return Marionette.Controller.extend({
+// Module
 
-        initialize: function(options){
-            _.bindAll(this, 'responderWantsMove');
-            this.slider = new HorizontalSlider(options);
-            this.slider.responderWantsMove = this.responderWantsMove;
-            this.listenTo(this.slider, 'change', this.rangeDidChange);
-        },
+var HorizontalRangeSlider =  Marionette.Controller.extend({
 
-        rangeDidChange: function(slider){
-            // forward the event
-            this.trigger('change', this);
-        },
+    // Initialization
 
-        responderWantsMove: function(responder){
-            var $h = responder.$el;
+    initialize: function(options){
+        _.bindAll(this, 'responderWantsMove');
+        this.slider = new HorizontalSlider(options);
+        this.slider.responderWantsMove = this.responderWantsMove;
+        this.listenTo(this.slider, 'change', this.rangeDidChange);
+    },
 
-            var action;
-            var handleIndex = this.slider.getHandleIndex($h);
-            var position = this.slider.calculatePositionXForDelta($h, responder.deltaX());
+    rangeDidChange: function(slider){
+        // forward the event
+        this.trigger('change', this);
+    },
 
-            if(this.slider.steps){
-                var step = this.slider.calculateStepForPositionX($h, position);
-                var currentStep = this.slider.handleSteps[handleIndex];
+    responderWantsMove: function(responder){
+        var $h = responder.$el;
 
-                if(step != currentStep){
-                    step = this.enforceRangeStep(handleIndex, step);
-                    this.slider.setStep($h, step);
-                }
-            } else {
-                position = this.enforceRangePosition(handleIndex, position);
-                this.slider.setPercent($h, position);
+        var action;
+        var handleIndex = this.slider.getHandleIndex($h);
+        var position = this.slider.calculatePositionXForDelta($h, responder.deltaX());
+
+        if(this.slider.steps){
+            var step = this.slider.calculateStepForPositionX($h, position);
+            var currentStep = this.slider.handleSteps[handleIndex];
+
+            if(step != currentStep){
+                step = this.enforceRangeStep(handleIndex, step);
+                this.slider.setStep($h, step);
             }
-        },
-
-        enforceRangePosition: function(index, position){
-            if(index == 1){
-                return Math.max(this.slider.handlePositionX[0], position);
-            }
-
-            return Math.min(this.slider.handlePositionX[1], position);
-        },
-
-        enforceRangeStep: function(index, step){
-            if(index == 1){
-                return Math.max(this.slider.handleSteps[0], step);
-            }
-
-            return Math.min(this.slider.handleSteps[1], step);
-        },
-
-
-        getPosition: function(){
-            return this.slider.handlePositionX;
-        },
-
-        getSteps: function(){
-            return this.slider.handleSteps;
-        },
-
-        onClose: function(){
-            this.slider.close();
+        } else {
+            position = this.enforceRangePosition(handleIndex, position);
+            this.slider.setPercent($h, position);
         }
-    });
-});
+    },
+
+    enforceRangePosition: function(index, position){
+        if(index == 1){
+            return Math.max(this.slider.handlePositionX[0], position);
+        }
+
+        return Math.min(this.slider.handlePositionX[1], position);
+    },
+
+    enforceRangeStep: function(index, step){
+        if(index == 1){
+            return Math.max(this.slider.handleSteps[0], step);
+        }
+
+        return Math.min(this.slider.handleSteps[1], step);
+    },
+
+    getPosition: function(){
+        return this.slider.handlePositionX;
+    },
+
+    getSteps: function(){
+        return this.slider.handleSteps;
+    },
+
+    // Marionette overrides
+
+    onClose: function(){
+        this.slider.close();
+    }
+
+}); // eof HorizontalRangeSlider
+
+// Exports
+module.exports = HorizontalRangeSlider;
+
+}); // eof define

@@ -1,14 +1,15 @@
 define(function(require, exports, module) {
 
-var touches = require('auf/ui/responders/touches'),
-    $       = require('vendor/jquery');
+// Import
 
-describe('Touch Responder', function() {
+var TouchResponder = require('auf/ui/responders/touches');
+var $              = require('vendor/jquery');
+
+describe('Responder: Touch', function() {
 
     var $input, responder = null;
 
     // Setup
-    // ==================================================================== //
 
     beforeEach(function() {
         loadFixtures('responder-touches.html');
@@ -22,11 +23,10 @@ describe('Touch Responder', function() {
     });
 
     // Helpers
-    // ==================================================================== //
 
     function simulateEvent($el, type, x, y) {
-        var e     = $.Event(type),
-            touch = {
+        var e     = $.Event(type);
+        var touch = {
                 pageX: x,
                 pageY: y,
                 target: $el[0]
@@ -58,12 +58,11 @@ describe('Touch Responder', function() {
     }
 
     // Test Suite
-    // ==================================================================== //
 
     it('triggered touchstart', function() {
 
-        var touch    = $.Event('touchstart'),
-            spyEvent = spyOnEvent($input, 'touchstart');
+        var touch    = $.Event('touchstart');
+        var spyEvent = spyOnEvent($input, 'touchstart');
 
         $input.trigger(touch);
         expect(spyEvent).toHaveBeenTriggered();
@@ -71,8 +70,8 @@ describe('Touch Responder', function() {
 
     it('triggered touchmove', function() {
 
-        var touch    = $.Event('touchmove'),
-            spyEvent = spyOnEvent($input, 'touchmove');
+        var touch    = $.Event('touchmove');
+        var spyEvent = spyOnEvent($input, 'touchmove');
 
         $input.trigger(touch);
         expect(spyEvent).toHaveBeenTriggered();
@@ -80,8 +79,8 @@ describe('Touch Responder', function() {
 
     it('triggered touchend', function() {
 
-        var touch = $.Event('touchend'),
-            spyEvent = spyOnEvent($input, 'touchend');
+        var touch    = $.Event('touchend');
+        var spyEvent = spyOnEvent($input, 'touchend');
 
         $input.trigger(touch);
         expect(spyEvent).toHaveBeenTriggered();
@@ -89,8 +88,8 @@ describe('Touch Responder', function() {
 
     it('triggered touchcancel', function() {
 
-        var touch = $.Event('touchcancel'),
-            spyEvent = spyOnEvent($input, 'touchcancel');
+        var touch = $.Event('touchcancel');
+        var spyEvent = spyOnEvent($input, 'touchcancel');
 
         $input.trigger(touch);
         expect(spyEvent).toHaveBeenTriggered();
@@ -101,7 +100,7 @@ describe('Touch Responder', function() {
         // not using the suite's setup 'responder' var
         // We want to explicitely test close()
 
-        var scopedResponder = new touches.TouchResponder({
+        var scopedResponder = new TouchResponder({
             el: $input
         });
 
@@ -116,9 +115,9 @@ describe('Touch Responder', function() {
         // not using the suite's setup 'responder' var
         // We want to explicitely test onClose behavior.
 
-        var touchStart      = jasmine.createSpy('touchStart'),
-            touchEnd        = jasmine.createSpy('touchEnd'),
-            scopedResponder = new touches.TouchResponder({
+        var touchStart      = jasmine.createSpy('touchStart');
+        var touchEnd        = jasmine.createSpy('touchEnd');
+        var scopedResponder = new TouchResponder({
                 el: $input,
                 touchStart: touchStart,
                 touchEnd: touchEnd
@@ -141,7 +140,7 @@ describe('Touch Responder', function() {
 
         var touchStart = jasmine.createSpy('touchStart');
 
-        responder = new touches.TouchResponder({
+        responder = new TouchResponder({
             el: $input,
             touchStart: touchStart
         });
@@ -154,7 +153,7 @@ describe('Touch Responder', function() {
 
         var touchMove = jasmine.createSpy('touchMove');
 
-        responder = new touches.TouchResponder({
+        responder = new TouchResponder({
             el: $input,
             touchMove: touchMove
         });
@@ -167,7 +166,7 @@ describe('Touch Responder', function() {
 
         var touchEnd = jasmine.createSpy('touchEnd');
 
-        responder = new touches.TouchResponder({
+        responder = new TouchResponder({
             el: $input,
             touchEnd: touchEnd
         });
@@ -180,7 +179,7 @@ describe('Touch Responder', function() {
 
         var touchCancel = jasmine.createSpy('touchCancel');
 
-        responder = new touches.TouchResponder({
+        responder = new TouchResponder({
             el: $input,
             touchCancel: touchCancel
         });

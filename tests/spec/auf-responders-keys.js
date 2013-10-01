@@ -1,13 +1,15 @@
 define(function(require, exports, module) {
 
-var keys = require('auf/ui/responders/keys');
+// Imports
 
-describe('Key Responder', function() {
+var KeyResponder = require('auf/ui/responders/keys');
+var KeyInputManager = require('auf/ui/managers/key-input');
+
+describe('Responder: Key', function() {
 
     var $input, responder = null;
 
     // Setup
-    // ==================================================================== //
 
     beforeEach(function() {
         loadFixtures('responder-keys.html');
@@ -21,12 +23,11 @@ describe('Key Responder', function() {
     });
 
     // Test Suite
-    // ==================================================================== //
 
     it('triggered keydown', function() {
 
-        var key      = jQuery.Event('keydown'),
-            spyEvent = spyOnEvent($input, 'keydown');
+        var key      = jQuery.Event('keydown');
+        var spyEvent = spyOnEvent($input, 'keydown');
 
         key.which   = 40;
         key.keyCode = 40;
@@ -37,8 +38,8 @@ describe('Key Responder', function() {
 
     it('triggered keyup', function() {
 
-        var key      = jQuery.Event('keyup'),
-            spyEvent = spyOnEvent($input, 'keyup');
+        var key      = jQuery.Event('keyup');
+        var spyEvent = spyOnEvent($input, 'keyup');
 
         key.which   = 40;
         key.keyCode = 40;
@@ -52,7 +53,7 @@ describe('Key Responder', function() {
         // not using the suite's setup 'responder' var
         // we want to explicitely test close()
 
-        var scopedResponder = new keys.KeyResponder({
+        var scopedResponder = new KeyResponder({
             el: $input
         });
 
@@ -63,14 +64,14 @@ describe('Key Responder', function() {
     });
 
     it('uses alternate KeyInputManager (for Aubrey)', function() {
-        var inputManager = new keys.KeyInputManager({
+        var inputManager = new KeyInputManager({
             13: 'moveUp'   // reassigning return to moveUp
         });
 
         var actionUp = jasmine.createSpy('moveUp');
         var actionNewline = jasmine.createSpy('insertNewline');
 
-        responder = new keys.KeyResponder({
+        responder = new KeyResponder({
             el: $input,
             moveUp: actionUp,
             insertNewline: actionNewline,
@@ -95,7 +96,7 @@ describe('Key Responder', function() {
         var keyDown = jasmine.createSpy('keyDown');
         var keyUp = jasmine.createSpy('keyUp');
 
-        var scopedResponder = new keys.KeyResponder({
+        var scopedResponder = new KeyResponder({
             el: $input,
             keyDown: keyDown,
             keyUp: keyUp
@@ -126,7 +127,7 @@ describe('Key Responder', function() {
 
         var keyDown = jasmine.createSpy('keyDown');
 
-        responder = new keys.KeyResponder({
+        responder = new KeyResponder({
             el: $input,
             keyDown: keyDown
         });
@@ -143,7 +144,7 @@ describe('Key Responder', function() {
     it('calls keyUp', function() {
 
         var keyUp = jasmine.createSpy('keyUp');
-        responder = new keys.KeyResponder({
+        responder = new KeyResponder({
             el: $input,
             keyUp: keyUp
         });
@@ -160,7 +161,7 @@ describe('Key Responder', function() {
     it('handles RETURN', function() {
 
         var action = jasmine.createSpy('insertNewline');
-        responder = new keys.KeyResponder({
+        responder = new KeyResponder({
             el: $input,
             insertNewline: action
         });
@@ -177,7 +178,7 @@ describe('Key Responder', function() {
     it('handles TAB', function() {
 
         var action = jasmine.createSpy('insertTab');
-        responder = new keys.KeyResponder({
+        responder = new KeyResponder({
             el: $input,
             insertTab: action
         });
@@ -194,7 +195,7 @@ describe('Key Responder', function() {
     it('handles DELETE', function() {
 
         var action = jasmine.createSpy('deleteBackward');
-        responder = new keys.KeyResponder({
+        responder = new KeyResponder({
             el: $input,
             deleteBackward: action
         });
@@ -211,7 +212,7 @@ describe('Key Responder', function() {
     it('handles ESC', function() {
 
         var action = jasmine.createSpy('cancelOperation');
-        responder = new keys.KeyResponder({
+        responder = new KeyResponder({
             el: $input,
             cancelOperation: action
         });
@@ -228,7 +229,7 @@ describe('Key Responder', function() {
     it('handles UP', function() {
 
         var action = jasmine.createSpy('moveUp');
-        responder = new keys.KeyResponder({
+        responder = new KeyResponder({
             el: $input,
             moveUp: action
         });
@@ -245,7 +246,7 @@ describe('Key Responder', function() {
     it('handles DOWN', function() {
 
         var action = jasmine.createSpy('moveDown');
-        responder = new keys.KeyResponder({
+        responder = new KeyResponder({
             el: $input,
             moveDown: action
         });
@@ -262,7 +263,7 @@ describe('Key Responder', function() {
     it('handles LEFT', function() {
 
         var action = jasmine.createSpy('moveLeft');
-        responder = new keys.KeyResponder({
+        responder = new KeyResponder({
             el: $input,
             moveLeft: action
         });
@@ -279,7 +280,7 @@ describe('Key Responder', function() {
     it('handles RIGHT', function() {
 
         var action = jasmine.createSpy('moveRight');
-        responder = new keys.KeyResponder({
+        responder = new KeyResponder({
             el: $input,
             moveRight: action
         });
@@ -302,7 +303,7 @@ describe('Key Responder', function() {
         };
 
         var action = jasmine.createSpy('insertText');
-        responder = new keys.KeyResponder({
+        responder = new KeyResponder({
             el: $input,
             insertText: action
         });

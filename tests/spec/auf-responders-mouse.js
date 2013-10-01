@@ -1,14 +1,15 @@
 define(function(require, exports, module) {
 
-var mouse = require('auf/ui/responders/mouse'),
-    $     = require('vendor/jquery');
+// Imports
 
-describe('Mouse Responder', function() {
+var MouseResponder = require('auf/ui/responders/mouse');
+var $              = require('vendor/jquery');
+
+describe('Responder: Mouse', function() {
 
     var $input, responder = null;
 
     // Setup
-    // ==================================================================== //
 
     beforeEach(function() {
         loadFixtures('responder-mouse.html');
@@ -22,10 +23,9 @@ describe('Mouse Responder', function() {
     });
 
     // Helpers
-    // ==================================================================== //
 
     function simulateEvent($el, type, x, y){
-        var e    = $.Event(type);
+        var e = $.Event(type);
 
         e.pageX = x;
         e.pageY = y;
@@ -53,30 +53,30 @@ describe('Mouse Responder', function() {
     }
 
     // Test Suite
-    // ==================================================================== //
+
 
     it('triggered mousedown', function(){
-        var type     = 'mousedown',
-            e        = $.Event(type),
-            spyEvent = spyOnEvent($input, type);
+        var type     = 'mousedown';
+        var e        = $.Event(type);
+        var spyEvent = spyOnEvent($input, type);
 
         $input.trigger(e);
         expect(spyEvent).toHaveBeenTriggered();
     });
 
     it('triggered mouseup', function(){
-        var type = 'mouseup',
-            e    = $.Event(type),
-            spy  = spyOnEvent($input, type);
+        var type = 'mouseup';
+        var e    = $.Event(type);
+        var spy  = spyOnEvent($input, type);
 
         $input.trigger(e);
         expect(spy).toHaveBeenTriggered();
     });
 
     it('triggered mousemove', function(){
-        var type  = 'mousemove',
-            e     = $.Event(type),
-            spy   = spyOnEvent($input, type);
+        var type  = 'mousemove';
+        var e     = $.Event(type);
+        var spy   = spyOnEvent($input, type);
 
         $input.trigger(e);
         expect(spy).toHaveBeenTriggered();
@@ -87,7 +87,7 @@ describe('Mouse Responder', function() {
         // not using the suite's setup 'responder' var.
         // We want to explicitely test close().
 
-        var scopedResponder = new mouse.MouseResponder({
+        var scopedResponder = new MouseResponder({
             el: $input
         });
 
@@ -102,9 +102,9 @@ describe('Mouse Responder', function() {
         // not using the suite's setup 'responder' var.
         // We want to explicitely test onClose() behavior.
 
-        var mouseDown       = jasmine.createSpy('mouseDown'),
-            mouseup         = jasmine.createSpy('mouseup'),
-            scopedResponder = new mouse.MouseResponder({
+        var mouseDown       = jasmine.createSpy('mouseDown');
+        var mouseup         = jasmine.createSpy('mouseup');
+        var scopedResponder = new MouseResponder({
                 el: $input,
                 mouseDown: mouseDown,
                 mouseup: mouseup
@@ -126,7 +126,7 @@ describe('Mouse Responder', function() {
     it('calls mouseDown', function(){
         var spy = jasmine.createSpy('mouseDown');
 
-        responder = new mouse.MouseResponder({
+        responder = new MouseResponder({
             el: $input,
             mouseDown: spy
         });
@@ -138,7 +138,7 @@ describe('Mouse Responder', function() {
     it('calls mouseUp', function(){
         var spy = jasmine.createSpy('mouseUp');
 
-        responder = new mouse.MouseResponder({
+        responder = new MouseResponder({
             el: $input,
             mouseUp: spy
         });
@@ -150,7 +150,7 @@ describe('Mouse Responder', function() {
     it('calls mouseMoved', function(){
         var spy = jasmine.createSpy('mouseMoved');
 
-        responder = new mouse.MouseResponder({
+        responder = new MouseResponder({
             el: $input,
             mouseMoved: spy,
             acceptsMoveEvents: true
@@ -163,7 +163,7 @@ describe('Mouse Responder', function() {
     it('calls mouseDragged', function(){
         var spy = jasmine.createSpy('mouseDragged');
 
-        responder = new mouse.MouseResponder({
+        responder = new MouseResponder({
             el: $input,
             mouseDragged: spy
         });
@@ -173,7 +173,7 @@ describe('Mouse Responder', function() {
     });
 
     it('tracks deltas', function(){
-        responder = new mouse.MouseResponder({
+        responder = new MouseResponder({
             el: $input
         });
 
@@ -184,7 +184,7 @@ describe('Mouse Responder', function() {
     });
 
     it('tracks negatvie deltas', function(){
-        responder = new mouse.MouseResponder({
+        responder = new MouseResponder({
             el: $input
         });
 
@@ -195,7 +195,7 @@ describe('Mouse Responder', function() {
     });
 
     it('counts clicks', function(){
-        responder = new mouse.MouseResponder({
+        responder = new MouseResponder({
             el: $input
         });
 

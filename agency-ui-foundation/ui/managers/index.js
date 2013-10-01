@@ -1,58 +1,66 @@
 define(function(require, exports, module){
-    var Marionette = require('vendor/marionette'),
-        _ = require('vendor/underscore');
 
-    var IndexManager = Marionette.Controller.extend({
+// Imports
 
-        setLength: function(value){
-            this.currentIndex = null;
-            this.itemsLength = value;
-        },
+var Marionette = require('vendor/marionette');
+var _          = require('vendor/underscore');
 
-        setCurrentIndex: function(value){
-            this.currentIndex = value;
-        },
+// Module
 
-        updateCurrentIndexForPrevious: function(){
-            var nextIndex,
-                currentIndex = this.currentIndex;
+var IndexManager = Marionette.Controller.extend({
 
-            if (currentIndex === null){
-                nextIndex = this.itemsLength - 1;
-                this.setCurrentIndex(nextIndex);
-                return nextIndex;
-            }
+    setLength: function(value){
+        this.currentIndex = null;
+        this.itemsLength = value;
+    },
 
-            nextIndex = currentIndex - 1;
+    setCurrentIndex: function(value){
+        this.currentIndex = value;
+    },
 
-            if(nextIndex < 0){
-                nextIndex = this.itemsLength - 1;
-            }
+    updateCurrentIndexForPrevious: function(){
+        var nextIndex,
+            currentIndex = this.currentIndex;
 
-            this.setCurrentIndex(nextIndex);
-            return nextIndex;
-        },
-
-        updateCurrentIndexForNext: function(){
-            var nextIndex,
-                currentIndex = this.currentIndex;
-
-            if (currentIndex === null){
-                nextIndex = 0;
-                this.setCurrentIndex(nextIndex);
-                return nextIndex;
-            }
-
-            nextIndex = currentIndex + 1;
-
-            if(nextIndex > (this.itemsLength - 1)){
-                nextIndex = 0;
-            }
-
+        if (currentIndex === null){
+            nextIndex = this.itemsLength - 1;
             this.setCurrentIndex(nextIndex);
             return nextIndex;
         }
-    });
 
-    module.exports.IndexManager = IndexManager;
+        nextIndex = currentIndex - 1;
+
+        if(nextIndex < 0){
+            nextIndex = this.itemsLength - 1;
+        }
+
+        this.setCurrentIndex(nextIndex);
+        return nextIndex;
+    },
+
+    updateCurrentIndexForNext: function(){
+        var nextIndex,
+            currentIndex = this.currentIndex;
+
+        if (currentIndex === null){
+            nextIndex = 0;
+            this.setCurrentIndex(nextIndex);
+            return nextIndex;
+        }
+
+        nextIndex = currentIndex + 1;
+
+        if(nextIndex > (this.itemsLength - 1)){
+            nextIndex = 0;
+        }
+
+        this.setCurrentIndex(nextIndex);
+        return nextIndex;
+    }
+});
+
+// Exports
+
+module.exports = IndexManager;
+
 });

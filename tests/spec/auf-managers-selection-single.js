@@ -1,13 +1,14 @@
 define(function(require, exports, module) {
 
-var selections = require('auf/ui/managers/selection');
+// Imports
 
-describe('Single Selection Manager', function() {
+var SingleSelectionManager = require('auf/ui/managers/selection-single');
+
+describe('Manager: Selection Single', function() {
 
     var $items, manager = null;
 
     // Setup
-    // ==================================================================== //
 
     beforeEach(function() {
         loadFixtures('manager-selection-single.html');
@@ -22,15 +23,14 @@ describe('Single Selection Manager', function() {
     });
 
     // Test Suite
-    // ==================================================================== //
 
     it('should trigger before:select', function() {
-        manager = new selections.SingleSelectionManager({
+        manager = new SingleSelectionManager({
             el: $items
         });
 
-        var beforeSelect = jasmine.createSpy('beforeSelect'),
-            $target      = $items.eq(0);
+        var beforeSelect = jasmine.createSpy('beforeSelect');
+        var $target      = $items.eq(0);
 
         $target.trigger('click');
 
@@ -43,12 +43,12 @@ describe('Single Selection Manager', function() {
     });
 
     it('should trigger after:select', function() {
-        manager = new selections.SingleSelectionManager({
+        manager = new SingleSelectionManager({
             el: $items
         });
 
-        var afterSelect = jasmine.createSpy('afterSelect'),
-            $target = $items.eq(0);
+        var afterSelect = jasmine.createSpy('afterSelect');
+        var $target = $items.eq(0);
 
         $target.trigger('click');
 
@@ -61,13 +61,13 @@ describe('Single Selection Manager', function() {
     });
 
     it('should select one option with click', function() {
-        manager = new selections.SingleSelectionManager({
+        manager = new SingleSelectionManager({
             el: $items
         });
 
-        var $target1      = $items.eq(0),
-            $target2      = $items.eq(1),
-            selectedClass = manager.selectionManager.selectedClass;
+        var $target1      = $items.eq(0);
+        var $target2      = $items.eq(1);
+        var selectedClass = manager.selectionManager.selectedClass;
 
         $target1.trigger('click');
         $target2.trigger('click');
@@ -77,14 +77,14 @@ describe('Single Selection Manager', function() {
     });
 
     it('should select one option on click with alt selectedClass', function() {
-        manager = new selections.SingleSelectionManager({
+        manager = new SingleSelectionManager({
             el: $items,
             selectedClass: 'foo'
         });
 
-        var $target1      = $items.eq(0),
-            $target2      = $items.eq(1),
-            selectedClass = 'foo';
+        var $target1      = $items.eq(0);
+        var $target2      = $items.eq(1);
+        var selectedClass = 'foo';
 
         $target1.trigger('click');
         $target2.trigger('click');
@@ -95,13 +95,13 @@ describe('Single Selection Manager', function() {
 
 
     it('should select one by index', function() {
-        manager = new selections.SingleSelectionManager({
+        manager = new SingleSelectionManager({
             el: $items
         });
 
-        var $target1      = $items.eq(0),
-            $target2      = $items.eq(1),
-            selectedClass = manager.selectionManager.selectedClass;
+        var $target1      = $items.eq(0);
+        var $target2      = $items.eq(1);
+        var selectedClass = manager.selectionManager.selectedClass;
 
         manager.selectIndex(0);
         manager.selectIndex(1);
@@ -111,13 +111,13 @@ describe('Single Selection Manager', function() {
     });
 
     it('should select one by value', function() {
-        manager = new selections.SingleSelectionManager({
+        manager = new SingleSelectionManager({
             el: $items
         });
 
-        var $target1      = $items.eq(0),
-            $target2      = $items.eq(1),
-            selectedClass = manager.selectionManager.selectedClass;
+        var $target1      = $items.eq(0);
+        var $target2      = $items.eq(1);
+        var selectedClass = manager.selectionManager.selectedClass;
 
         manager.selectValue('one');
         manager.selectValue('two');
@@ -127,13 +127,13 @@ describe('Single Selection Manager', function() {
     });
 
     it('should allow deselect', function() {
-        manager = new selections.SingleSelectionManager({
+        manager = new SingleSelectionManager({
             el: $items,
             allowsDeselect: true
         });
 
-        var $target1      = $items.eq(0),
-            selectedClass = manager.selectionManager.selectedClass;
+        var $target1      = $items.eq(0);
+        var selectedClass = manager.selectionManager.selectedClass;
 
         $target1.trigger('click');
         expect($target1).toHaveClass(selectedClass);
@@ -143,7 +143,7 @@ describe('Single Selection Manager', function() {
     });
 
     it('should return selected value', function() {
-        manager = new selections.SelectionManager({
+        manager = new SingleSelectionManager({
             el: $items
         });
 
@@ -156,10 +156,11 @@ describe('Single Selection Manager', function() {
         // specifically so don't use the module accessible
         // 'manager' var, as it is closed for us in 'afterEach'
 
-        var scopedManager = new selections.SingleSelectionManager({
+        var scopedManager = new SingleSelectionManager({
                 el: $items
-            }),
-            $target = $items.eq(0);
+            });
+
+        var $target = $items.eq(0);
 
         scopedManager.close();
 

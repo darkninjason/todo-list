@@ -1,45 +1,53 @@
 define(function(require, exports, module){
-    var Marionette = require('vendor/marionette'),
-        _ = require('vendor/underscore');
 
-    var OrientationResponder = Marionette.Controller.extend({
+// Imports
 
-        initialize: function(options){
-            _.extend(this, options);
-            _.bindAll(this, 'orientationChange');
+var Marionette = require('vendor/marionette');
+var _          = require('vendor/underscore');
 
-            $(window).on('orientationchange', this.orientationChange);
-        },
+// Module
 
-        orientationChange: function(e){
-            this.interpretOrientationEvent(e);
-        },
+var OrientationResponder = Marionette.Controller.extend({
 
-        portrait: function(responder, e){
-             // noop
-        },
+    initialize: function(options){
+        _.extend(this, options);
+        _.bindAll(this, 'orientationChange');
 
-        landscape: function(responder, e){
-             // noop
-        },
+        $(window).on('orientationchange', this.orientationChange);
+    },
 
-        interpretOrientationEvent: function (e){
-            var orientation = window.orientation;
+    orientationChange: function(e){
+        this.interpretOrientationEvent(e);
+    },
 
-            if (orientation == 90 || orientation == -90){
-                this.landscape(this, e);
-                return;
-            }
+    portrait: function(responder, e){
+         // noop
+    },
 
-            if(orientation === 0){
-                this.portrait(this, e);
-            }
-        },
+    landscape: function(responder, e){
+         // noop
+    },
 
-        onClose: function(){
-            $(window).off('orientationchange', this.orientationChange);
+    interpretOrientationEvent: function (e){
+        var orientation = window.orientation;
+
+        if (orientation == 90 || orientation == -90){
+            this.landscape(this, e);
+            return;
         }
-    });
 
-    module.exports.OrientationResponder = OrientationResponder;
-});
+        if(orientation === 0){
+            this.portrait(this, e);
+        }
+    },
+
+    onClose: function(){
+        $(window).off('orientationchange', this.orientationChange);
+    }
+}); // eof OrientationResponder
+
+// Exports
+
+module.OrientationResponder = OrientationResponder;
+
+}); // eof define

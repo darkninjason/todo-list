@@ -1,13 +1,14 @@
 define(function(require, exports, module) {
 
+// Imports
+
 var SwipeGesture = require('auf/ui/gestures/swipe');
 
-describe('Swipe Gesture', function() {
+describe('Gesture: Swipe', function() {
 
     var $input, gesture = null;
 
     // Setup
-    // ==================================================================== //
 
     beforeEach(function() {
         loadFixtures('responder-touches.html');
@@ -21,11 +22,10 @@ describe('Swipe Gesture', function() {
     });
 
     // Helpers
-    // ==================================================================== //
 
     function createTouchEvent($el, type, x, y){
-        var e     = jQuery.Event(type),
-            touch = {
+        var e     = jQuery.Event(type);
+        var touch = {
                 pageX: x,
                 pageY: y,
                 target: $el[0]
@@ -86,7 +86,7 @@ describe('Swipe Gesture', function() {
     }
 
     // Test Suite
-    // ==================================================================== //
+
 
     it('did trigger swipe left', function() {
 
@@ -215,9 +215,9 @@ describe('Swipe Gesture', function() {
 
     it('did trigger swipe left requiring 2 touches', function() {
 
-        var handleGesture = jasmine.createSpy('handleGesture'),
-            startEvent    = createTouchEvent($input, 'touchstart', 300, 300),
-            moveEvent     = createTouchEvent($input, 'touchmove', 0, 300);
+        var handleGesture = jasmine.createSpy('handleGesture');
+        var startEvent    = createTouchEvent($input, 'touchstart', 300, 300);
+        var moveEvent     = createTouchEvent($input, 'touchmove', 0, 300);
 
         gesture = new SwipeGesture({
             el: $input,

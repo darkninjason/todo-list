@@ -1,20 +1,20 @@
 define(function(require, exports, module) {
 
-var index = require('auf/ui/managers/index');
+// Imports
 
-describe('Index Manager', function() {
+var IndexManager = require('auf/ui/managers/index');
+
+describe('Manager: Index', function() {
 
     var manager = null;
 
     // Setup
-    // ==================================================================== //
 
     beforeEach(function(){
-        manager = new index.IndexManager();
+        manager = new IndexManager();
     });
 
     // Test Suite
-    // ==================================================================== //
 
     it('should set length', function() {
         manager.setLength(3);

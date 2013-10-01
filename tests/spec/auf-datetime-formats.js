@@ -1,16 +1,20 @@
 define(function(require, exports, module) {
 
-var formats  = require('auf/datetime/datetime-formats'),
-    datetime = require('auf/datetime/datetime');
+// Imports
 
-describe('Datetime Formats', function() {
+var formats  = require('auf/datetime/datetime-formats');
+var datetime = require('auf/datetime/datetime');
+
+describe('Datetime: Formats', function() {
     // [WARNING] these tests assume you are in PDT!
     // this not a portable suite across locales, it will need to
     // be adjusted if not run from PDT. =(
 
+    // Test Suite
+
     it('should return August 29th 2012 for Date object representing 2012-08-29T20:59Z', function() {
-        var date   = datetime.UTCStringToLocalDate('2012-08-29T20:59Z'),
-            result = formats.monthDayYearStringForDate(date);
+        var date   = datetime.UTCStringToLocalDate('2012-08-29T20:59Z');
+        var result = formats.monthDayYearStringForDate(date);
 
         expect(result).toBe('August 29th 2012');
     });
@@ -57,6 +61,7 @@ describe('Datetime Formats', function() {
 
     it('should return August 29th 2012 for 2012-08-29T20:59Z', function() {
         var result = formats.monthDayYearStringForUTCString('2012-08-29T20:59Z');
+
         expect(result).toBe('August 29th 2012');
     });
 
@@ -70,6 +75,7 @@ describe('Datetime Formats', function() {
 
     it('should return Wed 29 Aug 13:59 pm for 2012-08-29T20:59Z', function() {
         var result = formats.shortDayMonthTimeStringForUTCString('2012-08-29T20:59Z');
+
         expect(result).toBe('Wed 29 Aug 1:59 pm');
     });
 

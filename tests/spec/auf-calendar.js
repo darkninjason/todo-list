@@ -1,9 +1,11 @@
 define(function(require, exports, module) {
 
-var calendar = require('auf/calendar/calendar'),
-    _        = require('vendor/underscore');
+// Imports
 
-describe('Calendar', function() {
+var calendar = require('auf/calendar/calendar');
+var _        = require('vendor/underscore');
+
+describe('Calendar:', function() {
 
     it('should get the number of days in a month', function() {
         var days = calendar.daysInJavaScriptMonth(2012, 1);
@@ -22,26 +24,28 @@ describe('Calendar', function() {
     it('should get the number of days the current month', function() {
         var now = new Date();
 
-        // the 0 for the days in our date constructor means
-        // the last of the previous month.
-        // we need to add 1 to our JS month to be sure
-        // the "last month" means our current month.
+        // The 0 for the days in our date constructor means
+        // The last of the previous month.
+        // We need to add 1 to our JS month to be sure
+        // The "last month" means our current month.
         var currentDays = new Date(
             now.getFullYear(),
             now.getMonth() + 1, 0).getDate();
 
         var days = calendar.daysInJavaScriptMonth();
+
         expect(days).toEqual(currentDays);
     });
 
     it('should get the all of the days in Sept 2013', function(){
         var days = calendar.calendarMonthDays(2013, 9);
+
         expect(days.length).toEqual(30);
     });
 
     it('should get the all of the days in Sept 2013 from Date', function(){
-        var date = new Date(2013, 8, 1),
-            days = calendar.calendarMonthDays(date);
+        var date = new Date(2013, 8, 1);
+        var days = calendar.calendarMonthDays(date);
 
         expect(days.length).toEqual(30);
     });
@@ -56,6 +60,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for Jan 2013 as Date()', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 1, {useDates: true});
+
         expect(result.length).toEqual(42);
 
         _.each(result, function(x){
@@ -65,6 +70,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for Jan 2013 from Date', function() {
         var result = calendar.bufferedCalendarMonthDays(new Date(2013, 0, 1));
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(30);
@@ -78,6 +84,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for Jan 2013 from Date as Date()', function() {
         var result = calendar.bufferedCalendarMonthDays(new Date(2013, 0, 1), null, {useDates: true});
+
         expect(result.length).toEqual(42);
 
         _.each(result, function(x){
@@ -87,6 +94,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for Jan 2013', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 1);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(30);
@@ -100,6 +108,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for Feb 2013', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 2);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(27);
@@ -113,6 +122,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for March 2013', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 3);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(24);
@@ -126,6 +136,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for April 2013', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 4);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(31);
@@ -139,6 +150,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for May 2013', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 5);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(28);
@@ -152,6 +164,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for June 2013', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 6);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(26);
@@ -165,6 +178,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for July 2013', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 7);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(30);
@@ -178,6 +192,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for Aug 2013', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 8);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(28);
@@ -191,6 +206,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for Sept 2013', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 9);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(1);
@@ -204,6 +220,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for Oct 2013', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 10);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(29);
@@ -217,6 +234,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for Nov 2013', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 11);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(27);
@@ -230,6 +248,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for Dec 2013', function() {
         var result = calendar.bufferedCalendarMonthDays(2013, 12);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(1);
@@ -243,6 +262,7 @@ describe('Calendar', function() {
 
     it('should return a buffered calendar array of days for Feb 2012 (leap year)', function() {
         var result = calendar.bufferedCalendarMonthDays(2012, 2);
+
         expect(result.length).toEqual(42);
 
         expect(result[0]).toEqual(29);
@@ -255,9 +275,9 @@ describe('Calendar', function() {
     });
 
     it('should return a calendar array of buffered weeks for Jan 2013 no prefix days', function() {
-        var result    = calendar.bufferedCalendarMonthWeeks(2013, 1, {prefixDays: false}),
-            firstWeek = result[0],
-            lastWeek  = result[5];
+        var result    = calendar.bufferedCalendarMonthWeeks(2013, 1, {prefixDays: false});
+        var firstWeek = result[0];
+        var lastWeek  = result[5];
 
         expect(result.length).toEqual(6);
 
@@ -277,9 +297,9 @@ describe('Calendar', function() {
     });
 
     it('should return a calendar array of buffered weeks for Jan 2013 no suffix days', function() {
-        var result    = calendar.bufferedCalendarMonthWeeks(2013, 1, {suffixDays: false}),
-            firstWeek = result[0],
-            lastWeek  = result[5];
+        var result    = calendar.bufferedCalendarMonthWeeks(2013, 1, {suffixDays: false});
+        var firstWeek = result[0];
+        var lastWeek  = result[5];
 
         expect(result.length).toEqual(6);
 
@@ -299,9 +319,9 @@ describe('Calendar', function() {
     });
 
     it('should return a calendar array of buffered weeks for Jan 2013 no prefix or suffix days', function() {
-        var result    = calendar.bufferedCalendarMonthWeeks(2013, 1, {prefixDays: false, suffixDays: false}),
-            firstWeek = result[0],
-            lastWeek  = result[5];
+        var result    = calendar.bufferedCalendarMonthWeeks(2013, 1, {prefixDays: false, suffixDays: false});
+        var firstWeek = result[0];
+        var lastWeek  = result[5];
 
         expect(result.length).toEqual(6);
 
@@ -321,9 +341,9 @@ describe('Calendar', function() {
     });
 
     it('should return a buffered calendar array of weeks for Jan 2013', function() {
-        var result    = calendar.bufferedCalendarMonthWeeks(2013, 1),
-            firstWeek = result[0],
-            lastWeek  = result[5];
+        var result    = calendar.bufferedCalendarMonthWeeks(2013, 1);
+        var firstWeek = result[0];
+        var lastWeek  = result[5];
 
         expect(result.length).toEqual(6);
 
@@ -337,9 +357,9 @@ describe('Calendar', function() {
     });
 
     it('should return a buffered calendar array of weeks for Jan 2013 as Date()', function() {
-        var result    = calendar.bufferedCalendarMonthWeeks(2013, 1, {useDates: true}),
-            firstWeek = result[0],
-            lastWeek  = result[5];
+        var result    = calendar.bufferedCalendarMonthWeeks(2013, 1, {useDates: true});
+        var firstWeek = result[0];
+        var lastWeek  = result[5];
 
         expect(result.length).toEqual(6);
 

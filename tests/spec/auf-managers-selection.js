@@ -1,12 +1,14 @@
 define(function(require, exports, module) {
-var selections = require('auf/ui/managers/selection');
 
-describe('Selection Manager', function() {
+// Imports
+
+var SelectionManager = require('auf/ui/managers/selection');
+
+describe('Manager: Selection', function() {
 
     var $items, manager = null;
 
     // Setup
-    // ==================================================================== //
 
     beforeEach(function() {
         loadFixtures('manager-selection.html');
@@ -21,15 +23,14 @@ describe('Selection Manager', function() {
     });
 
     // Test Suite
-    // ==================================================================== //
 
     it('should trigger before:select', function() {
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items
         });
 
-        var beforeSelect = jasmine.createSpy('beforeSelect'),
-            $target      = $items.eq(0);
+        var beforeSelect = jasmine.createSpy('beforeSelect');
+        var $target      = $items.eq(0);
 
         $target.trigger('click');
 
@@ -42,12 +43,12 @@ describe('Selection Manager', function() {
     });
 
     it('should trigger after:select', function() {
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items
         });
 
-        var afterSelect = jasmine.createSpy('afterSelect'),
-            $target     = $items.eq(0);
+        var afterSelect = jasmine.createSpy('afterSelect');
+        var $target     = $items.eq(0);
 
         $target.trigger('click');
 
@@ -60,7 +61,7 @@ describe('Selection Manager', function() {
     });
 
     it('should select 1st option with click', function() {
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items
         });
 
@@ -75,7 +76,7 @@ describe('Selection Manager', function() {
     });
 
     it('should select option with value', function() {
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items
         });
 
@@ -86,7 +87,7 @@ describe('Selection Manager', function() {
     });
 
     it('should return selected value', function() {
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items
         });
 
@@ -95,7 +96,7 @@ describe('Selection Manager', function() {
     });
 
     it('should return null for selected value', function() {
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items
         });
 
@@ -103,7 +104,7 @@ describe('Selection Manager', function() {
     });
 
     it('should deselect', function() {
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items,
             allowsDeselect: true
         });
@@ -119,7 +120,7 @@ describe('Selection Manager', function() {
     });
 
     it('should not deselect', function() {
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items
         });
 
@@ -133,7 +134,7 @@ describe('Selection Manager', function() {
     });
 
     it('should select all options with click', function() {
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items
         });
 
@@ -144,7 +145,7 @@ describe('Selection Manager', function() {
     });
 
     it('should set alternate selectedClass', function() {
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items,
             selectedClass: 'foo'
         });
@@ -158,7 +159,7 @@ describe('Selection Manager', function() {
 
     it('should set call selection delegate', function() {
         var delegate = jasmine.createSpyObj('delegate', ['selectionManagerShouldSelect']);
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items,
             delegate: delegate
         });
@@ -173,7 +174,7 @@ describe('Selection Manager', function() {
 
     it('should select index 1', function() {
 
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items
         });
 
@@ -186,7 +187,7 @@ describe('Selection Manager', function() {
 
     it('should select all indexes', function() {
 
-        manager = new selections.SelectionManager({
+        manager = new SelectionManager({
             el: $items
         });
 
@@ -204,10 +205,11 @@ describe('Selection Manager', function() {
         // specifically so don't use the module accessible
         // 'manager' var, as it is closed for us in 'afterEach'
 
-        var scopedManager = new selections.SelectionManager({
+        var scopedManager = new SelectionManager({
                 el: $items
-            }),
-            $target = $items.eq(0);
+            });
+
+        var $target = $items.eq(0);
 
         spyOn(scopedManager, 'selectElement').andCallThrough();
         scopedManager.close();
