@@ -7,7 +7,7 @@ define(function() {
       'spec/auf-responders-keys',
       'spec/auf-responders-touches',
       'spec/auf-responders-mouse',
-      'spec/auf-responders-touches-swipe',
+      'spec/auf-gestures-swipe',
       'spec/auf-managers-index',
       'spec/auf-managers-selection',
       'spec/auf-managers-selection-single',

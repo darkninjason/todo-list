@@ -4,7 +4,7 @@ var SwipeGesture = require('auf/ui/gestures/swipe');
 
 describe('Swipe Gesture', function() {
 
-    var $input, responder = null;
+    var $input, gesture = null;
 
     // Setup
     // ==================================================================== //
@@ -15,8 +15,8 @@ describe('Swipe Gesture', function() {
     });
 
     afterEach(function() {
-        if(responder){
-            responder.close();
+        if(gesture){
+            gesture.close();
         }
     });
 
@@ -92,7 +92,7 @@ describe('Swipe Gesture', function() {
 
         var handleGesture = jasmine.createSpy('handleGesture');
 
-        responder = new SwipeGesture({
+        gesture = new SwipeGesture({
             el: $input,
             direction: 'left',
             handleGesture: handleGesture
@@ -107,7 +107,7 @@ describe('Swipe Gesture', function() {
 
         var handleGesture = jasmine.createSpy('handleGesture');
 
-        responder = new SwipeGesture({
+        gesture = new SwipeGesture({
             el: $input,
             direction: 'left',
             handleGesture: handleGesture
@@ -123,7 +123,7 @@ describe('Swipe Gesture', function() {
 
         var handleGesture = jasmine.createSpy('handleGesture');
 
-        responder = new SwipeGesture({
+        gesture = new SwipeGesture({
             el: $input,
             direction: 'right',
             handleGesture: handleGesture
@@ -138,7 +138,7 @@ describe('Swipe Gesture', function() {
 
         var handleGesture = jasmine.createSpy('handleGesture');
 
-        responder = new SwipeGesture({
+        gesture = new SwipeGesture({
             el: $input,
             direction: 'right',
             handleGesture: handleGesture
@@ -155,7 +155,7 @@ describe('Swipe Gesture', function() {
 
         var handleGesture = jasmine.createSpy('handleGesture');
 
-        responder = new SwipeGesture({
+        gesture = new SwipeGesture({
             el: $input,
             direction: 'up',
             handleGesture: handleGesture
@@ -169,7 +169,7 @@ describe('Swipe Gesture', function() {
 
         var handleGesture = jasmine.createSpy('handleGesture');
 
-        responder = new SwipeGesture({
+        gesture = new SwipeGesture({
             el: $input,
             direction: 'up',
             handleGesture: handleGesture
@@ -186,7 +186,7 @@ describe('Swipe Gesture', function() {
 
         var handleGesture = jasmine.createSpy('handleGesture');
 
-        responder = new SwipeGesture({
+        gesture = new SwipeGesture({
             el: $input,
             direction: 'down',
             handleGesture: handleGesture
@@ -200,7 +200,7 @@ describe('Swipe Gesture', function() {
 
         var handleGesture = jasmine.createSpy('handleGesture');
 
-        responder = new SwipeGesture({
+        gesture = new SwipeGesture({
             el: $input,
             direction: 'down',
             handleGesture: handleGesture
@@ -219,7 +219,7 @@ describe('Swipe Gesture', function() {
             startEvent    = createTouchEvent($input, 'touchstart', 300, 300),
             moveEvent     = createTouchEvent($input, 'touchmove', 0, 300);
 
-        responder = new SwipeGesture({
+        gesture = new SwipeGesture({
             el: $input,
             direction: 'left',
             numberOfTouchesRequired: 2,
@@ -245,7 +245,7 @@ describe('Swipe Gesture', function() {
 
         var handleGesture = jasmine.createSpy('handleGesture');
 
-        responder = new SwipeGesture({
+        gesture = new SwipeGesture({
             el: $input,
             direction: 'left',
             numberOfTouchesRequired: 2,
