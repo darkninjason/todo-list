@@ -5,7 +5,7 @@
 
 <link rel="shortcut icon" type="image/png" href="lib/jasmine/jasmine_favicon.png">
 <link rel="stylesheet" type="text/css" href="lib/jasmine/jasmine.css">
-<script type="text/javascript" src="../agency-ui-foundation/vendor/require.js"></script>
+<script type="text/javascript" src="lib/vendor/require.js"></script>
 
 <script>
 require(['../agency-ui-foundation/common'], function (common) {
@@ -13,35 +13,68 @@ require(['../agency-ui-foundation/common'], function (common) {
 
 // Update config valuse coming from agency-ui-foundation/common.
 require.config({
-    'baseUrl': '../',
-    'urlArgs': 'cb=' + Math.random(),
 
-    'packages': [
-        {
-            'name': 'jasmine',
-            'location': 'tests/lib/jasmine'
-        },
-        {
-            'name': 'spec',
-            'location': 'tests/spec'
-        }
-    ],
+'baseUrl': '../',
+'urlArgs': 'cb=' + Math.random(),
 
-    'shim': {
-        'jasmine/jasmine': {
-            'deps': [],
-            'exports': 'jasmine'
-        },
-        'jasmine/jasmine-html': {
-            'deps': ['jasmine/jasmine']
-        },
-        'jasmine/jasmine-jquery': {
-            'deps': ['jasmine/jasmine']
-        },
-        'jasmine/console-runner': {
-            'deps': ['jasmine/jasmine']
-        }
+'packages': [
+    {
+        'name': 'jasmine',
+        'location': 'tests/lib/jasmine'
+    },
+    {
+        'name': 'vendor',
+        'location': 'tests/lib/vendor'
+    },
+    {
+        'name': 'spec',
+        'location': 'tests/spec'
     }
+],
+
+'shim': {
+
+    // Jasmine shims
+
+    'jasmine/jasmine': {
+        'deps': [],
+        'exports': 'jasmine'
+    },
+    'jasmine/jasmine-html': {
+        'deps': ['jasmine/jasmine']
+    },
+    'jasmine/jasmine-jquery': {
+        'deps': ['jasmine/jasmine']
+    },
+    'jasmine/console-runner': {
+        'deps': ['jasmine/jasmine']
+    },
+
+    // Vendor shims
+
+    'vendor/modernizr': {
+        'exports': 'Modernizr'
+    },
+    'vendor/underscore': {
+        'exports': '_'
+    },
+    'vendor/jquery': {
+        'exports': 'jQuery'
+    },
+    'vendor/backbone': {
+        'deps': ['vendor/jquery', 'vendor/underscore'],
+        'exports': 'Backbone'
+    },
+    'vendor/marionette': {
+        'deps': ['vendor/jquery', 'vendor/underscore', 'vendor/backbone'],
+        'exports': 'Marionette'
+    },
+    'vendor/stickit': {
+        'deps' : ['vendor/backbone'],
+        'exports' : 'Stickit'
+    }
+}
+
 }); // eof require.config
 
 require(['spec/main']);
