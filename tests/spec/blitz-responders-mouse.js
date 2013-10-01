@@ -46,17 +46,22 @@ describe('Mouse Responder', function() {
     function simulateMouseMove($el, x, y) {
         return simulateEvent($el, 'mousemove', x, y);
     }
+    function simulateMouseDragged($el, startX, startY, endX, endY) {
+        simulateMouseDown($input, startX, startY);
+        simulateMouseMove($input, endX, endY);
+        simulateMouseUp($input, endX, endY);
+    }
 
     // Test Suite
     // ==================================================================== //
 
     it('triggered mousedown', function(){
-        var type = 'mousedown',
-            e    = $.Event(type),
-            spy  = spyOnEvent($input, type);
+        var type     = 'mousedown',
+            e        = $.Event(type),
+            spyEvent = spyOnEvent($input, type);
 
         $input.trigger(e);
-        expect(spy).toHaveBeenTriggered();
+        expect(spyEvent).toHaveBeenTriggered();
     });
 
     it('triggered mouseup', function(){
@@ -95,7 +100,7 @@ describe('Mouse Responder', function() {
     it('removes mouse events', function() {
         // Note the local assignment to of a scopedResponder,
         // not using the suite's setup 'responder' var.
-        // We want to explicitely test close().
+        // We want to explicitely test onClose() behavior.
 
         var mouseDown       = jasmine.createSpy('mouseDown'),
             mouseup         = jasmine.createSpy('mouseup'),
@@ -113,80 +118,87 @@ describe('Mouse Responder', function() {
         expect(mouseDown).not.toHaveBeenCalled();
         expect(mouseup).not.toHaveBeenCalled();
 
-        // this is probably a redundant check:
+        // This is probably a redundant check:
         expect(mouseDown.calls.length).toEqual(0);
         expect(mouseup.calls.length).toEqual(0);
     });
 
     it('calls mouseDown', function(){
-        var spy       = jasmine.createSpy('mouseDown'),
-            responder = new mouse.MouseResponder({
-                el: $input,
-                mouseDown: spy
-            });
+        var spy = jasmine.createSpy('mouseDown');
+
+        responder = new mouse.MouseResponder({
+            el: $input,
+            mouseDown: spy
+        });
 
         simulateMouseDown($input, 0, 0);
         expect(spy).toHaveBeenCalled();
     });
 
     it('calls mouseUp', function(){
-        var spy       = jasmine.createSpy('mouseUp'),
-            responder = new mouse.MouseResponder({
-                el: $input,
-                mouseUp: spy
-            });
+        var spy = jasmine.createSpy('mouseUp');
+
+        responder = new mouse.MouseResponder({
+            el: $input,
+            mouseUp: spy
+        });
 
         simulateMouseUp($input, 0, 0);
         expect(spy).toHaveBeenCalled();
     });
 
     it('calls mouseMoved', function(){
-        var spy       = jasmine.createSpy('mouseMoved'),
-            responder = new mouse.MouseResponder({
-                el: $input,
-                mouseMoved: spy,
-                acceptsMoveEvents: true
-            });
+        var spy = jasmine.createSpy('mouseMoved');
+
+        responder = new mouse.MouseResponder({
+            el: $input,
+            mouseMoved: spy,
+            acceptsMoveEvents: true
+        });
 
         simulateMouseMove($input, 0, 0);
         expect(spy).toHaveBeenCalled();
     });
 
     it('calls mouseDragged', function(){
-        var spy       = jasmine.createSpy('mouseDragged'),
-            responder = new mouse.MouseResponder({
-                el: $input,
-                mouseDragged: spy
-            });
+        var spy = jasmine.createSpy('mouseDragged');
 
-        // Drag it!
-        simulateMouseDown($input, 0, 0);
-        simulateMouseMove($input, 10, 10);
-        simulateMouseUp($input, 10, 10);
+        responder = new mouse.MouseResponder({
+            el: $input,
+            mouseDragged: spy
+        });
 
+        simulateMouseDragged($input, 0, 0, 10, 10);
         expect(spy).toHaveBeenCalled();
     });
 
-    it('properly tracks dragged deltas', function(){
-        var responder = new mouse.MouseResponder({
+    it('tracks deltas', function(){
+        responder = new mouse.MouseResponder({
             el: $input
         });
 
-        simulateMouseDown($input, 0, 0);
-        simulateMouseMove($input, 10, 10);
-        simulateMouseUp($input, 10, 10);
-
+        simulateMouseDragged($input, 0, 0, 10, 10);
         expect(responder.deltaX()).toEqual(10);
         expect(responder.deltaY()).toEqual(10);
 
     });
 
-    it('counts clicks', function(){
-        var responder = new mouse.MouseResponder({
-                el: $input
-            });
+    it('tracks negatvie deltas', function(){
+        responder = new mouse.MouseResponder({
+            el: $input
+        });
 
-        // Drag it!
+        simulateMouseDragged($input, 0, 0, -10, -10);
+        expect(responder.deltaX()).toEqual(-10);
+        expect(responder.deltaY()).toEqual(-10);
+
+    });
+
+    it('counts clicks', function(){
+        responder = new mouse.MouseResponder({
+            el: $input
+        });
+
         simulateMouseDown($input, 0, 0);
         expect(responder.clickCount()).toEqual(1);
     });
