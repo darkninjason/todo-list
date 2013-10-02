@@ -2,8 +2,8 @@ define(function(require){
 
     var Marionette = require('marionette'),
         _ = require('underscore'),
-        logging = require('alf/logging'),
-        log = logging.getLogger('alf.injector');
+        logging = require('auf/logging'),
+        log = logging.getLogger('auf.injector');
 
     var Component = Marionette.Controller.extend({
         cls: null,
