@@ -1,9 +1,8 @@
 define(function(require, exports, module){
-    var test = {};
 
-    var _ = require('underscore'),
-        _loggers = {},
-        _levelNames = {
+    var _ = require('underscore');
+    var _loggers = {};
+    var _levelNames = {
             0: 'NOTSET',
             1: 'TRACE',
             2: 'DEBUG',
