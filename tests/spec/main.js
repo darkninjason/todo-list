@@ -19,9 +19,8 @@ function($, Jasmine, index) {
     Jasmine.getFixtures().fixturesPath = 'fixtures';
 
     // phantom-jasmine
-    // var console_reporter = new Jasmine.ConsoleReporter();
     // jasmineEnv.addReporter(new Jasmine.TrivialReporter());
-    // jasmineEnv.addReporter(console_reporter);
+    jasmineEnv.addReporter(new Jasmine.ConsoleReporter());
 
     jasmineEnv.updateInterval = 1000;
 
