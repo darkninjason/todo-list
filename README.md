@@ -1,11 +1,11 @@
 # Agency UI Foundation
 
-[jQuery]:
-[Modernizr]:
-[Underscore]:
-[Backbone]:
-[Backbone - Marionette]:
-[Backbone - Stickit]:
+[jQuery v1.10.1]: http://api.jquery.com/
+[Modernizr v2.6.2 : Custom Build]: http://modernizr.com/download/#-fontface-backgroundsize-borderimage-borderradius-boxshadow-flexbox-flexboxlegacy-hsla-multiplebgs-opacity-rgba-textshadow-cssanimations-csscolumns-generatedcontent-cssgradients-cssreflections-csstransforms-csstransforms3d-csstransitions-applicationcache-canvas-canvastext-draganddrop-hashchange-history-audio-video-indexeddb-input-inputtypes-localstorage-postmessage-sessionstorage-websockets-websqldatabase-webworkers-geolocation-inlinesvg-smil-svg-svgclippaths-touch-webgl-cssclasses-teststyles-testprop-testallprops-hasevent-prefixes-domprefixes
+[Underscore v1.5.2]: http://underscorejs.org/
+[Backbone v1.0.0]: http://backbonejs.org/
+[Backbone : Marionette v1.1.0]: http://marionettejs.com/
+[Backbone : Stickit]: http://nytimes.github.io/backbone.stickit/
 
 A UI Foundation with a Unix-like philosophy.
 
@@ -23,12 +23,12 @@ Vendor dependencies are not versioned with the main AUF codebase. Check out `tes
 
 Below is a list of dependencies as of October 1st, 2013:
 
-- [jQuery]
-- [Modernizr]
-- [Underscore]
-- [Backbone]
-- [Backbone - Marionette]
-- [Backbone - Stickit]
+- [jQuery v1.10.1]
+- [Modernizr v2.6.2 : Custom Build]
+- [Underscore v1.5.2]
+- [Backbone v1.0.0]
+- [Backbone : Marionette v1.1.0]
+- [Backbone : Stickit]
 
 ## Version
 
