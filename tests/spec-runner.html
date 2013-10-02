@@ -8,10 +8,6 @@
 <script type="text/javascript" src="lib/vendor/require.js"></script>
 
 <script>
-require(['../agency-ui-foundation/common'], function (common) {
-
-
-// Update config valuse coming from agency-ui-foundation/common.
 require.config({
 
 'baseUrl': '../',
@@ -20,7 +16,8 @@ require.config({
 'paths' : {
     'vendor': 'tests/lib/vendor',
     'jasmine': 'tests/lib/jasmine',
-    'spec': 'tests/spec'
+    'spec': 'tests/spec',
+    'auf': 'agency-ui-foundation'
 },
 
 // the paths config is only for setting up root paths for module IDs,
@@ -30,13 +27,12 @@ require.config({
 'map': {
     '*': {
         'underscore': 'vendor/underscore',
-        'backbone': 'vendor/backbone',
+        'jquery'    : 'vendor/jquery'
+        'backbone'  : 'vendor/backbone',
         'marionette': 'vendor/marionette',
-        'stickit': 'vendor/stickit',
-        'jquery': 'vendor/jquery'
+        'stickit'   : 'vendor/stickit',
     }
 },
-
 
 'shim': {
 
@@ -58,15 +54,9 @@ require.config({
 
     // Vendor shims
 
-    // modernizr is currently not use for any tests
-    // 'modernizr': {
-    //     'exports': 'Modernizr'
-    // },
-
     'vendor/underscore': {
         'exports': '_'
     },
-
     'vendor/jquery': {
         'exports': 'jQuery'
     },
@@ -87,11 +77,10 @@ require.config({
 }); // eof require.config
 
 require(['spec/main']);
-
-});
 </script>
-</head>
 
+</head>
 <body>
+<!-- Jasmine will render HTMLReport here. -->
 </body>
 </html>
