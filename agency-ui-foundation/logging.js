@@ -1,7 +1,7 @@
 define(function(require, exports, module){
     var test = {};
 
-    var _ = require('vendor/underscore'),
+    var _ = require('underscore'),
         _loggers = {},
         _levelNames = {
             0: 'NOTSET',

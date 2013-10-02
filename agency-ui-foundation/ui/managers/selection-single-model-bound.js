@@ -2,8 +2,8 @@ define(function(require, exports, module){
 
 // Imports
 
-var Marionette       = require('vendor/marionette');
-var _                = require('vendor/underscore');
+var Marionette       = require('marionette');
+var _                = require('underscore');
 var SelectionManager = require('auf/managers/selection');
 
 // Module

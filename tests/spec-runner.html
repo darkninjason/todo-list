@@ -17,20 +17,26 @@ require.config({
 'baseUrl': '../',
 'urlArgs': 'cb=' + Math.random(),
 
-'packages': [
-    {
-        'name': 'jasmine',
-        'location': 'tests/lib/jasmine'
-    },
-    {
-        'name': 'vendor',
-        'location': 'tests/lib/vendor'
-    },
-    {
-        'name': 'spec',
-        'location': 'tests/spec'
+'paths' : {
+    'vendor': 'tests/lib/vendor',
+    'jasmine': 'tests/lib/jasmine',
+    'spec': 'tests/spec'
+},
+
+// the paths config is only for setting up root paths for module IDs,
+// not for mapping one module ID to another one.
+// http://requirejs.org/docs/api.html#config-map
+
+'map': {
+    '*': {
+        'underscore': 'vendor/underscore',
+        'backbone': 'vendor/backbone',
+        'marionette': 'vendor/marionette',
+        'stickit': 'vendor/stickit',
+        'jquery': 'vendor/jquery'
     }
-],
+},
+
 
 'shim': {
 
@@ -52,25 +58,28 @@ require.config({
 
     // Vendor shims
 
-    'vendor/modernizr': {
-        'exports': 'Modernizr'
-    },
+    // modernizr is currently not use for any tests
+    // 'modernizr': {
+    //     'exports': 'Modernizr'
+    // },
+
     'vendor/underscore': {
         'exports': '_'
     },
+
     'vendor/jquery': {
         'exports': 'jQuery'
     },
     'vendor/backbone': {
-        'deps': ['vendor/jquery', 'vendor/underscore'],
+        'deps': ['jquery', 'underscore'],
         'exports': 'Backbone'
     },
     'vendor/marionette': {
-        'deps': ['vendor/jquery', 'vendor/underscore', 'vendor/backbone'],
+        'deps': ['jquery', 'underscore', 'backbone'],
         'exports': 'Marionette'
     },
     'vendor/stickit': {
-        'deps' : ['vendor/backbone'],
+        'deps' : ['backbone'],
         'exports' : 'Stickit'
     }
 }

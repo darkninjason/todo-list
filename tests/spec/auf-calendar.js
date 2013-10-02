@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 // Imports
 
 var calendar = require('auf/calendar/calendar');
-var _        = require('vendor/underscore');
+var _        = require('underscore');
 
 describe('Calendar:', function() {
 
@@ -37,22 +37,21 @@ describe('Calendar:', function() {
         expect(days).toEqual(currentDays);
     });
 
-    it('should get the all of the days in Sept 2013', function(){
+    it('should get all of the days in Sept 2013', function(){
         var days = calendar.calendarMonthDays(2013, 9);
 
         expect(days.length).toEqual(30);
     });
 
-    it('should get the all of the days in Sept 2013 from Date', function(){
+    it('should get all of the days in Sept 2013 from Date', function(){
         var date = new Date(2013, 8, 1);
         var days = calendar.calendarMonthDays(date);
 
         expect(days.length).toEqual(30);
     });
 
-    it('should get the all of the days in Sept 2013 as Date()', function(){
+    it('should get all of the days in Sept 2013 as Date()', function(){
         var days = calendar.calendarMonthDays(2013, 9, {useDates:true});
-
         expect(days.length).toEqual(30);
         expect(_.isDate(days[0])).toBe(true);
         expect(_.isDate(days[29])).toBe(true);

@@ -1,7 +1,7 @@
 require(
 
 [
-    'vendor/jquery',
+    'jquery',
     'jasmine/jasmine',
     'spec/index',
 

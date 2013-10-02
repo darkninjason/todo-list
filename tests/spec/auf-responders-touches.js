@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 // Import
 
 var TouchResponder = require('auf/ui/responders/touches');
-var $              = require('vendor/jquery');
+var $              = require('jquery');
 
 describe('Responder: Touch', function() {
 
