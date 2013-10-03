@@ -143,6 +143,17 @@ describe('Manager: Range', function() {
 
     });
 
+    it('provides a default value', function(){
+
+        manager = new RangeManager({
+            min: 10,
+            max: 110
+        });
+
+        expect(manager.getValue()).toEqual(0);
+
+    });
+
     it('calculates position exceeding max', function(){
 
         manager = new RangeManager({

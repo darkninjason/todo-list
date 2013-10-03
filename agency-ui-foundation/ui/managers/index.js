@@ -2,59 +2,59 @@ define(function(require, exports, module){
 
 // Imports
 
-var Marionette = require('marionette');
-var _          = require('underscore');
+var Marionette   = require('marionette');
+var _            = require('underscore');
+var RangeManager = require('auf/ui/managers/range');
 
 // Module
 
 var IndexManager = Marionette.Controller.extend({
 
+    initialize: function(){
+        this.range = new RangeManager();
+    },
+
     setLength: function(value){
-        this.currentIndex = null;
-        this.itemsLength = value;
+        this.range.setMax(value);
     },
 
-    setCurrentIndex: function(value){
-        this.currentIndex = value;
+    getLength: function(){
+        return this.range.getMax();
     },
 
-    updateCurrentIndexForPrevious: function(){
-        var nextIndex,
-            currentIndex = this.currentIndex;
+    setIndex: function(value){
+        this.range.setValue(value);
+    },
 
-        if (currentIndex === null){
-            nextIndex = this.itemsLength - 1;
-            this.setCurrentIndex(nextIndex);
-            return nextIndex;
-        }
+    getIndex: function(){
+        return this.range.getValue();
+    },
+
+    previousIndex: function(){
+        var nextIndex;
+        var currentIndex = this.getIndex();
 
         nextIndex = currentIndex - 1;
 
         if(nextIndex < 0){
-            nextIndex = this.itemsLength - 1;
+            nextIndex = this.getLength() - 1;
         }
 
-        this.setCurrentIndex(nextIndex);
+        this.setIndex(nextIndex);
         return nextIndex;
     },
 
-    updateCurrentIndexForNext: function(){
-        var nextIndex,
-            currentIndex = this.currentIndex;
-
-        if (currentIndex === null){
-            nextIndex = 0;
-            this.setCurrentIndex(nextIndex);
-            return nextIndex;
-        }
+    nextIndex: function(){
+        var nextIndex;
+        var currentIndex = this.getIndex();
 
         nextIndex = currentIndex + 1;
 
-        if(nextIndex > (this.itemsLength - 1)){
+        if(nextIndex > (this.getLength() - 1)){
             nextIndex = 0;
         }
 
-        this.setCurrentIndex(nextIndex);
+        this.setIndex(nextIndex);
         return nextIndex;
     }
 });
