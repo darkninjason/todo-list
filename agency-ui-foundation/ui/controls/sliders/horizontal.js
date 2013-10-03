@@ -1,5 +1,4 @@
 define(function(require, exports, module){
-
 // Imports
 
 var Marionette           = require('marionette');
@@ -7,6 +6,7 @@ var _                    = require('underscore');
 var MouseResponder       = require('auf/ui/responders/mouse');
 var TouchResponder       = require('auf/ui/responders/touches');
 var OrientationResponder = require('auf/ui/responders/orientation');
+var RangeManager         = require('auf/ui/managers/range');
 
 // Module
 
@@ -24,19 +24,15 @@ var HorizontalSlider = Marionette.Controller.extend({
         _.extend(this, filtered);
         _.bindAll(this, 'updateHandleOffset');
 
-        // normalizeTrack needs to happen 1st
-        this.normalizeTrackForAvailableHandles();
         this.initializeSteps();
 
         this.handles = [];
         this.handleValues = [];
-        this.handleOffsetX = [];
-        this.handlePositionX = [];
-        this.handleTracks = [];
         this.handleSteps = [];
         this.mouseResponders = [];
         this.touchResponders = [];
 
+        this.ranges = [];
         this.initializeHandles.apply(this, options.$handles);
     },
 
@@ -45,14 +41,23 @@ var HorizontalSlider = Marionette.Controller.extend({
             var position = $h.position();
             this.handles.push($h[0]);
             this.handleValues.push($h);
-            this.handleTracks.push(this.normalizeTrack($h));
-            this.handleOffsetX.push(position.left);
 
-            var percentPosition = this.calculatePositionXForDelta($h, 0);
-            this.handlePositionX.push(percentPosition);
+            var range = new RangeManager({
+                max: this.normalizeTrack($h)
+            });
 
-            var step = this.calculateStepForPositionX($h, percentPosition);
+            range.setValue(position.left);
+
+            var obj = {
+                offsetPosition:range.getPosition(),
+                range: range
+            };
+
+            this.ranges.push(obj);
+
+            var step = this.calculateStepWithRangeAndPosition(obj, range.getPosition());
             this.handleSteps.push(step);
+
 
         }, this);
 
@@ -72,8 +77,9 @@ var HorizontalSlider = Marionette.Controller.extend({
 
             _.each(this.handleValues, function($h){
                 var handleIndex = self.getHandleIndex($h);
-                var currentPosition = self.handlePositionX[handleIndex];
-                self.setPercent($h, currentPosition);
+                var obj = self.ranges[handleIndex];
+                var currentPosition = obj.range.getPosition();
+                self.setPosition($h, currentPosition);
                 self.updateHandleOffset($h);
             });
         }, this);
@@ -89,7 +95,7 @@ var HorizontalSlider = Marionette.Controller.extend({
         var touchStart = _.bind(function(responder, e){
              e.preventDefault();
              var $h = responder.$el;
-             $h.css({'z-index': 1});
+             this.trigger('drag:start', $h);
         }, this);
 
         var touchMove = _.bind(function(responder, e){
@@ -99,8 +105,8 @@ var HorizontalSlider = Marionette.Controller.extend({
 
         var touchEnd = _.bind(function(responder, e){
             var $h = responder.$el;
-            $h.css({'z-index': 0});
             this.updateHandleOffset($h);
+            this.trigger('drag:stop', $h);
         }, this);
 
         var process = _.bind(function($h){
@@ -127,14 +133,14 @@ var HorizontalSlider = Marionette.Controller.extend({
         var mouseDown = _.bind(function(responder, e){
             e.preventDefault();
             var $h = responder.$el;
-            $h.css({'z-index': 1});
+            this.trigger('drag:start', $h);
 
         }, this);
 
         var mouseUp = _.bind(function(responder, e){
             var $h = responder.$el;
-            $h.css({'z-index': 0});
             this.updateHandleOffset($h);
+            this.trigger('drag:stop', $h);
         }, this);
 
         var process = _.bind(function($h){
@@ -163,60 +169,53 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     updateHandleOffset: function($h){
         var handleIndex = this.getHandleIndex($h);
-        this.handleOffsetX[handleIndex] = $h.position().left;
+
+        var obj = this.ranges[handleIndex];
+        obj.offsetPosition = obj.range.positionForValue($h.position().left);
     },
 
     getHandleIndex: function($h){
         return this.handles.indexOf($h[0]);
     },
 
-    getHandleOffsetX: function($h){
-        var handleIndex = this.getHandleIndex($h);
-        return this.handleOffsetX[handleIndex];
-    },
-
     responderWantsMove: function(responder){
         var $h = responder.$el;
-        var position = this.calculatePositionXForDelta($h, responder.deltaX());
+        var handleIndex = this.getHandleIndex($h);
+        var obj = this.ranges[handleIndex];
+
+        var position = this.calculatePositionWithRangeAndDelta(obj, responder.deltaX());
 
         if(this.steps){
-            var handleIndex = this.getHandleIndex($h);
-            var step = this.calculateStepForPositionX($h, position);
+            var step = this.calculateStepWithRangeAndPosition(obj, position);
             var currentStep = this.handleSteps[handleIndex];
 
             if(step != currentStep){
                 this.setStep($h, step);
             }
         } else {
-
-            this.setPercent($h, position);
+            this.setPosition($h, position);
         }
     },
 
-    calculateStepForPositionX: function($h, positionX){
-        var handleIndex = this.getHandleIndex($h);
-        var currentPosition = this.handlePositionX[handleIndex];
-        var action = positionX < currentPosition ? Math.ceil : Math.floor;
-        return action(positionX * this.steps);
+    calculateStepWithRangeAndPosition: function(obj, position){
+        var range = obj.range;
+        var currentPosition = range.getPosition();
+        var action = position < currentPosition ? Math.ceil : Math.floor;
+        return action(position * this.steps);
     },
 
-    calculatePositionXForDelta: function($h, deltaX){
-        var handleIndex = this.getHandleIndex($h);
-        var offsetX = this.getHandleOffsetX($h);
-        var normalizedTrack = this.handleTracks[handleIndex];
-        var posX = offsetX + deltaX;
-        var position = posX / normalizedTrack;
-
-        position = Math.min(1, position);
-        position = Math.max(0, position);
-
-        return position;
+    calculatePositionWithRangeAndDelta: function(obj, delta){
+        var range = obj.range;
+        var value = range.valueForPosition(obj.offsetPosition);
+        return range.positionForValue(value  + delta);
     },
 
     normalizeTrackForAvailableHandles: function(){
-        this.handleTracks = [];
         var process = _.bind(function($h){
-            this.handleTracks.push(this.normalizeTrack($h));
+            var handleIndex = this.getHandleIndex($h);
+            var obj = this.ranges[handleIndex];
+            obj.range.setMax(this.normalizeTrack($h));
+
         }, this);
 
         _.each(this.handleValues, process);
@@ -229,12 +228,13 @@ var HorizontalSlider = Marionette.Controller.extend({
         return trackRect.width - handleRect.width;
     },
 
-    setPercent: function ($h, percent){
+    setPosition: function($h, position){
         var handleIndex = this.getHandleIndex($h);
-        var normalizedTrack = this.handleTracks[handleIndex];
-        var x = percent * normalizedTrack;
-        this.moveTo($h, x);
-        this.handlePositionX[handleIndex] = percent;
+
+        var obj = this.ranges[handleIndex];
+        obj.range.setPosition(position);
+
+        this.moveTo($h, obj.range.getValue());
         this.trigger('change', this);
     },
 
@@ -244,7 +244,7 @@ var HorizontalSlider = Marionette.Controller.extend({
         target = Math.max(0, target);
 
         this.handleSteps[handleIndex] = target;
-        this.setPercent($h, target * this.stepUnit);
+        this.setPosition($h, target * this.stepUnit);
     },
 
     moveTo: function($el, posX){
@@ -252,7 +252,9 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     getPosition: function(){
-        return this.handlePositionX;
+        return _.map(this.ranges, function(x){
+            return x.range.getPosition();
+        });
     },
 
     getSteps: function(){

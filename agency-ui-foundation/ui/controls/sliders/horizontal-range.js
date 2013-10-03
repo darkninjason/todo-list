@@ -26,13 +26,13 @@ var HorizontalRangeSlider =  Marionette.Controller.extend({
 
     responderWantsMove: function(responder){
         var $h = responder.$el;
-
-        var action;
         var handleIndex = this.slider.getHandleIndex($h);
-        var position = this.slider.calculatePositionXForDelta($h, responder.deltaX());
+        var obj = this.slider.ranges[handleIndex];
+
+        var position = this.slider.calculatePositionWithRangeAndDelta(obj, responder.deltaX());
 
         if(this.slider.steps){
-            var step = this.slider.calculateStepForPositionX($h, position);
+            var step = this.slider.calculateStepWithRangeAndPosition(obj, position);
             var currentStep = this.slider.handleSteps[handleIndex];
 
             if(step != currentStep){
@@ -41,16 +41,16 @@ var HorizontalRangeSlider =  Marionette.Controller.extend({
             }
         } else {
             position = this.enforceRangePosition(handleIndex, position);
-            this.slider.setPercent($h, position);
+            this.slider.setPosition($h, position);
         }
     },
 
     enforceRangePosition: function(index, position){
         if(index == 1){
-            return Math.max(this.slider.handlePositionX[0], position);
+            return Math.max(this.slider.ranges[0].range.getPosition(), position);
         }
 
-        return Math.min(this.slider.handlePositionX[1], position);
+        return Math.min(this.slider.ranges[1].range.getPosition(), position);
     },
 
     enforceRangeStep: function(index, step){
@@ -62,7 +62,7 @@ var HorizontalRangeSlider =  Marionette.Controller.extend({
     },
 
     getPosition: function(){
-        return this.slider.handlePositionX;
+        return this.slider.getPosition();
     },
 
     getSteps: function(){
