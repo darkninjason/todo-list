@@ -175,5 +175,36 @@ describe('Control: Slider Horizontal', function() {
         expect($sliderHandle).toHaveCss(expectedCSS);
     });
 
+    it('triggered mouse drag events', function(){
+        var mouseDragStart  = jasmine.createSpy('mouseDragStart');
+        var mouseDragChange = jasmine.createSpy('mouseDragChange');
+        var mouseDragStop   = jasmine.createSpy('mouseDragStop');
+
+        control.listenTo(control, 'drag:start', mouseDragStart);
+        control.listenTo(control, 'change', mouseDragChange);
+        control.listenTo(control, 'drag:stop', mouseDragStop);
+
+        simulateMouseDragged($sliderHandle, 0, 0, 100, 0);
+
+        expect(mouseDragStart).toHaveBeenCalled();
+        expect(mouseDragChange).toHaveBeenCalled();
+        expect(mouseDragStop).toHaveBeenCalled();
+    });
+
+    it('triggered touch drag events', function(){
+        var touchDragStart  = jasmine.createSpy('touchDragStart');
+        var touchDragChange = jasmine.createSpy('touchDragChange');
+        var touchDragStop   = jasmine.createSpy('touchDragStop');
+
+        control.listenTo(control, 'drag:start', touchDragStart);
+        control.listenTo(control, 'change', touchDragChange);
+        control.listenTo(control, 'drag:stop', touchDragStop);
+
+        simulateTouchDragged($sliderHandle, 0, 0, 100, 0);
+
+        expect(touchDragStart).toHaveBeenCalled();
+        expect(touchDragStop).toHaveBeenCalled();
+    });
+
 }); // eof describe
 }); // eof define
