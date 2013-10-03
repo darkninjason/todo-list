@@ -112,22 +112,24 @@ var RangeManager = Marionette.Controller.extend({
         this.setMax(max);
     },
 
+    // Helpers
+
     positionForValue: function(val){
         var position = val / this.getRange();
         return this.normalizePosition(position);
     },
 
-    valueForPosition: function(position){
-        position = this.normalizePosition(position);
+    valueForPosition: function(val){
+        position = this.normalizePosition(val);
         return this.getRange() * position;
     },
 
-    normalizePosition: function(position){
+    normalizePosition: function(val){
         // Ternary is faster than Math.min,max
-        position = position > 1 ? 1 : position;
-        position = position < 0 ? 0 : position;
+        val = val > 1 ? 1 : val;
+        val = val < 0 ? 0 : val;
 
-        return position;
+        return val;
     }
 
 }); // eof RangeManager
