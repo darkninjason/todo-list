@@ -119,6 +119,30 @@ describe('Manager: Range', function() {
 
     });
 
+    it('calculates position when setting value', function(){
+
+        manager = new RangeManager({
+            min: 10,
+            max: 110
+        });
+
+        manager.setValue(50);
+        expect(manager.getPosition()).toEqual(0.5);
+
+    });
+
+    it('calculates value when setting position', function(){
+
+        manager = new RangeManager({
+            min: 10,
+            max: 110
+        });
+
+        manager.setPosition(0.5);
+        expect(manager.getValue()).toEqual(50);
+
+    });
+
     it('calculates position exceeding max', function(){
 
         manager = new RangeManager({

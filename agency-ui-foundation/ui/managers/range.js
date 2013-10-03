@@ -64,6 +64,15 @@ var RangeManager = Marionette.Controller.extend({
         }
     },
 
+    setValue: function(val){
+        var position = this.positionForValue(val);
+        this.setPosition(position);
+    },
+
+    getValue: function(){
+        return this.valueForPosition(this.getPosition());
+    },
+
     getMin: function() {
         return this._min;
     },
