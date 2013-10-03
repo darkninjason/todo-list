@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
 
 // Imports
+
 var RangeManager = require('auf/ui/managers/range');
 
 describe('Manager: Range', function() {
@@ -8,6 +9,7 @@ describe('Manager: Range', function() {
     var manager = null;
 
     // Set Up
+
     beforeEach(function() {
         // console.log('before: ' + this.description + '\n');
         manager = new RangeManager(
