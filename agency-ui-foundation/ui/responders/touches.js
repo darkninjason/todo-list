@@ -53,8 +53,7 @@ var TouchResponder = Marionette.Controller.extend({
     // Internal Handlers
 
     _touchStart: function(e){
-        this._startX = e.originalEvent.pageX;
-        this._startY = e.originalEvent.pageY;
+        this._setStartX(e);
 
         // multiple mouse clicks are conceptually treated as a single
         // mouse-down event within the clickCountTimeout window
@@ -64,8 +63,7 @@ var TouchResponder = Marionette.Controller.extend({
     },
 
     _touchEnd: function(e){
-        this._endX = e.originalEvent.pageX;
-        this._endY = e.originalEvent.pageY;
+        this._setEndX(e);
 
         // Returns 0 for a mouse-up event if the clickCountTimeout
         // has passed since the corresponding mouse-down event.
@@ -81,13 +79,32 @@ var TouchResponder = Marionette.Controller.extend({
     },
 
     _touchMove: function(e){
-        this._endX = e.originalEvent.pageX;
-        this._endY = e.originalEvent.pageY;
+        this._setEndX(e);
         this.touchMove(this, e);
     },
 
     _touchCancel: function(e){
         this.touchCancel(this, e);
+    },
+
+    _setStartX: function(e){
+        this._startX = _.map(e.originalEvent.touches, function(x){
+            return x.pageX;
+        });
+
+        this._startY = _.map(e.originalEvent.touches, function(x){
+            return x.pageY;
+        });
+    },
+
+    _setEndX: function(e){
+        this._endX = _.map(e.originalEvent.touches, function(x){
+            return x.pageX;
+        });
+
+        this._endY = _.map(e.originalEvent.touches, function(x){
+            return x.pageY;
+        });
     },
 
     touchStart: function(responder, e){
@@ -111,11 +128,19 @@ var TouchResponder = Marionette.Controller.extend({
     },
 
     deltaX: function(){
-        return this._endX - this._startX;
+        var each = _.zip(this._startX, this._endX);
+
+        return _.map(each, function(x){
+            return x[1] - x[0];
+        });
     },
 
     deltaY: function(){
-        return this._endY - this._startY;
+        var each = _.zip(this._startY, this._endY);
+
+        return _.map(each, function(x){
+            return x[1] - x[0];
+        });
     },
 
     // Marionette overrides

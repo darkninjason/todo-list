@@ -188,5 +188,53 @@ describe('Responder: Touch', function() {
         expect(touchCancel).toHaveBeenCalled();
     });
 
+    it('calculates deltaX negative', function() {
+
+        responder = new TouchResponder({
+            el: $input
+        });
+
+        simulateStart($input, 200, 200);
+        simulateMove($input, 0, 200);
+
+        expect(responder.deltaX()[0]).toEqual(-200);
+    });
+
+    it('calculates deltaX positive', function() {
+
+        responder = new TouchResponder({
+            el: $input
+        });
+
+        simulateStart($input, 200, 200);
+        simulateMove($input, 400, 200);
+
+        expect(responder.deltaX()[0]).toEqual(200);
+    });
+
+    it('calculates deltaY negative', function() {
+
+        responder = new TouchResponder({
+            el: $input
+        });
+
+        simulateStart($input, 200, 200);
+        simulateMove($input, 200, 0);
+
+        expect(responder.deltaY()[0]).toEqual(-200);
+    });
+
+    it('calculates deltaY positive', function() {
+
+        responder = new TouchResponder({
+            el: $input
+        });
+
+        simulateStart($input, 200, 200);
+        simulateMove($input, 200, 400);
+
+        expect(responder.deltaY()[0]).toEqual(200);
+    });
+
 }); // eof describe
 }); // eof define

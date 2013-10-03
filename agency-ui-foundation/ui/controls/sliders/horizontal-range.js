@@ -13,9 +13,9 @@ var HorizontalRangeSlider =  Marionette.Controller.extend({
     // Initialization
 
     initialize: function(options){
-        _.bindAll(this, 'responderWantsMove');
+        _.bindAll(this, 'handleWantsMove');
         this.slider = new HorizontalSlider(options);
-        this.slider.responderWantsMove = this.responderWantsMove;
+        this.slider.handleWantsMove = this.handleWantsMove;
         this.listenTo(this.slider, 'change', this.rangeDidChange);
     },
 
@@ -24,12 +24,11 @@ var HorizontalRangeSlider =  Marionette.Controller.extend({
         this.trigger('change', this);
     },
 
-    responderWantsMove: function(responder){
-        var $h = responder.$el;
+    handleWantsMove: function($h, offset){
         var handleIndex = this.slider.getHandleIndex($h);
         var obj = this.slider.ranges[handleIndex];
 
-        var position = this.slider.calculatePositionWithRangeAndDelta(obj, responder.deltaX());
+        var position = this.slider.calculatePositionWithRangeAndDelta(obj, offset);
 
         if(this.slider.steps){
             var step = this.slider.calculateStepWithRangeAndPosition(obj, position);
