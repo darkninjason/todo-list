@@ -9,7 +9,7 @@ describe('Manager: Range', function() {
 
     // Set Up
     beforeEach(function() {
-        console.log('before: ' + this.description + '\n');
+        // console.log('before: ' + this.description + '\n');
         manager = new RangeManager(
             {
                 max: 100,
@@ -19,7 +19,7 @@ describe('Manager: Range', function() {
     });
 
     afterEach(function() {
-        console.log('\neof ' + this.description);
+        // console.log('\neof ' + this.description);
     });
 
     // Helpers

@@ -158,10 +158,7 @@ var RangeManager = Marionette.Controller.extend({
         if(val != this._step) {
             this._step     = val;
             this._position = this.getPositionForStep(this._step);
-
-            console.log('set', this._step);
         }
-
     },
 
     getStepDistance: function() {
