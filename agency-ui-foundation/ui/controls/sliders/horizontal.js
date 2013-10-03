@@ -100,7 +100,8 @@ var HorizontalSlider = Marionette.Controller.extend({
 
         var touchMove = _.bind(function(responder, e){
             e.preventDefault();
-            this.handleWantsMove(responder.$el, e.deltaX()[0]);
+
+            this.handleWantsMove(responder.$el, responder.deltaX()[0]);
         }, this);
 
         var touchEnd = _.bind(function(responder, e){
@@ -127,7 +128,7 @@ var HorizontalSlider = Marionette.Controller.extend({
     initializeMouse: function(){
         var mouseDragged = _.bind(function(responder, e){
             e.preventDefault();
-            this.handleWantsMove(responder.$el, e.deltaX());
+            this.handleWantsMove(responder.$el, responder.deltaX());
         }, this);
 
         var mouseDown = _.bind(function(responder, e){
