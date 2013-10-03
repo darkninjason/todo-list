@@ -12,8 +12,7 @@ describe('Manager: Range', function() {
         // console.log('before: ' + this.description + '\n');
         manager = new RangeManager(
             {
-                max: 100,
-                steps: 10
+                max: 100
             }
         );
     });
@@ -26,119 +25,149 @@ describe('Manager: Range', function() {
 
     // Test Suite
 
+    it('applies range from default manager', function(){
+        expect(manager.getRange()).toEqual(100);
+    });
+
     it('applies options and computes properties', function(){
-        // Note:
-        // - Creating custom instance here to test various opts.
-        var manager = new RangeManager({
+        manager = new RangeManager({
             min: 100,
-            max: 200,
-            steps: 10
+            max: 200
         });
 
-        expect(manager.min()).toEqual(100);
-        expect(manager.max()).toEqual(200);
-        expect(manager.steps()).toEqual(10);
-        expect(manager.range()).toEqual(100);
-        expect(manager.stepDistance()).toEqual(10); // Range / steps = 10
+        expect(manager.getMin()).toEqual(100);
+        expect(manager.getMax()).toEqual(200);
+        expect(manager.getRange()).toEqual(100);
     });
 
-    it('updates properties when range and steps change', function(){
+    it('updates properties when range change', function(){
 
-        // update the range steps to force manager to recalculate
-        manager.range(10, 210);
-        manager.steps(4);
+        // update the range to force manager to recalculate
+        manager.setRange(10, 210);
 
-        expect(manager.min()).toEqual(10);
-        expect(manager.max()).toEqual(210);
-        expect(manager.steps()).toEqual(4);
-        expect(manager.range()).toEqual(200); // Max - min = 200
-        expect(manager.stepDistance()).toEqual(50); // Range / steps = 50
+        expect(manager.getMin()).toEqual(10);
+        expect(manager.getMax()).toEqual(210);
+        expect(manager.getRange()).toEqual(200); // Max - min = 200
     });
 
-    it('updates step when position changes', function(){
-        manager.position(0.25);
 
-        expect(manager.position()).toEqual(0.25);
-        expect(manager.step()).toEqual(2);
-    });
-
-    it('updates position when step changes', function(){
-        manager.step(5);
-
-        expect(manager.step()).toEqual(5);
-        expect(manager.position()).toEqual(0.5); // Steps / 5 = 0.5
-    });
-
-    it('updates position the number of steps changes', function(){
-        manager.step(5);
-
-        // Same as before
-        expect(manager.step()).toEqual(5);
-        expect(manager.position()).toEqual(0.5);
-
-        // Now updates steps
-        // Manager should recalculate position based on current step
-        manager.steps(20);
-
-        // We doubled the steps so our current position should be
-        // Half of what it used to be
-        expect(manager.position()).toBe(0.25);
-    });
-
-    it('handles step & position when steps is 1', function(){
-        manager.steps(1);
-
-        manager.step(2);
-        expect(manager.step()).toEqual(1);
-
-        manager.step(0);
-        expect(manager.step()).toEqual(0);
-
-        manager.position(0.5);
-        expect(manager.step()).toEqual(0);
-    });
-
-    it('updates range and step distance when range changes', function() {
-        manager.position(0.5);
-        manager.range(0, 200);
-
-        expect(manager.range()).toEqual(200);
-        expect(manager.stepDistance()).toEqual(20);
+    it('updates position change', function(){
+        expect(manager.getPosition()).toEqual(0);
+        manager.setPosition(0.25);
+        expect(manager.getPosition()).toEqual(0.25);
     });
 
     it('restricts position value greater 1 to 1', function(){
-        manager.position(10);
-        expect(manager.position()).toEqual(1);
+        expect(manager.getPosition()).toEqual(0);
+        manager.setPosition(9);
+        expect(manager.getPosition()).toEqual(1);
     });
 
     it('restricts position value less than 0 to 0', function(){
-        manager.position(-1);
-        expect(manager.position()).toEqual(0);
+        expect(manager.getPosition()).toEqual(0);
+        manager.setPosition(-9);
+        expect(manager.getPosition()).toEqual(0);
     });
 
-    it('restricts steps values less than 1 to 1', function(){
-        manager.steps(-1);
-        expect(manager.steps()).toEqual(1);
+    it('calculates position for a given value betwen 0 and 100', function(){
+
+        manager = new RangeManager({
+            min: 10,
+            max: 110
+        });
+
+        expect(manager.positionForValue(25)).toEqual(0.25);
+        expect(manager.positionForValue(33)).toEqual(0.33);
+        expect(manager.positionForValue(50)).toEqual(0.5);
+        expect(manager.positionForValue(75)).toEqual(0.75);
+        expect(manager.positionForValue(100)).toEqual(1);
+
     });
 
-    it('restricts a step value less than steps to 0', function(){
-        manager.step(-1);
-        expect(manager.step()).toEqual(0);
+    it('calculates position for a given value betwen 0 and 300', function(){
+
+        function round(val){
+            // 3 decimal places
+            return Math.round(val * 1000) / 1000;
+        }
+
+        manager = new RangeManager({
+            min: 10,
+            max: 310
+        });
+
+        expect(manager.positionForValue(0)).toEqual(0);
+        expect(round(manager.positionForValue(25))).toEqual(0.083);
+        expect(round(manager.positionForValue(100))).toEqual(0.333);
+        expect(round(manager.positionForValue(200))).toEqual(0.667);
+        expect(manager.positionForValue(300)).toEqual(1);
+
     });
 
-    it('restricts step greater than steps to steps', function(){
-        manager.step(20);
-        expect(manager.step()).toEqual(10);
+    it('calculates value for a given position betwen 0 and 1', function(){
+
+        manager = new RangeManager({
+            min: 10,
+            max: 110
+        });
+
+        expect(manager.valueForPosition(0)).toEqual(0);
+        expect(manager.valueForPosition(0.25)).toEqual(25);
+        expect(manager.valueForPosition(0.5)).toEqual(50);
+        expect(manager.valueForPosition(0.75)).toEqual(75);
+        expect(manager.valueForPosition(1)).toEqual(100);
+
     });
 
-    it('floors step that is not a whole number to a whole number', function(){
-        manager.step(1.5);
-        expect(manager.step()).toEqual(1);
+    it('calculates position when setting value', function(){
+
+        manager = new RangeManager({
+            min: 10,
+            max: 110
+        });
+
+        manager.setValue(50);
+        expect(manager.getPosition()).toEqual(0.5);
+
+    });
+
+    it('calculates value when setting position', function(){
+
+        manager = new RangeManager({
+            min: 10,
+            max: 110
+        });
+
+        manager.setPosition(0.5);
+        expect(manager.getValue()).toEqual(50);
+
+    });
+
+    it('calculates position exceeding max', function(){
+
+        manager = new RangeManager({
+            min: 10,
+            max: 110
+        });
+
+        expect(manager.positionForValue(150)).toEqual(1);
+
+    });
+
+    it('calculates position exceeding min', function(){
+
+        manager = new RangeManager({
+            min: 10,
+            max: 110
+        });
+
+        expect(manager.positionForValue(-200)).toEqual(0);
+
     });
 
     it('throws error if min greater than max', function(){
         function minIsGreaterThanMax() {
-            manager.min(manager.max() + 1);
+            manager.setMin(manager.getMax() + 1);
         }
 
         expect(minIsGreaterThanMax).toThrow();
@@ -146,7 +175,7 @@ describe('Manager: Range', function() {
 
     it('throws error if max is less than min', function(){
         function maxIsLessThanMin() {
-            manager.max(manager.min() - 1);
+            manager.setMax(manager.getMin() - 1);
         }
 
         expect(maxIsLessThanMin).toThrow();
