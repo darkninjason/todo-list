@@ -48,6 +48,6 @@ var OrientationResponder = Marionette.Controller.extend({
 
 // Exports
 
-module.OrientationResponder = OrientationResponder;
+module.exports = OrientationResponder;
 
 }); // eof define
