@@ -1,9 +1,10 @@
 define(function(require, exports, module) {
 
-var HorizontalSlider = require('auf/ui/controls/sliders/horizontal');
+// Imports
 
-// TODO:
-// - Breakout mouse and touch event simulations
+var HorizontalSlider = require('auf/ui/controls/sliders/horizontal');
+var SpecHelpers      = require('lib/spec-helpers');
+var EventHelpers     = SpecHelpers.Events;
 
 describe('Control: Slider Horizontal', function() {
 
@@ -28,77 +29,6 @@ describe('Control: Slider Horizontal', function() {
             steps: 30
         });
     });
-
-    // Mouse Event Helpers
-
-    function simulateMouseEvent($el, type, x, y){
-        var e = $.Event(type);
-
-        e.pageX = x;
-        e.pageY = y;
-        e.target = $el[0];
-        e.currentTarget = $el[0];
-
-        $el.trigger(e);
-
-        return e;
-    }
-
-    function simulateMouseDown($el, x, y) {
-        return simulateMouseEvent($el, 'mousedown', x, y);
-    }
-    function simulateMouseUp($el, x, y) {
-        return simulateMouseEvent($el, 'mouseup', x, y);
-    }
-    function simulateMouseMove($el, x, y) {
-        return simulateMouseEvent($el, 'mousemove', x, y);
-    }
-    function simulateMouseDragged($el, startX, startY, endX, endY) {
-        simulateMouseDown($el, startX, startY);
-        simulateMouseMove($el, endX, endY);
-        simulateMouseUp($el, endX, endY);
-    }
-
-    // Touch Evenet Helpers
-
-    function simulateTouchEvent($el, type, x, y) {
-        var e     = $.Event(type);
-        var touch = {
-                pageX: x,
-                pageY: y,
-                target: $el[0]
-            };
-
-        e.originalEvent = {touches: [touch]};
-        e.target        = $el[0];
-        e.currentTarget = $el[0];
-
-        $el.trigger(e);
-
-        return e;
-    }
-
-    function simulateTouchStart($el, x, y) {
-        return simulateTouchEvent($el, 'touchstart', x, y);
-    }
-
-    function simulateTouchMove($el, x, y) {
-        return simulateTouchEvent($el, 'touchmove', x, y);
-    }
-
-    function simulateTouchEnd($el, x, y) {
-        return simulateTouchEvent($el, 'touchend', x, y);
-    }
-
-    function simulateTouchCancel($el) {
-        return simulateTouchEvent($el, 'touchcancel');
-    }
-
-    function simulateTouchDragged($el, startX, startY, endX, endY) {
-        simulateTouchStart($el, startX, startY);
-        simulateTouchMove($el, endX, endY);
-        simulateTouchEnd($el, endX, endY);
-    }
 
     // Helpers
 
@@ -137,7 +67,7 @@ describe('Control: Slider Horizontal', function() {
         var moveToX     = trackWidth / 2;
         var expectedCSS = {'left': moveToX + 'px'}
 
-        simulateMouseDragged($sliderHandle, 0, 15, moveToX, 15);
+        EventHelpers.simulateMouseDragged($sliderHandle, 0, 15, moveToX, 15);
 
         expect($sliderHandle).toHaveCss(expectedCSS);
         expect(control.getPosition()[0]).toEqual(0.5);
@@ -148,13 +78,13 @@ describe('Control: Slider Horizontal', function() {
         var moveToX     = trackWidth / 2;
         var expectedCSS = {'left': moveToX + 'px'}
 
-        simulateTouchDragged($sliderHandle, 0, 15, moveToX, 15);
+        EventHelpers.simulateTouchDragged($sliderHandle, 0, 15, moveToX, 15);
 
         expect($sliderHandle).toHaveCss(expectedCSS);
         expect(control.getPosition()[0]).toEqual(0.5);
     });
 
-    it('did not move slider handle past track right', function() {
+    it('did not move slider handle past track right boundary', function() {
         var trackWidth  = getNormalizedTrackWidth($sliderHandle);
         var expectedCSS = {'left': trackWidth + 'px'};
 
@@ -166,7 +96,7 @@ describe('Control: Slider Horizontal', function() {
         expect($sliderHandle).toHaveCss(expectedCSS);
     });
 
-    it('did not move slider handle past track left', function() {
+    it('did not move slider handle past track left boundary', function() {
         var expectedCSS = {'left': '0px'};
 
         control.setPosition($sliderHandle, 0.5);
@@ -184,7 +114,7 @@ describe('Control: Slider Horizontal', function() {
         control.listenTo(control, 'change', mouseDragChange);
         control.listenTo(control, 'drag:stop', mouseDragStop);
 
-        simulateMouseDragged($sliderHandle, 0, 0, 100, 0);
+        EventHelpers.simulateMouseDragged($sliderHandle, 0, 0, 100, 0);
 
         expect(mouseDragStart).toHaveBeenCalled();
         expect(mouseDragChange).toHaveBeenCalled();
@@ -200,7 +130,7 @@ describe('Control: Slider Horizontal', function() {
         control.listenTo(control, 'change', touchDragChange);
         control.listenTo(control, 'drag:stop', touchDragStop);
 
-        simulateTouchDragged($sliderHandle, 0, 0, 100, 0);
+        EventHelpers.simulateTouchDragged($sliderHandle, 0, 0, 100, 0);
 
         expect(touchDragStart).toHaveBeenCalled();
         expect(touchDragStop).toHaveBeenCalled();

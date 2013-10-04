@@ -3,6 +3,8 @@ define(function(require, exports, module) {
 // Imports
 
 var SwipeGesture = require('auf/ui/gestures/swipe');
+var SpecHelpers  = require('lib/spec-helpers')
+var EventHelpers = SpecHelpers.Events;
 
 describe('Gesture: Swipe', function() {
 
@@ -23,66 +25,28 @@ describe('Gesture: Swipe', function() {
 
     // Helpers
 
-    function createTouchEvent($el, type, x, y){
-        var e     = jQuery.Event(type);
-        var touch = {
-                pageX: x,
-                pageY: y,
-                target: $el[0]
-            };
-
-        e.originalEvent = {touches: [touch]};
-        e.target        = $el[0];
-        e.currentTarget = $el[0];
-
-        return e;
-    }
-
-    function simulateEvent($el, type, x, y){
-        var e = createTouchEvent($el, type, x, y);
-        $el.trigger(e);
-
-        return e;
-    }
-
-    function simulateStart($el, x, y){
-        return simulateEvent($el, 'touchstart', x, y);
-    }
-
-    function simulateMove($el, x, y){
-        return simulateEvent($el, 'touchmove', x, y);
-    }
-
-    function simulateEnd($el){
-        return simulateEvent($el, 'touchend');
-    }
-
-    function simulateCancel($el){
-        return simulateEvent($el, 'touchcancel');
-    }
-
     function swipeLeft($el){
-        simulateStart($input, 300, 300);
-        simulateMove($input, 0, 290);
-        simulateEnd($input);
+        EventHelpers.simulateTouchStart($input, 300, 300);
+        EventHelpers.simulateTouchMove($input, 0, 290);
+        EventHelpers.simulateTouchEnd($input);
     }
 
     function swipeRight($el){
-        simulateStart($input, 0, 300);
-        simulateMove($input, 300, 290);
-        simulateEnd($input);
+        EventHelpers.simulateTouchStart($input, 0, 300);
+        EventHelpers.simulateTouchMove($input, 300, 290);
+        EventHelpers.simulateTouchEnd($input);
     }
 
     function swipeUp($el){
-        simulateStart($input, 300, 400);
-        simulateMove($input, 290, 50);
-        simulateEnd($input);
+        EventHelpers.simulateTouchStart($input, 300, 400);
+        EventHelpers.simulateTouchMove($input, 290, 50);
+        EventHelpers.simulateTouchEnd($input);
     }
 
     function swipeDown($el){
-        simulateStart($input, 300, 50);
-        simulateMove($input, 290, 400);
-        simulateEnd($input);
+        EventHelpers.simulateTouchStart($input, 300, 50);
+        EventHelpers.simulateTouchMove($input, 290, 400);
+        EventHelpers.simulateTouchEnd($input);
     }
 
     // Test Suite
@@ -216,8 +180,8 @@ describe('Gesture: Swipe', function() {
     it('did trigger swipe left requiring 2 touches', function() {
 
         var handleGesture = jasmine.createSpy('handleGesture');
-        var startEvent    = createTouchEvent($input, 'touchstart', 300, 300);
-        var moveEvent     = createTouchEvent($input, 'touchmove', 0, 300);
+        var startEvent    = EventHelpers.simulateTouchEvent($input, 'touchstart', 300, 300);
+        var moveEvent     = EventHelpers.simulateTouchEvent($input, 'touchmove', 0, 300);
 
         gesture = new SwipeGesture({
             el: $input,
@@ -236,7 +200,7 @@ describe('Gesture: Swipe', function() {
 
         $input.trigger(startEvent);
         $input.trigger(moveEvent);
-        simulateEnd($input);
+        EventHelpers.simulateTouchEnd($input);
 
         expect(handleGesture).toHaveBeenCalled();
     });

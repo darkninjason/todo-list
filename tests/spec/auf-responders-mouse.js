@@ -4,6 +4,8 @@ define(function(require, exports, module) {
 
 var MouseResponder = require('auf/ui/responders/mouse');
 var $              = require('jquery');
+var SpecHelpers    = require('lib/spec-helpers')
+var EventHelpers   = SpecHelpers.Events;
 
 describe('Responder: Mouse', function() {
 
@@ -22,38 +24,7 @@ describe('Responder: Mouse', function() {
         }
     });
 
-    // Helpers
-
-    function simulateEvent($el, type, x, y){
-        var e = $.Event(type);
-
-        e.pageX = x;
-        e.pageY = y;
-        e.target = $el[0];
-        e.currentTarget = $el[0];
-
-        $el.trigger(e);
-
-        return e;
-    }
-
-    function simulateMouseDown($el, x, y) {
-        return simulateEvent($el, 'mousedown', x, y);
-    }
-    function simulateMouseUp($el, x, y) {
-        return simulateEvent($el, 'mouseup', x, y);
-    }
-    function simulateMouseMove($el, x, y) {
-        return simulateEvent($el, 'mousemove', x, y);
-    }
-    function simulateMouseDragged($el, startX, startY, endX, endY) {
-        simulateMouseDown($input, startX, startY);
-        simulateMouseMove($input, endX, endY);
-        simulateMouseUp($input, endX, endY);
-    }
-
     // Test Suite
-
 
     it('triggered mousedown', function(){
         var type     = 'mousedown';
@@ -112,8 +83,8 @@ describe('Responder: Mouse', function() {
 
         scopedResponder.close();
 
-        simulateMouseDown($input, 0, 0);
-        simulateMouseUp($input, 0, 0);
+        EventHelpers.simulateMouseDown($input, 0, 0);
+        EventHelpers.simulateMouseUp($input, 0, 0);
 
         expect(mouseDown).not.toHaveBeenCalled();
         expect(mouseup).not.toHaveBeenCalled();
@@ -131,7 +102,7 @@ describe('Responder: Mouse', function() {
             mouseDown: spy
         });
 
-        simulateMouseDown($input, 0, 0);
+        EventHelpers.simulateMouseDown($input, 0, 0);
         expect(spy).toHaveBeenCalled();
     });
 
@@ -143,7 +114,7 @@ describe('Responder: Mouse', function() {
             mouseUp: spy
         });
 
-        simulateMouseUp($input, 0, 0);
+        EventHelpers.simulateMouseUp($input, 0, 0);
         expect(spy).toHaveBeenCalled();
     });
 
@@ -156,7 +127,7 @@ describe('Responder: Mouse', function() {
             acceptsMoveEvents: true
         });
 
-        simulateMouseMove($input, 0, 0);
+        EventHelpers.simulateMouseMove($input, 0, 0);
         expect(spy).toHaveBeenCalled();
     });
 
@@ -168,7 +139,7 @@ describe('Responder: Mouse', function() {
             mouseDragged: spy
         });
 
-        simulateMouseDragged($input, 0, 0, 10, 10);
+        EventHelpers.simulateMouseDragged($input, 0, 0, 10, 10);
         expect(spy).toHaveBeenCalled();
     });
 
@@ -177,7 +148,7 @@ describe('Responder: Mouse', function() {
             el: $input
         });
 
-        simulateMouseDragged($input, 0, 0, 10, 10);
+        EventHelpers.simulateMouseDragged($input, 0, 0, 10, 10);
         expect(responder.deltaX()).toEqual(10);
         expect(responder.deltaY()).toEqual(10);
 
@@ -188,7 +159,7 @@ describe('Responder: Mouse', function() {
             el: $input
         });
 
-        simulateMouseDragged($input, 0, 0, -10, -10);
+        EventHelpers.simulateMouseDragged($input, 0, 0, -10, -10);
         expect(responder.deltaX()).toEqual(-10);
         expect(responder.deltaY()).toEqual(-10);
 
@@ -199,7 +170,7 @@ describe('Responder: Mouse', function() {
             el: $input
         });
 
-        simulateMouseDown($input, 0, 0);
+        EventHelpers.simulateMouseDown($input, 0, 0);
         expect(responder.clickCount()).toEqual(1);
     });
 

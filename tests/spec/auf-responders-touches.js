@@ -4,6 +4,8 @@ define(function(require, exports, module) {
 
 var TouchResponder = require('auf/ui/responders/touches');
 var $              = require('jquery');
+var SpecHelpers    = require('lib/spec-helpers');
+var EventHelpers   = SpecHelpers.Events;
 
 describe('Responder: Touch', function() {
 
@@ -21,41 +23,6 @@ describe('Responder: Touch', function() {
             responder.close();
         }
     });
-
-    // Helpers
-
-    function simulateEvent($el, type, x, y) {
-        var e     = $.Event(type);
-        var touch = {
-                pageX: x,
-                pageY: y,
-                target: $el[0]
-            };
-
-        e.originalEvent = {touches: [touch]};
-        e.target        = $el[0];
-        e.currentTarget = $el[0];
-
-        $el.trigger(e);
-
-        return e;
-    }
-
-    function simulateStart($el, x, y) {
-        return simulateEvent($el, 'touchstart', x, y);
-    }
-
-    function simulateMove($el, x, y) {
-        return simulateEvent($el, 'touchmove', x, y);
-    }
-
-    function simulateEnd($el) {
-        return simulateEvent($el, 'touchend');
-    }
-
-    function simulateCancel($el) {
-        return simulateEvent($el, 'touchcancel');
-    }
 
     // Test Suite
 
@@ -125,8 +92,8 @@ describe('Responder: Touch', function() {
 
         scopedResponder.close();
 
-        simulateStart($input, 10, 10);
-        simulateEnd($input);
+        EventHelpers.simulateTouchStart($input, 10, 10);
+        EventHelpers.simulateTouchEnd($input);
 
         expect(touchStart).not.toHaveBeenCalled();
         expect(touchEnd).not.toHaveBeenCalled();
@@ -145,7 +112,7 @@ describe('Responder: Touch', function() {
             touchStart: touchStart
         });
 
-        simulateStart($input, 0, 0);
+        EventHelpers.simulateTouchStart($input, 0, 0);
         expect(touchStart).toHaveBeenCalled();
     });
 
@@ -158,7 +125,7 @@ describe('Responder: Touch', function() {
             touchMove: touchMove
         });
 
-        simulateMove($input, 0, 0);
+        EventHelpers.simulateTouchMove($input, 0, 0);
         expect(touchMove).toHaveBeenCalled();
     });
 
@@ -171,7 +138,7 @@ describe('Responder: Touch', function() {
             touchEnd: touchEnd
         });
 
-        simulateEnd($input, 0, 0);
+        EventHelpers.simulateTouchEnd($input, 0, 0);
         expect(touchEnd).toHaveBeenCalled();
     });
 
@@ -184,7 +151,7 @@ describe('Responder: Touch', function() {
             touchCancel: touchCancel
         });
 
-        simulateCancel($input);
+        EventHelpers.simulateTouchCancel($input);
         expect(touchCancel).toHaveBeenCalled();
     });
 
@@ -194,8 +161,8 @@ describe('Responder: Touch', function() {
             el: $input
         });
 
-        simulateStart($input, 200, 200);
-        simulateMove($input, 0, 200);
+        EventHelpers.simulateTouchStart($input, 200, 200);
+        EventHelpers.simulateTouchMove($input, 0, 200);
 
         expect(responder.deltaX()[0]).toEqual(-200);
     });
@@ -206,8 +173,8 @@ describe('Responder: Touch', function() {
             el: $input
         });
 
-        simulateStart($input, 200, 200);
-        simulateMove($input, 400, 200);
+        EventHelpers.simulateTouchStart($input, 200, 200);
+        EventHelpers.simulateTouchMove($input, 400, 200);
 
         expect(responder.deltaX()[0]).toEqual(200);
     });
@@ -218,8 +185,8 @@ describe('Responder: Touch', function() {
             el: $input
         });
 
-        simulateStart($input, 200, 200);
-        simulateMove($input, 200, 0);
+        EventHelpers.simulateTouchStart($input, 200, 200);
+        EventHelpers.simulateTouchMove($input, 200, 0);
 
         expect(responder.deltaY()[0]).toEqual(-200);
     });
@@ -230,8 +197,8 @@ describe('Responder: Touch', function() {
             el: $input
         });
 
-        simulateStart($input, 200, 200);
-        simulateMove($input, 200, 400);
+        EventHelpers.simulateTouchStart($input, 200, 200);
+        EventHelpers.simulateTouchMove($input, 200, 400);
 
         expect(responder.deltaY()[0]).toEqual(200);
     });
