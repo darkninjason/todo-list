@@ -2,16 +2,17 @@ define(function(require, exports, module){
 
 // Imports
 
-var Marionette = require('marionette');
-var _          = require('underscore');
+var Marionette     = require('marionette');
+var _              = require('underscore');
+var Collection     = require('auf/jquery/collection');
 
 // Module
 
-var SelectionManager =  Marionette.ItemView.extend({
+var SelectionManager =  Marionette.Controller.extend({
 
     // Object vars
 
-    selectedClass: null,
+    //selectedClass: null,
     delegate: null,
     $selectedElement: null,
     allowsDeselect: false,
@@ -23,7 +24,7 @@ var SelectionManager =  Marionette.ItemView.extend({
         _.bindAll(this, 'wasClicked');
         this.$el.on('click', this.wasClicked);
 
-        this.selectedClass = options.selectedClass || 'selected';
+        this.collection = new Collection();
 
         if (!this.delegate){
             this.delegate = {selectionManagerShouldSelect: function($el){ return true; }};
