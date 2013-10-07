@@ -65,16 +65,18 @@ var SelectionManager =  Marionette.Controller.extend({
         if(this.delegate.selectionManagerShouldSelect($el)){
 
             this.trigger('before:select', $el);
-            if(this.$selectedElement &&
-               $el[0] == this.$selectedElement[0] &&
-               this.allowsDeselect){
 
-                $el.removeClass(this.selectedClass);
-                this.$selectedElement = null;
+            var shouldDeselect = this.container.contains($el) &&
+                                 this.allowsDeselect;
+
+            if(shouldDeselect){
+
+                this.container.remove($el);
+                this.trigger('deselect', $el);
 
             } else {
-                $el.addClass(this.selectedClass);
-                this.$selectedElement = $el;
+                this.container.add($el);
+                this.trigger('select', $el);
             }
 
             this.trigger('after:select', $el);
