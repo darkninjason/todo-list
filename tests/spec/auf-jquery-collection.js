@@ -157,5 +157,24 @@ describe('JQuery Collection:', function() {
         expect(collection.length).toEqual(0);
     });
 
+    it('should contain element ', function() {
+
+        var $items = $ctx.find('li');
+
+        collection.add($items);
+        expect(collection.contains($items.eq(3))).toEqual(true);
+
+    });
+
+    it('should not contain element ', function() {
+
+        var $items = $ctx.find('li');
+        var $extras = $ctx.find('.extra');
+
+        collection.add($items);
+        expect(collection.contains($extras.eq(0))).toEqual(false);
+
+    });
+
 }); // eof describe
 }); // eof define

@@ -58,6 +58,10 @@ var Collection =  Marionette.Controller.extend({
         return $(this.$elements[index]);
     },
 
+    contains: function($el){
+        return this.$elements.indexOf($el[0]) == -1 ? false : true;
+    },
+
     toArray: function(){
         var i, l;
         var results = [];
