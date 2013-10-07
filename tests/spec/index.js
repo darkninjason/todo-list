@@ -1,6 +1,7 @@
 define(function() {
   return {
     specs: [
+      'spec/auf-jquery-collection',
       'spec/auf-calendar',
       'spec/auf-datetime',
       'spec/auf-datetime-formats',
