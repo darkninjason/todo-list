@@ -12,9 +12,7 @@ var SelectionManager =  Marionette.Controller.extend({
 
     // Object vars
 
-    //selectedClass: null,
     delegate: null,
-    $selectedElement: null,
     allowsDeselect: false,
 
     // Initialization
@@ -32,12 +30,16 @@ var SelectionManager =  Marionette.Controller.extend({
     },
 
     wasClicked: function(e){
-        this.selectElement($(e.target));
+        this._selectElement($(e.target));
     },
 
     val: function(){
-        if(this.$selectedElement){
-            return this.getValueForElement(this.$selectedElement);
+        if(this.collection.length){
+            var getValueForElement = this.getValueForElement;
+
+            return _.map(this.collection.toArray(), function(x){
+                return getValueForElement(x);
+            });
         }
 
         return null;
@@ -52,16 +54,16 @@ var SelectionManager =  Marionette.Controller.extend({
     },
 
     selectValue: function(value){
-        var $el = this.getElementWithValue(value);
-        this.selectElement($el);
+        var $el = this.getElementsaWithValue(value);
+        this._selectElement($el);
     },
 
     selectIndex: function(index){
         var $target = $(this.$el[index]);
-        this.selectElement($target);
+        this._selectElement($target);
     },
 
-    selectElement: function($el){
+    _selectElement: function($el){
         if(this.delegate.selectionManagerShouldSelect($el)){
 
             this.trigger('before:select', $el);
