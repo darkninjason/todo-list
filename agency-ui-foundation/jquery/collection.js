@@ -11,17 +11,11 @@ var Collection =  Marionette.Controller.extend({
     // Initialization
 
     initialize: function(options){
-        // JS cannot store objects as keys at this point. So we use an array here.
-        // Seeks cost O(N), so be careful with how massive this gets.
-        // the alternate option is to use a HashTable like this:
-        // http://stamat.wordpress.com/2013/07/03/javascript-quickly-find-very-large-objects-in-a-large-array/
-        this.$elements = [];
-        this.length = 0;
+        this.reset();
     },
 
 
     add: function($el){
-
         var i, l;
         var elements = $el.toArray();
         var $currentElements = this.$elements;
@@ -60,6 +54,16 @@ var Collection =  Marionette.Controller.extend({
 
     contains: function($el){
         return this.$elements.indexOf($el[0]) == -1 ? false : true;
+    },
+
+    reset: function(){
+        // JS cannot store objects as keys at this point. So we use an array here.
+        // Seeks cost O(N), so be careful with how massive this gets.
+        // the alternate option is to use a HashTable like this:
+        // http://stamat.wordpress.com/2013/07/03/javascript-quickly-find-very-large-objects-in-a-large-array/
+
+        this.$elements = [];
+        this.length = 0;
     },
 
     toArray: function(){

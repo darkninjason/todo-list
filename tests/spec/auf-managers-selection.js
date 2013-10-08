@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 
 var SelectionManager = require('auf/ui/managers/selection');
 
-describe('Manager: Selection', function() {
+describe('Selection Manager', function() {
 
     var $items, manager = null;
 
@@ -65,14 +65,14 @@ describe('Manager: Selection', function() {
             el: $items
         });
 
-        spyOn(manager, 'selectElement').andCallThrough();
+        spyOn(manager, '_selectElement').andCallThrough();
 
         var $target = $items.eq(0);
 
         $target.trigger('click');
 
-        expect($target).toHaveClass(manager.selectedClass);
-        expect(manager.selectElement).toHaveBeenCalled();
+        expect(manager.collection.contains($target)).toEqual(true);
+        expect(manager._selectElement).toHaveBeenCalled();
     });
 
     it('should select option with value', function() {
@@ -83,7 +83,7 @@ describe('Manager: Selection', function() {
         var $target = $items.eq(1);
 
         manager.selectValue('two');
-        expect($target).toHaveClass(manager.selectedClass);
+        expect(manager.collection.contains($target)).toEqual(true);
     });
 
     it('should return selected value', function() {
@@ -92,7 +92,10 @@ describe('Manager: Selection', function() {
         });
 
         manager.selectIndex(1);
-        expect(manager.val()).toEqual('two');
+        var val = manager.val();
+
+        expect(_.isArray(val)).toEqual(true);
+        expect(val[0]).toEqual('two');
     });
 
     it('should return null for selected value', function() {
@@ -100,7 +103,7 @@ describe('Manager: Selection', function() {
             el: $items
         });
 
-        expect(manager.val()).toEqual(null);
+        expect(manager.val().length).toEqual(0);
     });
 
     it('should deselect', function() {
@@ -113,10 +116,10 @@ describe('Manager: Selection', function() {
 
         manager.selectIndex(1);
 
-        expect($target).toHaveClass(manager.selectedClass);
+        expect(manager.collection.contains($target)).toEqual(true);
 
         manager.selectIndex(1);
-        expect($target).not.toHaveClass(manager.selectedClass);
+        expect(manager.collection.contains($target)).not.toEqual(true);
     });
 
     it('should not deselect', function() {
@@ -127,10 +130,10 @@ describe('Manager: Selection', function() {
         var $target = $items.eq(1);
 
         manager.selectIndex(1);
-        expect($target).toHaveClass(manager.selectedClass);
+        expect(manager.collection.contains($target)).toEqual(true);
 
         manager.selectIndex(1);
-        expect($target).toHaveClass(manager.selectedClass);
+        expect(manager.collection.contains($target)).toEqual(true);
     });
 
     it('should select all options with click', function() {
@@ -139,23 +142,12 @@ describe('Manager: Selection', function() {
         });
 
         $items.trigger('click');
-        expect($items.eq(0)).toHaveClass(manager.selectedClass);
-        expect($items.eq(1)).toHaveClass(manager.selectedClass);
-        expect($items.eq(2)).toHaveClass(manager.selectedClass);
+
+        expect(manager.collection.contains($items.eq(0))).toEqual(true);
+        expect(manager.collection.contains($items.eq(1))).toEqual(true);
+        expect(manager.collection.contains($items.eq(2))).toEqual(true);
     });
 
-    it('should set alternate selectedClass', function() {
-        manager = new SelectionManager({
-            el: $items,
-            selectedClass: 'foo'
-        });
-
-        var $target = $items.eq(0);
-        $target.trigger('click');
-
-        expect(manager.selectedClass).toBe('foo');
-        expect($target).toHaveClass(manager.selectedClass);
-    });
 
     it('should set call selection delegate', function() {
         var delegate = jasmine.createSpyObj('delegate', ['selectionManagerShouldSelect']);
@@ -182,7 +174,7 @@ describe('Manager: Selection', function() {
 
         var $target = $items.eq(1);
 
-        expect($target).toHaveClass(manager.selectedClass);
+        expect(manager.collection.contains($target)).toEqual(true);
     });
 
     it('should select all indexes', function() {
@@ -195,9 +187,9 @@ describe('Manager: Selection', function() {
         manager.selectIndex(1);
         manager.selectIndex(2);
 
-        expect($items.eq(0)).toHaveClass(manager.selectedClass);
-        expect($items.eq(1)).toHaveClass(manager.selectedClass);
-        expect($items.eq(2)).toHaveClass(manager.selectedClass);
+        expect(manager.collection.contains($items.eq(0))).toEqual(true);
+        expect(manager.collection.contains($items.eq(1))).toEqual(true);
+        expect(manager.collection.contains($items.eq(2))).toEqual(true);
     });
 
     it('should remove events', function() {
@@ -211,13 +203,13 @@ describe('Manager: Selection', function() {
 
         var $target = $items.eq(0);
 
-        spyOn(scopedManager, 'selectElement').andCallThrough();
+        spyOn(scopedManager, '_selectElement').andCallThrough();
         scopedManager.close();
 
         $target.trigger('click');
 
-        expect(scopedManager.selectElement).not.toHaveBeenCalled();
-        expect($target).not.toHaveClass(scopedManager.selectedClass);
+        expect(scopedManager._selectElement).not.toHaveBeenCalled();
+        expect(scopedManager.collection.length).toEqual(0);
     });
 
 }); // eof desribe

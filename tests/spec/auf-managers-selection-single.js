@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 
 var SingleSelectionManager = require('auf/ui/managers/selection-single');
 
-describe('Manager: Selection Single', function() {
+describe('Single Selection Manager', function() {
 
     var $items, manager = null;
 

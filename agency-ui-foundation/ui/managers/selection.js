@@ -5,6 +5,7 @@ define(function(require, exports, module){
 var Marionette     = require('marionette');
 var _              = require('underscore');
 var Collection     = require('auf/jquery/collection');
+var helpers        = require('auf/utils/helpers');
 
 // Module
 
@@ -20,6 +21,8 @@ var SelectionManager =  Marionette.Controller.extend({
     initialize: function(options){
         _.extend(this, options);
         _.bindAll(this, 'wasClicked');
+
+        this.$el = helpers.getElement(this.el);
         this.$el.on('click', this.wasClicked);
 
         this.collection = new Collection();
@@ -42,7 +45,7 @@ var SelectionManager =  Marionette.Controller.extend({
             });
         }
 
-        return null;
+        return [];
     },
 
     getValueForElement: function($el){
@@ -54,7 +57,7 @@ var SelectionManager =  Marionette.Controller.extend({
     },
 
     selectValue: function(value){
-        var $el = this.getElementsaWithValue(value);
+        var $el = this.getElementWithValue(value);
         this._selectElement($el);
     },
 
@@ -68,16 +71,16 @@ var SelectionManager =  Marionette.Controller.extend({
 
             this.trigger('before:select', $el);
 
-            var shouldDeselect = this.container.contains($el) &&
+            var shouldDeselect = this.collection.contains($el) &&
                                  this.allowsDeselect;
 
             if(shouldDeselect){
 
-                this.container.remove($el);
+                this.collection.remove($el);
                 this.trigger('deselect', $el);
 
             } else {
-                this.container.add($el);
+                this.collection.add($el);
                 this.trigger('select', $el);
             }
 
@@ -88,6 +91,7 @@ var SelectionManager =  Marionette.Controller.extend({
     // Marionette overrides
 
     onClose: function(){
+        this.collection.reset();
         this.$el.off('click', this.wasClicked);
     }
 
