@@ -113,7 +113,7 @@ describe('Single Selection Manager', function() {
     });
 
 
-    it('should select one by index', function() {
+    it('should focus one by index', function() {
         manager = new SingleFocusManager({
             el: $items
         });
@@ -128,6 +128,39 @@ describe('Single Selection Manager', function() {
 
         expect(collection.length).toEqual(1);
         expect(collection.contains($target2)).toEqual(true);
+        expect(collection.contains($target1)).toEqual(false);
+    });
+
+    it('should focus one by jquery element', function() {
+        manager = new SingleFocusManager({
+            el: $items
+        });
+
+        var $target1 = $items.eq(0);
+        manager.focus($target1);
+
+        var collection = manager.focusManager.collection;
+
+        expect(collection.length).toEqual(1);
+        expect(collection.contains($target1)).toEqual(true);
+    });
+
+    it('should blur one by jquery element', function() {
+        manager = new SingleFocusManager({
+            el: $items
+        });
+
+        var $target1 = $items.eq(0);
+        manager.focus($target1);
+
+        var collection = manager.focusManager.collection;
+
+        expect(collection.length).toEqual(1);
+        expect(collection.contains($target1)).toEqual(true);
+
+        manager.blur($target1);
+
+        expect(collection.length).toEqual(0);
         expect(collection.contains($target1)).toEqual(false);
     });
 
