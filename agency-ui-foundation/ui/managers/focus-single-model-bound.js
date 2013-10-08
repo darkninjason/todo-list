@@ -4,7 +4,7 @@ define(function(require, exports, module){
 
 var Marionette             = require('marionette');
 var _                      = require('underscore');
-var SingleSelectionManager = require('auf/ui/managers/selection-single');
+var SingleSelectionManager = require('auf/ui/managers/focus-single');
 
 // Module
 

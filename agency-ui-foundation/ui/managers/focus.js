@@ -9,7 +9,7 @@ var helpers        = require('auf/utils/helpers');
 
 // Module
 
-var SelectionManager =  Marionette.Controller.extend({
+var FocusManager =  Marionette.Controller.extend({
 
     // Object vars
     allowsDeselect: false,
@@ -28,39 +28,39 @@ var SelectionManager =  Marionette.Controller.extend({
     },
 
     wasClicked: function(e){
-        this.select($(e.target));
+        this.focus($(e.target));
     },
 
     val: function(){
         return this.collection.toArray();
     },
 
-    selectIndex: function(index){
+    focusIndex: function(index){
         var $target = this.$el.eq(index);
-        this.select($target);
+        this.focus($target);
     },
 
-    select: function($el){
-        var isSelected = this.collection.contains($el);
-        var shouldDeselect = isSelected && this.allowsDeselect;
+    focus: function($el){
+        var hasFocus = this.collection.contains($el);
+        var shouldBlur = hasFocus && this.allowsDeselect;
 
-        if(shouldDeselect){
-            this.deselect($el);
+        if(shouldBlur){
+            this.blur($el);
             return;
         }
 
-        if(!isSelected){
+        if(!hasFocus){
             this.collection.add($el);
-            this.trigger('select', $el);
+            this.trigger('focus', $el);
         }
     },
 
-    deselect: function($el){
-        var isSelected = this.collection.contains($el);
+    blur: function($el){
+        var hasFocus = this.collection.contains($el);
 
-        if(isSelected){
+        if(hasFocus){
             this.collection.remove($el);
-            this.trigger('deselect', $el);
+            this.trigger('blur', $el);
         }
     },
 
@@ -75,6 +75,6 @@ var SelectionManager =  Marionette.Controller.extend({
 
 // Exports
 
-module.exports = SelectionManager;
+module.exports = FocusManager;
 
 }); // eof define

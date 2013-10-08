@@ -2,16 +2,16 @@ define(function(require, exports, module) {
 
 // Imports
 
-var SelectionManager = require('auf/ui/managers/selection');
+var FocusManager = require('auf/ui/managers/focus');
 
-describe('Selection Manager', function() {
+describe('Focus Manager', function() {
 
     var $items, manager = null;
 
     // Setup
 
     beforeEach(function() {
-        loadFixtures('manager-selection.html');
+        loadFixtures('manager-focus.html');
         $items = $('.option');
     });
 
@@ -24,60 +24,60 @@ describe('Selection Manager', function() {
 
     // Test Suite
 
-    it('should trigger select', function() {
-        manager = new SelectionManager({
+    it('should trigger focus', function() {
+        manager = new FocusManager({
             el: $items
         });
 
-        var select = jasmine.createSpy('Select');
+        var focus = jasmine.createSpy('focus');
         var $target = $items.eq(0);
 
-        manager.listenTo(manager, 'select', select);
+        manager.listenTo(manager, 'focus', focus);
         $target.trigger('click');
         $target.trigger('click');
 
-        expect(select).toHaveBeenCalled();
-        expect(select.calls.length).toEqual(1);
+        expect(focus).toHaveBeenCalled();
+        expect(focus.calls.length).toEqual(1);
     });
 
-    it('should trigger deselect', function() {
-        manager = new SelectionManager({
+    it('should trigger blur', function() {
+        manager = new FocusManager({
             el: $items,
             allowsDeselect: true
         });
 
-        var deselect = jasmine.createSpy('Deselect');
+        var blur = jasmine.createSpy('blur');
         var $target = $items.eq(0);
 
-        manager.listenTo(manager, 'deselect', deselect);
+        manager.listenTo(manager, 'blur', blur);
         $target.trigger('click');
         $target.trigger('click');
 
-        expect(deselect).toHaveBeenCalled();
-        expect(deselect.calls.length).toEqual(1);
+        expect(blur).toHaveBeenCalled();
+        expect(blur.calls.length).toEqual(1);
     });
 
-    it('should select 1st option with click', function() {
-        manager = new SelectionManager({
+    it('should focus 1st option with click', function() {
+        manager = new FocusManager({
             el: $items
         });
 
-        spyOn(manager, 'select').andCallThrough();
+        spyOn(manager, 'focus').andCallThrough();
 
         var $target = $items.eq(0);
 
         $target.trigger('click');
 
         expect(manager.collection.contains($target)).toEqual(true);
-        expect(manager.select).toHaveBeenCalled();
+        expect(manager.focus).toHaveBeenCalled();
     });
 
-    it('should return selected elements', function() {
-        manager = new SelectionManager({
+    it('should return focused elements', function() {
+        manager = new FocusManager({
             el: $items
         });
 
-        manager.selectIndex(1);
+        manager.focusIndex(1);
         var val = manager.val();
 
         expect(_.isArray(val)).toEqual(true);
@@ -85,46 +85,46 @@ describe('Selection Manager', function() {
         expect(val[0][0]).toEqual($items.eq(1)[0]);
     });
 
-    it('should return null for selected elements', function() {
-        manager = new SelectionManager({
+    it('should return null for focused elements', function() {
+        manager = new FocusManager({
             el: $items
         });
 
         expect(manager.val().length).toEqual(0);
     });
 
-    it('should deselect', function() {
-        manager = new SelectionManager({
+    it('should blur', function() {
+        manager = new FocusManager({
             el: $items,
             allowsDeselect: true
         });
 
         var $target = $items.eq(1);
 
-        manager.selectIndex(1);
+        manager.focusIndex(1);
 
         expect(manager.collection.contains($target)).toEqual(true);
 
-        manager.selectIndex(1);
+        manager.focusIndex(1);
         expect(manager.collection.contains($target)).not.toEqual(true);
     });
 
-    it('should not deselect', function() {
-        manager = new SelectionManager({
+    it('should not blur', function() {
+        manager = new FocusManager({
             el: $items
         });
 
         var $target = $items.eq(1);
 
-        manager.selectIndex(1);
+        manager.focusIndex(1);
         expect(manager.collection.contains($target)).toEqual(true);
 
-        manager.selectIndex(1);
+        manager.focusIndex(1);
         expect(manager.collection.contains($target)).toEqual(true);
     });
 
-    it('should select all options with click', function() {
-        manager = new SelectionManager({
+    it('should foucs all options with click', function() {
+        manager = new FocusManager({
             el: $items
         });
 
@@ -135,28 +135,28 @@ describe('Selection Manager', function() {
         expect(manager.collection.contains($items.eq(2))).toEqual(true);
     });
 
-    it('should select index 1', function() {
+    it('should focus index 1', function() {
 
-        manager = new SelectionManager({
+        manager = new FocusManager({
             el: $items
         });
 
-        manager.selectIndex(1);
+        manager.focusIndex(1);
 
         var $target = $items.eq(1);
 
         expect(manager.collection.contains($target)).toEqual(true);
     });
 
-    it('should select all indexes', function() {
+    it('should focus all indexes', function() {
 
-        manager = new SelectionManager({
+        manager = new FocusManager({
             el: $items
         });
 
-        manager.selectIndex(0);
-        manager.selectIndex(1);
-        manager.selectIndex(2);
+        manager.focusIndex(0);
+        manager.focusIndex(1);
+        manager.focusIndex(2);
 
         expect(manager.collection.contains($items.eq(0))).toEqual(true);
         expect(manager.collection.contains($items.eq(1))).toEqual(true);
@@ -168,18 +168,18 @@ describe('Selection Manager', function() {
         // specifically so don't use the module accessible
         // 'manager' var, as it is closed for us in 'afterEach'
 
-        var scopedManager = new SelectionManager({
+        var scopedManager = new FocusManager({
                 el: $items
             });
 
         var $target = $items.eq(0);
 
-        spyOn(scopedManager, 'select').andCallThrough();
+        spyOn(scopedManager, 'focus').andCallThrough();
         scopedManager.close();
 
         $target.trigger('click');
 
-        expect(scopedManager.select).not.toHaveBeenCalled();
+        expect(scopedManager.focus).not.toHaveBeenCalled();
         expect(scopedManager.collection.length).toEqual(0);
     });
 
