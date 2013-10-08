@@ -40,7 +40,7 @@ var FocusManager =  Marionette.Controller.extend({
         this.focus($target);
     },
 
-    foucus: function($el){
+    focus: function($el){
         var hasFocus = this.collection.contains($el);
         var shouldBlur = hasFocus && this.allowsDeselect;
 

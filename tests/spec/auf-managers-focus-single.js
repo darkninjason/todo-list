@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var SingleSelectionManager = require('auf/ui/managers/selection-single');
+var SingleFocusManager = require('auf/ui/managers/focus-single');
 
 describe('Single Selection Manager', function() {
 
@@ -11,7 +11,7 @@ describe('Single Selection Manager', function() {
     // Setup
 
     beforeEach(function() {
-        loadFixtures('manager-selection-single.html');
+        loadFixtures('manager-focus-single.html');
         $items = $('.option');
     });
 
@@ -29,16 +29,16 @@ describe('Single Selection Manager', function() {
         // specifically so don't use the module accessible
         // 'manager' var, as it is closed for us in 'afterEach'
 
-        var manager = new SingleSelectionManager({
+        var manager = new SingleFocusManager({
                 el: $items
             });
 
         var $target = $items.eq(0);
 
-        spyOn(manager.selectionManager, 'select');
+        spyOn(manager.focusManager, 'focus');
 
         $target.trigger('click');
-        expect(manager.selectionManager.select).toHaveBeenCalled();
+        expect(manager.focusManager.focus).toHaveBeenCalled();
     });
 
     it('should remove click events', function() {
@@ -46,55 +46,55 @@ describe('Single Selection Manager', function() {
         // specifically so don't use the module accessible
         // 'manager' var, as it is closed for us in 'afterEach'
 
-        var manager = new SingleSelectionManager({
+        var manager = new SingleFocusManager({
                 el: $items
             });
 
         var $target = $items.eq(0);
 
-        spyOn(manager.selectionManager, 'select');
+        spyOn(manager.focusManager, 'focus');
         manager.close();
 
         $target.trigger('click');
 
-        expect(manager.selectionManager.select).not.toHaveBeenCalled();
+        expect(manager.focusManager.focus).not.toHaveBeenCalled();
     });
 
-    it('should trigger select', function() {
-        manager = new SingleSelectionManager({
+    it('should trigger focus', function() {
+        manager = new SingleFocusManager({
             el: $items
         });
 
-        var select = jasmine.createSpy('Select');
+        var focus = jasmine.createSpy('focus');
         var $target = $items.eq(0);
 
-        manager.listenTo(manager, 'select', select);
+        manager.listenTo(manager, 'focus', focus);
         $target.trigger('click');
         $target.trigger('click');
 
-        expect(select).toHaveBeenCalled();
-        expect(select.calls.length).toEqual(1);
+        expect(focus).toHaveBeenCalled();
+        expect(focus.calls.length).toEqual(1);
     });
 
-    it('should trigger deselect', function() {
-        manager = new SingleSelectionManager({
+    it('should trigger blur', function() {
+        manager = new SingleFocusManager({
             el: $items,
             allowsDeselect: true
         });
 
-        var deselect = jasmine.createSpy('Deselect');
+        var blur = jasmine.createSpy('blur');
         var $target = $items.eq(0);
 
-        manager.listenTo(manager, 'deselect', deselect);
+        manager.listenTo(manager, 'blur', blur);
         $target.trigger('click');
         $target.trigger('click');
 
-        expect(deselect).toHaveBeenCalled();
-        expect(deselect.calls.length).toEqual(1);
+        expect(blur).toHaveBeenCalled();
+        expect(blur.calls.length).toEqual(1);
     });
 
     it('should select one option with click', function() {
-        manager = new SingleSelectionManager({
+        manager = new SingleFocusManager({
             el: $items
         });
 
@@ -104,7 +104,7 @@ describe('Single Selection Manager', function() {
         $target1.trigger('click');
         $target2.trigger('click');
 
-        var collection = manager.selectionManager.collection;
+        var collection = manager.focusManager.collection;
 
         expect(collection.length).toEqual(1);
         expect(collection.contains($target2)).toEqual(true);
@@ -114,17 +114,17 @@ describe('Single Selection Manager', function() {
 
 
     it('should select one by index', function() {
-        manager = new SingleSelectionManager({
+        manager = new SingleFocusManager({
             el: $items
         });
 
         var $target1 = $items.eq(0);
         var $target2 = $items.eq(1);
 
-        manager.selectIndex(0);
-        manager.selectIndex(1);
+        manager.focusIndex(0);
+        manager.focusIndex(1);
 
-        var collection = manager.selectionManager.collection;
+        var collection = manager.focusManager.collection;
 
         expect(collection.length).toEqual(1);
         expect(collection.contains($target2)).toEqual(true);
@@ -132,14 +132,14 @@ describe('Single Selection Manager', function() {
     });
 
 
-    it('should allow deselect', function() {
-        manager = new SingleSelectionManager({
+    it('should allow blur', function() {
+        manager = new SingleFocusManager({
             el: $items,
             allowsDeselect: true
         });
 
         var $target1 = $items.eq(0);
-        var collection = manager.selectionManager.collection;
+        var collection = manager.focusManager.collection;
 
         $target1.trigger('click');
 
@@ -153,12 +153,12 @@ describe('Single Selection Manager', function() {
     });
 
     it('should return one selection', function() {
-        manager = new SingleSelectionManager({
+        manager = new SingleFocusManager({
             el: $items
         });
 
-        manager.selectIndex(1);
-        manager.selectIndex(2);
+        manager.focusIndex(1);
+        manager.focusIndex(2);
         expect(manager.val()[0]).toEqual($items.eq(2)[0]);
     });
 

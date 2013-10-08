@@ -4,16 +4,16 @@ define(function(require, exports, module){
 
 var Marionette       = require('marionette');
 var _                = require('underscore');
-var SelectionManager = require('auf/ui/managers/selection');
+var FocusManager     = require('auf/ui/managers/focus');
 var helpers          = require('auf/utils/helpers');
 
 // Module
 
-var SingleSelectionManager = Marionette.Controller.extend({
+var SingleFocusManager = Marionette.Controller.extend({
 
     // Object vars
 
-    selectionManager: null,
+    focusManager: null,
 
     // Initialization
 
@@ -21,49 +21,49 @@ var SingleSelectionManager = Marionette.Controller.extend({
         _.extend(this, options);
         this.$el = helpers.getElement(this.el);
 
-        if(!this.selectionManager){
-            this.selectionManager = new SelectionManager({
+        if(!this.focusManager){
+            this.focusManager = new FocusManager({
                 el: this.$el,
                 allowsDeselect: options.allowsDeselect});
         }
 
-        this.listenTo(this.selectionManager, 'select', this.selectionManagerDidSelect);
-        this.listenTo(this.selectionManager, 'deselect', this.selectionManagerDidDeselect);
+        this.listenTo(this.focusManager, 'focus', this.focusManagerDidFocus);
+        this.listenTo(this.focusManager, 'blur', this.focusManagerDidBlur);
     },
 
     val: function(){
-        return this.selectionManager.val()[0];
+        return this.focusManager.val()[0];
     },
 
-    selectIndex: function(value){
-        this.selectionManager.selectIndex(value);
+    focusIndex: function(value){
+        this.focusManager.focusIndex(value);
     },
 
-    selectionManagerDidSelect: function($el){
-        this.trigger('select', $el);
+    focusManagerDidFocus: function($el){
+        this.trigger('focus', $el);
 
         // Selection manager pushes items into the collection.
         // the item at position 0 will be the last element selected.
-        var selectionManager = this.selectionManager;
+        var focusManager = this.focusManager;
 
-        if(selectionManager.collection.length > 1){
-            selectionManager.deselect(selectionManager.collection.at(0));
+        if(focusManager.collection.length > 1){
+            focusManager.blur(focusManager.collection.at(0));
         }
     },
 
-    selectionManagerDidDeselect: function($el){
-        this.trigger('deselect', $el);
+    focusManagerDidBlur: function($el){
+        this.trigger('blur', $el);
     },
 
     // Marionette overrides
 
     onClose: function(){
-        this.selectionManager.close();
+        this.focusManager.close();
     }
 });
 
 // Exports
 
-module.exports = SingleSelectionManager;
+module.exports = SingleFocusManager;
 
 }); // eof define
