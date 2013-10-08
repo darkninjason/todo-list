@@ -12,8 +12,6 @@ var helpers        = require('auf/utils/helpers');
 var SelectionManager =  Marionette.Controller.extend({
 
     // Object vars
-
-    delegate: null,
     allowsDeselect: false,
 
     // Initialization
@@ -26,65 +24,42 @@ var SelectionManager =  Marionette.Controller.extend({
         this.$el.on('click', this.wasClicked);
 
         this.collection = new Collection();
-
-        if (!this.delegate){
-            this.delegate = {selectionManagerShouldSelect: function($el){ return true; }};
-        }
     },
 
     wasClicked: function(e){
-        this._selectElement($(e.target));
+        this.select($(e.target));
     },
 
     val: function(){
-        if(this.collection.length){
-            var getValueForElement = this.getValueForElement;
-
-            return _.map(this.collection.toArray(), function(x){
-                return getValueForElement(x);
-            });
-        }
-
-        return [];
-    },
-
-    getValueForElement: function($el){
-        return $el.data('select');
-    },
-
-    getElementWithValue: function(value){
-        return this.$el.siblings('[data-select="' + value + '"]');
-    },
-
-    selectValue: function(value){
-        var $el = this.getElementWithValue(value);
-        this._selectElement($el);
+        return this.collection.toArray();
     },
 
     selectIndex: function(index){
-        var $target = $(this.$el[index]);
-        this._selectElement($target);
+        var $target = this.$el.eq(index);
+        this.select($target);
     },
 
-    _selectElement: function($el){
-        if(this.delegate.selectionManagerShouldSelect($el)){
+    select: function($el){
+        var isSelected = this.collection.contains($el);
+        var shouldDeselect = isSelected && this.allowsDeselect;
 
-            this.trigger('before:select', $el);
+        if(shouldDeselect){
+            this.deselect($el);
+            return;
+        }
 
-            var shouldDeselect = this.collection.contains($el) &&
-                                 this.allowsDeselect;
+        if(!isSelected){
+            this.collection.add($el);
+            this.trigger('select', $el);
+        }
+    },
 
-            if(shouldDeselect){
+    deselect: function($el){
+        var isSelected = this.collection.contains($el);
 
-                this.collection.remove($el);
-                this.trigger('deselect', $el);
-
-            } else {
-                this.collection.add($el);
-                this.trigger('select', $el);
-            }
-
-            this.trigger('after:select', $el);
+        if(isSelected){
+            this.collection.remove($el);
+            this.trigger('deselect', $el);
         }
     },
 

@@ -9,7 +9,7 @@ var helpers          = require('auf/utils/helpers');
 
 // Module
 
-var SingleSelectionManager = Marionette.ItemView.extend({
+var SingleSelectionManager = Marionette.Controller.extend({
 
     // Object vars
 
@@ -22,55 +22,37 @@ var SingleSelectionManager = Marionette.ItemView.extend({
         this.$el = helpers.getElement(this.el);
 
         if(!this.selectionManager){
-
             this.selectionManager = new SelectionManager({
                 el: this.$el,
-                allowsDeselect: true,
-                delegate: options.delegate || this});
+                allowsDeselect: options.allowsDeselect});
         }
 
-        this.listenTo(this.selectionManager, 'before:select', this.selectionManagerBeforeSelect);
-        this.listenTo(this.selectionManager, 'after:select', this.selectionManagerAfterSelect);
+        this.listenTo(this.selectionManager, 'select', this.selectionManagerDidSelect);
+        this.listenTo(this.selectionManager, 'deselect', this.selectionManagerDidDeselect);
     },
 
     val: function(){
-        return this.selectionManager.val();
+        return this.selectionManager.val()[0];
     },
 
     selectIndex: function(value){
         this.selectionManager.selectIndex(value);
     },
 
-    selectValue: function(value){
-        this.selectionManager.selectValue(value);
-    },
+    selectionManagerDidSelect: function($el){
+        this.trigger('select', $el);
 
-    selectionManagerBeforeSelect: function($el){
-        var $selectedElement = this.selectionManager.$selectedElement;
-
-        if($selectedElement &&  $el[0] != $selectedElement[0]){
-            $selectedElement.removeClass(this.selectionManager.selectedClass);
-        }
-
-        this.trigger('before:select', $el);
-    },
-
-    selectionManagerAfterSelect: function($el){
-        this.trigger('after:select', $el);
-    },
-
-    selectionManagerShouldSelect: function($el){
-
+        // Selection manager pushes items into the collection.
+        // the item at position 0 will be the last element selected.
         var selectionManager = this.selectionManager;
-        var $selectedElement = selectionManager.$selectedElement;
 
-        if($selectedElement && $el[0] == $selectedElement[0]){
-            if(selectionManager.allowsDeselect === false){
-                return false;
-            }
+        if(selectionManager.collection.length > 1){
+            selectionManager.deselect(selectionManager.collection.at(0));
         }
+    },
 
-        return true;
+    selectionManagerDidDeselect: function($el){
+        this.trigger('deselect', $el);
     },
 
     // Marionette overrides

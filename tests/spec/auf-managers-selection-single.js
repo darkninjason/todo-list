@@ -24,40 +24,73 @@ describe('Single Selection Manager', function() {
 
     // Test Suite
 
-    it('should trigger before:select', function() {
-        manager = new SingleSelectionManager({
-            el: $items
-        });
+    it('should handle click events', function() {
+        // we want to test for onClose on this manager
+        // specifically so don't use the module accessible
+        // 'manager' var, as it is closed for us in 'afterEach'
 
-        var beforeSelect = jasmine.createSpy('beforeSelect');
-        var $target      = $items.eq(0);
+        var manager = new SingleSelectionManager({
+                el: $items
+            });
 
-        $target.trigger('click');
-
-        expect(beforeSelect).not.toHaveBeenCalled();
-
-        manager.listenTo(manager, 'before:select', beforeSelect);
-        $target.trigger('click');
-
-        expect(beforeSelect).toHaveBeenCalled();
-    });
-
-    it('should trigger after:select', function() {
-        manager = new SingleSelectionManager({
-            el: $items
-        });
-
-        var afterSelect = jasmine.createSpy('afterSelect');
         var $target = $items.eq(0);
 
+        spyOn(manager.selectionManager, 'select');
+
+        $target.trigger('click');
+        expect(manager.selectionManager.select).toHaveBeenCalled();
+    });
+
+    it('should remove click events', function() {
+        // we want to test for onClose on this manager
+        // specifically so don't use the module accessible
+        // 'manager' var, as it is closed for us in 'afterEach'
+
+        var manager = new SingleSelectionManager({
+                el: $items
+            });
+
+        var $target = $items.eq(0);
+
+        spyOn(manager.selectionManager, 'select');
+        manager.close();
+
         $target.trigger('click');
 
-        expect(afterSelect).not.toHaveBeenCalled();
+        expect(manager.selectionManager.select).not.toHaveBeenCalled();
+    });
 
-        manager.listenTo(manager, 'after:select', afterSelect);
+    it('should trigger select', function() {
+        manager = new SingleSelectionManager({
+            el: $items
+        });
+
+        var select = jasmine.createSpy('Select');
+        var $target = $items.eq(0);
+
+        manager.listenTo(manager, 'select', select);
+        $target.trigger('click');
         $target.trigger('click');
 
-        expect(afterSelect).toHaveBeenCalled();
+        expect(select).toHaveBeenCalled();
+        expect(select.calls.length).toEqual(1);
+    });
+
+    it('should trigger deselect', function() {
+        manager = new SingleSelectionManager({
+            el: $items,
+            allowsDeselect: true
+        });
+
+        var deselect = jasmine.createSpy('Deselect');
+        var $target = $items.eq(0);
+
+        manager.listenTo(manager, 'deselect', deselect);
+        $target.trigger('click');
+        $target.trigger('click');
+
+        expect(deselect).toHaveBeenCalled();
+        expect(deselect.calls.length).toEqual(1);
     });
 
     it('should select one option with click', function() {
@@ -65,32 +98,18 @@ describe('Single Selection Manager', function() {
             el: $items
         });
 
-        var $target1      = $items.eq(0);
-        var $target2      = $items.eq(1);
-        var selectedClass = manager.selectionManager.selectedClass;
+        var $target1 = $items.eq(0);
+        var $target2 = $items.eq(1);
 
         $target1.trigger('click');
         $target2.trigger('click');
 
-        expect($target1).not.toHaveClass(selectedClass);
-        expect($target2).toHaveClass(selectedClass);
-    });
+        var collection = manager.selectionManager.collection;
 
-    it('should select one option on click with alt selectedClass', function() {
-        manager = new SingleSelectionManager({
-            el: $items,
-            selectedClass: 'foo'
-        });
+        expect(collection.length).toEqual(1);
+        expect(collection.contains($target2)).toEqual(true);
+        expect(collection.contains($target1)).toEqual(false);
 
-        var $target1      = $items.eq(0);
-        var $target2      = $items.eq(1);
-        var selectedClass = 'foo';
-
-        $target1.trigger('click');
-        $target2.trigger('click');
-
-        expect($target1).not.toHaveClass(selectedClass);
-        expect($target2).toHaveClass(selectedClass);
     });
 
 
@@ -99,32 +118,19 @@ describe('Single Selection Manager', function() {
             el: $items
         });
 
-        var $target1      = $items.eq(0);
-        var $target2      = $items.eq(1);
-        var selectedClass = manager.selectionManager.selectedClass;
+        var $target1 = $items.eq(0);
+        var $target2 = $items.eq(1);
 
         manager.selectIndex(0);
         manager.selectIndex(1);
 
-        expect($target1).not.toHaveClass(selectedClass);
-        expect($target2).toHaveClass(selectedClass);
+        var collection = manager.selectionManager.collection;
+
+        expect(collection.length).toEqual(1);
+        expect(collection.contains($target2)).toEqual(true);
+        expect(collection.contains($target1)).toEqual(false);
     });
 
-    it('should select one by value', function() {
-        manager = new SingleSelectionManager({
-            el: $items
-        });
-
-        var $target1      = $items.eq(0);
-        var $target2      = $items.eq(1);
-        var selectedClass = manager.selectionManager.selectedClass;
-
-        manager.selectValue('one');
-        manager.selectValue('two');
-
-        expect($target1).not.toHaveClass(selectedClass);
-        expect($target2).toHaveClass(selectedClass);
-    });
 
     it('should allow deselect', function() {
         manager = new SingleSelectionManager({
@@ -132,41 +138,28 @@ describe('Single Selection Manager', function() {
             allowsDeselect: true
         });
 
-        var $target1      = $items.eq(0);
-        var selectedClass = manager.selectionManager.selectedClass;
+        var $target1 = $items.eq(0);
+        var collection = manager.selectionManager.collection;
 
         $target1.trigger('click');
-        expect($target1).toHaveClass(selectedClass);
+
+        expect(collection.length).toEqual(1);
+        expect(collection.contains($target1)).toEqual(true);
+
 
         $target1.trigger('click');
-        expect($target1).not.toHaveClass(selectedClass);
+        expect(collection.length).toEqual(0);
+        expect(collection.contains($target1)).toEqual(false);
     });
 
-    it('should return selected value', function() {
+    it('should return one selection', function() {
         manager = new SingleSelectionManager({
             el: $items
         });
 
         manager.selectIndex(1);
-        expect(manager.val()).toEqual('two');
-    });
-
-    it('should remove events', function() {
-        // we want to test for onClose on this manager
-        // specifically so don't use the module accessible
-        // 'manager' var, as it is closed for us in 'afterEach'
-
-        var scopedManager = new SingleSelectionManager({
-                el: $items
-            });
-
-        var $target = $items.eq(0);
-
-        scopedManager.close();
-
-        $target.trigger('click');
-
-        expect($target).not.toHaveClass(scopedManager.selectedClass);
+        manager.selectIndex(2);
+        expect(manager.val()[0]).toEqual($items.eq(2)[0]);
     });
 
 }); // eof describe

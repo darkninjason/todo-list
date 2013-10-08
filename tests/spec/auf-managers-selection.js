@@ -24,58 +24,20 @@ describe('Selection Manager', function() {
 
     // Test Suite
 
-    it('should trigger before:select', function() {
-        manager = new SelectionManager({
-            el: $items
-        });
-
-        var beforeSelect = jasmine.createSpy('beforeSelect');
-        var $target      = $items.eq(0);
-
-        $target.trigger('click');
-
-        expect(beforeSelect).not.toHaveBeenCalled();
-
-        manager.listenTo(manager, 'before:select', beforeSelect);
-        $target.trigger('click');
-
-        expect(beforeSelect).toHaveBeenCalled();
-    });
-
-    it('should trigger after:select', function() {
-        manager = new SelectionManager({
-            el: $items
-        });
-
-        var afterSelect = jasmine.createSpy('afterSelect');
-        var $target     = $items.eq(0);
-
-        $target.trigger('click');
-
-        expect(afterSelect).not.toHaveBeenCalled();
-
-        manager.listenTo(manager, 'after:select', afterSelect);
-        $target.trigger('click');
-
-        expect(afterSelect).toHaveBeenCalled();
-    });
-
     it('should trigger select', function() {
         manager = new SelectionManager({
             el: $items
         });
 
         var select = jasmine.createSpy('Select');
-        var $target     = $items.eq(0);
-
-        $target.trigger('click');
-
-        expect(select).not.toHaveBeenCalled();
+        var $target = $items.eq(0);
 
         manager.listenTo(manager, 'select', select);
         $target.trigger('click');
+        $target.trigger('click');
 
         expect(select).toHaveBeenCalled();
+        expect(select.calls.length).toEqual(1);
     });
 
     it('should trigger deselect', function() {
@@ -85,17 +47,14 @@ describe('Selection Manager', function() {
         });
 
         var deselect = jasmine.createSpy('Deselect');
-        var $target     = $items.eq(0);
-
-        $target.trigger('click');
-
-        expect(deselect).not.toHaveBeenCalled();
+        var $target = $items.eq(0);
 
         manager.listenTo(manager, 'deselect', deselect);
         $target.trigger('click');
         $target.trigger('click');
 
         expect(deselect).toHaveBeenCalled();
+        expect(deselect.calls.length).toEqual(1);
     });
 
     it('should select 1st option with click', function() {
@@ -103,28 +62,17 @@ describe('Selection Manager', function() {
             el: $items
         });
 
-        spyOn(manager, '_selectElement').andCallThrough();
+        spyOn(manager, 'select').andCallThrough();
 
         var $target = $items.eq(0);
 
         $target.trigger('click');
 
         expect(manager.collection.contains($target)).toEqual(true);
-        expect(manager._selectElement).toHaveBeenCalled();
+        expect(manager.select).toHaveBeenCalled();
     });
 
-    it('should select option with value', function() {
-        manager = new SelectionManager({
-            el: $items
-        });
-
-        var $target = $items.eq(1);
-
-        manager.selectValue('two');
-        expect(manager.collection.contains($target)).toEqual(true);
-    });
-
-    it('should return selected value', function() {
+    it('should return selected elements', function() {
         manager = new SelectionManager({
             el: $items
         });
@@ -133,10 +81,11 @@ describe('Selection Manager', function() {
         var val = manager.val();
 
         expect(_.isArray(val)).toEqual(true);
-        expect(val[0]).toEqual('two');
+        expect(val.length).toEqual(1);
+        expect(val[0][0]).toEqual($items.eq(1)[0]);
     });
 
-    it('should return null for selected value', function() {
+    it('should return null for selected elements', function() {
         manager = new SelectionManager({
             el: $items
         });
@@ -186,22 +135,6 @@ describe('Selection Manager', function() {
         expect(manager.collection.contains($items.eq(2))).toEqual(true);
     });
 
-
-    it('should set call selection delegate', function() {
-        var delegate = jasmine.createSpyObj('delegate', ['selectionManagerShouldSelect']);
-        manager = new SelectionManager({
-            el: $items,
-            delegate: delegate
-        });
-
-        var $target = $items.eq(0);
-
-        $target.trigger('click');
-
-        expect(delegate.selectionManagerShouldSelect).toHaveBeenCalled();
-        expect(delegate.selectionManagerShouldSelect).toHaveBeenCalledWith($target);
-    });
-
     it('should select index 1', function() {
 
         manager = new SelectionManager({
@@ -241,12 +174,12 @@ describe('Selection Manager', function() {
 
         var $target = $items.eq(0);
 
-        spyOn(scopedManager, '_selectElement').andCallThrough();
+        spyOn(scopedManager, 'select').andCallThrough();
         scopedManager.close();
 
         $target.trigger('click');
 
-        expect(scopedManager._selectElement).not.toHaveBeenCalled();
+        expect(scopedManager.select).not.toHaveBeenCalled();
         expect(scopedManager.collection.length).toEqual(0);
     });
 
