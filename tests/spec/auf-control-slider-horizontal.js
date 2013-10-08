@@ -65,7 +65,7 @@ describe('Control: Slider Horizontal', function() {
     it('moved slider handle with mouse drag', function() {
         var trackWidth  = getNormalizedTrackWidth($sliderHandle);
         var moveToX     = trackWidth / 2;
-        var expectedCSS = {'left': moveToX + 'px'}
+        var expectedCSS = {'left': moveToX + 'px'};
 
         EventHelpers.simulateMouseDragged($sliderHandle, 0, 15, moveToX, 15);
 
@@ -76,7 +76,7 @@ describe('Control: Slider Horizontal', function() {
     it('moved slider handle with touch drag', function() {
         var trackWidth  = getNormalizedTrackWidth($sliderHandle);
         var moveToX     = trackWidth / 2;
-        var expectedCSS = {'left': moveToX + 'px'}
+        var expectedCSS = {'left': moveToX + 'px'};
 
         EventHelpers.simulateTouchDragged($sliderHandle, 0, 15, moveToX, 15);
 
@@ -134,6 +134,20 @@ describe('Control: Slider Horizontal', function() {
 
         expect(touchDragStart).toHaveBeenCalled();
         expect(touchDragStop).toHaveBeenCalled();
+    });
+
+    it('updates steps for position', function(){
+        var expectedStep = 15;
+
+        control.setPosition($sliderHandle, 0.5);
+        expect(control.getSteps()[0]).toEqual(expectedStep);
+    });
+
+    it('updates position for steps', function(){
+        var expectedPosition = 0.5;
+        control.setStep($sliderHandle, 15); // 30, above, /2 = 15
+
+        expect(control.getPosition()[0]).toEqual(expectedPosition);
     });
 
 }); // eof describe
