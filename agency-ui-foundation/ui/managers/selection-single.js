@@ -5,6 +5,7 @@ define(function(require, exports, module){
 var Marionette       = require('marionette');
 var _                = require('underscore');
 var SelectionManager = require('auf/ui/managers/selection');
+var helpers          = require('auf/utils/helpers');
 
 // Module
 
@@ -18,13 +19,13 @@ var SingleSelectionManager = Marionette.ItemView.extend({
 
     initialize: function(options){
         _.extend(this, options);
+        this.$el = helpers.getElement(this.el);
 
         if(!this.selectionManager){
 
             this.selectionManager = new SelectionManager({
                 el: this.$el,
-                allowsDeselect: options.allowsDeselect,
-                selectedClass: options.selectedClass,
+                allowsDeselect: true,
                 delegate: options.delegate || this});
         }
 
