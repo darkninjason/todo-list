@@ -2,18 +2,18 @@ define(function(require, exports, module){
 
 // Imports
 
-var Marionette = require('marionette');
-var _          = require('underscore');
+var Marionette     = require('marionette');
+var _              = require('underscore');
+var Collection     = require('auf/jquery/collection');
+var helpers        = require('auf/utils/helpers');
 
 // Module
 
-var SelectionManager =  Marionette.ItemView.extend({
+var SelectionManager =  Marionette.Controller.extend({
 
     // Object vars
 
-    selectedClass: null,
     delegate: null,
-    $selectedElement: null,
     allowsDeselect: false,
 
     // Initialization
@@ -21,9 +21,11 @@ var SelectionManager =  Marionette.ItemView.extend({
     initialize: function(options){
         _.extend(this, options);
         _.bindAll(this, 'wasClicked');
+
+        this.$el = helpers.getElement(this.el);
         this.$el.on('click', this.wasClicked);
 
-        this.selectedClass = options.selectedClass || 'selected';
+        this.collection = new Collection();
 
         if (!this.delegate){
             this.delegate = {selectionManagerShouldSelect: function($el){ return true; }};
@@ -31,15 +33,19 @@ var SelectionManager =  Marionette.ItemView.extend({
     },
 
     wasClicked: function(e){
-        this.selectElement($(e.target));
+        this._selectElement($(e.target));
     },
 
     val: function(){
-        if(this.$selectedElement){
-            return this.getValueForElement(this.$selectedElement);
+        if(this.collection.length){
+            var getValueForElement = this.getValueForElement;
+
+            return _.map(this.collection.toArray(), function(x){
+                return getValueForElement(x);
+            });
         }
 
-        return null;
+        return [];
     },
 
     getValueForElement: function($el){
@@ -52,28 +58,30 @@ var SelectionManager =  Marionette.ItemView.extend({
 
     selectValue: function(value){
         var $el = this.getElementWithValue(value);
-        this.selectElement($el);
+        this._selectElement($el);
     },
 
     selectIndex: function(index){
         var $target = $(this.$el[index]);
-        this.selectElement($target);
+        this._selectElement($target);
     },
 
-    selectElement: function($el){
+    _selectElement: function($el){
         if(this.delegate.selectionManagerShouldSelect($el)){
 
             this.trigger('before:select', $el);
-            if(this.$selectedElement &&
-               $el[0] == this.$selectedElement[0] &&
-               this.allowsDeselect){
 
-                $el.removeClass(this.selectedClass);
-                this.$selectedElement = null;
+            var shouldDeselect = this.collection.contains($el) &&
+                                 this.allowsDeselect;
+
+            if(shouldDeselect){
+
+                this.collection.remove($el);
+                this.trigger('deselect', $el);
 
             } else {
-                $el.addClass(this.selectedClass);
-                this.$selectedElement = $el;
+                this.collection.add($el);
+                this.trigger('select', $el);
             }
 
             this.trigger('after:select', $el);
@@ -83,6 +91,7 @@ var SelectionManager =  Marionette.ItemView.extend({
     // Marionette overrides
 
     onClose: function(){
+        this.collection.reset();
         this.$el.off('click', this.wasClicked);
     }
 
