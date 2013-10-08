@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 
 var IndexManager = require('auf/ui/managers/index');
 
-describe('Manager: Index', function() {
+describe('Index Manager', function() {
 
     var manager = null;
 
@@ -22,6 +22,7 @@ describe('Manager: Index', function() {
     });
 
     it('should set current index', function() {
+        manager.setLength(3);
         manager.setIndex(1);
         expect(manager.getIndex()).toEqual(1);
     });
