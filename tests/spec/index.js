@@ -11,8 +11,8 @@ define(function() {
       'spec/auf-gestures-swipe',
       'spec/auf-managers-index',
       'spec/auf-managers-range',
-      'spec/auf-managers-selection',
-      'spec/auf-managers-selection-single',
+      'spec/auf-managers-focus',
+      'spec/auf-managers-focus-single',
       'spec/auf-control-slider-horizontal',
       'spec/auf-control-slider-horizontal-range',
     ]

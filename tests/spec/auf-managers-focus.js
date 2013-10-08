@@ -2,16 +2,16 @@ define(function(require, exports, module) {
 
 // Imports
 
-var SelectionManager = require('auf/ui/managers/selection');
+var FocusManager = require('auf/ui/managers/focus');
 
-describe('Selection Manager', function() {
+describe('FOcus Manager', function() {
 
     var $items, manager = null;
 
     // Setup
 
     beforeEach(function() {
-        loadFixtures('manager-selection.html');
+        loadFixtures('manager-focus.html');
         $items = $('.option');
     });
 
@@ -24,41 +24,41 @@ describe('Selection Manager', function() {
 
     // Test Suite
 
-    it('should trigger select', function() {
-        manager = new SelectionManager({
+    it('should trigger focus', function() {
+        manager = new FocusManager({
             el: $items
         });
 
-        var select = jasmine.createSpy('Select');
+        var focus = jasmine.createSpy('focus');
         var $target = $items.eq(0);
 
-        manager.listenTo(manager, 'select', select);
+        manager.listenTo(manager, 'focus', focus);
         $target.trigger('click');
         $target.trigger('click');
 
-        expect(select).toHaveBeenCalled();
-        expect(select.calls.length).toEqual(1);
+        expect(focus).toHaveBeenCalled();
+        expect(focus.calls.length).toEqual(1);
     });
 
-    it('should trigger deselect', function() {
-        manager = new SelectionManager({
+    it('should trigger blur', function() {
+        manager = new FocusManager({
             el: $items,
             allowsDeselect: true
         });
 
-        var deselect = jasmine.createSpy('Deselect');
+        var blur = jasmine.createSpy('blur');
         var $target = $items.eq(0);
 
-        manager.listenTo(manager, 'deselect', deselect);
+        manager.listenTo(manager, 'blur', blur);
         $target.trigger('click');
         $target.trigger('click');
 
-        expect(deselect).toHaveBeenCalled();
-        expect(deselect.calls.length).toEqual(1);
+        expect(blur).toHaveBeenCalled();
+        expect(blur.calls.length).toEqual(1);
     });
 
     it('should select 1st option with click', function() {
-        manager = new SelectionManager({
+        manager = new FocusManager({
             el: $items
         });
 
@@ -73,7 +73,7 @@ describe('Selection Manager', function() {
     });
 
     it('should return selected elements', function() {
-        manager = new SelectionManager({
+        manager = new FocusManager({
             el: $items
         });
 
@@ -86,7 +86,7 @@ describe('Selection Manager', function() {
     });
 
     it('should return null for selected elements', function() {
-        manager = new SelectionManager({
+        manager = new FocusManager({
             el: $items
         });
 
@@ -94,7 +94,7 @@ describe('Selection Manager', function() {
     });
 
     it('should deselect', function() {
-        manager = new SelectionManager({
+        manager = new FocusManager({
             el: $items,
             allowsDeselect: true
         });
@@ -110,7 +110,7 @@ describe('Selection Manager', function() {
     });
 
     it('should not deselect', function() {
-        manager = new SelectionManager({
+        manager = new FocusManager({
             el: $items
         });
 
@@ -124,7 +124,7 @@ describe('Selection Manager', function() {
     });
 
     it('should select all options with click', function() {
-        manager = new SelectionManager({
+        manager = new FocusManager({
             el: $items
         });
 
@@ -137,7 +137,7 @@ describe('Selection Manager', function() {
 
     it('should select index 1', function() {
 
-        manager = new SelectionManager({
+        manager = new FocusManager({
             el: $items
         });
 
@@ -150,7 +150,7 @@ describe('Selection Manager', function() {
 
     it('should select all indexes', function() {
 
-        manager = new SelectionManager({
+        manager = new FocusManager({
             el: $items
         });
 
@@ -168,7 +168,7 @@ describe('Selection Manager', function() {
         // specifically so don't use the module accessible
         // 'manager' var, as it is closed for us in 'afterEach'
 
-        var scopedManager = new SelectionManager({
+        var scopedManager = new FocusManager({
                 el: $items
             });
 

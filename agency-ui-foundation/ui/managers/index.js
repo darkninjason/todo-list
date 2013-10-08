@@ -10,8 +10,9 @@ var RangeManager = require('auf/ui/managers/range');
 
 var IndexManager = Marionette.Controller.extend({
 
-    initialize: function(){
+    initialize: function(options){
         this.range = new RangeManager();
+        this.setLength(options.length || 0);
     },
 
     setLength: function(value){
