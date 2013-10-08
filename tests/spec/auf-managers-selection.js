@@ -60,6 +60,44 @@ describe('Selection Manager', function() {
         expect(afterSelect).toHaveBeenCalled();
     });
 
+    it('should trigger select', function() {
+        manager = new SelectionManager({
+            el: $items
+        });
+
+        var select = jasmine.createSpy('Select');
+        var $target     = $items.eq(0);
+
+        $target.trigger('click');
+
+        expect(select).not.toHaveBeenCalled();
+
+        manager.listenTo(manager, 'select', select);
+        $target.trigger('click');
+
+        expect(select).toHaveBeenCalled();
+    });
+
+    it('should trigger deselect', function() {
+        manager = new SelectionManager({
+            el: $items,
+            allowsDeselect: true
+        });
+
+        var deselect = jasmine.createSpy('Deselect');
+        var $target     = $items.eq(0);
+
+        $target.trigger('click');
+
+        expect(deselect).not.toHaveBeenCalled();
+
+        manager.listenTo(manager, 'deselect', deselect);
+        $target.trigger('click');
+        $target.trigger('click');
+
+        expect(deselect).toHaveBeenCalled();
+    });
+
     it('should select 1st option with click', function() {
         manager = new SelectionManager({
             el: $items
