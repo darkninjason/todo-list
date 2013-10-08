@@ -78,32 +78,43 @@ describe('Manager: Range', function() {
             max: 110
         });
 
-        expect(manager.positionForValue(25)).toEqual(0.25);
-        expect(manager.positionForValue(33)).toEqual(0.33);
-        expect(manager.positionForValue(50)).toEqual(0.5);
-        expect(manager.positionForValue(75)).toEqual(0.75);
-        expect(manager.positionForValue(100)).toEqual(1);
+        manager.setValue(25);
+        expect(manager.getPosition()).toEqual(0.25);
 
+        manager.setValue(33);
+        expect(manager.getPosition()).toEqual(0.33);
+
+        manager.setValue(50);
+        expect(manager.getPosition()).toEqual(0.5);
+
+        manager.setValue(75);
+        expect(manager.getPosition()).toEqual(0.75);
+
+        manager.setValue(100);
+        expect(manager.getPosition()).toEqual(1);
     });
 
     it('calculates position for a given value betwen 0 and 300', function(){
-
-        function round(val){
-            // 3 decimal places
-            return Math.round(val * 1000) / 1000;
-        }
 
         manager = new RangeManager({
             min: 10,
             max: 310
         });
 
-        expect(manager.positionForValue(0)).toEqual(0);
-        expect(round(manager.positionForValue(25))).toEqual(0.083);
-        expect(round(manager.positionForValue(100))).toEqual(0.333);
-        expect(round(manager.positionForValue(200))).toEqual(0.667);
-        expect(manager.positionForValue(300)).toEqual(1);
+        manager.setValue(0);
+        expect(manager.getPosition()).toEqual(0);
 
+        manager.setValue(75);
+        expect(manager.getPosition()).toEqual(0.25);
+
+        manager.setValue(150);
+        expect(manager.getPosition()).toEqual(0.5);
+
+        manager.setValue(225);
+        expect(manager.getPosition()).toEqual(0.75);
+
+        manager.setValue(300);
+        expect(manager.getPosition()).toEqual(1);
     });
 
     it('calculates value for a given position betwen 0 and 1', function(){
@@ -113,12 +124,17 @@ describe('Manager: Range', function() {
             max: 110
         });
 
-        expect(manager.valueForPosition(0)).toEqual(0);
-        expect(manager.valueForPosition(0.25)).toEqual(25);
-        expect(manager.valueForPosition(0.5)).toEqual(50);
-        expect(manager.valueForPosition(0.75)).toEqual(75);
-        expect(manager.valueForPosition(1)).toEqual(100);
+        manager.setPosition(0.25);
+        expect(manager.getValue()).toEqual(25);
 
+        manager.setPosition(0.5);
+        expect(manager.getValue()).toEqual(50);
+
+        manager.setPosition(0.75);
+        expect(manager.getValue()).toEqual(75);
+
+        manager.setPosition(1);
+        expect(manager.getValue()).toEqual(100);
     });
 
     it('calculates position when setting value', function(){
@@ -156,26 +172,48 @@ describe('Manager: Range', function() {
 
     });
 
-    it('calculates position exceeding max', function(){
+    it('calculates position for value exceeding max', function(){
 
         manager = new RangeManager({
             min: 10,
             max: 110
         });
 
-        expect(manager.positionForValue(150)).toEqual(1);
-
+        manager.setValue(200);
+        expect(manager.getPosition()).toEqual(1);
     });
 
-    it('calculates position exceeding min', function(){
+    it('calculates position for value exceeding min', function(){
 
         manager = new RangeManager({
             min: 10,
             max: 110
         });
 
-        expect(manager.positionForValue(-200)).toEqual(0);
+        manager.setValue(-200);
+        expect(manager.getPosition()).toEqual(0);
+    });
 
+    it('calculates value for position exceeding max', function(){
+
+        manager = new RangeManager({
+            min: 10,
+            max: 110
+        });
+
+        manager.setPosition(2);
+        expect(manager.getValue()).toEqual(100);
+    });
+
+    it('calculates value for position exceeding min', function(){
+
+        manager = new RangeManager({
+            min: 10,
+            max: 110
+        });
+
+        manager.setPosition(-2);
+        expect(manager.getValue()).toEqual(0);
     });
 
     it('throws error if min greater than max', function(){
