@@ -135,11 +135,11 @@ var MouseResponder = Marionette.Controller.extend({
     },
 
     mouseEntered: function(responder, e){
-
+        // noop
     },
 
     mouseExited: function(responder, e){
-
+        // noop
     },
 
     deltaX: function(){
