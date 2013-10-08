@@ -20,9 +20,10 @@ var SelectionManager =  Marionette.Controller.extend({
         _.extend(this, options);
         _.bindAll(this, 'wasClicked');
 
+        if(!this.el) return;
         this.$el = helpers.getElement(this.el);
-        this.$el.on('click', this.wasClicked);
 
+        this.$el.on('click', this.wasClicked);
         this.collection = new Collection();
     },
 

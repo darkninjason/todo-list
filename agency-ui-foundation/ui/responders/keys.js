@@ -2,9 +2,10 @@ define(function(require, exports, module){
 
 // Imports
 
-var Marionette = require('marionette');
-var _          = require('underscore');
+var Marionette      = require('marionette');
+var _               = require('underscore');
 var KeyInputManager = require('auf/ui/managers/key-input');
+var helpers         = require('auf/utils/helpers');
 
 // Module
 
@@ -17,13 +18,7 @@ var KeyResponder = Marionette.Controller.extend({
         _.bindAll(this, '_keyDown', '_keyUp');
 
         if(!this.el) return;
-        var $el;
-
-        if(_.isString(this.el)){
-            $el = $(this.el);
-        } else $el = this.el;
-
-        this.$el = $el;
+        this.$el = helpers.getElement(this.el);
 
         if (!this.inputManager){
             this.inputManager = new KeyInputManager();

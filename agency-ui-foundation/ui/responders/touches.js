@@ -4,6 +4,7 @@ define(function(require, exports, module){
 
 var Marionette = require('marionette');
 var _          = require('underscore');
+var helpers    = require('auf/utils/helpers');
 
 // Module
 
@@ -21,13 +22,7 @@ var TouchResponder = Marionette.Controller.extend({
         _.bindAll(this, '_touchStart', '_touchMove', '_touchEnd', '_touchCancel');
 
         if(!this.el) return;
-        var $el;
-
-        if(_.isString(this.el)){
-            $el = $(this.el);
-        } else $el = this.el;
-
-        this.$el = $el;
+        this.$el = helpers.getElement(this.el);
 
         this.$el.on('touchstart', {ctx: this}, this._touchStart);
         this.$el.on('touchmove', {ctx: this}, this._touchMove);

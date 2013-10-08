@@ -4,6 +4,7 @@ define(function(require, exports, module){
 
 var Marionette = require('marionette');
 var _          = require('underscore');
+var helpers    = require('auf/utils/helpers');
 
 // Module
 
@@ -22,13 +23,7 @@ var MouseResponder = Marionette.Controller.extend({
         _.bindAll(this, '_mouseDown', '_mouseUp', '_mouseDragged', '_mouseMoved');
 
         if(!this.el) return;
-        var $el;
-
-        if(_.isString(this.el)){
-            $el = $(this.el);
-        } else $el = this.el;
-
-        this.$el = $el;
+        this.$el = helpers.getElement(this.el);
 
         this.$el.on('mousedown', {ctx: this}, this._mouseDown);
         this.$el.on('mouseup', {ctx: this}, this._mouseUp);
