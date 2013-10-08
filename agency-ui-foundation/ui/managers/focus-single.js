@@ -39,6 +39,14 @@ var SingleFocusManager = Marionette.Controller.extend({
         this.focusManager.focusIndex(value);
     },
 
+    focus: function($el){
+        this.focusManager.focus($el);
+    },
+
+    blur: function($el){
+        this.focusManager.blur($el);
+    },
+
     focusManagerDidFocus: function($el){
         this.trigger('focus', $el);
 
