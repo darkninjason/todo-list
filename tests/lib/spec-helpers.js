@@ -25,10 +25,19 @@ var SpecHelpers = {
                 pageY: y,
                 target: $el[0],
                 currentTarget: $el[0]
-            }
+            };
 
             return this.simulateEvent($el, type, payload);
         },
+
+        simulateMouseEnter: function($el, x, y){
+            return this.simulateMouseEvent($el, 'mouseenter', x, y);
+        },
+
+        simulateMouseExit: function($el, x, y){
+            return this.simulateMouseEvent($el, 'mouseleave', x, y);
+        },
+
         simulateMouseDown: function($el, x, y){
             return this.simulateMouseEvent($el, 'mousedown', x, y);
         },

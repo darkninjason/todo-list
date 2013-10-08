@@ -13,14 +13,17 @@ var MouseResponder = Marionette.Controller.extend({
     // Object vars
 
     el: null,
-    acceptsMoveEvents: false,
+    acceptsMove: false,
+    acceptsEnterExit: false,
     clickCountTimeout: 350,
 
     // Initialization
 
     initialize: function(options){
         _.extend(this, options);
-        _.bindAll(this, '_mouseDown', '_mouseUp', '_mouseDragged', '_mouseMoved');
+        _.bindAll(this, '_mouseDown', '_mouseUp',
+            '_mouseEntered', '_mouseExited',
+            '_mouseDragged', '_mouseMoved');
 
         if(!this.el) return;
         this.$el = helpers.getElement(this.el);
@@ -29,8 +32,13 @@ var MouseResponder = Marionette.Controller.extend({
         this.$el.on('mouseup', {ctx: this}, this._mouseUp);
 
         // does not participate in the internal state system
-        if (this.acceptsMoveEvents){
+        if (this.acceptsMove){
             this.$el.on('mousemove', {ctx: this}, this._mouseMoved);
+        }
+
+        if (this.acceptsEnterExit){
+            this.$el.on('mouseenter', {ctx: this}, this._mouseEntered);
+            this.$el.on('mouseleave', {ctx: this}, this._mouseExited);
         }
     },
 
@@ -101,6 +109,14 @@ var MouseResponder = Marionette.Controller.extend({
         this.mouseMoved(this, e);
     },
 
+    _mouseEntered: function(e){
+        this.mouseEntered(this, e);
+    },
+
+    _mouseExited: function(e){
+        this.mouseExited(this, e);
+    },
+
     // External Handlers
     mouseDown: function(responder, e){
         // noop
@@ -116,6 +132,14 @@ var MouseResponder = Marionette.Controller.extend({
 
     mouseDragged: function(responder, e){
         // noop
+    },
+
+    mouseEntered: function(responder, e){
+
+    },
+
+    mouseExited: function(responder, e){
+
     },
 
     deltaX: function(){

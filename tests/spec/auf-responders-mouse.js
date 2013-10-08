@@ -53,6 +53,24 @@ describe('Responder: Mouse', function() {
         expect(spy).toHaveBeenTriggered();
     });
 
+    it('triggered mouseenter', function(){
+        var type  = 'mouseenter';
+        var e     = $.Event(type);
+        var spy   = spyOnEvent($input, type);
+
+        $input.trigger(e);
+        expect(spy).toHaveBeenTriggered();
+    });
+
+    it('triggered mouseleave', function(){
+        var type  = 'mouseleave';
+        var e     = $.Event(type);
+        var spy   = spyOnEvent($input, type);
+
+        $input.trigger(e);
+        expect(spy).toHaveBeenTriggered();
+    });
+
     it('triggered MouseResponder.onClose', function() {
         // Note the local assignment to of a scopedResponder,
         // not using the suite's setup 'responder' var.
@@ -118,13 +136,39 @@ describe('Responder: Mouse', function() {
         expect(spy).toHaveBeenCalled();
     });
 
+    it('calls mouseEntered', function(){
+        var spy = jasmine.createSpy('mouseEntered');
+
+        responder = new MouseResponder({
+            el: $input,
+            mouseEntered: spy,
+            acceptsEnterExit: true
+        });
+
+        EventHelpers.simulateMouseEnter($input, 0, 0);
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('calls mouseExited', function(){
+        var spy = jasmine.createSpy('mouseExited');
+
+        responder = new MouseResponder({
+            el: $input,
+            mouseExited: spy,
+            acceptsEnterExit: true
+        });
+
+        EventHelpers.simulateMouseExit($input, 0, 0);
+        expect(spy).toHaveBeenCalled();
+    });
+
     it('calls mouseMoved', function(){
         var spy = jasmine.createSpy('mouseMoved');
 
         responder = new MouseResponder({
             el: $input,
             mouseMoved: spy,
-            acceptsMoveEvents: true
+            acceptsMove: true
         });
 
         EventHelpers.simulateMouseMove($input, 0, 0);
