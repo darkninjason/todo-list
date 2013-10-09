@@ -135,7 +135,7 @@ var RangeManager = Marionette.Controller.extend({
     // Event Dispatchers
 
     dispatchChange: function() {
-        this.trigger(this.EVENT_CHANGE, this.getPosition());
+        this.trigger(this.EVENT_CHANGE, this, this.getPosition(), this.getValue());
     },
 
 }); // eof RangeManager
