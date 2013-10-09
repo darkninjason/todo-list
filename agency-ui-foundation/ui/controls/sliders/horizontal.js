@@ -31,10 +31,8 @@ var HorizontalSlider = Marionette.Controller.extend({
 
         this.handles = [];
         this.handleValues = [];
-        this.handleSteps = [];
         this.mouseResponders = [];
         this.touchResponders = [];
-
         this.ranges = [];
 
         this._initializeHandles.apply(this, options.$handles);
@@ -48,21 +46,21 @@ var HorizontalSlider = Marionette.Controller.extend({
             this.handleValues.push($h);
 
             var range = new RangeManager({
-                max: this._normalizeTrack($h)
+                max: this._normalizeTrackBoundsForHandle($h)
             });
 
             range.setValue(position.left);
 
+            // lil object to help us along the way
+            // when managing multiple handles
             var obj = {
                 offsetPosition:range.getPosition(),
+                step: null,
                 range: range
             };
 
+            obj.step = this._calculateStepWithRangeAndPosition(obj, range.getPosition());
             this.ranges.push(obj);
-
-            var step = this._calculateStepWithRangeAndPosition(obj, range.getPosition());
-            this.handleSteps.push(step);
-
 
         }, this);
 
@@ -77,7 +75,7 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     _initializeOrientation: function(){
         var handleOrientation = _.bind(function(responder, e){
-            this._normalizeTrackForAvailableHandles();
+            this._normalizeTrackBoundsForAvailableHandles();
             this._initializeSteps();
 
             var self = this;
@@ -192,15 +190,12 @@ var HorizontalSlider = Marionette.Controller.extend({
         var position = this._calculatePositionWithRangeAndDelta(obj, offset);
 
         if(this.steps){
-            // TODO: Repeated Code, @setPosition
             var step = this._calculateStepWithRangeAndPosition(obj, position);
-            var currentStep = this.handleSteps[handleIndex];
-
-            if(step != currentStep){
-                this.setStep($h, step);
+            if(step != obj.step){
+                this.setStepForHandle(step, $h);
             }
         } else {
-            this.setPosition($h, position);
+            this.setPositionForHandle(position, $h);
         }
     },
 
@@ -217,35 +212,31 @@ var HorizontalSlider = Marionette.Controller.extend({
         return range.positionForValue(value  + delta);
     },
 
-    _normalizeTrackForAvailableHandles: function(){
+    _normalizeTrackBoundsForAvailableHandles: function(){
         var process = _.bind(function($h){
             var handleIndex = this._getHandleIndex($h);
             var obj = this.ranges[handleIndex];
-            obj.range.setMax(this._normalizeTrack($h));
+            obj.range.setMax(this._normalizeTrackBoundsForHandle($h));
 
         }, this);
 
         _.each(this.handleValues, process);
     },
 
-    // TODO:
-    // - Rename, name is a bit confugsing, maybe getTrackBounds()?
-    _normalizeTrack: function($h){
+    _normalizeTrackBoundsForHandle: function($h){
         var $track = this.$trackView;
         var trackRect = $track[0].getBoundingClientRect();
         var handleRect = $h[0].getBoundingClientRect();
         return trackRect.width - handleRect.width;
     },
 
-    // TODO:
-    // - Revisit, this function does zero validation.
     _moveTo: function($el, posX){
+        console.log(Math.random());
         $el.css({left: posX});
     },
 
     // 'Public' methods
-
-    setPosition: function($h, position){
+    setPositionForHandle: function(position, $h){
         var handleIndex = this._getHandleIndex($h);
         var obj         = this.ranges[handleIndex];
 
@@ -253,40 +244,45 @@ var HorizontalSlider = Marionette.Controller.extend({
 
         this._moveTo($h, obj.range.getValue());
         this.trigger('change', this);
-
-        // update step, if steps is enabled
-        if(this.steps) {
-            // TODO: Repeated code @_handleWantsMove
-            var step = this._calculateStepWithRangeAndPosition(obj, position);
-            var currentStep = this.handleSteps[handleIndex];
-
-            if(step != currentStep){
-                this.setStep($h, step);
-            }
-        }
     },
 
-    setStep: function($h, value){
+    setStepForHandle: function(value, $h){
         var handleIndex = this._getHandleIndex($h);
-        var target      = Math.min(this.steps, parseInt(value, 10));
-
+        var obj = this.ranges[handleIndex];
+        var target = Math.min(this.steps, parseInt(value, 10));
         target = Math.max(0, target);
 
-        this.handleSteps[handleIndex] = target;
-        this.setPosition($h, target * this.stepUnit);
+        obj.step = target;
+        this.setPositionForHandle(target * this.stepUnit, $h);
     },
 
-    // TODO:
-    // - Revisit, getPosition now returns arr
-    // - Rename to getPositions?
-    getPosition: function(){
+    getPositions: function(){
         return _.map(this.ranges, function(x){
             return x.range.getPosition();
         });
     },
 
+    getPositionAt: function(index){
+        return this.ranges[index].range.getPosition();
+    },
+
     getSteps: function(){
-        return this.handleSteps;
+        return _.map(this.ranges, function(x){
+            return x.step;
+        });
+    },
+
+    getStepAt: function(index){
+        return this.ranges[index].step;
+    },
+
+    // Convenience
+    getPosition: function(){
+        return this.getPositionAt(0);
+    },
+
+    getStep: function(){
+        return this.getStepAt(0);
     }
 
 }); // eof HorizontalSlider
