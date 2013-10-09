@@ -25,7 +25,9 @@ var MouseResponder = Marionette.Controller.extend({
             '_mouseEntered', '_mouseExited',
             '_mouseDragged', '_mouseMoved');
 
+
         if(!this.el) return;
+
         this.$el = helpers.getElement(this.el);
 
         this.$el.on('mousedown', {ctx: this}, this._mouseDown);
