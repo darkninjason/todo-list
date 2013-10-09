@@ -9,10 +9,6 @@ var OrientationResponder = require('auf/ui/responders/orientation');
 var RangeManager         = require('auf/ui/managers/range');
 
 // Module
-
-// TODO:
-// - Format, move getter / setters together
-
 var HorizontalSlider = Marionette.Controller.extend({
 
     // Object vars
@@ -77,10 +73,9 @@ var HorizontalSlider = Marionette.Controller.extend({
             var self = this;
 
             _.each(this.ranges, function(obj){
-                var $h = obj.$handle;
                 var currentPosition = obj.range.getPosition();
-                self.setPosition($h, currentPosition);
-                self._updateHandleOffset($h);
+                self.setPositionForObj(currentPosition, obj);
+                self._updateHandleOffset(obj.$handle);
             });
         }, this);
 
