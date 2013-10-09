@@ -9,17 +9,18 @@ var _          = require('underscore');
 
 var RangeManager = Marionette.Controller.extend({
 
-    // Option vars
+    // Constants
 
-    _min     : 0,
-    _max     : 1,
+    EVENT_CHANGE: 'change',
 
-    // Position vars
+    // Settings
+
+    settings: {
+        min: 0,
+        max: 1
+    },
 
     _position: 0,
-
-    // Computed vars
-
     _range   : null,
 
     /**
@@ -36,70 +37,89 @@ var RangeManager = Marionette.Controller.extend({
      * );
      */
     initialize: function(options) {
-        // Initialize settings
-        this.setMax   ( options.max   || this.getMax()   );
-        this.setMin   ( options.min   || this.getMin()   );
+        _.extend(this.settings, options);
 
         // Calculate computed properties
-        this.computeRange();
+        this._computeRange();
     },
 
-    // Computers
+    // Internal computed properties
 
-    computeRange: function() {
+    _computeRange: function() {
         this._range = Math.abs(this.getMax() - this.getMin());
     },
 
-    // Module methods
+    // Internal helper methods
+
+    _getPositionForValue: function(val){
+        var position = val / this.getRange();
+        return this._getNormalizedPosition(position);
+    },
+
+    _getValueForPosition: function(val){
+        position = this._getNormalizedPosition(val);
+        return this.getRange() * position;
+    },
+
+    _getNormalizedPosition: function(val){
+        // Ternary is faster than Math.min,max
+        val = val > 1 ? 1 : val;
+        val = val < 0 ? 0 : val;
+
+        return val;
+    },
+
+    // 'Public' methods
 
     getPosition: function() {
         return this._position;
     },
 
     setPosition: function(val) {
-        val = this.normalizePosition(val);
+        val = this._getNormalizedPosition(val);
 
         if(val != this._position) {
             this._position = val;
+            this.dispatchChange();
         }
     },
 
     setValue: function(val){
-        var position = this.positionForValue(val);
+        var position = this._getPositionForValue(val);
         this.setPosition(position);
     },
 
     getValue: function(){
-        return this.valueForPosition(this.getPosition());
+        return this._getValueForPosition(this.getPosition());
     },
 
     getMin: function() {
-        return this._min;
+        return this.settings.min;
     },
 
     setMin: function(val) {
-        if(val > this._max){
+        if(val > this.settings.max){
             throw "Min cannot be greater than max!";
         }
 
-        if(val != this._min) {
-            this._min = val;
-            this.computeRange();
+        if(val != this.settings.min) {
+            this.settings.min = val;
+            this._computeRange();
         }
     },
 
     getMax: function() {
-        return this._max;
+        return this.settings.max;
     },
 
     setMax: function(val) {
-        if(val < this._min) {
+        if(val < this.settings.min) {
             throw "Max cannot be less than min!";
         }
 
         if(val != this.getMax()) {
-            this._max = val;
-            this.computeRange();
+            this.settings.max = val;
+            this._computeRange();
         }
     },
 
@@ -112,25 +132,11 @@ var RangeManager = Marionette.Controller.extend({
         this.setMax(max);
     },
 
-    // Helpers
+    // Event Dispatchers
 
-    positionForValue: function(val){
-        var position = val / this.getRange();
-        return this.normalizePosition(position);
+    dispatchChange: function() {
+        this.trigger(this.EVENT_CHANGE, this, this.getPosition(), this.getValue());
     },
-
-    valueForPosition: function(val){
-        position = this.normalizePosition(val);
-        return this.getRange() * position;
-    },
-
-    normalizePosition: function(val){
-        // Ternary is faster than Math.min,max
-        val = val > 1 ? 1 : val;
-        val = val < 0 ? 0 : val;
-
-        return val;
-    }
 
 }); // eof RangeManager
 
