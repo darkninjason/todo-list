@@ -13,13 +13,27 @@ var MouseResponder = Marionette.Controller.extend({
     // Object vars
 
     el: null,
+
+    // Why rely on these accepts* flags? Why not use the presence of
+    // the public user callbacks: mouseUp, mouseDown, etc to designate
+    // which mouse events are importnat?
+    // The user may or may pass mouseUp, mouseDown, etc at construction
+    // time. It's entirely possible to do this:
+    //
+    // var m = new MouseResponder({el:'...', acceptsUpDown: true});
+    // m.mouseUp = myHandler.mouseUp.
+    //
+    // in that case, we would have never known to even start listenting
+    // for up or down events if we only relied on them being set at
+    // initialization time.
     acceptsUpDown: true,
     acceptsMove: false,
     acceptsEnterExit: false,
+
+    // Time window, in milliseconds,  to count clicks
     clickCountTimeout: 350,
 
     // Initialization
-
     initialize: function(options){
         _.extend(this, options);
         _.bindAll(this, '_mouseDown', '_mouseUp',
