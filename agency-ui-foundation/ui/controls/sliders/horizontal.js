@@ -126,7 +126,7 @@ var HorizontalSlider = Marionette.Controller.extend({
 
         this._initializeRanges(settings);
 
-        if(settings.acceptsMouse){
+        if(this.settings.acceptsMouse){
             this.mouseResponders = this._initializeMouse(settings);
         }
     },
@@ -209,28 +209,45 @@ var HorizontalSlider = Marionette.Controller.extend({
         return results;
     },
 
+    handleOffset: 0,
+
     _handleDidReceiveMouseDrag: function(range, responder, e) {
-        console.log('_handleDidReceiveMouseDrag', range, responder, e);
+        // console.log('_handleDidReceiveMouseDrag', range, responder, e);
+        e.preventDefault();
+
+        var delta = responder.deltaX();
+
+        console.log('delta', delta, this.handleOffset, delta + this.handleOffset);
+
+        $handle = responder.$el;
+        left = delta + this.handleOffset;
+
+        left = left > range.getMax() ? range.getMax() : left;
+        left = left < 0 ? 0 : left;
+
+        $handle.css({'left': left + 'px'});
+
+        range.setValue(left);
     },
 
     _handleDidRecieveMouseDown: function(range, responder, e) {
-        console.log('_handleDidRecieveMouseDown',range, responder, e);
+        // console.log('_handleDidRecieveMouseDown',range, responder, e);
+        e.preventDefault();
+        this.handleOffset = responder.$el.position().left;
     },
 
     _handleDidRecieveMouseUp: function(range, responder, e) {
-        console.log('_handleDidRecieveMouseUp', range, responder, e);
+        // console.log('_handleDidRecieveMouseUp', range, responder, e);
+        e.preventDefault();
+        this.handleOffset = responder.$el.position().left;
     },
 
     // 'Protected' methods
 
     // OK to override!
     _updateHandlePosition: function($handle, range, position, value) {
-        console.log(arguments);
-
         var left = value;
-
         $handle.css({'left': left});
-        // $handle.css({'left': range.getMax() * position + 'px'});
     },
 
     // 'Private' helper accessors
@@ -362,7 +379,7 @@ var HorizontalSlider = Marionette.Controller.extend({
     // Event delegates
 
     _rangeDidChange: function($handle, range, position, value) {
-
+        console.log('_rangeDidChange', position, value);
         this._updateHandlePosition($handle, range, position, value);
         // this.dispatchChange();
     },
