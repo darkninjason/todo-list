@@ -13,6 +13,7 @@ var MouseResponder = Marionette.Controller.extend({
     // Object vars
 
     el: null,
+    acceptsUpDown: true,
     acceptsMove: false,
     acceptsEnterExit: false,
     clickCountTimeout: 350,
@@ -28,10 +29,11 @@ var MouseResponder = Marionette.Controller.extend({
         if(!this.el) return;
         this.$el = helpers.getElement(this.el);
 
-        this.$el.on('mousedown', {ctx: this}, this._mouseDown);
-        this.$el.on('mouseup', {ctx: this}, this._mouseUp);
+        if(this.acceptsUpDown){
+            this.$el.on('mousedown', {ctx: this}, this._mouseDown);
+            this.$el.on('mouseup', {ctx: this}, this._mouseUp);
+        }
 
-        // does not participate in the internal state system
         if (this.acceptsMove){
             this.$el.on('mousemove', {ctx: this}, this._mouseMoved);
         }
@@ -157,13 +159,20 @@ var MouseResponder = Marionette.Controller.extend({
     // Marionette overrides
 
     onClose: function(){
-        this.$el.off('mousedown', this._mouseDown);
-        this.$el.off('mouseup', this._mouseUp);
-
         // to ensure it's gone
         $('body').off('mousemove', this._mouseDragged);
 
-        if (this.acceptsMoveEvents){
+        if(this.acceptsUpDown){
+            this.$el.off('mousedown', this._mouseDown);
+            this.$el.off('mouseup', this._mouseUp);
+        }
+
+        if (this.acceptsEnterExit){
+            this.$el.off('mouseenter', this._mouseEntered);
+            this.$el.off('mouseleave', this._mouseExited);
+        }
+
+        if (this.acceptsMove){
             this.$el.off('mousemove', this._mouseMoved);
         }
     }
