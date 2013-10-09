@@ -73,10 +73,10 @@ var MouseResponder = Marionette.Controller.extend({
         return ++this._clicks;
     },
 
-    /* In order to handle 'dragged' we need to handle some
-    internal state. We don't want the user overriding these
-    internal handlers so they are prefixed with an _ and will
-    call the public handlers accordingly */
+    // In order to handle 'dragged' we need to handle some
+    // internal state. We don't want the user overriding these
+    // internal handlers so they are prefixed with an _ and will
+    // call the public handlers accordingly
 
     // Internal Handlers
     _mouseDown: function(e){
