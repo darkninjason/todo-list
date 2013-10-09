@@ -13,8 +13,8 @@ define(function() {
       'spec/auf-managers-range',
       'spec/auf-managers-focus',
       'spec/auf-managers-focus-single',
-      'spec/auf-control-slider-horizontal',
-      'spec/auf-control-slider-horizontal-range',
+      // 'spec/auf-control-slider-horizontal',
+      // 'spec/auf-control-slider-horizontal-range',
     ]
   };
 });
