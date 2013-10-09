@@ -5,7 +5,7 @@ define(function(require, exports, module) {
 var KeyResponder = require('auf/ui/responders/keys');
 var KeyInputManager = require('auf/ui/managers/key-input');
 
-describe('Responder: Key', function() {
+describe('Key Responder', function() {
 
     var $input, responder = null;
 
@@ -24,7 +24,7 @@ describe('Responder: Key', function() {
 
     // Test Suite
 
-    it('triggered keydown', function() {
+    it('expects UI will trigger keydown', function() {
 
         var key      = jQuery.Event('keydown');
         var spyEvent = spyOnEvent($input, 'keydown');
@@ -36,7 +36,7 @@ describe('Responder: Key', function() {
         expect(spyEvent).toHaveBeenTriggered();
     });
 
-    it('triggered keyup', function() {
+    it('expects UI will trigger keyup', function() {
 
         var key      = jQuery.Event('keyup');
         var spyEvent = spyOnEvent($input, 'keyup');
@@ -48,7 +48,7 @@ describe('Responder: Key', function() {
         expect(spyEvent).toHaveBeenTriggered();
     });
 
-    it('triggered KeyResponder.onClose', function() {
+    it('expects onClose to be called', function() {
         // note the local assignment to of a scopedResponder
         // not using the suite's setup 'responder' var
         // we want to explicitely test close()
@@ -63,7 +63,7 @@ describe('Responder: Key', function() {
         expect(scopedResponder.onClose).toHaveBeenCalled();
     });
 
-    it('uses alternate KeyInputManager (for Aubrey)', function() {
+    it('expects alternate KeyInputManager to be used (for Aubrey)', function() {
         var inputManager = new KeyInputManager({
             13: 'moveUp'   // reassigning return to moveUp
         });
@@ -88,7 +88,7 @@ describe('Responder: Key', function() {
         expect(actionNewline).not.toHaveBeenCalled();
     });
 
-    it('removes key events', function() {
+    it('expects key events to be removed', function() {
         // note the local assignment to of a scopedResponder
         // not using the suite's setup 'responder' var
         // we want to explicitely test onClose behavior()
@@ -123,7 +123,7 @@ describe('Responder: Key', function() {
         expect(keyUp.calls.length).toEqual(0);
     });
 
-    it('calls keyDown', function() {
+    it('expects keyDown to be called', function() {
 
         var keyDown = jasmine.createSpy('keyDown');
 
@@ -141,7 +141,7 @@ describe('Responder: Key', function() {
         expect(keyDown).toHaveBeenCalledWith(responder, key);
     });
 
-    it('calls keyUp', function() {
+    it('expects keyUp to be called', function() {
 
         var keyUp = jasmine.createSpy('keyUp');
         responder = new KeyResponder({
@@ -158,7 +158,7 @@ describe('Responder: Key', function() {
         expect(keyUp).toHaveBeenCalledWith(responder, key);
     });
 
-    it('handles RETURN', function() {
+    it('expects insertNewline to be called', function() {
 
         var action = jasmine.createSpy('insertNewline');
         responder = new KeyResponder({
@@ -175,7 +175,7 @@ describe('Responder: Key', function() {
         expect(action).toHaveBeenCalledWith(responder, key);
     });
 
-    it('handles TAB', function() {
+    it('expects insertTab to be called', function() {
 
         var action = jasmine.createSpy('insertTab');
         responder = new KeyResponder({
@@ -192,7 +192,7 @@ describe('Responder: Key', function() {
         expect(action).toHaveBeenCalledWith(responder, key);
     });
 
-    it('handles DELETE', function() {
+    it('expects deleteBackward to be called', function() {
 
         var action = jasmine.createSpy('deleteBackward');
         responder = new KeyResponder({
@@ -209,7 +209,7 @@ describe('Responder: Key', function() {
         expect(action).toHaveBeenCalledWith(responder, key);
     });
 
-    it('handles ESC', function() {
+    it('expects cancelOperation to be called', function() {
 
         var action = jasmine.createSpy('cancelOperation');
         responder = new KeyResponder({
@@ -226,7 +226,7 @@ describe('Responder: Key', function() {
         expect(action).toHaveBeenCalledWith(responder, key);
     });
 
-    it('handles UP', function() {
+    it('expects moveUp to be called', function() {
 
         var action = jasmine.createSpy('moveUp');
         responder = new KeyResponder({
@@ -243,7 +243,7 @@ describe('Responder: Key', function() {
         expect(action).toHaveBeenCalledWith(responder, key);
     });
 
-    it('handles DOWN', function() {
+    it('expects moveDown to be called', function() {
 
         var action = jasmine.createSpy('moveDown');
         responder = new KeyResponder({
@@ -260,7 +260,7 @@ describe('Responder: Key', function() {
         expect(action).toHaveBeenCalledWith(responder, key);
     });
 
-    it('handles LEFT', function() {
+    it('expects moveLeft to be called', function() {
 
         var action = jasmine.createSpy('moveLeft');
         responder = new KeyResponder({
@@ -277,7 +277,7 @@ describe('Responder: Key', function() {
         expect(action).toHaveBeenCalledWith(responder, key);
     });
 
-    it('handles RIGHT', function() {
+    it('expects moveRight to be called', function() {
 
         var action = jasmine.createSpy('moveRight');
         responder = new KeyResponder({
@@ -294,7 +294,7 @@ describe('Responder: Key', function() {
         expect(action).toHaveBeenCalledWith(responder, key);
     });
 
-    it('handles TEXT (lucy)', function() {
+    it('expects insertText to be calles', function() {
         var keyCode = {
             l: 76,
             u: 85,
