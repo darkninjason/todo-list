@@ -30,7 +30,6 @@ var HorizontalSlider = Marionette.Controller.extend({
         this._initializeSteps();
 
         this.handles = [];
-        this.handleValues = [];
         this.mouseResponders = [];
         this.touchResponders = [];
         this.ranges = [];
@@ -43,7 +42,6 @@ var HorizontalSlider = Marionette.Controller.extend({
             var position = $h.position();
 
             this.handles.push($h[0]);
-            this.handleValues.push($h);
 
             var range = new RangeManager({
                 max: this._normalizeTrackBoundsForHandle($h)
@@ -56,7 +54,8 @@ var HorizontalSlider = Marionette.Controller.extend({
             var obj = {
                 offsetPosition:range.getPosition(),
                 step: null,
-                range: range
+                range: range,
+                $handle: $h
             };
 
             obj.step = this._calculateStepWithRangeAndPosition(obj, range.getPosition());
@@ -80,9 +79,8 @@ var HorizontalSlider = Marionette.Controller.extend({
 
             var self = this;
 
-            _.each(this.handleValues, function($h){
-                var handleIndex = self._getHandleIndex($h);
-                var obj = self.ranges[handleIndex];
+            _.each(this.ranges, function(obj){
+                var $h = obj.$handle;
                 var currentPosition = obj.range.getPosition();
                 self.setPosition($h, currentPosition);
                 self._updateHandleOffset($h);
@@ -115,9 +113,9 @@ var HorizontalSlider = Marionette.Controller.extend({
             this.trigger('drag:stop', $h);
         }, this);
 
-        var process = _.bind(function($h){
+        var process = _.bind(function(obj){
             var responder = new TouchResponder({
-                el: $h,
+                el: obj.$handle,
                 touchStart: touchStart,
                 touchMove: touchMove,
                 touchEnd: touchEnd
@@ -127,7 +125,7 @@ var HorizontalSlider = Marionette.Controller.extend({
 
         }, this);
 
-        _.each(this.handleValues, process);
+        _.each(this.ranges, process);
     },
 
     _initializeMouse: function(){
@@ -149,9 +147,9 @@ var HorizontalSlider = Marionette.Controller.extend({
             this.trigger('drag:stop', $h);
         }, this);
 
-        var process = _.bind(function($h){
+        var process = _.bind(function(obj){
             var responder = new MouseResponder({
-                el: $h,
+                el: obj.$handle,
                 mouseDragged: mouseDragged,
                 mouseDown: mouseDown,
                 mouseUp: mouseUp
@@ -161,7 +159,7 @@ var HorizontalSlider = Marionette.Controller.extend({
 
         }, this);
 
-        _.each(this.handleValues, process);
+        _.each(this.ranges, process);
     },
 
     _initializeSteps: function (){
@@ -192,10 +190,10 @@ var HorizontalSlider = Marionette.Controller.extend({
         if(this.steps){
             var step = this._calculateStepWithRangeAndPosition(obj, position);
             if(step != obj.step){
-                this.setStepForHandle(step, $h);
+                this.setStepForObj(step, obj);
             }
         } else {
-            this.setPositionForHandle(position, $h);
+            this.setPositionForObj(position, obj);
         }
     },
 
@@ -213,14 +211,12 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     _normalizeTrackBoundsForAvailableHandles: function(){
-        var process = _.bind(function($h){
-            var handleIndex = this._getHandleIndex($h);
-            var obj = this.ranges[handleIndex];
-            obj.range.setMax(this._normalizeTrackBoundsForHandle($h));
+        var process = _.bind(function(obj){
+            obj.range.setMax(this._normalizeTrackBoundsForHandle(obj.$handle));
 
         }, this);
 
-        _.each(this.handleValues, process);
+        _.each(this.ranges, process);
     },
 
     _normalizeTrackBoundsForHandle: function($h){
@@ -231,29 +227,22 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     _moveTo: function($el, posX){
-        console.log(Math.random());
         $el.css({left: posX});
     },
 
     // 'Public' methods
-    setPositionForHandle: function(position, $h){
-        var handleIndex = this._getHandleIndex($h);
-        var obj         = this.ranges[handleIndex];
-
+    setPositionForObj: function(position, obj){
         obj.range.setPosition(position);
-
-        this._moveTo($h, obj.range.getValue());
+        this._moveTo(obj.$handle, obj.range.getValue());
         this.trigger('change', this);
     },
 
-    setStepForHandle: function(value, $h){
-        var handleIndex = this._getHandleIndex($h);
-        var obj = this.ranges[handleIndex];
+    setStepForObj: function(value, obj){
         var target = Math.min(this.steps, parseInt(value, 10));
         target = Math.max(0, target);
 
         obj.step = target;
-        this.setPositionForHandle(target * this.stepUnit, $h);
+        this.setPositionForObj(target * this.stepUnit, obj);
     },
 
     getPositions: function(){
@@ -266,6 +255,11 @@ var HorizontalSlider = Marionette.Controller.extend({
         return this.ranges[index].range.getPosition();
     },
 
+    setPositionAt: function(position, index){
+        var obj = this.ranges[index];
+        this.setPositionForObj(position, obj);
+    },
+
     getSteps: function(){
         return _.map(this.ranges, function(x){
             return x.step;
@@ -274,6 +268,11 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     getStepAt: function(index){
         return this.ranges[index].step;
+    },
+
+    setStepAt: function(step, index){
+        var obj = this.ranges[index];
+        this.setStepForObj(step, index);
     },
 
     // Convenience
