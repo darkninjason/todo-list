@@ -49,6 +49,7 @@ describe('Control: Slider Horizontal', function() {
         control.setPosition($sliderHandle, 0.5);
 
         expect($sliderHandle).toHaveCss(expectedCSS);
+        expect(control.getPosition()[0]).toEqual(0.5);
     });
 
     it('moved slider handle a step', function() {
@@ -60,6 +61,7 @@ describe('Control: Slider Horizontal', function() {
         control.setStep($sliderHandle, stepsToMove);
 
         expect($sliderHandle).toHaveCss(expectedCSS);
+        expect(control.getSteps()[0]).toEqual(2);
     });
 
     it('moved slider handle with mouse drag', function() {
@@ -94,6 +96,7 @@ describe('Control: Slider Horizontal', function() {
         // normalized track. The normalized track subtracts
         // the width of the handle.
         expect($sliderHandle).toHaveCss(expectedCSS);
+        expect(control.getPosition()[0]).toEqual(1);
     });
 
     it('did not move slider handle past track left boundary', function() {
@@ -102,6 +105,7 @@ describe('Control: Slider Horizontal', function() {
         control.setPosition($sliderHandle, 0.5);
         control.setPosition($sliderHandle, -1);
 
+        expect(control.getPosition()[0]).toEqual(0);
         expect($sliderHandle).toHaveCss(expectedCSS);
     });
 

@@ -41,7 +41,9 @@ var HorizontalRangeSlider =  Marionette.Controller.extend({
         // Fix, update this when enforce steps is fixed / refactored.
 
         if(this.slider.steps) {
-            var step = this.slider.calculateStepWithRangeAndPosition(obj, position);
+
+            // TODO: dupes code in horizontal.js
+            var step = this.slider._calculateStepWithRangeAndPosition(obj, position);
             var currentStep = this.slider.handleSteps[handleIndex];
 
             if(step !== currentStep) {
@@ -118,8 +120,6 @@ var HorizontalRangeSlider =  Marionette.Controller.extend({
         // }
 
         return results;
-
-
     },
 
     // Horizontal slider proxies

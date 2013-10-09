@@ -23,11 +23,10 @@ describe('Control: Slider Horizontal Range', function() {
 
         control = new HorizontalRangeSlider({
             $handles: [$sliderHandleLeft, $sliderHandleMid, $sliderHandleRight],
-            $trackView: $sliderTrack,
+            $trackView: $sliderTrack
         });
 
         testPositions = [0.25, 0.5, 0.75];
-        testSteps     = [10, 15, 20];
     });
 
     afterEach(function() {
@@ -84,7 +83,7 @@ describe('Control: Slider Horizontal Range', function() {
 
     it('reports expected ranges when stepped', function() {
         // close existing control
-        control.close()
+        control.close();
 
         // create new one with steps enabled
         // note 60 steps here to create steps at positions [0.25, 0.5, 0.75]
@@ -166,7 +165,7 @@ describe('Control: Slider Horizontal Range', function() {
 
     it('respects stepped handle boundaries when handle is positioned', function(){
         // close existing control
-        control.close()
+        control.close();
 
         // create new one with steps enabled
         control = new HorizontalRangeSlider({
@@ -175,7 +174,7 @@ describe('Control: Slider Horizontal Range', function() {
             steps: 30
         });
 
-        var steps = testSteps;
+        var steps = [10, 15, 20];
         var min = 0;
         var max = 30; // steps is configured above to 30;
 

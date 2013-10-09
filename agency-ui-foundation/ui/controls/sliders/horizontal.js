@@ -11,283 +11,372 @@ var RangeManager         = require('auf/ui/managers/range');
 // Module
 
 // TODO:
-// - Format, move getter / setters together
-
+// - Options
+//   - $track             // required
+//   - $handles           // required (at least 1)
+//   - acceptsMouse       // default true
+//   - acceptsTouch       // default false
+//   - acceptsKeys        // default false
+//   - acceptsOrientation // default false
+//   - steps              // number of steps, default is 0
+//   - snap               // should view 'snap' to steps, default false
+//
+// - Public API
+//   - getPosition()
+//   - getPositions()
+//   - getHandlePosition()
+//   - setPosition()
+//   - setPositions()
+//   - setHandlePosition()
+//   - setHandlePositions()
+//   - getStep()
+//   - getSteps()
+//   - getHandleStep()
+//   - setStep()
+//   - setSteps()
+//   - setHandleStep()
+//   - setHandleSteps()
+//
+// - Events
+//   - change
+//   - drag: start
+//   - drag: end
+//
+// - Interaction support
+//   - Mouse
+//   - Touch
+//   - Device Orientation
+//   - Keys (arrows, depends on slider orientation)
+//
+// - Handling n-handles
+//   - Each handle will have it's own "range" because handle widths can vary
+//   - No need to store this, I think; easier to determine at runtime?
+//   - Cache on init.
+//
+// Tasks
+// - Implement Mouse Handling
+// - Implement Touch Handling
+// - Implement Key Handling
+// - Implement Orientation Handling
+//
+// Thoughts
+// - Handles take starting position?
+// - Change event reports steps, positions, target step, target position?
+//
 var HorizontalSlider = Marionette.Controller.extend({
 
-    // Object vars
+    // Constants
 
-    $trackView: null,
-    steps: 0,
+    EVENT_CHANGE:     'change',
+    EVENT_DRAG_START: 'drag: start',
+    EVENT_DRAG_END:   'drag: end',
 
-    // Initialization
+    ranges: null,
 
+    // Settings
+
+    settings: {
+        $track: null,
+        $handles: null,
+        steps: 0,
+        snap: false,
+        acceptsMouse: true,
+        acceptsTouch: false,
+        acceptsKeys: false,
+        acceptsOrientation: false
+    },
+
+    // Backbone & Marionette overrides
+
+    /**
+     * Initialize HorizontalSlider
+     * @param  {object} options options literal
+     * @return {undefined}
+     *
+     * @example
+     * horizontalSlider = new HorizontalSlider(
+     *     {
+     *         $track: $('.slider .track'),    // required
+     *         $handles: $('.slider .handle'), // required
+     *         steps: 10,                      // default 0
+     *         snap: true,                     // default false
+     *         acceptsMouse: true              // default true
+     *         acceptsTouch: true              // default false
+     *         acceptsKeys: true               // default false
+     *         acceptsOrientation: true        // default false
+     *     }
+     * );
+     */
     initialize: function(options){
-        var filtered = _.pick(options, '$trackView', 'steps');
-        _.extend(this, filtered);
-        _.bindAll(this, '_updateHandleOffset');
+        var settings = _.extend(this.settings, options);
 
-        this._initializeSteps();
+        var hasTrackSetting     = settings.$track !== null;
+        var hasOneTrack         = hasTrackSetting && settings.$track.length == 1;
+        var hasHandleSetting    = settings.$handles !== null;
+        var hasAtLeastOneHandle = hasHandleSetting && settings.$handles.length > 0;
 
-        this.handles = [];
-        this.handleValues = [];
-        this.handleSteps = [];
-        this.mouseResponders = [];
-        this.touchResponders = [];
+        if(!hasOneTrack) {
+            throw 'HorizontalSlider requires at least one track element!';
+        }
 
-        this.ranges = [];
+        if(!hasAtLeastOneHandle) {
+            throw 'HorizontalSlider requires at least one handle element!';
+        }
 
-        this._initializeHandles.apply(this, options.$handles);
+        this._initializeRanges(settings);
     },
 
-    _initializeHandles: function(){
-        var process = _.bind(function($h){
-            var position = $h.position();
-
-            this.handles.push($h[0]);
-            this.handleValues.push($h);
-
-            var range = new RangeManager({
-                max: this._normalizeTrack($h)
-            });
-
-            range.setValue(position.left);
-
-            var obj = {
-                offsetPosition:range.getPosition(),
-                range: range
-            };
-
-            this.ranges.push(obj);
-
-            var step = this._calculateStepWithRangeAndPosition(obj, range.getPosition());
-            this.handleSteps.push(step);
-
-
-        }, this);
-
-        _.each(arguments, process);
-
-        this._initializeTouches();
-        this._initializeMouse();
-        this._initializeOrientation();
+    onClose: function() {
+        // remove events
     },
 
-    // Responder initialization
+    // Internal initialization
 
-    _initializeOrientation: function(){
-        var handleOrientation = _.bind(function(responder, e){
-            this._normalizeTrackForAvailableHandles();
-            this._initializeSteps();
+    _initializeRanges: function(settings) {
+        var ranges = this._getNormalizedRanges(
+            settings.$track, settings.$handles
+        );
 
-            var self = this;
+        var id, range, $handle, listener;
+        var i = 0;
+        var len = ranges.length;
 
-            _.each(this.handleValues, function($h){
-                var handleIndex = self._getHandleIndex($h);
-                var obj = self.ranges[handleIndex];
-                var currentPosition = obj.range.getPosition();
-                self.setPosition($h, currentPosition);
-                self._updateHandleOffset($h);
-            });
-        }, this);
+        for(i; i < len; i++) {
+            id       = i;
+            range    = ranges[i];
+            $handle  = settings.$handles.eq(i);
+            listener = _.bind(this._rangeDidChange, this, range, $handle);
 
+            // attach listener to range: change
+            this.listenTo(range, 'change', listener);
+        }
 
-        this.orientationResponder = new OrientationResponder({
-            portrait: handleOrientation,
-            landscape: handleOrientation
-        });
+        this.ranges = ranges;
     },
 
-    _initializeTouches: function(){
-        var touchStart = _.bind(function(responder, e){
-             e.preventDefault();
-             var $h = responder.$el;
-             this.trigger('drag:start', $h);
-        }, this);
+    // 'Protected' methods
 
-        var touchMove = _.bind(function(responder, e){
-            e.preventDefault();
-
-            this._handleWantsMove(responder.$el, responder.deltaX()[0]);
-        }, this);
-
-        var touchEnd = _.bind(function(responder, e){
-            var $h = responder.$el;
-            this._updateHandleOffset($h);
-            this.trigger('drag:stop', $h);
-        }, this);
-
-        var process = _.bind(function($h){
-            var responder = new TouchResponder({
-                el: $h,
-                touchStart: touchStart,
-                touchMove: touchMove,
-                touchEnd: touchEnd
-            });
-
-            this.touchResponders.push(responder);
-
-        }, this);
-
-        _.each(this.handleValues, process);
+    // OK to override!
+    _updateHandlePosition: function(range, $handle, position) {
+        $handle.css({'left': range.getMax() * position + 'px'});
     },
 
-    _initializeMouse: function(){
-        var mouseDragged = _.bind(function(responder, e){
-            e.preventDefault();
-            this._handleWantsMove(responder.$el, responder.deltaX());
-        }, this);
+    // 'Private' helper accessors
 
-        var mouseDown = _.bind(function(responder, e){
-            e.preventDefault();
-            var $h = responder.$el;
-            this.trigger('drag:start', $h);
-
-        }, this);
-
-        var mouseUp = _.bind(function(responder, e){
-            var $h = responder.$el;
-            this._updateHandleOffset($h);
-            this.trigger('drag:stop', $h);
-        }, this);
-
-        var process = _.bind(function($h){
-            var responder = new MouseResponder({
-                el: $h,
-                mouseDragged: mouseDragged,
-                mouseDown: mouseDown,
-                mouseUp: mouseUp
-            });
-
-            this.mouseResponders.push(responder);
-
-        }, this);
-
-        _.each(this.handleValues, process);
+    _getElementBounds: function(el) {
+        // el is raw dom element
+        // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
+        // TODO: IE Support, may need polyfill later.
+        return el.getBoundingClientRect();
     },
 
-    _initializeSteps: function (){
-        if(this.steps){
-            this.stepUnit = 1 / this.steps;
-        } else {
-            this.stepUnit = 0;
+    _getElementsBounds: function(elements) {
+        // elements is a list of raw dom elements
+        // returns multiple ClientRects for list of elements.
+
+        var results = [];
+        var i = 0;
+        var len = elements.length;
+
+        for(i; i < len; i++){
+            results.push(this._getElementBounds(elements[i]));
+        }
+
+        return results;
+    },
+
+    _getHandleIndex: function($handle) {
+        return this.settings.$handles.index($handle);
+    },
+
+    _getRange: function(index) {
+        var range = this.ranges[index];
+
+        if(typeof range == 'undefined') {
+            throw 'Index out of range, this.ranges[' + index + '], when length is ' + this.ranges.length + '.';
+        }
+
+        return range;
+    },
+
+    _getNormalizedRanges: function($track, $handles) {
+        var max;
+        var min = 0;
+
+        var results       = [];
+        var trackBounds   = this._getElementBounds($track[0]);
+        var handlesBounds = this._getElementsBounds($handles.toArray());
+
+        var i   = 0;
+        var len = handlesBounds.length;
+
+        for(i; i < len; i++) {
+            max = trackBounds.width - handlesBounds[i].width;
+            results.push(new RangeManager({min:min, max:max}));
+        }
+
+        return results;
+     },
+
+    // 'Public' Position methods
+
+    getPosition: function(index) {
+        index = index || 0;
+        return this._getRange(index).getPosition();
+    },
+
+    getPositions: function() {
+        var results = [];
+        var ranges  = this.ranges;
+        var i       = 0;
+        var len     = ranges.length;
+
+        for(i; i < len; i++) {
+            results.push(this.getPosition(i));
+        }
+
+        return results;
+    },
+
+    getHandlePosition: function($handle) {
+        var index = this._getHandleIndex($handle);
+        return this.getPosition(index);
+    },
+
+    setPosition: function(value, index) {
+        index = index || 0; // default to 0
+        this._getRange(index).setPosition(value);
+    },
+
+    setPositions: function(positions) {
+        // positions look like [ {value, index} ]
+        var index, value;
+        var i      = 0;
+        var len    = positions.length;
+
+        for(i; i < len; i++) {
+            // index is optional if positions are provided in order
+            index = positions[i].index || i;
+            value = positions[i].value;
+
+            this.setPosition(value, index);
         }
     },
 
-    _updateHandleOffset: function($h){
-        var handleIndex = this._getHandleIndex($h);
-
-        var obj = this.ranges[handleIndex];
-        obj.offsetPosition = obj.range.positionForValue($h.position().left);
+    setHandlePosition: function(value, $handle) {
+        var index = this._getHandleIndex($handle);
+        this.setPosition(value, index);
     },
 
-    _getHandleIndex: function($h){
-        return this.handles.indexOf($h[0]);
-    },
+    setHandlePositions: function(positions) {
+        // positions look like [ {value, $handle} ];
+        var $handle, index, value;
+        var i      = 0;
+        var len    = positions.length;
 
-    _handleWantsMove: function($h, offset){
-        var handleIndex = this._getHandleIndex($h);
-        var obj = this.ranges[handleIndex];
+        for(i; i < len; i++) {
+            index = this._getHandleIndex(positions[i].$handle);
+            value = positions[i].value;
 
-        var position = this._calculatePositionWithRangeAndDelta(obj, offset);
-
-        if(this.steps){
-            // TODO: Repeated Code, @setPosition
-            var step = this._calculateStepWithRangeAndPosition(obj, position);
-            var currentStep = this.handleSteps[handleIndex];
-
-            if(step != currentStep){
-                this.setStep($h, step);
-            }
-        } else {
-            this.setPosition($h, position);
+            this.setPosition(value, index);
         }
     },
 
-    _calculateStepWithRangeAndPosition: function(obj, position){
-        var range = obj.range;
-        var currentPosition = range.getPosition();
-        var action = position < currentPosition ? Math.ceil : Math.floor;
-        return action(position * this.steps);
+    // Step methods
+
+    getStep: function(index) {
+        index = index || 0;
+        var position = this.getPosition(index);
+
+        // round will round-up if decimal is .5 or higher.
+        // this should give good reporting of steps
+        return Math.round(this.settings.steps * position);
     },
 
-    _calculatePositionWithRangeAndDelta: function(obj, delta){
-        var range = obj.range;
-        var value = range.valueForPosition(obj.offsetPosition);
-        return range.positionForValue(value  + delta);
+    getSteps: function() {
+        var results = [];
+        var ranges  = this.ranges;
+        var i       = 0;
+        var len     = ranges.length;
+
+        for(i; i < len; i++) {
+            results.push(this.getStep(i));
+        }
+
+        return results;
     },
 
-    _normalizeTrackForAvailableHandles: function(){
-        var process = _.bind(function($h){
-            var handleIndex = this._getHandleIndex($h);
-            var obj = this.ranges[handleIndex];
-            obj.range.setMax(this._normalizeTrack($h));
-
-        }, this);
-
-        _.each(this.handleValues, process);
+    getHandleStep: function($handle) {
+        var index = this._getHandleIndex($handle);
+        return this.getStep(index);
     },
 
-    // TODO:
-    // - Rename, name is a bit confugsing, maybe getTrackBounds()?
-    _normalizeTrack: function($h){
-        var $track = this.$trackView;
-        var trackRect = $track[0].getBoundingClientRect();
-        var handleRect = $h[0].getBoundingClientRect();
-        return trackRect.width - handleRect.width;
+    setStep: function(value, index) {
+        // set step value for index
+        index = index || 0;
+
+        var posiiton;
+        var steps = this.settings.steps;
+        var step  = value;
+
+        // normalize step value
+        step = step > steps ? steps : step;
+        step = step < 0 ? 0 : step;
+
+        // isNaN check handles 0/0 case
+        position = step/steps;
+        position = isNaN(position) ? 0 : position;
+
+        this.setPosition(position, index);
     },
 
-    // TODO:
-    // - Revisit, this function does zero validation.
-    _moveTo: function($el, posX){
-        $el.css({left: posX});
-    },
+    setSteps: function(steps) {
+        // steps look like [{value, index}]
+        var index, value;
+        var i      = 0;
+        var len    = steps.length;
 
-    // 'Public' methods
+        for(i; i < len; i++) {
+            // index is optional if steps are provided in order
+            index = steps[i].index || i;
+            value = steps[i].value;
 
-    setPosition: function($h, position){
-        var handleIndex = this._getHandleIndex($h);
-        var obj         = this.ranges[handleIndex];
-
-        obj.range.setPosition(position);
-
-        this._moveTo($h, obj.range.getValue());
-        this.trigger('change', this);
-
-        // update step, if steps is enabled
-        if(this.steps) {
-            // TODO: Repeated code @_handleWantsMove
-            var step = this._calculateStepWithRangeAndPosition(obj, position);
-            var currentStep = this.handleSteps[handleIndex];
-
-            if(step != currentStep){
-                this.setStep($h, step);
-            }
+            this.setSteps(value, index);
         }
     },
 
-    setStep: function($h, value){
-        var handleIndex = this._getHandleIndex($h);
-        var target      = Math.min(this.steps, parseInt(value, 10));
-
-        target = Math.max(0, target);
-
-        this.handleSteps[handleIndex] = target;
-        this.setPosition($h, target * this.stepUnit);
+    setHandleStep: function(value, $handle) {
+        var index = this._getHandleIndex($handle);
+        this.setStep(value, index);
     },
 
-    // TODO:
-    // - Revisit, getPosition now returns arr
-    // - Rename to getPositions?
-    getPosition: function(){
-        return _.map(this.ranges, function(x){
-            return x.range.getPosition();
-        });
+    setHandleSteps: function(steps) {
+        // values look like [{value, $handle}];
+        var $handle, index, value;
+        var i      = 0;
+        var len    = steps.length;
+
+        for(i; i < len; i++) {
+            index = this._getHandleIndex(steps[i].$handle);
+            value = steps[i].value;
+
+            this.setStep(value, index);
+        }
     },
 
-    getSteps: function(){
-        return this.handleSteps;
-    }
+    // Event delegates
+
+    _rangeDidChange: function(range, $handle, position) {
+        this._updateHandlePosition(range, $handle, position);
+        this.dispatchChange();
+    },
+
+    // Event Dispatchers
+
+    // TODO: possibly pass in target, and related data
+    dispatchChange: function() {
+        this.trigger(this.EVENT_CHANGE, this.getPositions(), this.getSteps());
+    },
 
 }); // eof HorizontalSlider
 

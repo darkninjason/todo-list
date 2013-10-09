@@ -232,5 +232,20 @@ describe('Manager: Range', function() {
         expect(maxIsLessThanMin).toThrow();
     });
 
+    it('dispatches change', function(){
+        manager = new RangeManager({
+            min: 10,
+            max: 110
+        });
+
+        var spy = jasmine.createSpy('spy');
+
+        manager.listenTo(manager, 'change', spy);
+        manager.setPosition(0.5);
+        manager.setValue(75);
+
+        expect(spy.calls.length).toEqual(2);
+    });
+
 }); // Eof describe
 }); // Eof define
