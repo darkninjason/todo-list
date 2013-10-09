@@ -13,9 +13,9 @@ var RangeManager = Marionette.Controller.extend({
 
     EVENT_CHANGE: 'change',
 
-    // Settings
+    // Defaults
 
-    settings: {
+    _defaults: {
         min: 0,
         max: 1
     },
@@ -37,7 +37,7 @@ var RangeManager = Marionette.Controller.extend({
      * );
      */
     initialize: function(options) {
-        _.extend(this.settings, options);
+        _.defaults(options, this._defaults);
 
         // Calculate computed properties
         this._computeRange();
@@ -94,31 +94,31 @@ var RangeManager = Marionette.Controller.extend({
     },
 
     getMin: function() {
-        return this.settings.min;
+        return this.options.min;
     },
 
     setMin: function(val) {
-        if(val > this.settings.max){
+        if(val > this.options.max){
             throw "Min cannot be greater than max!";
         }
 
-        if(val != this.settings.min) {
-            this.settings.min = val;
+        if(val != this.options.min) {
+            this.options.min = val;
             this._computeRange();
         }
     },
 
     getMax: function() {
-        return this.settings.max;
+        return this.options.max;
     },
 
     setMax: function(val) {
-        if(val < this.settings.min) {
+        if(val < this.options.min) {
             throw "Max cannot be less than min!";
         }
 
         if(val != this.getMax()) {
-            this.settings.max = val;
+            this.options.max = val;
             this._computeRange();
         }
     },
