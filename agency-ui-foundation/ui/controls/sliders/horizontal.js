@@ -22,17 +22,17 @@ var RangeManager         = require('auf/ui/managers/range');
 //   - snap               // should view 'snap' to steps, default false
 //
 // - Public API
-//   - getPosition()
+//   - getPositionAt()
 //   - getPositions()
 //   - getHandlePosition()
-//   - setPosition()
+//   - setPositionAt()
 //   - setPositions()
 //   - setHandlePosition()
 //   - setHandlePositions()
-//   - getStep()
+//   - getStepAt()
 //   - getSteps()
 //   - getHandleStep()
-//   - setStep()
+//   - setStepAt()
 //   - setSteps()
 //   - setHandleStep()
 //   - setHandleSteps()
@@ -62,7 +62,7 @@ var RangeManager         = require('auf/ui/managers/range');
 // Thoughts
 // - Handles take starting position?
 // - Change event reports steps, positions, target step, target position?
-//
+
 var HorizontalSlider = Marionette.Controller.extend({
 
     // Constants
@@ -74,9 +74,9 @@ var HorizontalSlider = Marionette.Controller.extend({
     ranges: null,
     mouseResponders: null,
 
-    // Settings
+    // Defaults
 
-    settings: {
+    _defaults: {
         $track: null,
         $handles: null,
         steps: 0,
@@ -109,12 +109,12 @@ var HorizontalSlider = Marionette.Controller.extend({
      * );
      */
     initialize: function(options){
-        var settings = _.extend(this.settings, options);
+        _.defaults(options, this._defaults);
 
-        var hasTrackSetting     = settings.$track !== null;
-        var hasOneTrack         = hasTrackSetting && settings.$track.length == 1;
-        var hasHandleSetting    = settings.$handles !== null;
-        var hasAtLeastOneHandle = hasHandleSetting && settings.$handles.length > 0;
+        var hasTrackSetting     = options.$track !== null;
+        var hasOneTrack         = hasTrackSetting && options.$track.length == 1;
+        var hasHandleSetting    = options.$handles !== null;
+        var hasAtLeastOneHandle = hasHandleSetting && options.$handles.length > 0;
 
         if(!hasOneTrack) {
             throw 'HorizontalSlider requires at least one track element!';
@@ -124,10 +124,10 @@ var HorizontalSlider = Marionette.Controller.extend({
             throw 'HorizontalSlider requires at least one handle element!';
         }
 
-        this._initializeRanges(settings);
+        this._initializeRanges(this.options);
 
-        if(this.settings.acceptsMouse){
-            this.mouseResponders = this._initializeMouse(settings);
+        if(this.options.acceptsMouse){
+            this.mouseResponders = this._initializeMouse(this.options);
         }
     },
 
@@ -137,10 +137,10 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     // Internal initialization
 
-    _initializeRanges: function(settings) {
+    _initializeRanges: function(options) {
         var ranges = this._getNormalizedRanges(
-            settings.$track,
-            settings.$handles
+            options.$track,
+            options.$handles
         );
 
         var id, range, $handle, listener;
@@ -150,7 +150,7 @@ var HorizontalSlider = Marionette.Controller.extend({
         for(i; i < len; i++) {
             id       = i;
             range    = ranges[i];
-            $handle  = settings.$handles.eq(i);
+            $handle  = options.$handles.eq(i);
             listener = _.bind(this._rangeDidChange, this, $handle);
 
             // attach listener to range: change
@@ -179,15 +179,13 @@ var HorizontalSlider = Marionette.Controller.extend({
         return results;
      },
 
-    _initializeMouse: function(settings) {
+    _initializeMouse: function(options) {
         var range, mouseDragged, mouseDown, mouseUp, responder;
-        var $handles = settings.$handles;
-        var ranges = this.ranges;
-        var i = 0;
-        var len = $handles.length;
-        var results = [];
-
-        console.log('underscore', _);
+        var $handles = options.$handles;
+        var ranges   = this.ranges;
+        var i        = 0;
+        var len      = $handles.length;
+        var results  = [];
 
         for(i; i < len; i++) {
             range        = ranges[i];
@@ -215,19 +213,11 @@ var HorizontalSlider = Marionette.Controller.extend({
         // console.log('_handleDidReceiveMouseDrag', range, responder, e);
         e.preventDefault();
 
-        var delta = responder.deltaX();
+        var delta   = responder.deltaX();
+        var $handle = responder.$el;
+        var value   = delta + this.handleOffset;
 
-        console.log('delta', delta, this.handleOffset, delta + this.handleOffset);
-
-        $handle = responder.$el;
-        left = delta + this.handleOffset;
-
-        left = left > range.getMax() ? range.getMax() : left;
-        left = left < 0 ? 0 : left;
-
-        $handle.css({'left': left + 'px'});
-
-        range.setValue(left);
+        range.setValue(value);
     },
 
     _handleDidRecieveMouseDown: function(range, responder, e) {
@@ -244,8 +234,17 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     // 'Protected' methods
 
-    // OK to override!
     _updateHandlePosition: function($handle, range, position, value) {
+        var left = value;
+        $handle.css({'left': left});
+    },
+
+    _updateHandlePositionWithSnap: function($handle, range, position, value) {
+        // var left = value;
+        var step = this.getStep();
+        var result = value;
+        console.log('step, result', step, result);
+
         var left = value;
         $handle.css({'left': left});
     },
@@ -275,7 +274,7 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     _getHandleIndex: function($handle) {
-        return this.settings.$handles.index($handle);
+        return this.options.$handles.index($handle);
     },
 
     _getRange: function(index) {
@@ -290,8 +289,11 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     // 'Public' Position methods
 
-    getPosition: function(index) {
-        index = index || 0;
+    getPosition: function() {
+        return this.getPositionAt(0);
+    },
+
+    getPositionAt: function(index) {
         return this._getRange(index).getPosition();
     },
 
@@ -302,7 +304,7 @@ var HorizontalSlider = Marionette.Controller.extend({
         var len     = ranges.length;
 
         for(i; i < len; i++) {
-            results.push(this.getPosition(i));
+            results.push(this.getPositionAt(i));
         }
 
         return results;
@@ -310,28 +312,34 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     getHandlePosition: function($handle) {
         var index = this._getHandleIndex($handle);
-        return this.getPosition(index);
+        return this.getPositionAt(index);
     },
 
-    setPosition: function(value, index) {
+    setPosition: function(value) {
+        this.setPositionAt(value, 0);
+    },
+
+    setPositionAt: function(value, index) {
         index = index || 0; // default to 0
         this._getRange(index).setPosition(value);
     },
 
     setHandlePosition: function(value, $handle) {
         var index = this._getHandleIndex($handle);
-        this.setPosition(value, index);
+        this.setPositionAt(value, index);
     },
 
     // Step methods
+    getStep: function() {
+        return this.getStepAt(0);
+    },
 
-    getStep: function(index) {
-        index = index || 0;
-        var position = this.getPosition(index);
+    getStepAt: function(index) {
+        var position = this.getPositionAt(index);
 
         // round will round-up if decimal is .5 or higher.
         // this should give good reporting of steps
-        return Math.round(this.settings.steps * position);
+        return Math.round(this.options.steps * position);
     },
 
     getSteps: function() {
@@ -341,7 +349,7 @@ var HorizontalSlider = Marionette.Controller.extend({
         var len     = ranges.length;
 
         for(i; i < len; i++) {
-            results.push(this.getStep(i));
+            results.push(this.getStepAt(i));
         }
 
         return results;
@@ -349,46 +357,49 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     getHandleStep: function($handle) {
         var index = this._getHandleIndex($handle);
-        return this.getStep(index);
+        return this.getStepAt(index);
     },
 
-    setStep: function(value, index) {
-        // set step value for index
-        index = index || 0;
+    setStep: function(value) {
+        this.setStepAt(value, 0);
+    },
 
+    setStepAt: function(value, index) {
         var posiiton;
-        var steps = this.settings.steps;
-        var step  = value;
-
-        // normalize step value
-        step = step > steps ? steps : step;
-        step = step < 0 ? 0 : step;
+        var steps = this.options.steps;
 
         // isNaN check handles 0/0 case
-        position = step/steps;
+        position = value/steps;
         position = isNaN(position) ? 0 : position;
 
-        this.setPosition(position, index);
+        this.setPositionAt(position, index);
     },
 
     setHandleStep: function(value, $handle) {
         var index = this._getHandleIndex($handle);
-        this.setStep(value, index);
+        this.setStepAt(value, index);
     },
 
     // Event delegates
 
     _rangeDidChange: function($handle, range, position, value) {
-        console.log('_rangeDidChange', position, value);
-        this._updateHandlePosition($handle, range, position, value);
-        // this.dispatchChange();
+        // console.log('_rangeDidChange', position, value);
+
+        if(this.options.snap) {
+            this._updateHandlePositionWithSnap($handle, range, position, value);
+        }else {
+            this._updateHandlePosition($handle, range, position, value);
+        }
+
+
+        this.dispatchChange();
     },
 
     // Event Dispatchers
 
     // TODO: possibly pass in target, and related data
     dispatchChange: function() {
-        // this.trigger(this.EVENT_CHANGE, this.getPositions(), this.getSteps());
+        this.trigger(this.EVENT_CHANGE, this.getPositions(), this.getSteps());
     },
 
 }); // eof HorizontalSlider
