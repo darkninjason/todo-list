@@ -30,8 +30,6 @@ var HorizontalSlider = Marionette.Controller.extend({
         this._initializeSteps();
 
         this.handles = [];
-        this.mouseResponders = [];
-        this.touchResponders = [];
         this.ranges = [];
 
         this._initializeHandles.apply(this, options.$handles);
@@ -71,7 +69,6 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     // Responder initialization
-
     _initializeOrientation: function(){
         var handleOrientation = _.bind(function(responder, e){
             this._normalizeTrackBoundsForAvailableHandles();
@@ -120,9 +117,6 @@ var HorizontalSlider = Marionette.Controller.extend({
                 touchMove: touchMove,
                 touchEnd: touchEnd
             });
-
-            this.touchResponders.push(responder);
-
         }, this);
 
         _.each(this.ranges, process);
@@ -154,9 +148,6 @@ var HorizontalSlider = Marionette.Controller.extend({
                 mouseDown: mouseDown,
                 mouseUp: mouseUp
             });
-
-            this.mouseResponders.push(responder);
-
         }, this);
 
         _.each(this.ranges, process);
