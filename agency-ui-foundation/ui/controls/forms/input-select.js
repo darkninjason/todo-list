@@ -171,6 +171,7 @@ define(function(require, exports, module){
         debounceDelay: 300,
 
         initialize: function(options){
+            _.defaults(options, this._defaults);
 
             _.extend(this, options);
             _.bindAll(this, 'receivedText',
