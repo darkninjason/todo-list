@@ -4,10 +4,10 @@ define(function(require, exports, module) {
 
 var MouseResponder = require('auf/ui/responders/mouse');
 var $              = require('jquery');
-var SpecHelpers    = require('lib/spec-helpers')
+var SpecHelpers    = require('lib/spec-helpers');
 var EventHelpers   = SpecHelpers.Events;
 
-describe('Responder: Mouse', function() {
+describe('Mouse Responder', function() {
 
     var $input, responder = null;
 
@@ -26,7 +26,7 @@ describe('Responder: Mouse', function() {
 
     // Test Suite
 
-    it('triggered mousedown', function(){
+    it('expects UI will trigger mousedown', function(){
         var type     = 'mousedown';
         var e        = $.Event(type);
         var spyEvent = spyOnEvent($input, type);
@@ -35,7 +35,7 @@ describe('Responder: Mouse', function() {
         expect(spyEvent).toHaveBeenTriggered();
     });
 
-    it('triggered mouseup', function(){
+    it('expects UI will trigger mouseup', function(){
         var type = 'mouseup';
         var e    = $.Event(type);
         var spy  = spyOnEvent($input, type);
@@ -44,7 +44,7 @@ describe('Responder: Mouse', function() {
         expect(spy).toHaveBeenTriggered();
     });
 
-    it('triggered mousemove', function(){
+    it('expects UI will trigger mousemove', function(){
         var type  = 'mousemove';
         var e     = $.Event(type);
         var spy   = spyOnEvent($input, type);
@@ -53,7 +53,7 @@ describe('Responder: Mouse', function() {
         expect(spy).toHaveBeenTriggered();
     });
 
-    it('triggered mouseenter', function(){
+    it('expects UI will trigger mouseenter', function(){
         var type  = 'mouseenter';
         var e     = $.Event(type);
         var spy   = spyOnEvent($input, type);
@@ -62,7 +62,7 @@ describe('Responder: Mouse', function() {
         expect(spy).toHaveBeenTriggered();
     });
 
-    it('triggered mouseleave', function(){
+    it('expects UI will trigger mouseleave', function(){
         var type  = 'mouseleave';
         var e     = $.Event(type);
         var spy   = spyOnEvent($input, type);
@@ -71,7 +71,7 @@ describe('Responder: Mouse', function() {
         expect(spy).toHaveBeenTriggered();
     });
 
-    it('triggered MouseResponder.onClose', function() {
+    it('expects onClose to be called', function() {
         // Note the local assignment to of a scopedResponder,
         // not using the suite's setup 'responder' var.
         // We want to explicitely test close().
@@ -86,17 +86,64 @@ describe('Responder: Mouse', function() {
         expect(scopedResponder.onClose).toHaveBeenCalled();
     });
 
-    it('removes mouse events', function() {
+    it('expects mouse up and mouse down to be called', function() {
+        var mouseDown       = jasmine.createSpy('mouseDown');
+        var mouseUp         = jasmine.createSpy('mouseup');
+
+        responder = new MouseResponder({
+                el: $input,
+                mouseDown: mouseDown,
+                mouseUp: mouseUp,
+                acceptsUpDown: true
+        });
+
+
+        EventHelpers.simulateMouseDown($input, 0, 0);
+        EventHelpers.simulateMouseUp($input, 0, 0);
+
+        expect(mouseDown).toHaveBeenCalled();
+        expect(mouseUp).toHaveBeenCalled();
+
+        // This is probably a redundant check:
+        expect(mouseDown.calls.length).toEqual(1);
+        expect(mouseUp.calls.length).toEqual(1);
+    });
+
+    it('expects mouse up and mouse down not to be called', function() {
+        var mouseDown       = jasmine.createSpy('mouseDown');
+        var mouseUp         = jasmine.createSpy('mouseup');
+
+        responder = new MouseResponder({
+                el: $input,
+                mouseDown: mouseDown,
+                mouseUp: mouseUp,
+                acceptsUpDown: false
+        });
+
+
+        EventHelpers.simulateMouseDown($input, 0, 0);
+        EventHelpers.simulateMouseUp($input, 0, 0);
+
+        expect(mouseDown).not.toHaveBeenCalled();
+        expect(mouseUp).not.toHaveBeenCalled();
+
+        // This is probably a redundant check:
+        expect(mouseDown.calls.length).toEqual(0);
+        expect(mouseUp.calls.length).toEqual(0);
+    });
+
+    it('expects mouse up and mouse down to be removed', function() {
         // Note the local assignment to of a scopedResponder,
         // not using the suite's setup 'responder' var.
         // We want to explicitely test onClose() behavior.
 
         var mouseDown       = jasmine.createSpy('mouseDown');
-        var mouseup         = jasmine.createSpy('mouseup');
+        var mouseUp         = jasmine.createSpy('mouseUp');
         var scopedResponder = new MouseResponder({
                 el: $input,
                 mouseDown: mouseDown,
-                mouseup: mouseup
+                mouseUp: mouseUp,
+                acceptsUpDown: true
             });
 
         scopedResponder.close();
@@ -105,91 +152,159 @@ describe('Responder: Mouse', function() {
         EventHelpers.simulateMouseUp($input, 0, 0);
 
         expect(mouseDown).not.toHaveBeenCalled();
-        expect(mouseup).not.toHaveBeenCalled();
+        expect(mouseUp).not.toHaveBeenCalled();
 
         // This is probably a redundant check:
         expect(mouseDown.calls.length).toEqual(0);
-        expect(mouseup.calls.length).toEqual(0);
+        expect(mouseUp.calls.length).toEqual(0);
     });
 
-    it('calls mouseDown', function(){
-        var spy = jasmine.createSpy('mouseDown');
+    it('expects mouse enter and exit to be called', function() {
+        var mouseEntered = jasmine.createSpy('mouseEntered');
+        var mouseExited = jasmine.createSpy('mouseExited');
 
         responder = new MouseResponder({
-            el: $input,
-            mouseDown: spy
-        });
-
-        EventHelpers.simulateMouseDown($input, 0, 0);
-        expect(spy).toHaveBeenCalled();
-    });
-
-    it('calls mouseUp', function(){
-        var spy = jasmine.createSpy('mouseUp');
-
-        responder = new MouseResponder({
-            el: $input,
-            mouseUp: spy
-        });
-
-        EventHelpers.simulateMouseUp($input, 0, 0);
-        expect(spy).toHaveBeenCalled();
-    });
-
-    it('calls mouseEntered', function(){
-        var spy = jasmine.createSpy('mouseEntered');
-
-        responder = new MouseResponder({
-            el: $input,
-            mouseEntered: spy,
-            acceptsEnterExit: true
+                el: $input,
+                mouseEntered: mouseEntered,
+                mouseExited: mouseExited,
+                acceptsEnterExit: true
         });
 
         EventHelpers.simulateMouseEnter($input, 0, 0);
-        expect(spy).toHaveBeenCalled();
+        EventHelpers.simulateMouseExit($input, 0, 0);
+
+        expect(mouseEntered).toHaveBeenCalled();
+        expect(mouseExited).toHaveBeenCalled();
+
+        // This is probably a redundant check:
+        expect(mouseEntered.calls.length).toEqual(1);
+        expect(mouseExited.calls.length).toEqual(1);
     });
 
-    it('calls mouseExited', function(){
-        var spy = jasmine.createSpy('mouseExited');
+    it('expects mouse enter and exit not to be called', function() {
+        var mouseEntered = jasmine.createSpy('mouseEntered');
+        var mouseExited = jasmine.createSpy('mouseExited');
 
         responder = new MouseResponder({
-            el: $input,
-            mouseExited: spy,
-            acceptsEnterExit: true
+                el: $input,
+                mouseEntered: mouseEntered,
+                mouseExited: mouseExited,
+                acceptsEnterExit: false
         });
 
+        EventHelpers.simulateMouseEnter($input, 0, 0);
         EventHelpers.simulateMouseExit($input, 0, 0);
-        expect(spy).toHaveBeenCalled();
+
+        expect(mouseEntered).not.toHaveBeenCalled();
+        expect(mouseExited).not.toHaveBeenCalled();
+
+        // This is probably a redundant check:
+        expect(mouseEntered.calls.length).toEqual(0);
+        expect(mouseExited.calls.length).toEqual(0);
     });
 
-    it('calls mouseMoved', function(){
-        var spy = jasmine.createSpy('mouseMoved');
+    it('expects mouse enter and mouse exit to be removed', function() {
+        // Note the local assignment to of a scopedResponder,
+        // not using the suite's setup 'responder' var.
+        // We want to explicitely test onClose() behavior.
+
+        var mouseEntered = jasmine.createSpy('mouseEntered');
+        var mouseExited = jasmine.createSpy('mouseExited');
+
+        var scopedResponder = new MouseResponder({
+                el: $input,
+                mouseEntered: mouseEntered,
+                mouseExited: mouseExited,
+                acceptsEnterExit: true
+        });
+
+        scopedResponder.close();
+
+        EventHelpers.simulateMouseEnter($input, 0, 0);
+        EventHelpers.simulateMouseExit($input, 0, 0);
+
+        expect(mouseEntered).not.toHaveBeenCalled();
+        expect(mouseExited).not.toHaveBeenCalled();
+
+        // This is probably a redundant check:
+        expect(mouseEntered.calls.length).toEqual(0);
+        expect(mouseExited.calls.length).toEqual(0);
+    });
+
+    it('expects mouse move to be called', function() {
+        var mouseMoved = jasmine.createSpy('mouseMoved');
 
         responder = new MouseResponder({
-            el: $input,
-            mouseMoved: spy,
-            acceptsMove: true
+                el: $input,
+                mouseMoved: mouseMoved,
+                acceptsMove: true
         });
 
         EventHelpers.simulateMouseMove($input, 0, 0);
-        expect(spy).toHaveBeenCalled();
+
+        expect(mouseMoved).toHaveBeenCalled();
+
+        // This is probably a redundant check:
+        expect(mouseMoved.calls.length).toEqual(1);
     });
 
-    it('calls mouseDragged', function(){
+    it('expects mouse move not to be called', function() {
+        var mouseMoved = jasmine.createSpy('mouseMoved');
+
+        responder = new MouseResponder({
+                el: $input,
+                mouseMoved: mouseMoved,
+                acceptsMove: false
+        });
+
+        EventHelpers.simulateMouseMove($input, 0, 0);
+
+        expect(mouseMoved).not.toHaveBeenCalled();
+
+        // This is probably a redundant check:
+        expect(mouseMoved.calls.length).toEqual(0);
+    });
+
+    it('expects mouse move to be removed', function() {
+        // Note the local assignment to of a scopedResponder,
+        // not using the suite's setup 'responder' var.
+        // We want to explicitely test onClose() behavior.
+
+        var mouseMoved = jasmine.createSpy('mouseMoved');
+
+        var scopedResponder = new MouseResponder({
+                el: $input,
+                mouseMoved: mouseMoved,
+                acceptsMove: true
+        });
+
+        scopedResponder.close();
+
+        EventHelpers.simulateMouseMove($input, 0, 0);
+
+        expect(mouseMoved).not.toHaveBeenCalled();
+
+        // This is probably a redundant check:
+        expect(mouseMoved.calls.length).toEqual(0);
+    });
+
+    it('expectes mouse dragged to be called', function(){
         var spy = jasmine.createSpy('mouseDragged');
 
         responder = new MouseResponder({
             el: $input,
-            mouseDragged: spy
+            mouseDragged: spy,
+            acceptsUpDown: true
         });
 
         EventHelpers.simulateMouseDragged($input, 0, 0, 10, 10);
         expect(spy).toHaveBeenCalled();
     });
 
-    it('tracks deltas', function(){
+    it('should report deltas', function(){
         responder = new MouseResponder({
-            el: $input
+            el: $input,
+            acceptsUpDown: true
         });
 
         EventHelpers.simulateMouseDragged($input, 0, 0, 10, 10);
@@ -198,9 +313,10 @@ describe('Responder: Mouse', function() {
 
     });
 
-    it('tracks negatvie deltas', function(){
+    it('should report negatvie deltas', function(){
         responder = new MouseResponder({
-            el: $input
+            el: $input,
+            acceptsUpDown: true
         });
 
         EventHelpers.simulateMouseDragged($input, 0, 0, -10, -10);
@@ -209,9 +325,10 @@ describe('Responder: Mouse', function() {
 
     });
 
-    it('counts clicks', function(){
+    it('should count clicks', function(){
         responder = new MouseResponder({
-            el: $input
+            el: $input,
+            acceptsUpDown: true
         });
 
         EventHelpers.simulateMouseDown($input, 0, 0);
