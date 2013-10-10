@@ -210,7 +210,6 @@ var HorizontalSlider = Marionette.Controller.extend({
     handleOffset: 0,
 
     _handleDidReceiveMouseDrag: function(range, responder, e) {
-        // console.log('_handleDidReceiveMouseDrag', range, responder, e);
         e.preventDefault();
 
         var delta   = responder.deltaX();
@@ -221,13 +220,11 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     _handleDidRecieveMouseDown: function(range, responder, e) {
-        // console.log('_handleDidRecieveMouseDown',range, responder, e);
         e.preventDefault();
         this.handleOffset = responder.$el.position().left;
     },
 
     _handleDidRecieveMouseUp: function(range, responder, e) {
-        // console.log('_handleDidRecieveMouseUp', range, responder, e);
         e.preventDefault();
         this.handleOffset = responder.$el.position().left;
     },
@@ -236,17 +233,15 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     _updateHandlePosition: function($handle, range, position, value) {
         var left = value;
-        $handle.css({'left': left});
+        $handle.css({'left': left + 'px'});
     },
 
     _updateHandlePositionWithSnap: function($handle, range, position, value) {
-        // var left = value;
-        var step = this.getStep();
-        var result = value;
-        console.log('step, result', step, result);
+        var step = this.getHandleStep($handle);
+        var stepDelta = range.getMax() / this.options.steps;
+        var left = stepDelta * step;
 
-        var left = value;
-        $handle.css({'left': left});
+        $handle.css({'left': left + 'px'});
     },
 
     // 'Private' helper accessors
@@ -383,8 +378,6 @@ var HorizontalSlider = Marionette.Controller.extend({
     // Event delegates
 
     _rangeDidChange: function($handle, range, position, value) {
-        // console.log('_rangeDidChange', position, value);
-
         if(this.options.snap) {
             this._updateHandlePositionWithSnap($handle, range, position, value);
         }else {
