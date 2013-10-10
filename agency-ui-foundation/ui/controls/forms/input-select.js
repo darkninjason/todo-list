@@ -165,15 +165,19 @@ define(function(require, exports, module){
         EVENT_BLUR: 'blur',
         EVENT_SELECT: 'select',
         EVENT_CANCEL: 'cancel',
+        EVENT_INPUT: 'input',
 
         el: null, // needs to be an <input> or contenteditable
-        minLength: 2,
-        debounceDelay: 300,
+
+        _defaults: {
+            minLength: 2,
+            debounceDelay: 300
+        },
 
         initialize: function(options){
             _.defaults(options, this._defaults);
+            this.el = options.el || null;
 
-            _.extend(this, options);
             _.bindAll(this, 'receivedText',
                 'mouseDidClick', 'mouseDidEnter', 'mouseDidExit',
                 'keyNavigationKeyDown', 'keyNavigationReturn', 'keyNavigationEscape',
@@ -185,7 +189,7 @@ define(function(require, exports, module){
         },
 
         initializeKeyResponder: function(){
-            var actionEvent = _.debounce(this.receivedText, this.debounceDelay);
+            var actionEvent = _.debounce(this.receivedText, this.options.debounceDelay);
 
             this.inputResponder = new KeyResponder({
                 el: this.$el,
@@ -198,8 +202,9 @@ define(function(require, exports, module){
             var $el = this.$el;
             var val = $el.is('input') ? $el.val() : $el.text();
 
-            if (val && val.length > this.minLength){
-                this.trigger('input', val);
+            if (val && val.length > this.options.minLength){
+                this._dispatchInput(this.$el, val);
+                //this.trigger('input', val);
             }
         },
 
@@ -375,6 +380,10 @@ define(function(require, exports, module){
 
         // Event Dispatchers
         // event, sender, [target, [args ...]]
+        _dispatchInput: function($target, value) {
+            this.trigger(this.EVENT_INPUT, this, $target, value);
+        },
+
         _dispatchFocus: function($target) {
             this.trigger(this.EVENT_FOCUS, this, $target);
         },
