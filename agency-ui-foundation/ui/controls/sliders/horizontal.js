@@ -10,53 +10,6 @@ var RangeManager         = require('auf/ui/managers/range');
 
 // Module
 
-// TODO:
-// - Options
-//   - $track             // required
-//   - $handles           // required (at least 1)
-//   - acceptsMouse       // default true
-//   - acceptsTouch       // default false
-//   - acceptsKeys        // default false
-//   - acceptsOrientation // default false
-//   - steps              // number of steps, default is 0
-//   - snap               // should view 'snap' to steps, default false
-//
-// - Public API
-//   - getPositionAt()
-//   - getPositions()
-//   - getHandlePosition()
-//   - setPositionAt()
-//   - setPositions()
-//   - setHandlePosition()
-//   - setHandlePositions()
-//   - getStepAt()
-//   - getSteps()
-//   - getHandleStep()
-//   - setStepAt()
-//   - setSteps()
-//   - setHandleStep()
-//   - setHandleSteps()
-//
-// - Events
-//   - change
-//   - drag: start
-//   - drag: stop
-//
-// - Interaction support
-//   - Mouse
-//   - Touch
-//   - Device Orientation
-//   - Keys (arrows, depends on slider orientation)
-//
-// Tasks
-// - Implement Touch Handling
-// - Implement Key Handling
-// - Implement Orientation Handling
-//
-// Thoughts
-// - Handles take starting position?
-// - Change event reports steps, positions, target step, target position?
-
 var HorizontalSlider = Marionette.Controller.extend({
 
     // Constants
@@ -67,7 +20,8 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     ranges: null,
     mouseResponders: null,
-    handleOffset: 0,
+    touchResponders: null,
+    handleOffsets: [],
 
     // Defaults
 
@@ -98,8 +52,8 @@ var HorizontalSlider = Marionette.Controller.extend({
      *         snap              : true,                   // default false
      *         acceptsMouse      : true                    // default true
      *         acceptsTouch      : false                   // default false
-     *         acceptsKeys       : false                   // default false
-     *         acceptsOrientation: false                   // default false
+     *         acceptsKeys       : false                   // default false   // not implemented
+     *         acceptsOrientation: false                   // default false   // not implemented
      *     }
      * );
      */
@@ -124,10 +78,20 @@ var HorizontalSlider = Marionette.Controller.extend({
         if(this.options.acceptsMouse){
             this.mouseResponders = this._initializeMouse(this.options);
         }
+        if(this.options.acceptsTouch){
+            this.touchResponders = this._initializeTouch(this.options);
+        }
     },
 
     onClose: function() {
-        // TODO: Close all responders here?
+        function iterator (responder, i, list) {
+            if(responder) responder.onClose();
+        }
+
+        var responders = this.mouseResponders
+            .concat(this.touchResponders || []);
+
+        _.each(responders, iterator, this);
     },
 
     // Internal initialization
@@ -156,48 +120,60 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     _getNormalizedRanges: function($track, $handles) {
-        var max;
-        var min           = 0;
-        var results       = [];
-        var trackBounds   = this._getElementBounds($track[0]);
-        var handlesBounds = this._getElementsBounds($handles.toArray());
-        var i             = 0;
-        var len           = handlesBounds.length;
-
-        for(i; i < len; i++) {
-            max = trackBounds.width - handlesBounds[i].width;
-            results.push(new RangeManager({min:min, max:max}));
+        function iterator(handleBounds, i, list) {
+            return new RangeManager({
+                min: 0,
+                max: trackBounds.width - handleBounds.width
+            });
         }
 
-        return results;
+        // TODO: Revisit, really need toArray() call?
+        var list        = this._getElementsBounds($handles.toArray());
+        var trackBounds = this._getElementBounds($track[0]);
+
+        return _.map(list, iterator, this);
      },
 
     _initializeMouse: function(options) {
-        var range, mouseDragged, mouseDown, mouseUp, responder;
-        var $handles = options.$handles;
-        var ranges   = this.ranges;
-        var i        = 0;
-        var len      = $handles.length;
-        var results  = [];
-
-        for(i; i < len; i++) {
-            range        = ranges[i];
-            mouseDragged = _.bind(this._handleDidReceiveMouseDrag, this, range);
-            mouseDown    = _.bind(this._handleDidRecieveMouseDown, this, range);
-            mouseUp      = _.bind(this._handleDidRecieveMouseUp, this, range);
-
-            responder = new MouseResponder({
-                el: $handles.eq(i),
-                mouseDragged: mouseDragged,
-                mouseDown: mouseDown,
-                mouseUp: mouseUp
+        function iterator(el, i, list) {
+            return new MouseResponder({
+                el: $(el),
+                mouseDragged: _.bind(this._handleDidReceiveDrag,      this, ranges[i]),
+                mouseDown   : _.bind(this._handleDidRecieveDragStart, this, ranges[i]),
+                mouseUp     : _.bind(this._handleDidRecieveDragStop,  this, ranges[i])
             });
-
-            results.push(responder);
-
         }
 
-        return results;
+        var ranges = this.ranges;
+
+        return _.map(this.options.$handles, iterator, this);
+    },
+
+    _initializeTouch: function(options) {
+        function iterator(el, i, list) {
+            return new TouchResponder({
+                el: $(el),
+                touchMove : _.bind(this._handleDidReceiveDrag,      this, ranges[i]),
+                touchStart: _.bind(this._handleDidRecieveDragStart, this, ranges[i]),
+                touchEnd  : _.bind(this._handleDidRecieveDragStop,  this, ranges[i])
+            });
+        }
+
+        var ranges = this.ranges;
+
+        return _.map(this.options.$handles, iterator, this);
+    },
+
+    _initializeKeys: function(options) {
+        function iterator(el, i, list) {
+            // TODO implement KeyResponder init.
+        }
+
+        return _.map(this.options.$handles, iterator, this);
+    },
+
+    _initializeOrientation: function(options) {
+        console.log('_initializeOrientation not implemented.', options);
     },
 
     // 'Protected' methods
@@ -243,7 +219,7 @@ var HorizontalSlider = Marionette.Controller.extend({
         return this.options.$handles.index($handle);
     },
 
-    _getRange: function(index) {
+    _getRangeManager: function(index) {
         var range = this.ranges[index];
 
         if(typeof range == 'undefined') {
@@ -255,25 +231,16 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     // 'Public' Position methods
 
-    getPosition: function() {
-        return this.getPositionAt(0);
-    },
-
     getPositionAt: function(index) {
-        return this._getRange(index).getPosition();
+        return this._getRangeManager(index).getPosition();
     },
 
     getPositions: function() {
-        var results = [];
-        var ranges  = this.ranges;
-        var i       = 0;
-        var len     = ranges.length;
-
-        for(i; i < len; i++) {
-            results.push(this.getPositionAt(i));
+        function iter(el, i, list) {
+            return this.getPositionAt(i);
         }
 
-        return results;
+        return _.map(this.ranges, iter, this);
     },
 
     getHandlePosition: function($handle) {
@@ -281,53 +248,38 @@ var HorizontalSlider = Marionette.Controller.extend({
         return this.getPositionAt(index);
     },
 
-    setPosition: function(value) {
-        this.setPositionAt(value, 0);
-    },
-
     setPositionAt: function(value, index) {
         index = index || 0; // default to 0
-        this._getRange(index).setPosition(value);
+        this._getRangeManager(index).setPosition(value);
     },
 
-    setHandlePosition: function(value, $handle) {
+    setPositionForHandle: function(value, $handle) {
         var index = this._getHandleIndex($handle);
         this.setPositionAt(value, index);
     },
 
     // Step methods
-    getStep: function() {
-        return this.getStepAt(0);
-    },
 
     getStepAt: function(index) {
         var position = this.getPositionAt(index);
 
-        // round will round-up if decimal is .5 or higher.
-        // this should give good reporting of steps
+        // round will round-up if decimal is greater than .5.
+        // round will round-down if decimal is less than .5.
+        // this should give good reporting of steps based on position.
         return Math.round(this.options.steps * position);
     },
 
     getSteps: function() {
-        var results = [];
-        var ranges  = this.ranges;
-        var i       = 0;
-        var len     = ranges.length;
-
-        for(i; i < len; i++) {
-            results.push(this.getStepAt(i));
+        function iter(el, i, list) {
+            return this.getStepAt(i);
         }
 
-        return results;
+        return _.map(this.ranges, iter, this);
     },
 
     getHandleStep: function($handle) {
         var index = this._getHandleIndex($handle);
         return this.getStepAt(index);
-    },
-
-    setStep: function(value) {
-        this.setStepAt(value, 0);
     },
 
     setStepAt: function(value, index) {
@@ -341,9 +293,27 @@ var HorizontalSlider = Marionette.Controller.extend({
         this.setPositionAt(position, index);
     },
 
-    setHandleStep: function(value, $handle) {
+    setStepForHandle: function(value, $handle) {
         var index = this._getHandleIndex($handle);
         this.setStepAt(value, index);
+    },
+
+    // Convenience API
+
+    getPosition: function() {
+        return this.getPositionAt(0);
+    },
+
+    setPosition: function(value) {
+        this.setPositionAt(value, 0);
+    },
+
+    getStep: function() {
+        return this.getStepAt(0);
+    },
+
+    setStep: function(value) {
+        this.setStepAt(value, 0);
     },
 
     // Event delegates
@@ -355,46 +325,55 @@ var HorizontalSlider = Marionette.Controller.extend({
 
         }else{
             this._updateHandlePosition(
-                $handle, range, position, value
-            );
+                $handle, range, position, value);
         }
 
         this._dispatchChange($handle, position);
     },
 
-    _handleDidReceiveMouseDrag: function(range, responder, e) {
+    _handleDidReceiveDrag: function(range, responder, e) {
         e.preventDefault();
 
-        var delta   = responder.deltaX();
         var $handle = responder.$el;
-        var value   = delta + this.handleOffset;
+        var index   = this._getHandleIndex($handle);
+        var delta   = responder.deltaX()[0] || responder.deltaX();
+        var value   = delta + this.handleOffsets[index];
 
-        range.setValue(value);
+        this.setPositionForHandle(range.calculatePositionForValue(value), $handle);
     },
 
-    _handleDidRecieveMouseDown: function(range, responder, e) {
+    _handleDidRecieveDragStart: function(range, responder, e) {
         e.preventDefault();
-        this.handleOffset = responder.$el.position().left;
+
+        var $handle = responder.$el;
+        var index   = this._getHandleIndex($handle);
+
+        this.handleOffsets[index] = responder.$el.position().left;
 
         this._dispatchDragStart(responder.$el, range.getPosition());
     },
 
-    _handleDidRecieveMouseUp: function(range, responder, e) {
+    _handleDidRecieveDragStop: function(range, responder, e) {
         e.preventDefault();
-        this.handleOffset = responder.$el.position().left;
-
         this._dispatchDragStop(responder.$el, range.getPosition());
     },
 
     // Event Dispatchers
 
-    // TODO: possibly pass in target, and related data
+    // Event dispatchers should follow this format:
+    // this.trigger(EVENT_CONSTANT, sender, [target, [args...]]);
+    // Where:
+    // - Target is optional if the sender is the target, else required.
+    // - Args is also optional and can be any number of args.
+    //   - Use args to pass along useful, additional information.
     _dispatchChange: function($handle, position) {
         this.trigger(this.EVENT_CHANGE, this, $handle, position);
     },
+
     _dispatchDragStart: function($handle, position) {
         this.trigger(this.EVENT_DRAG_START, this, $handle, position);
     },
+
     _dispatchDragStop: function($handle, position) {
         this.trigger(this.EVENT_DRAG_STOP, this, $handle, position);
     }
