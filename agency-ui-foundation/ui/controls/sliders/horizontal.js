@@ -62,8 +62,8 @@ var HorizontalSlider = Marionette.Controller.extend({
     // Constants
 
     EVENT_CHANGE:     'change',
-    EVENT_DRAG_START: 'drag: start',
-    EVENT_DRAG_STOP:   'drag: stop;',
+    EVENT_DRAG_START: 'drag:start',
+    EVENT_DRAG_STOP:   'drag:stop;',
 
     ranges: null,
     mouseResponders: null,
