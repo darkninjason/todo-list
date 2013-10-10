@@ -48,11 +48,10 @@ define(function(require, exports, module){
     //    and the debounce delay has expired.
     //
     // 3) You do something with that input you recieve. For example,
-    //    you might Make a call to a server to fetch choices.
+    //    you might make a call to a server to fetch choices.
     //
-    // 4) Once you have the information for choices you would like to
-    //    display you must decide how to visually put those choices on
-    //    the screen and do so.
+    // 4) Once you have the information for the choices you must decide
+    //    how to visually put those choices on the screen and do so.
     //
     // 5) After you have displayed your choices to the user, you then
     //    need to tell this control about those items. There are 3 ways
@@ -65,17 +64,19 @@ define(function(require, exports, module){
     // 6) Now that this control is aware of your choices you inform it
     //    that you would like to start the navigation process via:
     //    beginNavigationPhase(). The key and mouse handlers will
-    //    be activated here and you will begin to receive 'focus' and 'blur'
-    //    events from this control. You must decide what those events
-    //    visually mean for your application. Each 'focus' and 'blur' events
-    //    will provide the $jqElement that it applies to. In addition to
-    //    'focus' and 'blur' events you will also receive 'select' and 'cancel'
-    //    events. Like 'focus' and 'blur', 'select' also hands you a
-    //    $jqElement. The $jqElement provided from a 'select' event will be
-    //    the $jqElement of the last 'focus' event. A 'cancel' event does
-    //    not provide a $jqElement. In summation the events you would be
-    //    interested in after you call beginNavigationPhase() are:
-    //    'focus', 'blur', 'select', 'cancel'.
+    //    be activated here and you will begin to receive 'focus', 'blur'
+    //    'select', and 'cancel' events from this control. You must decide
+    //    what those events visually mean for your application. Each
+    //    'focus' and 'blur' event will provide the $jqElement that it
+    //    applies to. In addition to 'focus' and 'blur' events you will
+    //    also receive 'select' and 'cancel' events. Like 'focus' and
+    //    'blur', 'select' also hands you a $jqElement. The $jqElement
+    //    provided from a 'select' event will be the $jqElement of the
+    //    last 'focus' event. A 'cancel' event does not provide a
+    //    $jqElement. In summation the events you would be interested
+    //    in after you call beginNavigationPhase() are:
+    //    'focus', 'blur', 'select', 'cancel'. You are responsible for
+    //    showing and hiding your choices.
     //
     // 7) At anytime during the navigation phase, which was started with
     //    the call to beginNavigationPhase(), it is your responsibility
