@@ -67,13 +67,14 @@ var SpecHelpers = {
             ];
 
             var payload = {
-                originalEvent: {touches: touches},
+                originalEvent: {touches: touches, targetTouches: touches},
                 target: $el[0],
                 currentTarget: $el[0]
-            }
+            };
 
             return this.simulateEvent($el, type, payload);
         },
+
         simulateTouchStart: function($el, x, y){
             return this.simulateTouchEvent($el, 'touchstart', x, y);
         },
