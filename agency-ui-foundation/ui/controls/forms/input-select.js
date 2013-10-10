@@ -78,10 +78,10 @@ define(function(require, exports, module){
     //    showing and hiding your choices.
     //
     // 7) At anytime during the navigation phase, which was started with
-    //    the call to beginNavigationPhase(), it is your responsibility
-    //    to also end the navigation phase with a call to
-    //    endNavigationPhase(). You will typically end the navigation
-    //    phase upon receiving a 'select' or 'cancel' event.
+    //    the call to beginNavigationPhase(), it is YOUR RESPONSIBILITY
+    //    to end the navigation phase with a call to endNavigationPhase().
+    //    You will typically end the navigation phase upon receiving a
+    //    'select' or 'cancel' event.
     //
     // 8) After ending the navigation phase, it is your responsibility
     //    to hide the selection choices from the user. Just as it was
