@@ -90,7 +90,7 @@ define(function(require, exports, module){
     //    If you have a constant representation of this control
     //    it becomes trivial to wrap these steps into a
     //    reusable component. An example, -!!- hastily constructed -!!-
-    //    example is included below using a Marionette CollectionView
+    //    is included below using a Marionette CollectionView
     //
     //
     //           var MyItemView = Marionette.ItemView.extend({
