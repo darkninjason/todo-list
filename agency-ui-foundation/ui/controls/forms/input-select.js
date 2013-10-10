@@ -363,7 +363,7 @@ define(function(require, exports, module){
         },
 
         onClose: function(){
-            this.endNavigationControls();
+            this.endNavigationPhase();
             this._$elements = [];
         }
 
