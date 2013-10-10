@@ -35,8 +35,7 @@ define(function(require, exports, module){
     // mean for your application.
     //
     // Additionally, this control does not hide or show anything.
-    // That decision on how to hide and show your collection
-    // of choices is up to you.
+    // The decision on how to hide and show your choices is up to you.
     //
     // This control provides the following flow:
     // 1) You provide it an <input> that can accept user typing
