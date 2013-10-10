@@ -83,21 +83,21 @@ var TouchResponder = Marionette.Controller.extend({
     },
 
     _setStartX: function(e){
-        this._startX = _.map(e.originalEvent.touches, function(x){
+        this._startX = _.map(e.originalEvent.targetTouches, function(x){
             return x.pageX;
         });
 
-        this._startY = _.map(e.originalEvent.touches, function(x){
+        this._startY = _.map(e.originalEvent.targetTouches, function(x){
             return x.pageY;
         });
     },
 
     _setEndX: function(e){
-        this._endX = _.map(e.originalEvent.touches, function(x){
+        this._endX = _.map(e.originalEvent.targetTouches, function(x){
             return x.pageX;
         });
 
-        this._endY = _.map(e.originalEvent.touches, function(x){
+        this._endY = _.map(e.originalEvent.targetTouches, function(x){
             return x.pageY;
         });
     },

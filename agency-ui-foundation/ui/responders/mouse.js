@@ -13,27 +13,41 @@ var MouseResponder = Marionette.Controller.extend({
     // Object vars
 
     el: null,
+
+    // Why rely on these accepts* flags? Why not use the presence of
+    // the public user callbacks: mouseUp, mouseDown, etc to designate
+    // which mouse events are importnat?
+    // The user may or may pass mouseUp, mouseDown, etc at construction
+    // time. It's entirely possible to do this:
+    //
+    // var m = new MouseResponder({el:'...', acceptsUpDown: true});
+    // m.mouseUp = myHandler.mouseUp.
+    //
+    // in that case, we would have never known to even start listenting
+    // for up or down events if we only relied on them being set at
+    // initialization time.
+    acceptsUpDown: true,
     acceptsMove: false,
     acceptsEnterExit: false,
+
+    // Time window, in milliseconds,  to count clicks
     clickCountTimeout: 350,
 
     // Initialization
-
     initialize: function(options){
         _.extend(this, options);
         _.bindAll(this, '_mouseDown', '_mouseUp',
             '_mouseEntered', '_mouseExited',
             '_mouseDragged', '_mouseMoved');
 
-
         if(!this.el) return;
-
         this.$el = helpers.getElement(this.el);
 
-        this.$el.on('mousedown', {ctx: this}, this._mouseDown);
-        this.$el.on('mouseup', {ctx: this}, this._mouseUp);
+        if(this.acceptsUpDown){
+            this.$el.on('mousedown', {ctx: this}, this._mouseDown);
+            this.$el.on('mouseup', {ctx: this}, this._mouseUp);
+        }
 
-        // does not participate in the internal state system
         if (this.acceptsMove){
             this.$el.on('mousemove', {ctx: this}, this._mouseMoved);
         }
@@ -59,10 +73,10 @@ var MouseResponder = Marionette.Controller.extend({
         return ++this._clicks;
     },
 
-    /* In order to handle 'dragged' we need to handle some
-    internal state. We don't want the user overriding these
-    internal handlers so they are prefixed with an _ and will
-    call the public handlers accordingly */
+    // In order to handle 'dragged' we need to handle some
+    // internal state. We don't want the user overriding these
+    // internal handlers so they are prefixed with an _ and will
+    // call the public handlers accordingly
 
     // Internal Handlers
     _mouseDown: function(e){
@@ -159,13 +173,20 @@ var MouseResponder = Marionette.Controller.extend({
     // Marionette overrides
 
     onClose: function(){
-        this.$el.off('mousedown', this._mouseDown);
-        this.$el.off('mouseup', this._mouseUp);
-
         // to ensure it's gone
         $('body').off('mousemove', this._mouseDragged);
 
-        if (this.acceptsMoveEvents){
+        if(this.acceptsUpDown){
+            this.$el.off('mousedown', this._mouseDown);
+            this.$el.off('mouseup', this._mouseUp);
+        }
+
+        if (this.acceptsEnterExit){
+            this.$el.off('mouseenter', this._mouseEntered);
+            this.$el.off('mouseleave', this._mouseExited);
+        }
+
+        if (this.acceptsMove){
             this.$el.off('mousemove', this._mouseMoved);
         }
     }
