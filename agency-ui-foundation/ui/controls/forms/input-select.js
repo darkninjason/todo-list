@@ -13,8 +13,7 @@ define(function(require, exports, module){
     // inject any markup.
     //
     // This control assumes that there will be some
-    // collection of views stacked vertically that will
-    // represent the choices.
+    // views arranged vertically that will represent the choices.
     //
     // Up and Down keyboard based control will notify
     // you via 'focus' 'blur' events which one should currentlly
