@@ -159,6 +159,13 @@ define(function(require, exports, module){
 
     var InputSelect = Marionette.Controller.extend({
 
+        // Constants
+
+        EVENT_FOCUS: 'focus',
+        EVENT_BLUR: 'blur',
+        EVENT_SELECT: 'select',
+        EVENT_CANCEL: 'cancel',
+
         el: null, // needs to be an <input> or contenteditable
         minLength: 2,
         debounceDelay: 300,
@@ -278,6 +285,7 @@ define(function(require, exports, module){
             this.listenTo(this.focusManager, 'blur', this.wantsBlur);
         },
 
+        // Keyboard Handling
         keyNavigationSupressLateralCursorMovement: function(e){
             // up | down
             // when the user presses up or down
@@ -299,7 +307,7 @@ define(function(require, exports, module){
         },
 
         keyNavigationEscape: function(responder, e){
-            this.trigger('cancel');
+            this._dispatchCancel();
         },
 
         keyNavigationFirstMove: function(responder, e){
@@ -327,6 +335,7 @@ define(function(require, exports, module){
             this.focusManager.focusIndex(this.indexManager.getIndex());
         },
 
+        // Mouse Handling
         mouseDidClick: function(responder, e){
             if(responder.clickCount() > 0){
                 // keep the input focused
@@ -347,24 +356,38 @@ define(function(require, exports, module){
         },
 
         wantsFocus: function($el){
-            this.trigger('focus', $el);
+            this._dispatchFocus($el);
         },
 
         wantsBlur: function($el){
-            this.trigger('blur', $el);
+            this._dispatchBlur($el);
         },
 
         wantsSelect: function($el){
-            this.trigger('select', $el);
-        },
-
-        cleanup: function(){
-
+            this._dispatchSelect($el);
         },
 
         onClose: function(){
             this.endNavigationPhase();
             this._$elements = [];
+        },
+
+        // Event Dispatchers
+        // event, sender, [target, [args ...]]
+        _dispatchFocus: function($target) {
+            this.trigger(this.EVENT_FOCUS, this, $target);
+        },
+
+        _dispatchBlur: function($target) {
+            this.trigger(this.EVENT_BLUR, this, $target);
+        },
+
+        _dispatchSelect: function($target) {
+            this.trigger(this.EVENT_SELECT, this, $target);
+        },
+
+        _dispatchCancel: function() {
+            this.trigger(this.EVENT_CANCEL, this);
         }
 
     });
