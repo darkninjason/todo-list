@@ -88,7 +88,7 @@ define(function(require, exports, module){
     //    your responsibility to show them.
     //
     //    If you have a constant representation of this control
-    //    it becomes trivial to wrap these steps into a
+    //    it becomes trivial to compose this control into a
     //    reusable component. An example, -!!- hastily constructed -!!-
     //    is included below using a Marionette CollectionView
     //
