@@ -14,54 +14,70 @@ describe('Input Select Control', function() {
     // Object Vars
 
     //var control, $sliderContainer, $slider, $sliderTrack, $sliderHandle;
-    var control, MyItemView, $input, $collection;
+    var control, myCollectionView, MyItemView, $ctx, $input, $collection;
     // Setup
 
     beforeEach(function() {
         loadFixtures('control-input-select.html');
 
-        $input = $('#input');
-        $collection = $('#collection');
+        $ctx = $('#jasmine-context');
+        $input = $ctx.find('#input');
+        $collection = $ctx.find('#collection');
 
         MyItemView = Marionette.ItemView.extend({
             template: '#itemView',
             tagName: 'li'
         });
 
+        myCollectionView = new Marionette.CollectionView({
+            el: $collection,
+            itemView: MyItemView,
+            collection: new Backbone.Collection()
+        });
+
         control = new InputSelect({
-            el: $input
+            el: $input,
         });
     });
 
 
     // Test Suite
-    it('throws error when no track provided', function(){
-        EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-        // function badInit() {
-        //     new HorizontalSlider({
-        //         $handles: $sliderHandle,
-        //         // $track: $sliderTrack,
-        //         steps: 30,
-        //         acceptsMouse: true,
-        //         acceptsTouch: true,
-        //     });
-        // }
-
-        // expect(badInit).toThrow();
-    });
-
-    xit('throws error when no handle provided', function(){
+    it('throws error when no input provided', function(){
+        //EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
         function badInit() {
-            new HorizontalSlider({
-                // $handles: $sliderHandle,
-                $track: $sliderTrack,
-                steps: 30,
-                acceptsMouse: true,
-                acceptsTouch: true,
-            });
+            new InputSelect({});
         }
 
         expect(badInit).toThrow();
+    });
+
+    it('dispatches input event', function(){
+        var flag = false;
+        var obj = _.extend({
+          receivedInput: jasmine.createSpy('receivedInput')
+        }, Backbone.Events);
+
+        obj.listenTo(control, 'input', obj.receivedInput);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+
+            setTimeout(function() {
+                flag = true;
+            }, 300); // default debounce delay is 300
+        });
+
+        waitsFor(function() {
+            return flag;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(obj.receivedInput).toHaveBeenCalled();
+            expect(obj.receivedInput).toHaveBeenCalledWith(control, $input, 'lucy');
+        });
     });
 
     xit('moved slider handle', function() {

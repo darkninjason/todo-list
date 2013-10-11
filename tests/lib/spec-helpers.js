@@ -17,7 +17,43 @@ var SpecHelpers = {
         'escape': 27,
         'return': 13,
         'tab': 9,
-        'delete': 8
+        'delete': 8,
+        '_0': 48,
+        '_1': 49,
+        '_2': 50,
+        '_3': 51,
+        '_4': 52,
+        '_5': 53,
+        '_6': 54,
+        '_7': 55,
+        '_8': 56,
+        '_9': 57,
+        'a': 65,
+        'b': 66,
+        'c': 67,
+        'd': 68,
+        'e': 69,
+        'f': 70,
+        'g': 71,
+        'h': 72,
+        'i': 73,
+        'j': 74,
+        'k': 75,
+        'l': 76,
+        'm': 77,
+        'n': 78,
+        'o': 79,
+        'p': 80,
+        'q': 81,
+        'r': 82,
+        's': 83,
+        't': 84,
+        'u': 85,
+        'v': 86,
+        'w': 87,
+        'x': 88,
+        'y': 89,
+        'z': 90
     },
 
     Events: {
@@ -126,9 +162,16 @@ var SpecHelpers = {
             this.simulateKeyEvent($el, 'keyup', keyCode);
         },
 
-        simulateKeyDownWithDownArrow: function($el){
-            debugger;
-            this.simulateKeyDown($el, SpecHelpers.KeyCodes.downArrow);
+        insertChar: function($el, char){
+            var val = function(){
+                var action = $el.is('input') ? $el.val : $el.text;
+                return action.apply($el, arguments);
+            };
+
+            val(val() + char);
+
+            var prefix = isNaN(parseInt(char, 10)) ? '' : '_';
+            this.simulateKeyDown($el, SpecHelpers.KeyCodes[prefix + char]);
         }
     }
 

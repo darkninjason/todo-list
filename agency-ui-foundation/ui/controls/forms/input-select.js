@@ -191,7 +191,6 @@ define(function(require, exports, module){
 
         _initializeKeyResponder: function(){
             var actionEvent = _.debounce(this.receivedText, this.options.debounceDelay);
-
             this.inputResponder = new KeyResponder({
                 el: this.$el,
                 insertText: actionEvent,
@@ -202,10 +201,10 @@ define(function(require, exports, module){
         receivedText: function(responder, e){
             var $el = this.$el;
             var val = $el.is('input') ? $el.val() : $el.text();
+            console.log(val);
 
             if (val && val.length > this.options.minLength){
                 this._dispatchInput(this.$el, val);
-                //this.trigger('input', val);
             }
         },
 
