@@ -44,7 +44,8 @@ describe('Input Select Control', function() {
         });
 
         control = new InputSelect({
-            el: $input
+            el: $input,
+            debounceDelay: 100
         });
 
         inputHandler = {
@@ -110,7 +111,7 @@ describe('Input Select Control', function() {
 
             setTimeout(function() {
                 flag = true;
-            }, 300); // default debounce delay is 300
+            }, 100); // debounce delay is 100 for the tests
         });
 
         waitsFor(function() {
