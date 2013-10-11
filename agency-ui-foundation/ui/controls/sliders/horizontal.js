@@ -55,8 +55,7 @@ var HorizontalSlider = Marionette.Controller.extend({
      *         snap              : true,                   // default false
      *         acceptsMouse      : true                    // default true
      *         acceptsTouch      : false                   // default false
-     *         acceptsKeys       : false                   // default false   // not implemented
-     *         acceptsOrientation: false                   // default false   // not implemented
+     *         acceptsOrientation: false                   // default false
      *     }
      * );
      */
