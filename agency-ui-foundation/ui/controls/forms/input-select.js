@@ -280,7 +280,7 @@ define(function(require, exports, module){
 
             this.keyNavigation = new KeyResponder({
                 el: this.$el,
-                keyDown: this.keyNavigationKeyDown,
+                keyDown: this._keyNavigationKeyDown,
                 insertNewline: this.keyNavigationReturn,
                 cancelOperation: this.keyNavigationEscape,
                 moveUp: this.keyNavigationFirstMove,
@@ -303,7 +303,7 @@ define(function(require, exports, module){
             if(/(27|13)/.test(e.keyCode)) e.preventDefault();
         },
 
-        keyNavigationKeyDown: function(responder, e){
+        _keyNavigationKeyDown: function(responder, e){
             this._keyNavigationSupressLateralCursorMovement(e);
             this.keyNavigation.interpretKeyEvents([e]);
         },
