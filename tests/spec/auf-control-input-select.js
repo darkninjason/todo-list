@@ -617,6 +617,120 @@ describe('Input Select Control', function() {
         });
     });
 
+    it('does not dispatch \'focus\' event with key down or up', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'focus', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                control.endNavigationPhase();
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    it('does not dispatch \'blur\' event with key down or up', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'blur', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                control.endNavigationPhase();
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    it('does not dispatch \'select\' event with key', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'select', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                control.endNavigationPhase();
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.return);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    it('does not dispatch \'cancel\' event with key', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'cancel', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                control.endNavigationPhase();
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.escape);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).not.toHaveBeenCalled();
+        });
+    });
+
     // Mouse Events
 
     it('dispatches \'focus\' event with mouse', function() {
@@ -671,6 +785,34 @@ describe('Input Select Control', function() {
         runs(function() {
             expect(actionSpy).toHaveBeenCalled();
             expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
+        });
+    });
+
+    it('dispatches \'select\' event with mouse', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'select', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateMouseDown($items.eq(1));
+                EventHelpers.simulateMouseUp($items.eq(1));
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).toHaveBeenCalled();
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(1));
         });
     });
 
@@ -741,7 +883,62 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('dispatches \'select\' event with mouse', function() {
+    it('does not dispatch \'focus\' event with mouse', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'focus', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                control.endNavigationPhase();
+                EventHelpers.simulateMouseEnter($items.eq(0));
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    it('does not dispatch \'blur\' event with mouse', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'blur', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                control.endNavigationPhase();
+                EventHelpers.simulateMouseEnter($items.eq(0));
+                EventHelpers.simulateMouseExit($items.eq(0));
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    it('does not dispatch \'select\' event with mouse', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -756,17 +953,16 @@ describe('Input Select Control', function() {
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateMouseEnter($items.eq(1));
-                EventHelpers.simulateMouseDown($items.eq(1));
-                EventHelpers.simulateMouseUp($items.eq(1));
+                control.endNavigationPhase();
+                EventHelpers.simulateMouseDown($items.eq(0));
+                EventHelpers.simulateMouseUp($items.eq(0));
                 return true;
             }
             return false;
         }, 'No input received', 500);
 
         runs(function() {
-            expect(actionSpy).toHaveBeenCalled();
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(1));
+            expect(actionSpy).not.toHaveBeenCalled();
         });
     });
 
