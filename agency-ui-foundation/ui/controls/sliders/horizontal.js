@@ -10,9 +10,6 @@ var OrientationResponder = require('auf/ui/responders/orientation');
 
 // Module
 
-// TODO:
-// - implement orientation
-
 var HorizontalSlider = Marionette.Controller.extend({
 
     // Constants
