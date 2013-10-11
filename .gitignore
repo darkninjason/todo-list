@@ -64,11 +64,7 @@ deploy/
 nosetests.xml
 *.sublime-*
 
-# Personal TODOs
-__TODO__.md
-
-tests/kitchen-sink
-agency-ui-foundation/ui/controls/sliders/horizontal.old.js
+tests/rig
 
 # Ignore Exceptions
 # ========================================================================== #
