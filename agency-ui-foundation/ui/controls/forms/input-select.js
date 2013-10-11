@@ -185,10 +185,10 @@ define(function(require, exports, module){
 
             if(!this.el) throw 'No input element provided.';
             this.$el = helpers.getElement(this.el);
-            this.initializeKeyResponder();
+            this._initializeKeyResponder();
         },
 
-        initializeKeyResponder: function(){
+        _initializeKeyResponder: function(){
             var actionEvent = _.debounce(this.receivedText, this.options.debounceDelay);
 
             this.inputResponder = new KeyResponder({
@@ -235,7 +235,7 @@ define(function(require, exports, module){
 
         beginNavigationPhase: function(){
             this.endNavigationPhase();
-            this.initializeNavigationControls(this._$elements);
+            this._initializeNavigationControls(this._$elements);
         },
 
         endNavigationPhase: function(){
@@ -261,7 +261,7 @@ define(function(require, exports, module){
             this.keyNavigation = null;
         },
 
-        initializeNavigationControls: function($elements){
+        _initializeNavigationControls: function($elements){
             this.focusManager = new SingleFocusManager({
                 el: $elements
             });
@@ -292,7 +292,7 @@ define(function(require, exports, module){
         },
 
         // Keyboard Handling
-        keyNavigationSupressLateralCursorMovement: function(e){
+        _keyNavigationSupressLateralCursorMovement: function(e){
             // up | down
             // when the user presses up or down
             // prevent the cursor from jumping to the
@@ -304,7 +304,7 @@ define(function(require, exports, module){
         },
 
         keyNavigationKeyDown: function(responder, e){
-            this.keyNavigationSupressLateralCursorMovement(e);
+            this._keyNavigationSupressLateralCursorMovement(e);
             this.keyNavigation.interpretKeyEvents([e]);
         },
 
