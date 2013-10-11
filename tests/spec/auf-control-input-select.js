@@ -114,6 +114,13 @@ describe('Input Select Control', function() {
         obj.close();
     });
 
+    it('sets debounceDelay and minLength on init', function(){
+        var obj = new InputSelect({el: $input, debounceDelay: 1000, minLength: 30});
+        expect(obj.options.minLength).toEqual(30);
+        expect(obj.options.debounceDelay).toEqual(1000);
+        obj.close();
+    });
+
     // Input Event
     it('dispatches \'input\' event', function(){
         var flag = false;
@@ -664,6 +671,102 @@ describe('Input Select Control', function() {
         runs(function() {
             expect(actionSpy).toHaveBeenCalled();
             expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
+        });
+    });
+
+    it('dispatches \'focus\' events for all items with mouse', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'focus', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateMouseEnter($items.eq(0));
+                EventHelpers.simulateMouseEnter($items.eq(1));
+                EventHelpers.simulateMouseEnter($items.eq(2));
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy.calls.length).toEqual(3);
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(1));
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(2));
+        });
+    });
+
+    it('dispatches \'blur\' events for all items with mouse', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'blur', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateMouseEnter($items.eq(0));
+                EventHelpers.simulateMouseExit($items.eq(0));
+
+                EventHelpers.simulateMouseEnter($items.eq(1));
+                EventHelpers.simulateMouseExit($items.eq(1));
+
+                EventHelpers.simulateMouseEnter($items.eq(2));
+                EventHelpers.simulateMouseExit($items.eq(2));
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy.calls.length).toEqual(3);
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(1));
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(2));
+        });
+    });
+
+    it('dispatches \'select\' event with mouse', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'select', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateMouseEnter($items.eq(1));
+                EventHelpers.simulateMouseDown($items.eq(1));
+                EventHelpers.simulateMouseUp($items.eq(1));
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).toHaveBeenCalled();
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(1));
         });
     });
 
