@@ -60,7 +60,6 @@ describe('Input Select Control', function() {
             collectionRendered: function(){
                 var kids = myCollectionView.children.toArray();
                 this.stopListening(myCollectionView, 'render');
-                debugger;
             }
         };
     });

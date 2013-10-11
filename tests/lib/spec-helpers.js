@@ -2,8 +2,15 @@ define(function(require, exports, module) {
 
 // Imports
 
-_ = require('underscore');
-$ = require('jquery');
+var _          = require('underscore');
+var $          = require('jquery');
+var Marionette = require('marionette');
+var Handlebars = require('handlebars');
+
+// Replace underscore template with Handlebars
+Marionette.TemplateCache.prototype.compileTemplate = function(rawTemplate) {
+    return Handlebars.compile(rawTemplate);
+};
 
 // Module
 
