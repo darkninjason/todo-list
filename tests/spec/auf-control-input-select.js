@@ -62,6 +62,7 @@ describe('Input Select Control', function() {
                 this.stopListening(myCollectionView, 'render');
                 control.setViews(kids);
                 control.beginNavigationPhase();
+                this.hasRendered = true;
             }
         };
     });
@@ -112,10 +113,12 @@ describe('Input Select Control', function() {
     });
 
     it('disptches focus event for first item with key', function() {
-        var flag = false;
         var obj = _.extend({}, inputHandler, collectionHandler, Backbone.Events);
+        var focusSpy = jasmine.createSpy('focusSpy');
+
         obj.listenTo(control, 'input', obj.receivedInput);
         obj.listenTo(myCollectionView, 'render', obj.collectionRendered);
+        obj.listenTo(control, 'focus', focusSpy);
 
 
         runs(function() {
@@ -123,20 +126,25 @@ describe('Input Select Control', function() {
             EventHelpers.insertChar($input, 'u');
             EventHelpers.insertChar($input, 'c');
             EventHelpers.insertChar($input, 'y');
-
-            setTimeout(function() {
-                flag = true;
-            }, 300); // default debounce delay is 300
         });
 
         waitsFor(function() {
-            return flag;
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                return true;
+            }
+            return false;
         }, 'No input received', 500);
 
         runs(function() {
-            // expect(obj.receivedInput).toHaveBeenCalled();
-            // expect(obj.receivedInput).toHaveBeenCalledWith(
-            //     control, $input, 'lucy');
+            expect(focusSpy).toHaveBeenCalled();
+
+            expect(focusSpy).toHaveBeenCalledWith(
+                 control, myCollectionView.children.findByIndex(0).$el);
+
+            expect(focusSpy).toHaveBeenCalledWith(
+                 control, myCollectionView.children.findByIndex(1).$el);
         });
     });
 

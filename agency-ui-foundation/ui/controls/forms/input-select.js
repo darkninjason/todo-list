@@ -201,7 +201,6 @@ define(function(require, exports, module){
         receivedText: function(responder, e){
             var $el = this.$el;
             var val = $el.is('input') ? $el.val() : $el.text();
-            console.log(val);
 
             if (val && val.length > this.options.minLength){
                 this._dispatchInput(this.$el, val);
