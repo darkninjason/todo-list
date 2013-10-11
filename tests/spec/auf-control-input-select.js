@@ -95,6 +95,26 @@ describe('Input Select Control', function() {
         expect(badInit).toThrow();
     });
 
+    it('sets default values on init', function(){
+        var obj = new InputSelect({el: $input});
+        expect(obj.options.debounceDelay).toEqual(obj._defaults.debounceDelay);
+        expect(obj.options.minLength).toEqual(obj._defaults.minLength);
+        obj.close();
+    });
+
+    it('sets debounceDelay on init', function(){
+        var obj = new InputSelect({el: $input, debounceDelay: 1000});
+        expect(obj.options.debounceDelay).toEqual(1000);
+        obj.close();
+    });
+
+    it('sets minLength on init', function(){
+        var obj = new InputSelect({el: $input, minLength: 30});
+        expect(obj.options.minLength).toEqual(30);
+        obj.close();
+    });
+
+    // Input Event
     it('dispatches \'input\' event', function(){
         var flag = false;
         var obj = _.extend({
@@ -125,6 +145,7 @@ describe('Input Select Control', function() {
         });
     });
 
+    // Key Events
     it('disptches \'focus\' event for first item with down arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
@@ -588,6 +609,8 @@ describe('Input Select Control', function() {
             expect(actionSpy).toHaveBeenCalledWith(control);
         });
     });
+
+    // Mouse Events
 
 
 }); // eof describe
