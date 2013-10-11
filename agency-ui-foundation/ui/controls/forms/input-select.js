@@ -183,7 +183,7 @@ define(function(require, exports, module){
                 'keyNavigationKeyDown', 'keyNavigationReturn', 'keyNavigationEscape',
                 'keyNavigationUp', 'keyNavigationDown', 'keyNavigationFirstMove');
 
-            if(!this.el) return;
+            if(!this.el) throw 'No input element provided.';
             this.$el = helpers.getElement(this.el);
             this.initializeKeyResponder();
         },
