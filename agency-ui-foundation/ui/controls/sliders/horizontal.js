@@ -103,6 +103,7 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     _initializeRanges: function(options) {
         function iterator(handle, i, list) {
+            console.log(handle);
             var $handle      = $(handle);
             var handleBounds = handlesBounds[i];
             var listener     = _.bind(this._rangeDidChange, this, $handle);

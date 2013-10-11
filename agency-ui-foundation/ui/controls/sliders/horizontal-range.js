@@ -77,38 +77,39 @@ var HorizontalRangeSlider =  Marionette.Controller.extend({
     },
 
     updateHandlePosition: function($handle, range, position, value) {
+        // position = this._enforceRangePosition($handle, position);
+        // value    = range.calculateValueForPosition(position);
 
-        position = this._enforceRangePosition($handle, position);
-        value = range.calculateValueForPosition(position);
-
-        console.log(position, value);
-
-        $handle.css({'left': value + 'px'});
+        var result = this._restrictHandlePosition($handle, range, value);
+        $handle.css({'left': result + 'px'});
     },
 
-    // _handleWantsMove: function($h, offset) {
-    //     var handleIndex = this.slider._getHandleIndex($h);
-    //     var obj         = this.slider.ranges[handleIndex];
-    //     var position    = this.slider._calculatePositionWithRangeAndDelta(obj, offset);
+    // TODO:
+    // Revisit - Restricting the UI is not enough.
+    // Range will report improper data as the step and position still update
+    // on drag even though the UI is not allowed to pass.
+    // I think the better place to override this is in _rangeDidChange.
+    // Stop updates to the values, and ui will stop updating.
 
-    //     // TODO:
-    //     // Fix, update this when enforce steps is fixed / refactored.
+    _restrictHandlePosition: function($handle, range, value) {
+        var index = this.slider._getHandleIndex($handle);
+        var ranges = this.slider.ranges;
+        var values = _.map(ranges, function(range){
+            return range.getValue();
+        }, this);
 
-    //     if(this.slider.steps) {
+        var min = values[index - 1] || 0;
+        var max = values[index + 1] || range.getMax();
 
-    //         // TODO: dupes code in horizontal.js
-    //         var step = this.slider._calculateStepWithRangeAndPosition(obj, position);
-    //         var currentStep = this.slider.handleSteps[handleIndex];
+        var result = value;
 
-    //         if(step !== currentStep) {
-    //             step = this._enforceRangeStep(handleIndex, step);
-    //             this.slider.setStep($h, step);
-    //         }
-    //     } else {
-    //         position = this._enforceRangePosition($h, position);
-    //         this.slider.setPosition($h, position);
-    //     }
-    // },
+        result = Math.max(value, min);
+        result = Math.min(result, max);
+
+        console.log(min, max, result);
+
+        return result;
+    },
 
     _enforceRangePosition: function($h, position) {
         var result    = position;
@@ -125,20 +126,6 @@ var HorizontalRangeSlider =  Marionette.Controller.extend({
         // Restrict value to left and right boundary values
         result = Math.max(position, minBoundary);
         result = Math.min(result, maxBoundary);
-
-        return result;
-    },
-
-    _enforceRangeStep: function($h, step) {
-        var result    = step;
-        var index     = this.slider._getHandleIndex($h);
-        var steps     = this.slider.getSteps();
-
-        var minStep = steps[index -1] || 0;
-        var maxStep = steps[index + 1] || this.slider.steps;
-
-        result = Math.max(step, minStep);
-        result = Math.min(result, maxStep);
 
         return result;
     },
