@@ -199,18 +199,13 @@ var HorizontalSlider = Marionette.Controller.extend({
     _getElementBounds: function(el) {
         // el is raw dom element
         // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
-        // TODO: IE Support, may need polyfill later.
         return el.getBoundingClientRect();
     },
 
     _getElementsBounds: function(elements) {
-        function iterator(el, i, list) {
-            return this._getElementBounds(el);
-        }
-
         // elements is a list of raw dom elements
         // returns multiple ClientRects for list of elements.
-        return _.map(elements, iterator, this);
+        return _.map(elements, this._getElementBounds, this);
     },
 
     _getHandleIndex: function($handle) {
