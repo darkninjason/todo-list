@@ -13,8 +13,15 @@ describe('Input Select Control', function() {
 
     // Object Vars
 
-    //var control, $sliderContainer, $slider, $sliderTrack, $sliderHandle;
-    var control, myCollectionView, MyItemView, $ctx, $input, $collection;
+    var control;
+    var myCollectionView;
+    var MyItemView;
+    var $ctx;
+    var $input;
+    var $collection;
+
+    var inputHandler;
+    var collectionHandler;
     // Setup
 
     beforeEach(function() {
@@ -36,8 +43,26 @@ describe('Input Select Control', function() {
         });
 
         control = new InputSelect({
-            el: $input,
+            el: $input
         });
+
+        inputHandler = {
+            receivedInput: function(){
+                myCollectionView.collection.reset([
+                  new Backbone.Model({'label': 'foo'}),
+                  new Backbone.Model({'label': 'bar'}),
+                  new Backbone.Model({'label': 'baz'})
+                  ]);
+            }
+        };
+
+        collectionHandler = {
+            collectionRendered: function(){
+                var kids = myCollectionView.children.toArray();
+                this.stopListening(myCollectionView, 'render');
+                debugger;
+            }
+        };
     });
 
 
@@ -76,19 +101,38 @@ describe('Input Select Control', function() {
 
         runs(function() {
             expect(obj.receivedInput).toHaveBeenCalled();
-            expect(obj.receivedInput).toHaveBeenCalledWith(control, $input, 'lucy');
+            expect(obj.receivedInput).toHaveBeenCalledWith(
+                control, $input, 'lucy');
         });
     });
 
-    xit('moved slider handle', function() {
-        var targetPosition = 0.5;
-        var trackWidth     = getNormalizedTrackWidth($sliderHandle);
-        var expectedCSS    = {'left': trackWidth * targetPosition + 'px'};
+    it('selects first item with key', function() {
+        var flag = false;
+        var obj = _.extend({}, inputHandler, collectionHandler, Backbone.Events);
+        obj.listenTo(control, 'input', obj.receivedInput);
+        obj.listenTo(myCollectionView, 'render', obj.collectionRendered);
 
-        control.setPosition(targetPosition);
 
-        expect(control.getPosition()).toEqual(targetPosition);
-        expect($sliderHandle).toHaveCss(expectedCSS);
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+
+            setTimeout(function() {
+                flag = true;
+            }, 300); // default debounce delay is 300
+        });
+
+        waitsFor(function() {
+            return flag;
+        }, 'No input received', 500);
+
+        runs(function() {
+            // expect(obj.receivedInput).toHaveBeenCalled();
+            // expect(obj.receivedInput).toHaveBeenCalledWith(
+            //     control, $input, 'lucy');
+        });
     });
 
     xit('moved slider handle a step', function() {
