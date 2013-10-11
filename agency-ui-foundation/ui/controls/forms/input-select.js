@@ -1,5 +1,5 @@
 define(function(require, exports, module){
-    var _ = require('underscore');
+    var _                  = require('underscore');
     var Marionette         = require('marionette');
     var KeyResponder       = require('auf/ui/responders/keys');
     var MouseResponder     = require('auf/ui/responders/mouse');
@@ -177,13 +177,14 @@ define(function(require, exports, module){
         initialize: function(options){
             _.defaults(options, this._defaults);
             this.el = options.el || null;
+            if(!this.el) throw 'No input element provided.';
 
             _.bindAll(this, 'receivedText',
                 'mouseDidClick', 'mouseDidEnter', 'mouseDidExit',
-                'keyNavigationKeyDown', 'keyNavigationReturn', 'keyNavigationEscape',
+                '_keyNavigationKeyDown', 'keyNavigationReturn', 'keyNavigationEscape',
                 'keyNavigationUp', 'keyNavigationDown', 'keyNavigationFirstMove');
 
-            if(!this.el) throw 'No input element provided.';
+
             this.$el = helpers.getElement(this.el);
             this._initializeKeyResponder();
         },

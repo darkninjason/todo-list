@@ -9,6 +9,17 @@ $ = require('jquery');
 
 var SpecHelpers = {
 
+    KeyCodes : {
+        'downArrow': 40,
+        'upArrow': 38,
+        'rightArrow': 39,
+        'leftArrow': 37,
+        'escape': 27,
+        'return': 13,
+        'tab': 9,
+        'delete': 8
+    },
+
     Events: {
         simulateEvent: function($el, type, payload) {
             var e = $.Event(type);
@@ -95,6 +106,29 @@ var SpecHelpers = {
             events.push( this.simulateTouchEnd  ( $el, endX, endY     ));
 
             return events;
+        },
+
+        simulateKeyEvent: function($el, type, keyCode) {
+            var payload = {
+                keyCode: keyCode,
+                target: $el[0],
+                currentTarget: $el[0]
+            };
+
+            return this.simulateEvent($el, type, payload);
+        },
+
+        simulateKeyDown: function($el, keyCode){
+            this.simulateKeyEvent($el, 'keydown', keyCode);
+        },
+
+        simulateKeyUp: function($el, keyCode){
+            this.simulateKeyEvent($el, 'keyup', keyCode);
+        },
+
+        simulateKeyDownWithDownArrow: function($el){
+            debugger;
+            this.simulateKeyDown($el, SpecHelpers.KeyCodes.downArrow);
         }
     }
 
