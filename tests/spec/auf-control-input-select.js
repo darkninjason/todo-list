@@ -612,6 +612,61 @@ describe('Input Select Control', function() {
 
     // Mouse Events
 
+    it('dispatches \'focus\' event with mouse', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'focus', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateMouseEnter($items.eq(0));
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).toHaveBeenCalled();
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
+        });
+    });
+
+    it('dispatches \'blur\' event with mouse', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'blur', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateMouseEnter($items.eq(0));
+                EventHelpers.simulateMouseExit($items.eq(0));
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).toHaveBeenCalled();
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
+        });
+    });
+
 
 }); // eof describe
 }); // eof define
