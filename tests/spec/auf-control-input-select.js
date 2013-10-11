@@ -18,6 +18,7 @@ describe('Input Select Control', function() {
     var MyItemView;
     var $ctx;
     var $input;
+    var $items;
     var $collection;
 
     var inputHandler;
@@ -63,6 +64,7 @@ describe('Input Select Control', function() {
                 control.setViews(kids);
                 control.beginNavigationPhase();
                 this.hasRendered = true;
+                $items = $collection.find('li');
             }
         };
     });
@@ -71,6 +73,16 @@ describe('Input Select Control', function() {
         control.close();
     });
 
+
+    // Helpers
+
+    function getEventHandler() {
+        var obj =  _.extend({}, inputHandler, collectionHandler, Backbone.Events);
+        obj.listenTo(control, 'input', obj.receivedInput);
+        obj.listenTo(myCollectionView, 'render', obj.collectionRendered);
+
+        return obj;
+    }
 
     // Test Suite
     it('throws error when no input provided', function(){
@@ -82,7 +94,7 @@ describe('Input Select Control', function() {
         expect(badInit).toThrow();
     });
 
-    it('dispatches input event', function(){
+    it('dispatches \'input\' event', function(){
         var flag = false;
         var obj = _.extend({
           receivedInput: jasmine.createSpy('receivedInput')
@@ -112,14 +124,65 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('disptches focus event for first item with key', function() {
-        var obj = _.extend({}, inputHandler, collectionHandler, Backbone.Events);
+    it('disptches \'focus\' event for first item with down arrow key', function() {
+        var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
-        obj.listenTo(control, 'input', obj.receivedInput);
-        obj.listenTo(myCollectionView, 'render', obj.collectionRendered);
         obj.listenTo(control, 'focus', focusSpy);
 
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(focusSpy).toHaveBeenCalled();
+            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(0));
+        });
+    });
+
+    it('disptches \'focus\' event for last item with up arrow key', function() {
+        var obj = getEventHandler();
+        var focusSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'focus', focusSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(focusSpy).toHaveBeenCalled();
+            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(2));
+        });
+    });
+
+    it('disptches \'focus\' event for middle item with down arrow key', function() {
+        var obj = getEventHandler();
+        var focusSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'focus', focusSpy);
 
         runs(function() {
             EventHelpers.insertChar($input, 'l');
@@ -139,141 +202,305 @@ describe('Input Select Control', function() {
 
         runs(function() {
             expect(focusSpy).toHaveBeenCalled();
-
-            expect(focusSpy).toHaveBeenCalledWith(
-                 control, myCollectionView.children.findByIndex(0).$el);
-
-            expect(focusSpy).toHaveBeenCalledWith(
-                 control, myCollectionView.children.findByIndex(1).$el);
+            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(1));
         });
     });
 
-    xit('moved slider handle a step', function() {
-        var targetStep   = 2;
-        var trackWidth   = getNormalizedTrackWidth($sliderHandle);
-        var stepDistance = trackWidth / 30;
-        var expectedCSS  = {'left': stepDistance * targetStep + 'px'};
+    it('disptches \'focus\' event for middle item with up arrow key', function() {
+        var obj = getEventHandler();
+        var focusSpy = jasmine.createSpy('focusSpy');
 
-        control.setStep(targetStep);
+        obj.listenTo(control, 'focus', focusSpy);
 
-        expect(control.getStep()).toEqual(targetStep);
-        expect($sliderHandle).toHaveCss(expectedCSS);
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(focusSpy).toHaveBeenCalled();
+            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(1));
+        });
     });
 
-    xit('moved slider handle with mouse drag', function() {
-        var trackWidth     = getNormalizedTrackWidth($sliderHandle);
-        var targetPosition = 0.5;
-        var moveToX        = trackWidth * targetPosition;
-        var expectedCSS    = {'left': moveToX + 'px'};
+    it('cycles \'focus\' events with down arrow key', function() {
+        var obj = getEventHandler();
+        var focusSpy = jasmine.createSpy('focusSpy');
 
-        EventHelpers.simulateMouseDragged($sliderHandle, 0, 15, moveToX, 15);
+        obj.listenTo(control, 'focus', focusSpy);
 
-        expect(control.getPosition()).toEqual(targetPosition);
-        expect($sliderHandle).toHaveCss(expectedCSS);
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(focusSpy).toHaveBeenCalled();
+            expect(focusSpy.calls.length).toEqual(4);
+            expect(focusSpy.mostRecentCall.args[1]).toEqual($items.eq(0));
+        });
     });
 
-    xit('moved slider handle with touch drag', function() {
-        var trackWidth     = getNormalizedTrackWidth($sliderHandle);
-        var targetPosition = 0.5;
-        var moveToX        = trackWidth * targetPosition;
-        var expectedCSS    = {'left': moveToX + 'px'};
+    it('cycles \'focus\' events with up arrow key', function() {
+        var obj = getEventHandler();
+        var focusSpy = jasmine.createSpy('focusSpy');
 
-        EventHelpers.simulateTouchDragged($sliderHandle, 0, 15, moveToX, 15);
+        obj.listenTo(control, 'focus', focusSpy);
 
-        expect(control.getPosition()).toEqual(0.5);
-        expect($sliderHandle).toHaveCss(expectedCSS);
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(focusSpy).toHaveBeenCalled();
+            expect(focusSpy.calls.length).toEqual(4);
+            expect(focusSpy.mostRecentCall.args[1]).toEqual($items.eq(2));
+        });
     });
 
-    xit('did not move slider handler past max', function() {
-        var trackWidth  = getNormalizedTrackWidth($sliderHandle);
-        var expectedCSS = {'left': trackWidth + 'px'};
+    it('disptches \'blur\' event for first item with down arrow key', function() {
+        var obj = getEventHandler();
+        var focusSpy = jasmine.createSpy('focusSpy');
 
-        control.setPosition(0.5);
-        control.setPosition(2.0);
+        obj.listenTo(control, 'blur', focusSpy);
 
-        expect(control.getPosition()).toEqual(1);
-        expect($sliderHandle).toHaveCss(expectedCSS);
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(focusSpy).toHaveBeenCalled();
+            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(0));
+        });
     });
 
-    xit('did not move slider handle past min', function() {
-        var expectedCSS = {'left': '0px'};
+    it('disptches \'blur\' event for last item with up arrow key', function() {
+        var obj = getEventHandler();
+        var focusSpy = jasmine.createSpy('focusSpy');
 
-        control.setPosition(0.5);
-        control.setPosition(-1);
+        obj.listenTo(control, 'blur', focusSpy);
 
-        expect(control.getPosition()).toEqual(0);
-        expect($sliderHandle).toHaveCss(expectedCSS);
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(focusSpy).toHaveBeenCalled();
+            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(2));
+        });
     });
 
-    xit('triggered events from mouse', function(){
-        var dragStart = jasmine.createSpy('dragStart');
-        var change    = jasmine.createSpy('change');
-        var dragStop  = jasmine.createSpy('dragStop');
+    it('cycles \'blur\' events with down arrow key', function() {
+        var obj = getEventHandler();
+        var focusSpy = jasmine.createSpy('focusSpy');
 
-        control.on('drag:start', dragStart);
-        control.on('change', change);
-        control.on('drag:stop', dragStop);
+        obj.listenTo(control, 'blur', focusSpy);
 
-        EventHelpers.simulateTouchDragged($sliderHandle, 0, 0, 100, 0);
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
 
-        expect(dragStart).toHaveBeenCalled();
-        expect(change).toHaveBeenCalled();
-        expect(dragStop).toHaveBeenCalled();
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(focusSpy).toHaveBeenCalled();
+            expect(focusSpy.calls.length).toEqual(4);
+            expect(focusSpy.mostRecentCall.args[1]).toEqual($items.eq(0));
+        });
     });
 
-    xit('triggered events from touch', function(){
-        var dragStart = jasmine.createSpy('dragStart');
-        var change    = jasmine.createSpy('change');
-        var dragStop  = jasmine.createSpy('dragStop');
+    it('cycles \'blur\' events with up arrow key', function() {
+        var obj = getEventHandler();
+        var focusSpy = jasmine.createSpy('focusSpy');
 
-        control.on('drag:start', dragStart);
-        control.on('change', change);
-        control.on('drag:stop', dragStop);
+        obj.listenTo(control, 'blur', focusSpy);
 
-        EventHelpers.simulateTouchDragged($sliderHandle, 0, 0, 100, 0);
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
 
-        expect(dragStart).toHaveBeenCalled();
-        expect(change).toHaveBeenCalled();
-        expect(dragStop).toHaveBeenCalled();
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(focusSpy).toHaveBeenCalled();
+            expect(focusSpy.calls.length).toEqual(4);
+            expect(focusSpy.mostRecentCall.args[1]).toEqual($items.eq(2));
+        });
     });
 
-    xit('updates steps for position', function(){
-        var expectedStep = 15;
+    it('dispatches \'select\' event for first item with return key', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('actionSpy');
 
-        control.setPosition(0.5);
+        obj.listenTo(control, 'select', actionSpy);
 
-        expect(control.getStep()).toEqual(expectedStep);
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.return);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).toHaveBeenCalled();
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
+        });
     });
 
-    xit('updates position for steps', function(){
-        var expectedPosition = 0.5;
+    it('dispatches \'select\' event for last item with return key', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('actionSpy');
 
-        control.setStep(15); // 30, above, /2 = 15
+        obj.listenTo(control, 'select', actionSpy);
 
-        expect(control.getPosition()).toEqual(expectedPosition);
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.return);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).toHaveBeenCalled();
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(2));
+        });
     });
 
-    xit('expects responders to be removed', function(){
-        var trackWidth       = getNormalizedTrackWidth($sliderHandle);
-        var expectedPosition = 200/trackWidth;
+    it('dispatches \'cancel\' event with escape key', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('actionSpy');
 
-        // Drag the handle around a bit.
-        EventHelpers.simulateMouseDragged($sliderHandle, 0, 0, 50, 0);
-        EventHelpers.simulateTouchDragged($sliderHandle, 50, 0, 200, 0);
+        obj.listenTo(control, 'cancel', actionSpy);
 
-        expect(control.getPosition()).toEqual(expectedPosition);
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
 
-        // Run close functionality.
-        control.close();
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                EventHelpers.simulateKeyDown($input, KeyCodes.escape);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
 
-        // Drag the handle around a bit.
-        EventHelpers.simulateMouseDragged($sliderHandle, 200, 0, 50, 0);
-        EventHelpers.simulateTouchDragged($sliderHandle, 50, 0, 0, 0);
-
-        // When closed is called, no listeners should be active
-        // Expect our position to be identical
-        expect(control.getPosition()).toEqual(expectedPosition);
+        runs(function() {
+            expect(actionSpy).toHaveBeenCalled();
+            expect(actionSpy).toHaveBeenCalledWith(control);
+        });
     });
+
 
 }); // eof describe
 }); // eof define
