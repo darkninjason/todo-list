@@ -293,14 +293,11 @@ define(function(require, exports, module){
 
         // Keyboard Handling
         _keyNavigationSupressLateralCursorMovement: function(e){
-            // up | down
+            // up | down | escape | return
             // when the user presses up or down
             // prevent the cursor from jumping to the
             // left or right in the text field.
-            if(/(38|40)/.test(e.keyCode)) e.preventDefault();
-
-            // escape | return
-            if(/(27|13)/.test(e.keyCode)) e.preventDefault();
+            if(/(38|40|27|13)/.test(e.keyCode)) e.preventDefault();
         },
 
         _keyNavigationKeyDown: function(responder, e){
