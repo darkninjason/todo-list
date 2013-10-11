@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require, exports, module){
 
     function _isDate(obj){
         // taken directly from underscore.js to avoid the _ dependency.
@@ -187,15 +187,24 @@ define(function(require){
         return result;
     }
 
-    return {
-        daysInJavaScriptMonth: daysInJavaScriptMonth,
-        calendarMonthDays: calendarMonthDays,
-        bufferedCalendarMonthDays: bufferedCalendarMonthDays,
-        bufferedCalendarMonthWeeks: bufferedCalendarMonthWeeks,
-        previousMonthForYearMonth: previousMonthForYearMonth,
-        previousMonthForDate: previousMonthForDate,
-        nextMonthForYearMonth: nextMonthForYearMonth,
-        nextMonthForDate: nextMonthForDate,
-        firstOfMonth: firstOfMonth
-    };
+    module.exports.daysInJavaScriptMonth = daysInJavaScriptMonth;
+    module.exports.calendarMonthDays = calendarMonthDays;
+    module.exports.bufferedCalendarMonthDays = bufferedCalendarMonthDays;
+    module.exports.bufferedCalendarMonthWeeks = bufferedCalendarMonthWeeks;
+    module.exports.previousMonthForYearMonth = previousMonthForYearMonth;
+    module.exports.previousMonthForDate = previousMonthForDate;
+    module.exports.nextMonthForYearMonth = nextMonthForYearMonth;
+    module.exports.nextMonthForDate = nextMonthForDate;
+    module.exports.firstOfMonth = firstOfMonth;
+    // return {
+    //     daysInJavaScriptMonth: daysInJavaScriptMonth,
+    //     calendarMonthDays: calendarMonthDays,
+    //     bufferedCalendarMonthDays: bufferedCalendarMonthDays,
+    //     bufferedCalendarMonthWeeks: bufferedCalendarMonthWeeks,
+    //     previousMonthForYearMonth: previousMonthForYearMonth,
+    //     previousMonthForDate: previousMonthForDate,
+    //     nextMonthForYearMonth: nextMonthForYearMonth,
+    //     nextMonthForDate: nextMonthForDate,
+    //     firstOfMonth: firstOfMonth
+    // };
 });

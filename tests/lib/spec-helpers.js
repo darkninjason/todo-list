@@ -1,7 +1,6 @@
 define(function(require, exports, module) {
 
 // Imports
-
 var _          = require('underscore');
 var $          = require('jquery');
 var Marionette = require('marionette');
@@ -154,6 +153,7 @@ var SpecHelpers = {
         simulateKeyEvent: function($el, type, keyCode) {
             var payload = {
                 keyCode: keyCode,
+                which: keyCode,
                 target: $el[0],
                 currentTarget: $el[0]
             };

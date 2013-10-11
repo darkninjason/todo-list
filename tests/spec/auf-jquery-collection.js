@@ -3,9 +3,9 @@ define(function(require, exports, module) {
 // Imports
 
 var Collection = require('auf/jquery/collection');
-var _        = require('underscore');
+var _          = require('underscore');
 
-describe('JQuery Collection:', function() {
+describe('jQuery Collection:', function() {
     var collection;
     var $ctx;
 

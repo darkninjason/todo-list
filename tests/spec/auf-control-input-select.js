@@ -20,6 +20,7 @@ describe('Input Select Control', function() {
     var $input;
     var $items;
     var $collection;
+    var DEBOUNCE_DELAY = 50;
 
     var inputHandler;
     var collectionHandler;
@@ -45,7 +46,7 @@ describe('Input Select Control', function() {
 
         control = new InputSelect({
             el: $input,
-            debounceDelay: 50
+            debounceDelay: DEBOUNCE_DELAY
         });
 
         inputHandler = {
@@ -138,7 +139,7 @@ describe('Input Select Control', function() {
 
             setTimeout(function() {
                 flag = true;
-            }, 50); // debounce delay is 100 for the tests
+            }, DEBOUNCE_DELAY);
         });
 
         waitsFor(function() {

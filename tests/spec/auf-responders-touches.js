@@ -4,8 +4,7 @@ define(function(require, exports, module) {
 
 var TouchResponder = require('auf/ui/responders/touches');
 var $              = require('jquery');
-var SpecHelpers    = require('lib/spec-helpers');
-var EventHelpers   = SpecHelpers.Events;
+var EventHelpers   = require('lib/spec-helpers').Events;
 
 describe('Responder: Touch', function() {
 
@@ -27,39 +26,49 @@ describe('Responder: Touch', function() {
     // Test Suite
 
     it('triggered touchstart', function() {
+        var actionSpy = jasmine.createSpy('eventSpy');
 
-        var touch    = $.Event('touchstart');
-        var spyEvent = spyOnEvent($input, 'touchstart');
+        $input.on('touchstart', actionSpy);
 
-        $input.trigger(touch);
-        expect(spyEvent).toHaveBeenTriggered();
+        EventHelpers.simulateTouchStart($input);
+        expect(actionSpy).toHaveBeenCalled();
+
+        $input.off('touchstart', actionSpy);
+
     });
 
     it('triggered touchmove', function() {
+        var actionSpy = jasmine.createSpy('eventSpy');
 
-        var touch    = $.Event('touchmove');
-        var spyEvent = spyOnEvent($input, 'touchmove');
+        $input.on('touchmove', actionSpy);
 
-        $input.trigger(touch);
-        expect(spyEvent).toHaveBeenTriggered();
+        EventHelpers.simulateTouchMove($input);
+        expect(actionSpy).toHaveBeenCalled();
+
+        $input.off('touchmove', actionSpy);
     });
 
     it('triggered touchend', function() {
+        var actionSpy = jasmine.createSpy('eventSpy');
 
-        var touch    = $.Event('touchend');
-        var spyEvent = spyOnEvent($input, 'touchend');
+        $input.on('touchend', actionSpy);
 
-        $input.trigger(touch);
-        expect(spyEvent).toHaveBeenTriggered();
+        EventHelpers.simulateTouchEnd($input);
+        expect(actionSpy).toHaveBeenCalled();
+
+        $input.off('touchend', actionSpy);
     });
 
     it('triggered touchcancel', function() {
 
-        var touch = $.Event('touchcancel');
-        var spyEvent = spyOnEvent($input, 'touchcancel');
+        var actionSpy = jasmine.createSpy('eventSpy');
 
-        $input.trigger(touch);
-        expect(spyEvent).toHaveBeenTriggered();
+        $input.on('touchcancel', actionSpy);
+
+        EventHelpers.simulateTouchCancel($input);
+        expect(actionSpy).toHaveBeenCalled();
+
+        $input.off('touchcancel', actionSpy);
     });
 
     it('triggered TouchResponder.onClose', function() {

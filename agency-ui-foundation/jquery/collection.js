@@ -1,11 +1,10 @@
 define(function(require, exports, module){
 
 // Imports
-
+var $          = require('jquery');
 var Marionette = require('marionette');
 
 // Module
-
 var Collection =  Marionette.Controller.extend({
 
     // Initialization
@@ -19,6 +18,7 @@ var Collection =  Marionette.Controller.extend({
         var i, l;
         var elements = $el.toArray();
         var $currentElements = this.$elements;
+
 
         for (i = 0, l = elements.length; i < l;  i++){
             var each = elements[i];

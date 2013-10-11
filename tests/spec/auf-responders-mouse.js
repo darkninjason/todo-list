@@ -4,8 +4,7 @@ define(function(require, exports, module) {
 
 var MouseResponder = require('auf/ui/responders/mouse');
 var $              = require('jquery');
-var SpecHelpers    = require('lib/spec-helpers');
-var EventHelpers   = SpecHelpers.Events;
+var EventHelpers   = require('lib/spec-helpers').Events;
 
 describe('Mouse Responder', function() {
 
@@ -27,48 +26,61 @@ describe('Mouse Responder', function() {
     // Test Suite
 
     it('expects UI will trigger mousedown', function(){
-        var type     = 'mousedown';
-        var e        = $.Event(type);
-        var spyEvent = spyOnEvent($input, type);
 
-        $input.trigger(e);
-        expect(spyEvent).toHaveBeenTriggered();
+        var actionSpy = jasmine.createSpy('eventSpy');
+
+        $input.on('mousedown', actionSpy);
+
+        EventHelpers.simulateMouseDown($input);
+        expect(actionSpy).toHaveBeenCalled();
+
+        $input.off('mousedown', actionSpy);
     });
 
     it('expects UI will trigger mouseup', function(){
-        var type = 'mouseup';
-        var e    = $.Event(type);
-        var spy  = spyOnEvent($input, type);
+        var actionSpy = jasmine.createSpy('eventSpy');
 
-        $input.trigger(e);
-        expect(spy).toHaveBeenTriggered();
+        $input.on('mouseup', actionSpy);
+
+        EventHelpers.simulateMouseUp($input);
+        expect(actionSpy).toHaveBeenCalled();
+
+        $input.off('mouseup', actionSpy);
     });
 
     it('expects UI will trigger mousemove', function(){
-        var type  = 'mousemove';
-        var e     = $.Event(type);
-        var spy   = spyOnEvent($input, type);
 
-        $input.trigger(e);
-        expect(spy).toHaveBeenTriggered();
+        var actionSpy = jasmine.createSpy('eventSpy');
+
+        $input.on('mousemove', actionSpy);
+
+        EventHelpers.simulateMouseMove($input);
+        expect(actionSpy).toHaveBeenCalled();
+
+        $input.off('mousemove', actionSpy);
     });
 
     it('expects UI will trigger mouseenter', function(){
-        var type  = 'mouseenter';
-        var e     = $.Event(type);
-        var spy   = spyOnEvent($input, type);
 
-        $input.trigger(e);
-        expect(spy).toHaveBeenTriggered();
+        var actionSpy = jasmine.createSpy('eventSpy');
+
+        $input.on('mouseenter', actionSpy);
+
+        EventHelpers.simulateMouseEnter($input);
+        expect(actionSpy).toHaveBeenCalled();
+
+        $input.off('mouseenter', actionSpy);
     });
 
     it('expects UI will trigger mouseleave', function(){
-        var type  = 'mouseleave';
-        var e     = $.Event(type);
-        var spy   = spyOnEvent($input, type);
+        var actionSpy = jasmine.createSpy('eventSpy');
 
-        $input.trigger(e);
-        expect(spy).toHaveBeenTriggered();
+        $input.on('mouseleave', actionSpy);
+
+        EventHelpers.simulateMouseExit($input);
+        expect(actionSpy).toHaveBeenCalled();
+
+        $input.off('mouseleave', actionSpy);
     });
 
     it('expects onClose to be called', function() {

@@ -2,18 +2,20 @@ define(function(require, exports, module) {
 
 // Imports
 
-var KeyResponder = require('auf/ui/responders/keys');
+var KeyResponder    = require('auf/ui/responders/keys');
 var KeyInputManager = require('auf/ui/managers/key-input');
+var EventHelpers    = require('lib/spec-helpers').Events;
 
 describe('Key Responder', function() {
 
-    var $input, responder = null;
+    var $input, $ctx, responder = null;
 
     // Setup
 
     beforeEach(function() {
         loadFixtures('responder-keys.html');
-        $input = $('#responder');
+        $ctx = $('#jasmine-fixtures');
+        $input = $ctx.find('#responder');
     });
 
     afterEach(function() {
@@ -25,27 +27,27 @@ describe('Key Responder', function() {
     // Test Suite
 
     it('expects UI will trigger keydown', function() {
+        var actionSpy = jasmine.createSpy('eventSpy');
 
-        var key      = jQuery.Event('keydown');
-        var spyEvent = spyOnEvent($input, 'keydown');
+        $input.on('keydown', actionSpy);
 
-        key.which   = 40;
-        key.keyCode = 40;
+        EventHelpers.simulateKeyDown($input, 40);
+        expect(actionSpy).toHaveBeenCalled();
 
-        $input.trigger(key);
-        expect(spyEvent).toHaveBeenTriggered();
+        $input.off('keydown', actionSpy);
     });
 
     it('expects UI will trigger keyup', function() {
 
-        var key      = jQuery.Event('keyup');
-        var spyEvent = spyOnEvent($input, 'keyup');
+        var actionSpy = jasmine.createSpy('eventSpy');
 
-        key.which   = 40;
-        key.keyCode = 40;
+        $input.on('keyup', actionSpy);
 
-        $input.trigger(key);
-        expect(spyEvent).toHaveBeenTriggered();
+        EventHelpers.simulateKeyUp($input, 40);
+        expect(actionSpy).toHaveBeenCalled();
+
+        $input.off('keyup', actionSpy);
+
     });
 
     it('expects onClose to be called', function() {
