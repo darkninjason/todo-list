@@ -51,16 +51,6 @@ var RangeManager = Marionette.Controller.extend({
 
     // Internal helper methods
 
-    _getPositionForValue: function(val){
-        var position = val / this.getRange();
-        return this._getNormalizedPosition(position);
-    },
-
-    _getValueForPosition: function(val){
-        position = this._getNormalizedPosition(val);
-        return this.getRange() * position;
-    },
-
     _getNormalizedPosition: function(val){
         // Ternary is faster than Math.min,max
         val = val > 1 ? 1 : val;
@@ -71,6 +61,33 @@ var RangeManager = Marionette.Controller.extend({
 
     // 'Public' methods
 
+
+    /**
+     * Calculates a range position for a literal range value between min and max.
+     * @param  {number} val a value between min and max
+     * @return {number}     a position from 0 - 1 based on the provided value.
+     *
+     * @note
+     * This will not set any value internally, retrives a possible value only.
+     */
+    calculatePositionForValue: function(val){
+        var position = val / this.getRange();
+        return this._getNormalizedPosition(position);
+    },
+
+    /**
+     * Calculates a literal range value for range position.
+     * @param  {number} val a value from 0 - 1
+     * @return {number}     the value for the position provided.
+     *
+     * @note
+     * This will not set any value internally, retreives a possible value only.
+     */
+    calculateValueForPosition: function(val){
+        position = this._getNormalizedPosition(val);
+        return this.getRange() * position;
+    },
+
     getPosition: function() {
         return this._position;
     },
@@ -80,17 +97,17 @@ var RangeManager = Marionette.Controller.extend({
 
         if(val != this._position) {
             this._position = val;
-            this.dispatchChange();
+            this._dispatchChange();
         }
     },
 
     setValue: function(val){
-        var position = this._getPositionForValue(val);
+        var position = this.calculatePositionForValue(val);
         this.setPosition(position);
     },
 
     getValue: function(){
-        return this._getValueForPosition(this.getPosition());
+        return this.calculateValueForPosition(this.getPosition());
     },
 
     getMin: function() {
@@ -105,6 +122,7 @@ var RangeManager = Marionette.Controller.extend({
         if(val != this.options.min) {
             this.options.min = val;
             this._computeRange();
+            this._dispatchChange();
         }
     },
 
@@ -120,6 +138,7 @@ var RangeManager = Marionette.Controller.extend({
         if(val != this.getMax()) {
             this.options.max = val;
             this._computeRange();
+            this._dispatchChange();
         }
     },
 
@@ -134,7 +153,7 @@ var RangeManager = Marionette.Controller.extend({
 
     // Event Dispatchers
 
-    dispatchChange: function() {
+    _dispatchChange: function() {
         this.trigger(this.EVENT_CHANGE, this, this.getPosition(), this.getValue());
     },
 

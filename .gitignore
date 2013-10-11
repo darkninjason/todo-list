@@ -67,6 +67,9 @@ nosetests.xml
 # Personal TODOs
 __TODO__.md
 
+tests/kitchen-sink
+agency-ui-foundation/ui/controls/sliders/horizontal.old.js
+
 # Ignore Exceptions
 # ========================================================================== #
 
