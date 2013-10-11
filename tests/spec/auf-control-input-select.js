@@ -60,8 +60,14 @@ describe('Input Select Control', function() {
             collectionRendered: function(){
                 var kids = myCollectionView.children.toArray();
                 this.stopListening(myCollectionView, 'render');
+                control.setViews(kids);
+                control.beginNavigationPhase();
             }
         };
+    });
+
+    afterEach(function(){
+        control.close();
     });
 
 
@@ -105,7 +111,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('selects first item with key', function() {
+    it('disptches focus event for first item with key', function() {
         var flag = false;
         var obj = _.extend({}, inputHandler, collectionHandler, Backbone.Events);
         obj.listenTo(control, 'input', obj.receivedInput);
