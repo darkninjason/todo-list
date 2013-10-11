@@ -18,6 +18,8 @@ var HorizontalSlider = Marionette.Controller.extend({
     EVENT_DRAG_START: 'drag:start',
     EVENT_DRAG_STOP:  'drag:stop',
 
+    // Properties
+
     ranges: null,
     mouseResponders: null,
     touchResponders: null,
@@ -160,37 +162,6 @@ var HorizontalSlider = Marionette.Controller.extend({
         });
     },
 
-    _didReceiveOrientationChange: function(responder, e) {
-        function iterator(range, i, list) {
-            // setMax causes range to dispatch change.
-            // that should be suffient to also update this
-            // component should the position change.
-            range.setMax(trackBounds.width - handleBounds[i].width);
-        }
-
-        var $track        = this.options.$track;
-        var handlesBounds = this._getElementsBounds($handles.toArray());
-        var trackBounds   = this._getElementBounds($track[0]);
-
-        _.each(this.ranges, iterator, this);
-    },
-
-
-    // 'Protected' methods
-
-    _updateHandlePosition: function($handle, range, position, value) {
-        var left = value;
-        $handle.css({'left': left + 'px'});
-    },
-
-    _updateHandlePositionWithSnap: function($handle, range, position, value) {
-        var step      = this.getHandleStep($handle);
-        var stepDelta = range.getMax() / this.options.steps;
-        var left      = stepDelta * step;
-
-        $handle.css({'left': left + 'px'});
-    },
-
     // 'Private' helper accessors
 
     _getElementBounds: function(el) {
@@ -219,6 +190,28 @@ var HorizontalSlider = Marionette.Controller.extend({
         return range;
     },
 
+    // 'Protected' methods
+
+    updateHandlePosition: function($handle, range, position, value) {
+        console.log('hi');
+        // TODO: Enhancement - ADD support for CSS3 Transitions?
+        $handle.css({'left': value + 'px'});
+    },
+
+    updateHandlePositionWithSnap: function($handle, range, position, value) {
+        var step      = this.getStepForHandle($handle);
+        var stepDelta = range.getMax() / this.options.steps;
+
+        // augment position and value
+        value = stepDelta * step;
+        // position = range.calculatePositionForValue(value);
+
+        console.log(value, position);
+
+        // pass in augmented values to original update function
+        this.updateHandlePosition($handle, range, position, value);
+    },
+
     // 'Public' Position methods
 
     getPositionAt: function(index) {
@@ -233,7 +226,7 @@ var HorizontalSlider = Marionette.Controller.extend({
         return _.map(this.ranges, iter, this);
     },
 
-    getHandlePosition: function($handle) {
+    getPositionForHandle: function($handle) {
         var index = this._getHandleIndex($handle);
         return this.getPositionAt(index);
     },
@@ -267,7 +260,7 @@ var HorizontalSlider = Marionette.Controller.extend({
         return _.map(this.ranges, iter, this);
     },
 
-    getHandleStep: function($handle) {
+    getStepForHandle: function($handle) {
         var index = this._getHandleIndex($handle);
         return this.getStepAt(index);
     },
@@ -310,11 +303,11 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     _rangeDidChange: function($handle, range, position, value) {
         if(this.options.snap) {
-            this._updateHandlePositionWithSnap(
+            this.updateHandlePositionWithSnap(
                 $handle, range, position, value);
 
         }else{
-            this._updateHandlePosition(
+            this.updateHandlePosition(
                 $handle, range, position, value);
         }
 
@@ -346,6 +339,21 @@ var HorizontalSlider = Marionette.Controller.extend({
     _handleDidRecieveDragStop: function(range, responder, e) {
         e.preventDefault();
         this._dispatchDragStop(responder.$el, range.getPosition());
+    },
+
+    _didReceiveOrientationChange: function(responder, e) {
+        function iterator(range, i, list) {
+            // setMax causes range to dispatch change.
+            // that should be suffient to also update this
+            // component should the position change.
+            range.setMax(trackBounds.width - handleBounds[i].width);
+        }
+
+        var $track        = this.options.$track;
+        var handlesBounds = this._getElementsBounds($handles.toArray());
+        var trackBounds   = this._getElementBounds($track[0]);
+
+        _.each(this.ranges, iterator, this);
     },
 
     // Event Dispatchers
