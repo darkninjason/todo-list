@@ -3,12 +3,15 @@ define(function(require, exports, module){
 
 var Marionette           = require('marionette');
 var _                    = require('underscore');
+var RangeManager         = require('auf/ui/managers/range');
 var MouseResponder       = require('auf/ui/responders/mouse');
 var TouchResponder       = require('auf/ui/responders/touches');
 var OrientationResponder = require('auf/ui/responders/orientation');
-var RangeManager         = require('auf/ui/managers/range');
 
 // Module
+
+// TODO:
+// - implement orientation
 
 var HorizontalSlider = Marionette.Controller.extend({
 
@@ -21,6 +24,7 @@ var HorizontalSlider = Marionette.Controller.extend({
     ranges: null,
     mouseResponders: null,
     touchResponders: null,
+    orientationResponder: null,
     handleOffsets: [],
 
     // Defaults
@@ -32,7 +36,6 @@ var HorizontalSlider = Marionette.Controller.extend({
         snap: false,
         acceptsMouse: true,
         acceptsTouch: false,
-        acceptsKeys: false,
         acceptsOrientation: false
     },
 
@@ -97,41 +100,27 @@ var HorizontalSlider = Marionette.Controller.extend({
     // Internal initialization
 
     _initializeRanges: function(options) {
-        var ranges = this._getNormalizedRanges(
-            options.$track,
-            options.$handles
-        );
+        function iterator(handle, i, list) {
+            var $handle      = $(handle);
+            var handleBounds = handlesBounds[i];
+            var listener     = _.bind(this._rangeDidChange, this, $handle);
 
-        var id, range, $handle, listener;
-        var i   = 0;
-        var len = ranges.length;
-
-        for(i; i < len; i++) {
-            id       = i;
-            range    = ranges[i];
-            $handle  = options.$handles.eq(i);
-            listener = _.bind(this._rangeDidChange, this, $handle);
-
-            // attach listener to range: change
-            this.listenTo(range, 'change', listener);
-        }
-
-        return ranges;
-    },
-
-    _getNormalizedRanges: function($track, $handles) {
-        function iterator(handleBounds, i, list) {
-            return new RangeManager({
+            var range = new RangeManager({
                 min: 0,
                 max: trackBounds.width - handleBounds.width
             });
+
+            this.listenTo(range, 'change', listener);
+
+            return range;
         }
 
-        // TODO: Revisit, really need toArray() call?
-        var list        = this._getElementsBounds($handles.toArray());
-        var trackBounds = this._getElementBounds($track[0]);
+        var $handles      = options.$handles;
+        var $track        = options.$track;
+        var handlesBounds = this._getElementsBounds($handles.toArray());
+        var trackBounds   = this._getElementBounds($track[0]);
 
-        return _.map(list, iterator, this);
+        return _.map($handles, iterator, this);
      },
 
     _initializeMouse: function(options) {
@@ -164,17 +153,28 @@ var HorizontalSlider = Marionette.Controller.extend({
         return _.map(this.options.$handles, iterator, this);
     },
 
-    _initializeKeys: function(options) {
-        function iterator(el, i, list) {
-            // TODO implement KeyResponder init.
+    _initializeOrientation: function(options) {
+        return new OrientationResponder({
+            portrait : this._didReceiveOrientationChange,
+            landscape: this._didReceiveOrientationChange
+        });
+    },
+
+    _didReceiveOrientationChange: function(responder, e) {
+        function iterator(range, i, list) {
+            // setMax causes range to dispatch change.
+            // that should be suffient to also update this
+            // component should the position change.
+            range.setMax(trackBounds.width - handleBounds[i].width);
         }
 
-        return _.map(this.options.$handles, iterator, this);
+        var $track        = this.options.$track;
+        var handlesBounds = this._getElementsBounds($handles.toArray());
+        var trackBounds   = this._getElementBounds($track[0]);
+
+        _.each(this.ranges, iterator, this);
     },
 
-    _initializeOrientation: function(options) {
-        console.log('_initializeOrientation not implemented.', options);
-    },
 
     // 'Protected' methods
 
@@ -201,18 +201,13 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     _getElementsBounds: function(elements) {
-        // elements is a list of raw dom elements
-        // returns multiple ClientRects for list of elements.
-
-        var results = [];
-        var i = 0;
-        var len = elements.length;
-
-        for(i; i < len; i++){
-            results.push(this._getElementBounds(elements[i]));
+        function iterator(el, i, list) {
+            return this._getElementBounds(el);
         }
 
-        return results;
+        // elements is a list of raw dom elements
+        // returns multiple ClientRects for list of elements.
+        return _.map(elements, iterator, this);
     },
 
     _getHandleIndex: function($handle) {

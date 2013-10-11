@@ -97,7 +97,7 @@ var RangeManager = Marionette.Controller.extend({
 
         if(val != this._position) {
             this._position = val;
-            this.dispatchChange();
+            this._dispatchChange();
         }
     },
 
@@ -122,6 +122,7 @@ var RangeManager = Marionette.Controller.extend({
         if(val != this.options.min) {
             this.options.min = val;
             this._computeRange();
+            this._dispatchChange();
         }
     },
 
@@ -137,6 +138,7 @@ var RangeManager = Marionette.Controller.extend({
         if(val != this.getMax()) {
             this.options.max = val;
             this._computeRange();
+            this._dispatchChange();
         }
     },
 
@@ -151,7 +153,7 @@ var RangeManager = Marionette.Controller.extend({
 
     // Event Dispatchers
 
-    dispatchChange: function() {
+    _dispatchChange: function() {
         this.trigger(this.EVENT_CHANGE, this, this.getPosition(), this.getValue());
     },
 
