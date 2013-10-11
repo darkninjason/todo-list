@@ -84,6 +84,9 @@ var HorizontalSlider = Marionette.Controller.extend({
         if(this.options.acceptsTouch){
             this.touchResponders = this._initializeTouch(this.options);
         }
+        if(this.options.acceptsOrientation){
+            this.orientationResponder = this._initializeOrientation(this.options);
+        }
     },
 
     onClose: function() {
@@ -92,7 +95,8 @@ var HorizontalSlider = Marionette.Controller.extend({
         }
 
         var responders = this.mouseResponders
-            .concat(this.touchResponders || []);
+            .concat(this.touchResponders || [])
+            .concat(this.orientationResponder || []);
 
         _.each(responders, iterator, this);
     },
