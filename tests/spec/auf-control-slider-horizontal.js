@@ -189,8 +189,6 @@ describe('Horizontal Slider Control', function() {
         var trackWidth       = getNormalizedTrackWidth($sliderHandle);
         var expectedPosition = 200/trackWidth;
 
-        console.log(expectedPosition);
-
         // Drag the handle around a bit.
         EventHelpers.simulateMouseDragged($sliderHandle, 0, 0, 50, 0);
         EventHelpers.simulateTouchDragged($sliderHandle, 50, 0, 200, 0);
