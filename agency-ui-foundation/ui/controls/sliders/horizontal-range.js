@@ -2,161 +2,101 @@ define(function(require, exports, module) {
 
 // Imports
 
-var Marionette       = require('marionette');
 var _                = require('underscore');
+var Marionette       = require('marionette');
 var HorizontalSlider = require('auf/ui/controls/sliders/horizontal');
 
 // Module
 
-// TODO:
-// - Add Error, lt handles in opts, causes error.
-// - Idea?, handles are distributed evenly by default?
-//      - eg |[h1]---[h2]| or |[h1]---[h2]---[h3]|
-//      - currently |[h1/2/3]------|
-// - Revisit, having to call some _ from slider; not sure it's good.
+// TODO
+// - Explore - See what using BB's extend on HorizontalSlider looks like.
 
-var HorizontalRangeSlider =  Marionette.Controller.extend({
+// var HorizontalRangeSlider =  Marionette.Controller.extend({
+var HorizontalRangeSlider =  HorizontalSlider.extend({
 
-    // Initialization
+    // Backbone & Marionette overrides
 
+    /**
+     * Initialize HorizontalRangeSlider
+     *
+     * @description HorizontalRangeSlider simply extends a HorizontalSlider
+     * performing some overrides of internal HorizontalSlider methods to
+     * @param  {object} options options literal
+     * @return {undefined}
+     *
+     * @example
+     * horizontalRangeSlider = new HorizontalRangeSlider(
+     *     {
+     *         $track            : $('.slider .track'),    // required
+     *         $handles          : $('.slider .handle'),   // min 2 required
+     *         steps             : 10,                     // default 0
+     *         snap              : true,                   // default false
+     *         acceptsMouse      : true                    // default true
+     *         acceptsTouch      : false                   // default false
+     *         acceptsOrientation: false                   // default false
+     *     }
+     * );
+     */
     initialize: function(options) {
-        _.bindAll(this, '_handleWantsMove');
-
-        this.slider = new HorizontalSlider(options);
-        this.slider._handleWantsMove = this._handleWantsMove;
-
-        this.listenTo(this.slider, 'change', this._rangeDidChange);
+        // call super initialize
+        // required, the parent initialize does not get called otherwise.
+        this.constructor.__super__.initialize.apply(this, arguments);
     },
 
-    _rangeDidChange: function(slider) {
-        this.trigger('change', this);
+    // HorizontalSlider overrides
+
+    setPositionAt: function(value, index) {
+        value = this._restrictRangePositions(value, index);
+        this.constructor.__super__.setPositionAt.call(this, value, index);
     },
 
-    _handleWantsMove: function($h, offset) {
-        var handleIndex = this.slider._getHandleIndex($h);
-        var obj         = this.slider.ranges[handleIndex];
-        var position    = this.slider._calculatePositionWithRangeAndDelta(obj, offset);
+    // Helper methods
 
-        // TODO:
-        // Fix, update this when enforce steps is fixed / refactored.
+    _restrictRangePositions: function(value, index) {
+        var positions = this.getPositions();
+        var min         = positions[index - 1] || 0;
+        var max         = positions[index + 1] || 1;
+        var result      = value;
 
-        if(this.slider.steps) {
-
-            // TODO: dupes code in horizontal.js
-            var step = this.slider._calculateStepWithRangeAndPosition(obj, position);
-            var currentStep = this.slider.handleSteps[handleIndex];
-
-            if(step !== currentStep) {
-                step = this._enforceRangeStep(handleIndex, step);
-                this.slider.setStep($h, step);
-            }
-        } else {
-            position = this._enforceRangePosition($h, position);
-            this.slider.setPosition($h, position);
-        }
-    },
-
-    // TODO: Optimization, ternary for performance?
-    // - Rename, name could be more explicit
-
-    _enforceRangePosition: function($h, position) {
-        var result    = position;
-        var index     = this.slider._getHandleIndex($h);
-        var positions = this.getPosition();
-        var length    = positions.length;
-
-        // get boundaries
-        // if index + or - 1 is out of range, set to min or max limit.
-        var minBoundary = positions[index - 1] || 0;
-        var maxBoundary = positions[index + 1] || 1;
-
-        // Update result
-        // Restrict value to left and right boundary values
-        result = Math.max(position, minBoundary);
-        result = Math.min(result, maxBoundary);
-
-        return result;
-    },
-
-    // TODO:
-    // - FIx, update to use _enforceRangePosition
-    // - Rename, name could be more explicit
-
-    _enforceRangeStep: function($h, step) {
-        var result    = step;
-        var index     = this.slider._getHandleIndex($h);
-        var steps     = this.slider.getSteps();
-
-        var minStep = steps[index -1] || 0;
-        var maxStep = steps[index + 1] || this.slider.steps;
-
-        result = Math.max(step, minStep);
-        result = Math.min(result, maxStep);
+        // Perf - ternary is faster then Math.min / max
+        // note that the test against result on the second line,
+        // instead of value.
+        result = value  < min ? min : value;
+        result = result > max ? max : result;
 
         return result;
     },
 
     // "Public" methods
 
-    getRange: function() {
-        var results = [];
+    getRanges: function() {
+        var p1, p2;
+        var positions = this.getPositions();
+        var i         = 0;
+        var len       = positions.length;
+        var results   = [];
 
-        var positions          = this.getPosition();
-        var availableRanges    = this.slider.handles.length - 1;
-        var hasAtLeastOneRange = availableRanges > 0;
-
-        // TODO:
-        // Refactor, hslider should error if less-than two handles are passed in.
-        // if(hasAtLeastOneRange) {
-        var i = 0;
-        var len = availableRanges;
-
+        // not using _.map here because for loop was more clear / convenient
         for(i; i < len; i++) {
-            var x1 = positions[i];
-            var x2 = positions[i+1];
+            p1 = positions[i];
+            p2 = positions[i + 1];
 
-            results.push(Math.abs(x2-x1));
+            // skip any range that does not have a second value
+            // this is usually the right most range / handle
+            if(typeof p2 === 'undefined') {
+                continue;
+            }
+
+            results.push(Math.abs(p2 - p1));
         }
-        // }
 
         return results;
     },
 
-    // Horizontal slider proxies
-
-    // TODO:
-    // Improvement, take optional element; return all positions if undefined.
-    // - OR, change this to getPositions()
-    // - and, getPosition now looks like getPosition($h)
-    getPosition: function() {
-        return this.slider.getPosition();
-    },
-
-    // TODO:
-    // - Flag, flag for slider.steps is clunky
-    setPosition: function($h, position) {
-        position = this._enforceRangePosition($h, position);
-        return this.slider.setPosition($h, position);
-    },
-
-    getSteps: function() {
-        return this.slider.handleSteps;
-    },
-
-    setStep: function($h, value) {
-        value = this._enforceRangeStep($h, value);
-        return this.slider.setStep($h, value);
-    },
-
-    // Marionette overrides
-
-    onClose: function() {
-        this.slider.close();
-    }
-
 }); // eof HorizontalRangeSlider
 
 // Exports
+
 module.exports = HorizontalRangeSlider;
 
 }); // eof define

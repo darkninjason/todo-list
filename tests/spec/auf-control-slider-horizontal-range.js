@@ -1,193 +1,340 @@
 define(function(require, exports, module) {
 
+var _                     = require('underscore');
 var HorizontalRangeSlider = require('auf/ui/controls/sliders/horizontal-range');
 var SpecHelpers           = require('lib/spec-helpers');
 var EventHelpers          = SpecHelpers.Events;
 
-describe('Control: Slider Horizontal Range', function() {
+describe('Horizontal Range Slider', function() {
 
     // Set Up
 
     beforeEach(function() {
-        // console.log('// ' + this.description);
-
-        loadFixtures('control-slider-horizontal-range.html');
-
-        $sliderContainer   = $('.slider-container');
-        $slider            = $('.slider');
-        $sliderTrack       = $slider.find('.track');
-        $handles           = $('.handle');
-        $sliderHandleLeft  = $slider.find('.handle.left');
-        $sliderHandleMid   = $slider.find('.handle.mid');
-        $sliderHandleRight = $slider.find('.handle.right');
-
-        control = new HorizontalRangeSlider({
-            $handles: [$sliderHandleLeft, $sliderHandleMid, $sliderHandleRight],
-            $trackView: $sliderTrack,
-        });
-
-        testPositions = [0.25, 0.5, 0.75];
-        testSteps     = [10, 15, 20];
+        loadFixtures('control-slider-horizontal.html');
     });
 
     afterEach(function() {
-        // console.log('// eof ' + this.description);
     });
 
     // Helpers
 
-    function getNormalizedTrackWidth($h) {
-        var trackRect  = $sliderTrack[0].getBoundingClientRect();
-        var handleRect = $h[0].getBoundingClientRect();
+    function getOptions(augments) {
+        augments = augments || {};
+
+        var testSuiteDefaults = {
+            $track            : $('.slider .track'),
+            $handles          : $('.slider .handle'),
+            steps             : 30,
+            acceptsMouse      : true,
+            acceptsTouch      : true,
+            acceptsOrientation: true,
+            snap              : false
+        };
+
+        return _.extend(testSuiteDefaults, augments);
+    }
+
+    function getControl(augments) {
+        return new HorizontalRangeSlider(getOptions(augments));
+    }
+
+    function getPageElements() {
+        return {
+            $container  : $('.slider-container'),
+            $slider     : $('.slider'),
+            $track      : $('.slider .track'),
+            $handles    : $('.slider .handle'),
+            $leftHandle : $('.slider .handle.left'),
+            $midHandle  : $('.slider .handle.mid'),
+            $rightHandle: $('.slider .handle.right')
+        };
+    }
+
+    function getNormalizedTrackWidth($track, $handle) {
+        var trackRect, handleRect;
+
+        trackRect  = $track[0].getBoundingClientRect();
+        handleRect = $handle[0].getBoundingClientRect();
 
         return trackRect.width - handleRect.width;
     }
 
-    function setSliderTestPositions(positions) {
-        var i = positions.length-1;
-        var len = 0;
-
-        for(i; i >= 0; i--) {
-            position = positions[i];
-            handle = $handles.eq(i);
-
-            control.setPosition(handle, position);
-        }
+    function doBasicMouseDrag($handle, dragx) {
+        EventHelpers.simulateMouseDragged($handle, 0, 0, dragx, 0);
     }
 
-    function setSliderTestSteps(steps) {
-        var i = steps.length-1;
-        var len = 0;
-
-        for(i; i >= 0; i--) {
-            step = steps[i];
-            handle = $handles.eq(i);
-
-            control.setStep(handle, step);
-        }
+    function doBasicTouchDrag($handle, dragx) {
+        EventHelpers.simulateTouchDragged($handle, 0, 0, dragx, 0);
     }
 
-    // Test Suite
+    // Extended Functionality Tests
 
-    it('reports expected ranges when positioned', function() {
-        var positions      = testPositions;
-        var expectedRange1 = Math.abs(positions[1] - positions[0]);
-        var expectedRange2 = Math.abs(positions[1] - positions[2]);
+    it('does not exceed min (0)', function(){
+        var control, pos;
 
-        setSliderTestPositions(positions);
+        control = getControl();
+        pos     = [0.25, 0.50, 0.75];
 
-        ranges = control.getRange();
-
-        expect(ranges[0]).toEqual(expectedRange1);
-        expect(ranges[1]).toEqual(expectedRange2);
-    });
-
-    it('reports expected ranges when stepped', function() {
-        // close existing control
-        control.close()
-
-        // create new one with steps enabled
-        // note 60 steps here to create steps at positions [0.25, 0.5, 0.75]
-        control = new HorizontalRangeSlider({
-            $handles: [$sliderHandleLeft, $sliderHandleMid, $sliderHandleRight],
-            $trackView: $sliderTrack,
-            steps: 60
+        _.each(pos, function(p, i, list){
+            control.setPositionAt(p, i);
         });
 
-        // custom steps
-        var steps          = [15, 30, 45];
-        var positions      = testPositions;
-        var expectedRange1 = Math.abs(positions[1] - positions[0]);
-        var expectedRange2 = Math.abs(positions[1] - positions[2]);
+        control.setPositionAt(-1, 0);
 
-        setSliderTestSteps(steps);
-
-        ranges = control.getRange();
-
-        expect(ranges[0]).toEqual(expectedRange1);
-        expect(ranges[1]).toEqual(expectedRange2);
+        expect(control.getPositionAt(0)).toEqual(0);
     });
 
-    it('respects handle boundaries when handle is positioned', function() {
-        var positions = testPositions;
-        var min       = 0;
-        var max       = 1;
+    it('does not exceed max (position at index 1)', function(){
+        var control, pos;
 
-        setSliderTestPositions(positions);
+        control = getControl();
+        pos     = [0.25, 0.50, 0.75];
 
-        control.setPosition($sliderHandleMid, min);
-
-        expect(control.getPosition()[1]).toEqual(positions[0]);
-
-        control.setPosition($handles.eq(1), max);
-
-        expect(control.getPosition()[1]).toEqual(positions[2]);
-    });
-
-    it('respects handle boundaries when handle is dragged by mouse', function() {
-        var startPos;
-        var $handle   = $handles.eq(1);
-        var positions = testPositions;
-        var min       = 0;
-        var max       = getNormalizedTrackWidth($handle);
-
-        setSliderTestPositions(positions);
-
-        startPos = $handle.position().left;
-        EventHelpers.simulateMouseDragged($handle, startPos, 15, min, 15);
-
-        expect(control.getPosition()[1]).toEqual(positions[0]);
-
-        startPos = $handle.position().left;
-        EventHelpers.simulateMouseDragged($handle, startPos, 0, max, 0);
-
-        expect(control.getPosition()[1]).toEqual(positions[2]);
-    });
-
-    it('respects handle boundaries when handle is dragged by touch', function(){
-        var startPos;
-        var $handle   = $handles.eq(1);
-        var positions = testPositions;
-        var min       = 0;
-        var max       = getNormalizedTrackWidth($handle);
-
-        setSliderTestPositions(positions);
-
-        startPos = $handle.position().left;
-        EventHelpers.simulateTouchDragged($handle, startPos, 15, min, 15);
-
-        expect(control.getPosition()[1]).toEqual(positions[0]);
-
-        startPos = $handle.position().left;
-        EventHelpers.simulateTouchDragged($handle, startPos, 0, max, 0);
-
-        expect(control.getPosition()[1]).toEqual(positions[2]);
-    });
-
-    it('respects stepped handle boundaries when handle is positioned', function(){
-        // close existing control
-        control.close()
-
-        // create new one with steps enabled
-        control = new HorizontalRangeSlider({
-            $handles: [$sliderHandleLeft, $sliderHandleMid, $sliderHandleRight],
-            $trackView: $sliderTrack,
-            steps: 30
+        _.each(pos, function(p, i, list){
+            control.setPositionAt(p, i);
         });
 
-        var steps = testSteps;
-        var min = 0;
-        var max = 30; // steps is configured above to 30;
+        control.setPositionAt(1, 0);
 
-        setSliderTestSteps(steps);
+        expect(control.getPositionAt(0)).toEqual(pos[1]);
+    });
 
-        control.setStep($sliderHandleMid, min);
+    it('does exceed min (position at index 0)', function(){
+        var control, pos;
 
-        expect(control.getSteps()[1]).toEqual(steps[0]);
+        control = getControl();
+        pos     = [0.25, 0.50, 0.75];
 
-        control.setStep($handles.eq(1), max);
+        _.each(pos, function(p, i, list){
+            control.setPositionAt(p, i);
+        });
 
-        expect(control.getSteps()[1]).toEqual(steps[2]);
+        control.setPositionAt(0, 1);
+
+        expect(control.getPositionAt(1)).toEqual(pos[0]);
+    });
+
+    it('does exceed max (position at index 1)', function(){
+        var control, pos;
+
+        control = getControl();
+        pos     = [0.25, 0.50, 0.75];
+
+        _.each(pos, function(p, i, list){
+            control.setPositionAt(p, i);
+        });
+
+        control.setPositionAt(1, 1);
+
+        expect(control.getPositionAt(1)).toEqual(pos[2]);
+    });
+
+    it('does exceed min (position at index 1)', function(){
+        var control, pos;
+
+        control = getControl();
+        pos     = [0.25, 0.50, 0.75];
+
+        _.each(pos, function(p, i, list){
+            control.setPositionAt(p, i);
+        });
+
+        control.setPositionAt(0, 2);
+
+        expect(control.getPositionAt(2)).toEqual(pos[1]);
+    });
+
+    it('does exceed max (1)', function(){
+        var control, pos;
+
+        control = getControl();
+        pos     = [0.25, 0.50, 0.75];
+
+        _.each(pos, function(p, i, list){
+            control.setPositionAt(p, i);
+        });
+
+        control.setPositionAt(2, 2);
+
+        expect(control.getPositionAt(2)).toEqual(1);
+    });
+
+    // Public API
+
+    it('returns expected ranges', function(){
+        var control, pos, expectedRanges;
+
+        pos     = [0.25, 0.50, 0.75];
+        control = getControl();
+        expectedRanges = [pos[1] - pos[0], pos[2] - pos[1]];
+
+        _.each(pos, function(p, i, list){
+            control.setPositionAt(p, i);
+        });
+
+        expect(control.getRanges()).toEqual(expectedRanges);
+    });
+
+    // UI
+    it('does not exceed min with snap enabled (position at index 0)', function(){
+        var control, pos;
+
+        control = getControl();
+        pos     = [0.25, 0.5, 0.75];
+        step    = [8, 15, 23];
+
+        _.each(pos, function(p, i, list){
+            control.setPositionAt(p, i);
+        });
+
+        control.setPositionAt(0, 1);
+
+        expect(control.getStepAt(1)).toEqual(step[0]);
+    });
+
+    it('does not exceed max with snap enabled (position at index 2)', function(){
+        var control, pos;
+
+        control = getControl();
+        pos     = [0.25, 0.5, 0.75];
+        step    = [8, 15, 23];
+
+        _.each(pos, function(p, i, list){
+            control.setPositionAt(p, i);
+        });
+
+        control.setPositionAt(1, 1);
+
+        expect(control.getStepAt(1)).toEqual(step[2]);
+    });
+
+    // Events Tests
+
+    it('dispatches change for setPositionAt', function(){
+        var change, els, control;
+
+        change    = jasmine.createSpy('change');
+        els       = getPageElements();
+        control   = getControl();
+
+        control.on('change', change);
+
+        control.setPositionAt(0.5, 0);
+
+        expect(change).toHaveBeenCalled();
+    });
+
+    it('dispatches change for mouse', function(){
+        var change, els, control;
+
+        change    = jasmine.createSpy('change');
+        els       = getPageElements();
+        control   = getControl();
+
+        control.on('change', change);
+
+        doBasicMouseDrag(els.$leftHandle, 100);
+
+        expect(change).toHaveBeenCalled();
+    });
+
+    it('dispatches drag:start for mouse', function(){
+        var dragStart, els, control;
+
+        dragStart = jasmine.createSpy('dragStart');
+        els       = getPageElements();
+        control   = getControl();
+
+        control.on('drag:start', dragStart);
+
+        doBasicMouseDrag(els.$leftHandle, 100);
+
+        expect(dragStart).toHaveBeenCalled();
+    });
+
+    it('dispatches drag:stop for mouse', function(){
+        var dragStop, els, control;
+
+        dragStop  = jasmine.createSpy('dragStop');
+        els       = getPageElements();
+        control   = getControl();
+
+        control.on('drag:stop', dragStop);
+
+        doBasicMouseDrag(els.$leftHandle, 100);
+
+        expect(dragStop).toHaveBeenCalled();
+    });
+
+    it('dispatches change for touch', function(){
+        var change, els, control;
+
+        change    = jasmine.createSpy('change');
+        els       = getPageElements();
+        control   = getControl();
+
+        control.on('change', change);
+
+        doBasicTouchDrag(els.$leftHandle, 100);
+
+        expect(change).toHaveBeenCalled();
+    });
+
+    it('dispatches drag:start for touch', function(){
+        var dragStart, els, control;
+
+        dragStart = jasmine.createSpy('dragStart');
+        els       = getPageElements();
+        control   = getControl();
+
+        control.on('drag:start', dragStart);
+
+        doBasicTouchDrag(els.$leftHandle, 100);
+
+        expect(dragStart).toHaveBeenCalled();
+    });
+
+    it('dispatches drag:stop for touch', function(){
+        var dragStop, els, control;
+
+        dragStop  = jasmine.createSpy('dragStop');
+        els       = getPageElements();
+        control   = getControl();
+
+        control.on('drag:stop', dragStop);
+
+        doBasicTouchDrag(els.$leftHandle, 100);
+
+        expect(dragStop).toHaveBeenCalled();
+    });
+
+    // Marionette
+
+    it('closes all responders on close', function(){
+        var els, trackWidth, control, pos;
+
+        els = getPageElements();
+        trackWidth = getNormalizedTrackWidth(els.$track, els.$leftHandle);
+        control = getControl();
+        pos = [0.25, 0.5, 0.75];
+
+        // drag the handles around a bit
+        doBasicMouseDrag(els.$leftHandle, trackWidth * pos[0]);
+        doBasicTouchDrag(els.$midHandle, trackWidth * pos[1]);
+        control.setPositionForHandle(pos[2], els.$rightHandle);
+
+        // expect things to have moved around
+        expect(control.getPositions()).toEqual(pos);
+
+        // call close
+        control.close();
+
+        // drag the handles around a bit with responder input
+        doBasicMouseDrag(els.$leftHandle, trackWidth * pos[2]);
+        doBasicTouchDrag(els.$midHandle, trackWidth * pos[1]);
+
+        // expect no movement
+        expect(control.getPositions()).toEqual(pos);
     });
 
 }); // eof describe
