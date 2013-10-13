@@ -20,6 +20,7 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     // Properties
 
+    minRequiredHandles: 1,
     ranges: null,
     mouseResponders: null,
     touchResponders: null,
@@ -64,14 +65,14 @@ var HorizontalSlider = Marionette.Controller.extend({
         var hasTrackSetting     = options.$track !== null;
         var hasOneTrack         = hasTrackSetting && options.$track.length == 1;
         var hasHandleSetting    = options.$handles !== null;
-        var hasAtLeastOneHandle = hasHandleSetting && options.$handles.length > 0;
+        var hasAtLeastOneHandle = hasHandleSetting && options.$handles.length >= this.minRequiredHandles;
 
         if(!hasOneTrack) {
             throw 'HorizontalSlider requires at least one track element!';
         }
 
         if(!hasAtLeastOneHandle) {
-            throw 'HorizontalSlider requires at least one handle element!';
+            throw 'HorizontalSlider requires at least ' + this.minRequiredHandles + ' handle element(s)!';
         }
 
         this.ranges = this._initializeRanges(this.options);

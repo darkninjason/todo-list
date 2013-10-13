@@ -38,6 +38,8 @@ var HorizontalRangeSlider =  HorizontalSlider.extend({
      * );
      */
     initialize: function(options) {
+        this.minRequiredHandles = 2;
+
         // call super initialize
         // required, the parent initialize does not get called otherwise.
         this.constructor.__super__.initialize.apply(this, arguments);

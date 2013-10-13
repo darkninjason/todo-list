@@ -67,6 +67,21 @@ describe('Horizontal Range Slider', function() {
         EventHelpers.simulateTouchDragged($handle, 0, 0, dragx, 0);
     }
 
+    // Throws Tests
+
+    it('throws when less than two handles provided.', function(){
+        function throwable() {
+            var els,control;
+
+            els     = getPageElements();
+            control = getControl({
+                $handles: els.$leftHandle
+            });
+        }
+
+        expect(throwable).toThrow();
+    });
+
     // Extended Functionality Tests
 
     it('does not exceed min (0)', function(){
