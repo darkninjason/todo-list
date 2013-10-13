@@ -1,47 +1,65 @@
-var tests = [];
-for (var file in window.__karma__.files) {
-  if (window.__karma__.files.hasOwnProperty(file)) {
-    if (/auf.+\.js$/.test(file)) {
-      tests.push(file);
-    }
+// var tests = [];
+// for (var file in window.__karma__.files) {
+//   if (window.__karma__.files.hasOwnProperty(file)) {
+//     if (/auf.+\.js$/.test(file)) {
+//       tests.push(file);
+//     }
 
-    // if (/auf-managers.{0,}\.js$/.test(file)) {
-    //   tests.push(file);
-    // }
+//     // if (/auf-managers.{0,}\.js$/.test(file)) {
+//     //   tests.push(file);
+//     // }
 
-    // if (/auf-calendar.{0,}\.js$/.test(file)) {
-    //   tests.push(file);
-    // }
+//     // if (/auf-calendar.{0,}\.js$/.test(file)) {
+//     //   tests.push(file);
+//     // }
 
-    // if (/auf-control-input.{0,}\.js$/.test(file)) {
-    //   tests.push(file);
-    // }
+//     // if (/auf-control-input.{0,}\.js$/.test(file)) {
+//     //   tests.push(file);
+//     // }
 
-    // if (/auf-datetime.{0,}\.js$/.test(file)) {
-    //   tests.push(file);
-    // }
+//     // if (/auf-datetime.{0,}\.js$/.test(file)) {
+//     //   tests.push(file);
+//     // }
 
-    // if (/auf-gestures.{0,}\.js$/.test(file)) {
-    //   tests.push(file);
-    // }
+//     // if (/auf-gestures.{0,}\.js$/.test(file)) {
+//     //   tests.push(file);
+//     // }
 
-    // if (/auf-jquery.{0,}\.js$/.test(file)) {
-    //   tests.push(file);
-    // }
+//     // if (/auf-jquery.{0,}\.js$/.test(file)) {
+//     //   tests.push(file);
+//     // }
 
-    // if (/auf-managers.{0,}\.js$/.test(file)) {
-    //   tests.push(file);
-    // }
+//     // if (/auf-managers.{0,}\.js$/.test(file)) {
+//     //   tests.push(file);
+//     // }
 
-    // if (/auf-responders.{0,}\.js$/.test(file)) {
-    //   tests.push(file);
-    // }
+//     // if (/auf-responders.{0,}\.js$/.test(file)) {
+//     //   tests.push(file);
+//     // }
 
-    // if (/auf-control-slider-horizontal\.js$/.test(file)) {
-    //   tests.push(file);
-    // }
-  }
-}
+//     // if (/auf-control-slider-horizontal\.js$/.test(file)) {
+//     //   tests.push(file);
+//     // }
+//   }
+// }
+
+var tests = [
+  'spec/auf-jquery-collection',
+  'spec/auf-calendar',
+  'spec/auf-datetime',
+  'spec/auf-datetime-formats',
+  'spec/auf-responders-keys',
+  'spec/auf-responders-touches',
+  'spec/auf-responders-mouse',
+  'spec/auf-gestures-swipe',
+  'spec/auf-managers-index',
+  'spec/auf-managers-range',
+  'spec/auf-managers-focus',
+  'spec/auf-managers-focus-single',
+  'spec/auf-control-slider-horizontal',
+  'spec/auf-control-slider-horizontal-range',
+  'spec/auf-control-input-select'
+];
 
 var path = '';
 
@@ -57,6 +75,7 @@ requirejs.config({
         'lib': 'tests/lib',
         'vendor': 'tests/lib/vendor',
         'jasmine': 'tests/lib/jasmine',
+        'spec': 'tests/spec',
         'auf': 'agency-ui-foundation'
     },
 
