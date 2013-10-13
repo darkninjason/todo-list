@@ -103,10 +103,9 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     _initializeRanges: function(options) {
         function iterator(handle, i, list) {
-            console.log(handle);
             var $handle      = $(handle);
             var handleBounds = handlesBounds[i];
-            var listener     = _.bind(this._rangeDidChange, this, $handle);
+            var listener     = _.bind(this.rangeDidChange, this, $handle);
 
             var range = new RangeManager({
                 min: 0,
@@ -130,9 +129,9 @@ var HorizontalSlider = Marionette.Controller.extend({
         function iterator(el, i, list) {
             return new MouseResponder({
                 el: $(el),
-                mouseDragged: _.bind(this._handleDidReceiveDrag,      this, ranges[i]),
-                mouseDown   : _.bind(this._handleDidRecieveDragStart, this, ranges[i]),
-                mouseUp     : _.bind(this._handleDidRecieveDragStop,  this, ranges[i])
+                mouseDragged: _.bind(this.handleDidReceiveDrag,      this, ranges[i]),
+                mouseDown   : _.bind(this.handleDidReceiveDragStart, this, ranges[i]),
+                mouseUp     : _.bind(this.handleDidReceiveDragStop,  this, ranges[i])
             });
         }
 
@@ -145,9 +144,9 @@ var HorizontalSlider = Marionette.Controller.extend({
         function iterator(el, i, list) {
             return new TouchResponder({
                 el: $(el),
-                touchMove : _.bind(this._handleDidReceiveDrag,      this, ranges[i]),
-                touchStart: _.bind(this._handleDidRecieveDragStart, this, ranges[i]),
-                touchEnd  : _.bind(this._handleDidRecieveDragStop,  this, ranges[i])
+                touchMove : _.bind(this.handleDidReceiveDrag,      this, ranges[i]),
+                touchStart: _.bind(this.handleDidReceiveDragStart, this, ranges[i]),
+                touchEnd  : _.bind(this.handleDidReceiveDragStop,  this, ranges[i])
             });
         }
 
@@ -158,8 +157,8 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     _initializeOrientation: function(options) {
         return new OrientationResponder({
-            portrait : this._didReceiveOrientationChange,
-            landscape: this._didReceiveOrientationChange
+            portrait : this.didReceiveOrientationChange,
+            landscape: this.didReceiveOrientationChange
         });
     },
 
@@ -178,39 +177,48 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     _getHandleIndex: function($handle) {
-        return this.options.$handles.index($handle);
+        var $handles = this.options.$handles;
+        var index = $handles.index($handle);
+
+        if(index < 0) {
+            throw 'Could not retrieve handle from the currently set $handles option.';
+        }
+
+        return index;
     },
 
     _getRangeManager: function(index) {
-        var range = this.ranges[index];
+        var outofrange = index > this.ranges.length - 1;
 
-        if(typeof range == 'undefined') {
+        if(outofrange) {
             throw 'Index out of range, this.ranges[' + index + '], when length is ' + this.ranges.length + '.';
         }
 
-        return range;
+        return this.ranges[index];
     },
 
-    // 'Protected' methods
+    _getRangeValues: function() {
+        function iterator(range, i, list) {
+            return range.getValue();
+        }
 
-    updateHandlePosition: function($handle, range, position, value) {
-        console.log('hi');
+         return _.map(this.ranges, iterator, this);
+    },
+
+    _updateHandlePosition: function($handle, range, position, value) {
         // TODO: Enhancement - ADD support for CSS3 Transitions?
         $handle.css({'left': value + 'px'});
     },
 
-    updateHandlePositionWithSnap: function($handle, range, position, value) {
+    _updateHandlePositionWithSnap: function($handle, range, position, value) {
         var step      = this.getStepForHandle($handle);
         var stepDelta = range.getMax() / this.options.steps;
 
         // augment position and value
         value = stepDelta * step;
-        // position = range.calculatePositionForValue(value);
-
-        console.log(value, position);
 
         // pass in augmented values to original update function
-        this.updateHandlePosition($handle, range, position, value);
+        this._updateHandlePosition($handle, range, position, value);
     },
 
     // 'Public' Position methods
@@ -302,31 +310,34 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     // Event delegates
 
-    _rangeDidChange: function($handle, range, position, value) {
+    rangeDidChange: function($handle, range, position, value) {
         if(this.options.snap) {
-            this.updateHandlePositionWithSnap(
-                $handle, range, position, value);
+            this._updateHandlePositionWithSnap($handle, range, position, value);
 
         }else{
-            this.updateHandlePosition(
-                $handle, range, position, value);
+            this._updateHandlePosition($handle, range, position, value);
         }
 
         this._dispatchChange($handle, position);
     },
 
-    _handleDidReceiveDrag: function(range, responder, e) {
+    handleDidReceiveDrag: function(range, responder, e) {
         e.preventDefault();
 
         var $handle = responder.$el;
         var index   = this._getHandleIndex($handle);
-        var delta   = responder.deltaX()[0] || responder.deltaX();
-        var value   = delta + this.handleOffsets[index];
+
+        // touch returns array, mouse returns single value.
+        // we can use some slight-of-hand to get the correct value.
+        // if deltaX()[0] is undefined then
+        // return the value of deltaX() only.
+        var delta = responder.deltaX()[0] || responder.deltaX();
+        var value = delta + this.handleOffsets[index];
 
         this.setPositionForHandle(range.calculatePositionForValue(value), $handle);
     },
 
-    _handleDidRecieveDragStart: function(range, responder, e) {
+    handleDidReceiveDragStart: function(range, responder, e) {
         e.preventDefault();
 
         var $handle = responder.$el;
@@ -337,12 +348,12 @@ var HorizontalSlider = Marionette.Controller.extend({
         this._dispatchDragStart(responder.$el, range.getPosition());
     },
 
-    _handleDidRecieveDragStop: function(range, responder, e) {
+    handleDidReceiveDragStop: function(range, responder, e) {
         e.preventDefault();
         this._dispatchDragStop(responder.$el, range.getPosition());
     },
 
-    _didReceiveOrientationChange: function(responder, e) {
+    didReceiveOrientationChange: function(responder, e) {
         function iterator(range, i, list) {
             // setMax causes range to dispatch change.
             // that should be suffient to also update this
