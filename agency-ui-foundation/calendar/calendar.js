@@ -48,7 +48,7 @@ define(function(require, exports, module){
         }
 
         var days = daysInJavaScriptMonth(date.getFullYear(), date.getMonth());
-        return new Date(date.getTime() + ((86400 * (days + 1)) * 1000));
+        return new Date(date.getTime() + ((86400 * (days)) * 1000));
     }
 
     function daysInJavaScriptMonth(year, month){

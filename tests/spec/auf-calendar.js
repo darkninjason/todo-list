@@ -7,6 +7,83 @@ var _        = require('underscore');
 
 describe('Calendar:', function() {
 
+    it('should get first of month for date', function() {
+        var date = new Date(2012, 7, 29);
+
+        var first = calendar.firstOfMonth(date);
+        expect(first.getFullYear()).toEqual(2012); // leap year
+        expect(first.getMonth()).toEqual(7);
+        expect(first.getDate()).toEqual(1);
+    });
+
+    it('should get first of month for current month', function() {
+        var date = new Date();
+        var first = calendar.firstOfMonth();
+        expect(first.getFullYear()).toEqual(date.getFullYear()); // leap year
+        expect(first.getMonth()).toEqual(date.getMonth());
+        expect(first.getDate()).toEqual(1);
+    });
+
+    it('should get previous month for a given year and month', function(){
+        // previousMonthForYearMonth uses non-javascript month integers
+        // aka 1 based not 0 based
+        var first = calendar.previousMonthForYearMonth(2012, 9);
+        expect(first.getFullYear()).toEqual(2012); // leap year
+        expect(first.getMonth()).toEqual(7);
+        expect(first.getDate()).toEqual(31);
+    });
+
+    it('should get next month for a given year and month', function(){
+        // nextMonthForYearMonth uses non-javascript month integers
+        // aka 1 based not 0 based
+        var first = calendar.nextMonthForYearMonth(2012, 7);
+        expect(first.getFullYear()).toEqual(2012); // leap year
+        expect(first.getMonth()).toEqual(7);
+        expect(first.getDate()).toEqual(1);
+    });
+
+    it('should get next month for a date where the date is not the 1st of the month', function(){
+        var date = new Date(2012, 6, 29);
+        var first = calendar.nextMonthForDate(date);
+        expect(first.getFullYear()).toEqual(2012); // leap year
+        expect(first.getMonth()).toEqual(7);
+        expect(first.getDate()).toEqual(1);
+    });
+
+    it('should get calendar days for a month with a date', function(){
+        var date = new Date(2012, 7, 29);
+        var results = calendar.calendarMonthDays(date, null, {useDates: true});
+        expect(results.length).toEqual(31);
+
+        expect(_.isDate(results[0])).toEqual(true);
+        expect(_.isDate(results[30])).toEqual(true);
+
+        expect(results[0].getFullYear()).toEqual(2012);
+        expect(results[0].getMonth()).toEqual(7);
+        expect(results[0].getDate()).toEqual(1);
+
+        expect(results[30].getFullYear()).toEqual(2012);
+        expect(results[30].getMonth()).toEqual(7);
+        expect(results[30].getDate()).toEqual(31);
+    });
+
+    it('should get buffered calendar days for a month with a date', function(){
+        var date = new Date(2012, 7, 29);
+        var results = calendar.bufferedCalendarMonthDays(date, null, {useDates: true});
+        expect(results.length).toEqual(42);
+
+        expect(_.isDate(results[3])).toEqual(true);
+        expect(_.isDate(results[33])).toEqual(true);
+
+        expect(results[3].getFullYear()).toEqual(2012);
+        expect(results[3].getMonth()).toEqual(7);
+        expect(results[3].getDate()).toEqual(1);
+
+        expect(results[33].getFullYear()).toEqual(2012);
+        expect(results[33].getMonth()).toEqual(7);
+        expect(results[33].getDate()).toEqual(31);
+    });
+
     it('should get the number of days in a month', function() {
         var days = calendar.daysInJavaScriptMonth(2012, 1);
         expect(days).toEqual(29); // leap year
