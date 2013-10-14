@@ -218,16 +218,6 @@ define(function(require, exports, module){
             this.setElements($(elements));
         },
 
-        setjQueryElements: function(jqElements){
-            var elements = [];
-
-            _.each(jqElements, function(each){
-                elements.push(each[0]);
-            });
-
-            this.setElements($(elements));
-        },
-
         setElements: function($elements){
             this._$elements = $elements;
         },

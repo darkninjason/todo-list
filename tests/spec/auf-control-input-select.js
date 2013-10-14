@@ -24,6 +24,7 @@ describe('Input Select Control', function() {
 
     var inputHandler;
     var collectionHandler;
+    var collectionHandlerjQueryElements;
     // Setup
 
     beforeEach(function() {
@@ -69,6 +70,17 @@ describe('Input Select Control', function() {
                 $items = $collection.find('li');
             }
         };
+
+        collectionHandlerjQueryElements = {
+            collectionRendered: function(){
+                var kids = $collection.find('li');
+                this.stopListening(myCollectionView, 'render');
+                control.setElements(kids);
+                control.beginNavigationPhase();
+                this.hasRendered = true;
+                $items = $collection.find('li');
+            }
+        };
     });
 
     afterEach(function(){
@@ -85,6 +97,15 @@ describe('Input Select Control', function() {
 
         return obj;
     }
+
+    function getEventHandlerJqueryElements() {
+        var obj =  _.extend({}, inputHandler, collectionHandlerjQueryElements, Backbone.Events);
+        obj.listenTo(control, 'input', obj.receivedInput);
+        obj.listenTo(myCollectionView, 'render', obj.collectionRendered);
+
+        return obj;
+    }
+
 
     // Test Suite
     it('throws error when no input provided', function(){
@@ -156,6 +177,34 @@ describe('Input Select Control', function() {
     // Key Events
     it('disptches \'focus\' event for first item with down arrow key', function() {
         var obj = getEventHandler();
+        var focusSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'focus', focusSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(focusSpy).toHaveBeenCalled();
+            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(0));
+        });
+    });
+
+    it('disptches \'focus\' event for first item set with jquery elements with down arrow key', function() {
+
+        var obj = getEventHandlerJqueryElements();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, 'focus', focusSpy);
