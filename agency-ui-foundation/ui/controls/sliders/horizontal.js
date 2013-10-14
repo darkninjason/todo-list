@@ -90,7 +90,7 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     onClose: function() {
         function iterator (responder, i, list) {
-            if(responder) responder.onClose();
+            if(responder) responder.close();
         }
 
         var responders = this.mouseResponders
