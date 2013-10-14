@@ -353,7 +353,36 @@ describe('Mouse Responder', function() {
         });
 
         EventHelpers.simulateMouseDown($input, 0, 0);
-        expect(responder.clickCount()).toEqual(1);
+        EventHelpers.simulateMouseUp($input, 0, 0);
+        EventHelpers.simulateMouseDown($input, 0, 0);
+        EventHelpers.simulateMouseUp($input, 0, 0);
+        expect(responder.clickCount()).toEqual(2);
+    });
+
+    it('should reset clicks to 0 after delay', function(){
+        var flag = false;
+
+        responder = new MouseResponder({
+            el: $input,
+            acceptsUpDown: true
+        });
+
+        runs(function() {
+            EventHelpers.simulateMouseDown($input, 0, 0);
+
+            setTimeout(function() {
+                flag = true;
+            }, responder.clickCountTimeout + 1);
+        });
+
+        waitsFor(function() {
+            return flag;
+        }, 'No input received', responder.clickCountTimeout * 2);
+
+        runs(function() {
+            EventHelpers.simulateMouseUp($input, 0, 0);
+            expect(responder.clickCount()).toEqual(0);
+        });
     });
 
 }); // eof describe
