@@ -39,55 +39,9 @@ define(function(require){
         return date;
     }
 
-    function daysInMonth(year, month){
-        if (!year && !month){
-            var now = new Date();
-            year = now.getFullYear();
-            month = now.getMonth();
-        }
-
-        var d = new Date(year, month, 0);
-        return d.getDate();
-    }
-
-    function bufferedCalendarMonth(year, month, options){
-
-        var firstDayOfWeek = options.firstDayOfWeek || 0;
-        var useDates = options.useDates || false;
-
-        if (!year && !month){
-            var now = new Date();
-            year = now.getFullYear();
-            month = now.getMonth();
-        }
-
-        var date = new Date(year, month, 1);
-        var weekdaysCount = date.getDay() - firstDayOfWeek;
-
-        if (weekdaysCount == -1) weekdaysCount = 6;
-
-        var lastMonth = new Date(date.getTime() - 1);
-
-        console.log(lastMonth.getFullYear(), lastMonth.getMonth(), lastMonth.getDate());
-        console.log(weekdaysCount);
-
-        for(var i = 0; i < weekdaysCount; i++) {
-            var day = lastMonth.getDate() - (weekdaysCount - i) + 1;
-            var d = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), day);
-            console.log(d.getDate());
-            //this.injectDay(row, this.viewDate.clone().decrement('month').set('date', y - (weekdaysCount - i) + 1), true);
-        }
-
-        //console.log(firstDay.getDay());
-
-
-
-    }
-
     return {
         UTCStringToMilliseconds: UTCStringToMilliseconds,
         UTCStringToSeconds: UTCStringToSeconds,
-        UTCStringToLocalDate: UTCStringToLocalDate,
-        daysInMonth: daysInMonth
+        UTCStringToLocalDate: UTCStringToLocalDate
     };
 });
