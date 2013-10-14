@@ -21,16 +21,16 @@ module.exports = function(config) {
         {pattern: 'tests/lib/**/*.js', included: false, served: true},
         {pattern: 'agency-ui-foundation/**/*.js', included: false, served: true},
 
-      'tests/karma-main.js'
+        'tests/karma-main.js'
     ],
 
     // don't be fancy with html files:
-    // using jasmine-jquery, we do not want karma messing with our html files.
+    // using jasmine-jqkarma uery, we do not want karma messing with our html files.
     // https://github.com/karma-runner/karma/issues/740
     preprocessors: {
         // Istanbul required for coverage (npm install -g istanbul)
         // karma-coverage required for coverage (npm install -g karma-coverage)
-        // 'agency-ui-foundation/**/*.js': 'coverage'
+        'agency-ui-foundation/**/*.js': 'coverage'
     },
 
 
@@ -46,8 +46,8 @@ module.exports = function(config) {
     // Istanbul required for coverage (npm install -g istanbul)
     // karma-coverage required for coverage (npm install -g karma-coverage)
 
-    //reporters: ['progress', 'coverage'],
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
+    //reporters: ['progress'],
 
 
     // web server port
