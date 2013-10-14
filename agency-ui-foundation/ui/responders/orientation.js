@@ -29,12 +29,13 @@ var OrientationResponder = Marionette.Controller.extend({
     },
 
     interpretOrientationEvent: function (e){
-        var orientation = window.orientation;
+        var orientation = e.target.orientation;
 
         if (orientation == 90 || orientation == -90){
             this.landscape(this, e);
             return;
         }
+
 
         if(orientation === 0){
             this.portrait(this, e);

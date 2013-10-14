@@ -196,15 +196,4 @@ define(function(require, exports, module){
     module.exports.nextMonthForYearMonth = nextMonthForYearMonth;
     module.exports.nextMonthForDate = nextMonthForDate;
     module.exports.firstOfMonth = firstOfMonth;
-    // return {
-    //     daysInJavaScriptMonth: daysInJavaScriptMonth,
-    //     calendarMonthDays: calendarMonthDays,
-    //     bufferedCalendarMonthDays: bufferedCalendarMonthDays,
-    //     bufferedCalendarMonthWeeks: bufferedCalendarMonthWeeks,
-    //     previousMonthForYearMonth: previousMonthForYearMonth,
-    //     previousMonthForDate: previousMonthForDate,
-    //     nextMonthForYearMonth: nextMonthForYearMonth,
-    //     nextMonthForDate: nextMonthForDate,
-    //     firstOfMonth: firstOfMonth
-    // };
 });

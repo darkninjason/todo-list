@@ -27,7 +27,12 @@ module.exports = function(config) {
     // don't be fancy with html files:
     // using jasmine-jquery, we do not want karma messing with our html files.
     // https://github.com/karma-runner/karma/issues/740
-    preprocessors: {},
+    preprocessors: {
+        // Istanbul required for coverage (npm install -g istanbul)
+        // karma-coverage required for coverage (npm install -g karma-coverage)
+        // 'agency-ui-foundation/**/*.js': 'coverage'
+    },
+
 
     // list of files to exclude
     exclude: [
@@ -37,6 +42,11 @@ module.exports = function(config) {
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
+
+    // Istanbul required for coverage (npm install -g istanbul)
+    // karma-coverage required for coverage (npm install -g karma-coverage)
+    // reporters: ['progress', 'coverage'],
+
     reporters: ['progress'],
 
 

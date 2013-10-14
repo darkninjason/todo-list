@@ -179,6 +179,25 @@ var SpecHelpers = {
 
             var prefix = isNaN(parseInt(char, 10)) ? '' : '_';
             this.simulateKeyDown($el, SpecHelpers.KeyCodes[prefix + char]);
+        },
+
+        simulateOrientationEvent: function($el, payload){
+            return this.simulateEvent($el, 'orientationchange', payload);
+        },
+
+        simulateOrientationLandscapeLeft: function($el){
+            this.simulateOrientationEvent($el, {
+                'target': {'orientation': -90}});
+        },
+
+        simulateOrientationLandscapeRight: function($el){
+            this.simulateOrientationEvent($el, {
+                'target': {'orientation': 90}});
+        },
+
+        simulateOrientationPortrait: function($el){
+            this.simulateOrientationEvent($el, {
+                'target': {'orientation': 0}});
         }
     }
 
