@@ -24,6 +24,14 @@ describe('Focus Manager', function() {
 
     // Test Suite
 
+    it('throws error when no input provided', function(){
+        function badInit() {
+            new FocusManager({});
+        }
+
+        expect(badInit).toThrow();
+    });
+
     it('should trigger focus', function() {
         manager = new FocusManager({
             el: $items

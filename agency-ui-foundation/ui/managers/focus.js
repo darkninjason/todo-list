@@ -20,7 +20,7 @@ var FocusManager =  Marionette.Controller.extend({
         _.extend(this, options);
         _.bindAll(this, 'wasClicked');
 
-        if(!this.el) return;
+        if(!this.el) throw 'No input element provided.';
         this.$el = helpers.getElement(this.el);
 
         this.$el.on('click.auf.managers.focus', this.wasClicked);
