@@ -45,8 +45,8 @@ module.exports = function(config) {
 
     // Istanbul required for coverage (npm install -g istanbul)
     // karma-coverage required for coverage (npm install -g karma-coverage)
-    // reporters: ['progress', 'coverage'],
 
+    //reporters: ['progress', 'coverage'],
     reporters: ['progress'],
 
 

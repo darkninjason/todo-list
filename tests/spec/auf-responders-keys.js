@@ -26,6 +26,16 @@ describe('Key Responder', function() {
 
     // Test Suite
 
+    // Test Suite
+    it('throws error when no input provided', function(){
+        //EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+        function badInit() {
+            new KeyResponder({});
+        }
+
+        expect(badInit).toThrow();
+    });
+
     it('expects UI will trigger keydown', function() {
         var actionSpy = jasmine.createSpy('eventSpy');
 

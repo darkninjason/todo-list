@@ -21,7 +21,7 @@ var TouchResponder = Marionette.Controller.extend({
         _.extend(this, options);
         _.bindAll(this, '_touchStart', '_touchMove', '_touchEnd', '_touchCancel');
 
-        if(!this.el) return;
+        if(!this.el) throw 'No input element provided.';
         this.$el = helpers.getElement(this.el);
 
         this.$el.on('touchstart.auf.responders.touch', {ctx: this}, this._touchStart);

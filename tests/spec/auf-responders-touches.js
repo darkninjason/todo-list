@@ -2,8 +2,8 @@ define(function(require, exports, module) {
 
 // Import
 
-var TouchResponder = require('auf/ui/responders/touches');
 var $              = require('jquery');
+var TouchResponder = require('auf/ui/responders/touches');
 var EventHelpers   = require('lib/spec-helpers').Events;
 
 describe('Responder: Touch', function() {
@@ -24,6 +24,15 @@ describe('Responder: Touch', function() {
     });
 
     // Test Suite
+
+    it('throws error when no input provided', function(){
+        //EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+        function badInit() {
+            new TouchResponder({});
+        }
+
+        expect(badInit).toThrow();
+    });
 
     it('triggered touchstart', function() {
         var actionSpy = jasmine.createSpy('eventSpy');

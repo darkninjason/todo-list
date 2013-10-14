@@ -40,7 +40,7 @@ var MouseResponder = Marionette.Controller.extend({
             '_mouseEntered', '_mouseExited',
             '_mouseDragged', '_mouseMoved');
 
-        if(!this.el) return;
+        if(!this.el) throw 'No input element provided.';
         this.$el = helpers.getElement(this.el);
 
         if(this.acceptsUpDown){

@@ -17,7 +17,7 @@ var KeyResponder = Marionette.Controller.extend({
         _.extend(this, options);
         _.bindAll(this, '_keyDown', '_keyUp');
 
-        if(!this.el) return;
+        if(!this.el) throw 'No input element provided.';
         this.$el = helpers.getElement(this.el);
 
         if (!this.inputManager){

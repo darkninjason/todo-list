@@ -2,8 +2,8 @@ define(function(require, exports, module) {
 
 // Imports
 
-var MouseResponder = require('auf/ui/responders/mouse');
 var $              = require('jquery');
+var MouseResponder = require('auf/ui/responders/mouse');
 var EventHelpers   = require('lib/spec-helpers').Events;
 
 describe('Mouse Responder', function() {
@@ -24,6 +24,15 @@ describe('Mouse Responder', function() {
     });
 
     // Test Suite
+
+    it('throws error when no input provided', function(){
+        //EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+        function badInit() {
+            new MouseResponder({});
+        }
+
+        expect(badInit).toThrow();
+    });
 
     it('expects UI will trigger mousedown', function(){
 
