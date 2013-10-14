@@ -43,10 +43,14 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
 
+    reporters: [
+    'dots',
+    //'progress',
+
     // Istanbul required for coverage (npm install -g istanbul)
     // karma-coverage required for coverage (npm install -g karma-coverage)
-
-    reporters: ['progress', 'coverage'],
+    'coverage'
+    ],
     //reporters: ['progress'],
 
 
