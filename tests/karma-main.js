@@ -78,13 +78,16 @@ requirejs.config({
         'vendor': 'tests/lib/vendor',
         'jasmine': 'tests/lib/jasmine',
         'spec': 'tests/spec',
-        'auf': 'agency-ui-foundation'
+        'auf': 'agency-ui-foundation',
+
+        // Only jquery is allowed to do this as it's a named module
+        // https://github.com/jrburke/requirejs/wiki/Updating-existing-libraries#wiki-anon
+        'jquery': 'tests/lib/vendor/jquery'
     },
 
     map: {
         '*': {
-            'underscore': 'vendor/underscore',
-            'jquery'    : 'vendor/jquery',
+            'underscore': 'vendor/lodash',
             'backbone'  : 'vendor/backbone',
             'marionette': 'vendor/marionette',
             'stickit'   : 'vendor/stickit',
@@ -101,19 +104,10 @@ requirejs.config({
 
         // Vendor shims
 
-        'vendor/underscore': {
-            'exports': '_'
-        },
-
-        'vendor/jquery': {
-            'exports': '$'
-        },
-
         'vendor/backbone': {
             'deps': ['jquery', 'underscore'],
             'exports': 'Backbone'
         },
-
 
         'vendor/marionette': {
             'deps': ['jquery', 'underscore', 'backbone'],
