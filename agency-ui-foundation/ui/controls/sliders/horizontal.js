@@ -198,14 +198,6 @@ var HorizontalSlider = Marionette.Controller.extend({
         return this.ranges[index];
     },
 
-    _getRangeValues: function() {
-        function iterator(range, i, list) {
-            return range.getValue();
-        }
-
-         return _.map(this.ranges, iterator, this);
-    },
-
     _updateHandlePosition: function($handle, range, position, value) {
         // TODO: Enhancement - ADD support for CSS3 Transitions?
         $handle.css({'left': value + 'px'});

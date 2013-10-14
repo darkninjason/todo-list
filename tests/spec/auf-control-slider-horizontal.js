@@ -210,6 +210,10 @@ describe('Horizontal Slider Control', function() {
             expect(els.$handles.eq(i)).toHaveCss({'left': left[i] + 'px'});
         });
 
+        _.each(pos, function(p, i, list){
+            expect(control.getPositionAt(i)).toEqual(p);
+        });
+
         expect(control.getPositions()).toEqual(pos);
     });
 
@@ -230,6 +234,10 @@ describe('Horizontal Slider Control', function() {
         _.each(pos, function(p, i, list){
             control.setPositionForHandle(p, $handles.eq(i));
             expect($handles.eq(i)).toHaveCss({'left': left[i] + 'px'});
+        });
+
+        _.each(pos, function(p, i, list){
+            expect(control.getPositionForHandle($handles.eq(i))).toEqual(p);
         });
 
         expect(control.getPositions()).toEqual(pos);
@@ -254,6 +262,10 @@ describe('Horizontal Slider Control', function() {
             expect(els.$handles.eq(i)).toHaveCss({'left': left[i] + 'px'});
         });
 
+        _.each(step, function(s, i, list){
+            expect(control.getStepAt(i)).toEqual(s);
+        });
+
         expect(control.getSteps()).toEqual(step);
     });
 
@@ -275,6 +287,10 @@ describe('Horizontal Slider Control', function() {
         _.each(step, function(s, i, list){
             control.setStepForHandle(s, $handles.eq(i));
             expect($handles.eq(i)).toHaveCss({'left': left[i] + 'px'});
+        });
+
+        _.each(step, function(s, i, list){
+            expect(control.getStepForHandle($handles.eq(i))).toEqual(s);
         });
 
         expect(control.getSteps()).toEqual(step);
