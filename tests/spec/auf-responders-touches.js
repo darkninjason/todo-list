@@ -221,5 +221,42 @@ describe('Responder: Touch', function() {
         expect(responder.deltaY()[0]).toEqual(200);
     });
 
+    it('should count clicks', function(){
+        responder = new TouchResponder({
+            el: $input
+        });
+
+        EventHelpers.simulateTouchStart($input, 0, 0);
+        EventHelpers.simulateTouchEnd($input, 0, 0);
+        EventHelpers.simulateTouchStart($input, 0, 0);
+        EventHelpers.simulateTouchEnd($input, 0, 0);
+        expect(responder.clickCount()).toEqual(2);
+    });
+
+    it('should reset clicks to 0 after delay', function(){
+        var flag = false;
+
+        responder = new TouchResponder({
+            el: $input
+        });
+
+        runs(function() {
+            EventHelpers.simulateTouchStart($input, 0, 0);
+
+            setTimeout(function() {
+                flag = true;
+            }, responder.clickCountTimeout + 1);
+        });
+
+        waitsFor(function() {
+            return flag;
+        }, 'No input received', responder.clickCountTimeout * 2);
+
+        runs(function() {
+            EventHelpers.simulateTouchEnd($input, 0, 0);
+            expect(responder.clickCount()).toEqual(0);
+        });
+    });
+
 }); // eof describe
 }); // eof define
