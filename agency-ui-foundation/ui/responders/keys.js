@@ -25,8 +25,8 @@ var KeyResponder = Marionette.Controller.extend({
         }
 
         this.inputManager.responder = this;
-        this.$el.on('keydown', {ctx: this}, this._keyDown);
-        this.$el.on('keyup', {ctx: this}, this._keyUp);
+        this.$el.on('keydown.auf.responders.keys', {ctx: this}, this._keyDown);
+        this.$el.on('keyup.auf.responders.keys', {ctx: this}, this._keyUp);
     },
 
     _keyDown: function(e){
@@ -94,8 +94,8 @@ var KeyResponder = Marionette.Controller.extend({
     },
 
     onClose: function(){
-        this.$el.off('keydown', this._keyDown);
-        this.$el.off('keyup', this._keyUp);
+        this.$el.off('keydown.auf.responders.keys', this._keyDown);
+        this.$el.off('keyup.auf.responders.keys', this._keyUp);
     }
 
 });

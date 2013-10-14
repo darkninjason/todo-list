@@ -24,10 +24,10 @@ var TouchResponder = Marionette.Controller.extend({
         if(!this.el) return;
         this.$el = helpers.getElement(this.el);
 
-        this.$el.on('touchstart', {ctx: this}, this._touchStart);
-        this.$el.on('touchmove', {ctx: this}, this._touchMove);
-        this.$el.on('touchend', {ctx: this}, this._touchEnd);
-        this.$el.on('touchcancel', {ctx: this}, this._touchCancel);
+        this.$el.on('touchstart.auf.responders.touch', {ctx: this}, this._touchStart);
+        this.$el.on('touchmove.auf.responders.touch', {ctx: this}, this._touchMove);
+        this.$el.on('touchend.auf.responders.touch', {ctx: this}, this._touchEnd);
+        this.$el.on('touchcancel.auf.responders.touch', {ctx: this}, this._touchCancel);
     },
 
     _clickCounter: function(){
@@ -141,10 +141,10 @@ var TouchResponder = Marionette.Controller.extend({
     // Marionette overrides
 
     onClose: function(){
-        this.$el.off('touchstart', this._touchStart);
-        this.$el.off('touchmove', this._touchMove);
-        this.$el.off('touchend', this._touchEnd);
-        this.$el.off('touchcancel', this._touchCancel);
+        this.$el.off('touchstart.auf.responders.touch', this._touchStart);
+        this.$el.off('touchmove.auf.responders.touch', this._touchMove);
+        this.$el.off('touchend.auf.responders.touch', this._touchEnd);
+        this.$el.off('touchcancel.auf.responders.touch', this._touchCancel);
     }
 
 }); // eof TouchResponder

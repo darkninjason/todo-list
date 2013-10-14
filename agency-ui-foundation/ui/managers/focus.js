@@ -23,7 +23,7 @@ var FocusManager =  Marionette.Controller.extend({
         if(!this.el) return;
         this.$el = helpers.getElement(this.el);
 
-        this.$el.on('click', this.wasClicked);
+        this.$el.on('click.auf.managers.focus', this.wasClicked);
         this.collection = new Collection();
     },
 
@@ -68,7 +68,7 @@ var FocusManager =  Marionette.Controller.extend({
 
     onClose: function(){
         this.collection.reset();
-        this.$el.off('click', this.wasClicked);
+        this.$el.off('click.auf.managers.focus', this.wasClicked);
     }
 
 }); // eof SelectionManager

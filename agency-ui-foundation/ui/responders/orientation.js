@@ -13,7 +13,7 @@ var OrientationResponder = Marionette.Controller.extend({
         _.extend(this, options);
         _.bindAll(this, 'orientationChange');
 
-        $(window).on('orientationchange', this.orientationChange);
+        $(window).on('orientationchange.auf.responders.orientation', this.orientationChange);
     },
 
     orientationChange: function(e){
@@ -42,7 +42,7 @@ var OrientationResponder = Marionette.Controller.extend({
     },
 
     onClose: function(){
-        $(window).off('orientationchange', this.orientationChange);
+        $(window).off('orientationchange.auf.responders.orientation', this.orientationChange);
     }
 }); // eof OrientationResponder
 

@@ -44,17 +44,17 @@ var MouseResponder = Marionette.Controller.extend({
         this.$el = helpers.getElement(this.el);
 
         if(this.acceptsUpDown){
-            this.$el.on('mousedown', {ctx: this}, this._mouseDown);
-            this.$el.on('mouseup', {ctx: this}, this._mouseUp);
+            this.$el.on('mousedown.auf.responders.mouse', {ctx: this}, this._mouseDown);
+            this.$el.on('mouseup.auf.responders.mouse', {ctx: this}, this._mouseUp);
         }
 
         if (this.acceptsMove){
-            this.$el.on('mousemove', {ctx: this}, this._mouseMoved);
+            this.$el.on('mousemove.auf.responders.mouse', {ctx: this}, this._mouseMoved);
         }
 
         if (this.acceptsEnterExit){
-            this.$el.on('mouseenter', {ctx: this}, this._mouseEntered);
-            this.$el.on('mouseleave', {ctx: this}, this._mouseExited);
+            this.$el.on('mouseenter.auf.responders.mouse', {ctx: this}, this._mouseEntered);
+            this.$el.on('mouseleave.auf.responders.mouse', {ctx: this}, this._mouseExited);
         }
     },
 
@@ -89,8 +89,8 @@ var MouseResponder = Marionette.Controller.extend({
         this._clickCounter();
 
         // watch for dragging
-        $(document).on('mousemove', this._mouseDragged);
-        $(document).on('mouseup', this._mouseUp);
+        $(document).on('mousemove.auf.responders.mouse', this._mouseDragged);
+        $(document).on('mouseup.auf.responders.mouse', this._mouseUp);
         this.mouseDown(this, e);
     },
 
@@ -110,8 +110,8 @@ var MouseResponder = Marionette.Controller.extend({
         this._clicks = (now - this._lastClick) > this.clickCountTimeout ? 0 : this._clicks;
 
         // disable for dragging
-        $(document).off('mousemove', this._mouseDragged);
-        $(document).off('mouseup', this._mouseUp);
+        $(document).off('mousemove.auf.responders.mouse', this._mouseDragged);
+        $(document).off('mouseup.auf.responders.mouse', this._mouseUp);
         this.mouseUp(this, e);
     },
 
@@ -174,20 +174,20 @@ var MouseResponder = Marionette.Controller.extend({
 
     onClose: function(){
         // to ensure it's gone
-        $('body').off('mousemove', this._mouseDragged);
+        $('body').off('mousemove.auf.responders.mouse', this._mouseDragged);
 
         if(this.acceptsUpDown){
-            this.$el.off('mousedown', this._mouseDown);
-            this.$el.off('mouseup', this._mouseUp);
+            this.$el.off('mousedown.auf.responders.mouse', this._mouseDown);
+            this.$el.off('mouseup.auf.responders.mouse', this._mouseUp);
         }
 
         if (this.acceptsEnterExit){
-            this.$el.off('mouseenter', this._mouseEntered);
-            this.$el.off('mouseleave', this._mouseExited);
+            this.$el.off('mouseenter.auf.responders.mouse', this._mouseEntered);
+            this.$el.off('mouseleave.auf.responders.mouse', this._mouseExited);
         }
 
         if (this.acceptsMove){
-            this.$el.off('mousemove', this._mouseMoved);
+            this.$el.off('mousemove.auf.responders.mouse', this._mouseMoved);
         }
     }
 
