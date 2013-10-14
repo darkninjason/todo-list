@@ -30,7 +30,7 @@ module.exports = function(config) {
     preprocessors: {
         // Istanbul required for coverage (npm install -g istanbul)
         // karma-coverage required for coverage (npm install -g karma-coverage)
-        // 'agency-ui-foundation/**/*.js': 'coverage'
+        //'agency-ui-foundation/**/*.js': 'coverage'
     },
 
 

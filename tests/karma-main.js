@@ -44,6 +44,7 @@
 // }
 
 var tests = [
+  'spec/auf-utils-helpers',
   'spec/auf-jquery-collection',
   'spec/auf-calendar',
   'spec/auf-datetime',
