@@ -1016,6 +1016,38 @@ describe('Input Select Control', function() {
         });
     });
 
+    // Mouse & Key Events
+
+    it('dispatches \'focus\' event with mouse then down arrow key', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, 'focus', actionSpy);
+
+        runs(function() {
+            EventHelpers.insertChar($input, 'l');
+            EventHelpers.insertChar($input, 'u');
+            EventHelpers.insertChar($input, 'c');
+            EventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                EventHelpers.simulateMouseEnter($items.eq(1));
+                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).toHaveBeenCalled();
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(1));
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(2));
+        });
+    });
+
+
 
 }); // eof describe
 }); // eof define
