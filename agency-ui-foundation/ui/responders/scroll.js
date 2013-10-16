@@ -36,7 +36,7 @@ var ScrollResponder = Marionette.Controller.extend({
             '_didReceiveScroll'
         );
 
-        if(!this.el) {
+        if(_.isEmpty(this.el)) {
             throw 'No input element provided.';
         }
 
