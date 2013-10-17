@@ -2,6 +2,27 @@
     .container{
         height: 6000px;
     }
+    .scroll-outer {
+        height: 300px;
+        overflow: hidden;
+        overflow-y: scroll;
+    }
+    .scroll-inner {
+        height: 6000px;
+    }
 </style>
 
-<div class="container"></div>
+<!-- Container is tall to test window scroll -->
+<div class="container">
+    <!-- Scroll Outer is short, with overflow-y:scroll -->
+    <div class="scroll-outer">
+        <!-- Scroll Inner is tall, to test outer (element) scroll -->
+        <div class="scroll-inner"></div>
+    </div>
+    <div class="scroll-outer">
+        <div class="scroll-inner"></div>
+    </div>
+    <div class="scroll-outer">
+        <div class="scroll-inner"></div>
+    </div>
+</div>

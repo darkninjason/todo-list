@@ -51,14 +51,6 @@ var RangeManager = Marionette.Controller.extend({
 
     // Internal helper methods
 
-    _validatePosition: function(position) {
-        var positionIsEmpty = _.isEmpty(position);
-
-        if(positionIsEmpty){
-            throw "Empty parameter: position = " + position;
-        }
-    },
-
     _getNormalizedPosition: function(val){
         // Ternary is faster than Math.min,max
         val = val > 1 ? 1 : val;
@@ -101,8 +93,6 @@ var RangeManager = Marionette.Controller.extend({
     },
 
     setPosition: function(val) {
-        this._validatePosition(val);
-
         val = this._getNormalizedPosition(val);
 
         if(val != this._position) {
