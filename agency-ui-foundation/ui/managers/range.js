@@ -9,19 +9,11 @@ var _          = require('underscore');
 
 var RangeManager = Marionette.Controller.extend({
 
-    // Constants
-
     EVENT_CHANGE: 'change',
 
-    // Defaults
-
-    _defaults: {
-        min: 0,
-        max: 1
-    },
-
-    _position: 0,
+    _defaults: null,
     _range   : null,
+    _position: 0,
 
     /**
      * Initialize RangeManager
@@ -37,6 +29,11 @@ var RangeManager = Marionette.Controller.extend({
      * );
      */
     initialize: function(options) {
+        this._defaults = {
+            min: 0,
+            max: 1
+        };
+
         _.defaults(options, this._defaults);
 
         // Calculate computed properties
