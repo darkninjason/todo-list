@@ -15,7 +15,7 @@ define(function() {
      'spec/auf-managers-index',
      'spec/auf-managers-range',
      'spec/auf-managers-focus',
-     'spec/auf-managers-scroll',
+     // 'spec/auf-managers-scroll',
      'spec/auf-managers-focus-single',
      'spec/auf-control-slider-horizontal',
      'spec/auf-control-slider-horizontal-range',

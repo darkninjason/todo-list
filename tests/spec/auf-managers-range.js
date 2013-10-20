@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 
 var RangeManager = require('auf/ui/managers/range');
 
-describe('Manager: Range', function() {
+describe('Range Manager', function() {
 
     var manager = null;
 
