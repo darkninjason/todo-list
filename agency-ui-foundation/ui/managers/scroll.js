@@ -13,13 +13,10 @@ var RangeManager    = require('auf/ui/managers/range');
 
 // TODO:
 // - WindowResponder, resize event implementation. Compose here to get resize.
-// - Move markers funct to range or marked ranges
 // - SmoothScroll, composes scroll manager
-// - Forward a 'scroll' event that sends range position / value
 
 var ScrollManager = Marionette.Controller.extend({
 
-    EVENT_MARKER: 'marker',
     EVENT_SCROLL: 'scroll',
 
     _defaults: null,
@@ -27,12 +24,6 @@ var ScrollManager = Marionette.Controller.extend({
     scrollResponder: null,
     rangeManager   : null,
     scrollable     : null,
-
-    // marker values should be unique
-    // sort markers after adding a value
-    markers       : null,
-    lastDispatched: null,
-    prevPosition  : null,
 
     // Backbone & Marionette overrides
 
@@ -60,8 +51,6 @@ var ScrollManager = Marionette.Controller.extend({
             throw 'No input element provided.';
         }
 
-        this.markers         = [];
-        this.lastDispatched  = [];
         this.$el             = Helpers.getElement(this.options.el);
         this.scrollResponder = this._initializeScrollResponder(this.options);
         this.rangeManager    = this._initializeRangeManager(this.options);
@@ -69,9 +58,24 @@ var ScrollManager = Marionette.Controller.extend({
         // call this for initial max scroll setting
         this.calculateMaxScroll();
 
+        // compose range manager methods
+        Helpers.composeAll(
+            this,
+            this.rangeManager,
+            'getMarkers',
+            'addMarkerPositions',
+            'removeMarkerPositions',
+            'addMarkerValues',
+            'removeMarkerValues'
+        );
+
         // listen to range manager
         this.listenTo(
-            this.rangeManager, 'change', _.bind(this._rangeManagerDidChange, this)
+            this.rangeManager, 'change', _.bind(this._dispatchScroll, this)
+        );
+
+        this.listenTo(
+            this.rangeManager, 'marker', _.bind(this._dispatchMarker, this)
         );
     },
 
@@ -107,58 +111,15 @@ var ScrollManager = Marionette.Controller.extend({
         return manager;
     },
 
-    _elementIsWindow: function($el) {
-        return window === _.identity($el[0]);
-    },
+    // Helpers
 
-    _rangeManagerDidChange: function(sender, position, value) {
-        var reached, iterator, direction, inBetween; //, tollerance, lower, upper;
-
-        function down_iterator(marker, i, list) {
-            inBetween = marker >= this.prevPosition && marker <= position;
-
-            if(inBetween) {
-                reached.push(marker);
-            }
-        }
-
-        function up_iterator(marker, i, list) {
-            inBetween = marker <= this.prevPosition && marker >= position;
-
-            if(inBetween) {
-                reached.unshift(marker);
-            }
-        }
-
-        reached   = [];
-        direction = (this.prevPosition < position) ? 'down' : 'up';
-        iterator  = direction === 'down' ? down_iterator : up_iterator;
-
-        // loop over all markers to see if we're in range
-        _.each(this.markers, iterator, this);
-
-        reached = _.difference(reached, this.lastDispatched);
-
-        if(reached.length > 0) {
-            this._dispatchMarker(reached, direction);
-            this.lastDispatched = reached;
-        }
-
-        // finally update our local storage of position
-        // used to calculate direction
-        this.prevPosition = position;
-    },
-
-    // All updates to range manager position should route through here.
     _updateRangePosition: function(position) {
+        // All updates to range manager position route through this func.
         this.rangeManager.setPosition(position);
     },
 
-    // "Private" internal methods
-
-    _sortArrayAscending: function(a, b) {
-        // see: http://bit.ly/1c0cPTU
-        return a - b;
+    _elementIsWindow: function($el) {
+        return window === _.identity($el[0]);
     },
 
     // Public API
@@ -170,16 +131,16 @@ var ScrollManager = Marionette.Controller.extend({
         documentElement = document.documentElement;
         body            = document.body;
 
-        $el        = (isWindow) ? $(documentElement) : $el;
-        el         = $el[0];
+        $el = (isWindow) ? $(documentElement) : $el;
+        el  = $el[0];
 
         // see: http://mzl.la/19SZOty
         // for detailed explanation of ternary test below
         //
         // essentially:
         // documentElement will sometimes return zero for scroll top,
-        // even when the window is scrolled. If it does return zero,
-        // check the body for it's scroll top. This technique should
+        // even when the window was scrolled. If it does return zero,
+        // we check the body for it's scroll top. This technique should
         // always return a value equal to the what window's pageYOffset
         // would have been should pageYOffset be unsupported.
         scrollTop  = (isWindow) ? (window.pageYOffset || documentElement.scrollTop  || body.scrollTop ) : el.scrollTop;
@@ -199,11 +160,6 @@ var ScrollManager = Marionette.Controller.extend({
         };
     },
 
-    getMarkers: function() {
-        // return (shallow) copy of markers
-        return this.markers.slice();
-    },
-
     calculateMaxScroll: function() {
         var scrollable, max;
 
@@ -211,79 +167,6 @@ var ScrollManager = Marionette.Controller.extend({
         max = scrollable.scrollHeight - scrollable.displayHeight;
 
         this.rangeManager.setMax(max);
-    },
-
-    /**
-     * add positions (values between 0 and 1) to the markers array
-     * @param {arguments} __args__ position arguments
-     *
-     * @usage addMarkerPositions([*positions])
-     * @example addMerkerPositions(0.1, 0.2, 0.3)
-     */
-    addMarkerPositions: function(__args__) {
-        // __args__ is there to denote that this function takes 'arguments'
-        // if you're familiar with python it's inspired by *args.
-        // unfortunately, * is not a legal character for function args in js.
-        // I added it to make the signature more explicit
-        var sorted;
-
-        function iterator(position, i, list) {
-            if(position < 0 || position > 1) {
-                throw 'Position out of range. Valid positions are between 0 and 1, position: ' + position;
-            }
-
-            this.markers.push(position);
-        }
-
-        sorted = true;
-
-        // add positions to this.markers
-        _.each(arguments, iterator, this);
-
-        this.markers.sort(this._sortArrayAscending);
-        this.markers = _.uniq(this.markers, sorted);
-    },
-
-    removeMarkerPositions: function(__args__) {
-        var markerIndex;
-
-        function iterator(arg, i, list) {
-            markerIndex = _.indexOf(this.markers, arg);
-
-            if(markerIndex == -1) {
-                return;
-            }
-
-            this.markers.splice(markerIndex, 1);
-        }
-
-        // attempt removal of requested positions
-        // non-existing positions are ignored
-        _.each(arguments, iterator, this);
-    },
-
-    addMarkerValues: function(__args__) {
-        var positions;
-
-        positions = _.map(
-            arguments,
-            this.rangeManager.calculatePositionForValue,
-            this.rangeManager
-        );
-
-        this.addMarkerPositions.apply(this, positions);
-    },
-
-    removeMarkerValues: function(__args__) {
-        var positions;
-
-        positions = _.map(
-            arguments,
-            this.rangeManager.calculatePositionForValue,
-            this.rangeManager
-        );
-
-        this.removeMarkerPositions.apply(this, positions);
     },
 
     /**
@@ -341,22 +224,12 @@ var ScrollManager = Marionette.Controller.extend({
 
     // Event dispatchers
 
-    _dispatchScroll: function() {
-        var position, value;
-
-        position = this.rangeManager.getPosition();
-        value    = this.rangeManager.getValue();
-
+    _dispatchScroll: function(sender, position, value) {
         this.trigger(this.EVENT_SCROLL, this, position, value);
     },
 
-    _dispatchMarker: function(markers, direction) {
-        var position, value;
-
-        position = this.rangeManager.getPosition();
-        value    = this.rangeManager.getValue();
-
-        this.trigger(this.EVENT_MARKER, this, markers, direction);
+    _dispatchMarker: function(sender, markers, direction) {
+        this.trigger(this.rangeManager.EVENT_MARKER, this, markers, direction);
     }
 
 }); // eof ScrollManager
