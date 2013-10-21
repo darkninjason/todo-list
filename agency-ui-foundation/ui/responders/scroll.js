@@ -9,7 +9,10 @@ var helpers    = require('auf/utils/helpers');
 
 var ScrollResponder = Marionette.Controller.extend({
 
+    EVENT_SCROLL: 'scroll.auf.responders.scroll',
+
     el: null,
+    scrollDebounce: null,
 
     // Backbone & Marionette overrides
 
@@ -22,7 +25,8 @@ var ScrollResponder = Marionette.Controller.extend({
      * var scrollResponder = new ScrollResponder(
      *     {
      *         el: $('.scrollable-element'),  // required, window must be passed in as $(window)
-     *         scroll: this.scrollCallback,   // default, no-op function
+     *         scrollDebounce: 300,           // optional, default 0, 0 disables debounce
+     *         scroll: this.scrollCallback,   // optional
      *     }
      * );
      */
@@ -41,11 +45,18 @@ var ScrollResponder = Marionette.Controller.extend({
         }
 
         this.$el = helpers.getElement(this.el);
-        this.$el.on('scroll.auf.responders.scroll', this._didReceiveScroll);
+
+        // decorate internal _didReceiveScroll if debounce is enabled
+        if(this.scrollDebounce > 0) {
+            this._didReceiveScroll = _.debounce(
+                this._didReceiveScroll, this.scrollDebounce);
+        }
+
+        this.$el.on(this.EVENT_SCROLL, this._didReceiveScroll);
     },
 
     onClose: function() {
-        this.$el.off('scroll.auf.responders.scroll', this._didReceiveScroll);
+        this.$el.off(this.EVENT_SCROLL, this._didReceiveScroll);
     },
 
     // Internal event delegates
@@ -56,13 +67,7 @@ var ScrollResponder = Marionette.Controller.extend({
     // memory leaks typically associated with event delegates when
     // "close" is run on this object.
     _didReceiveScroll: function(e) {
-
-        // Forward on to assigned callback.
-        var scrollIsFunction = _.isFunction(this.scroll);
-
-        if(scrollIsFunction) {
-            this.scroll(this, e);
-        }
+        this.scroll(this, e);
     },
 
     // Optional, user-defined delegates
@@ -70,7 +75,6 @@ var ScrollResponder = Marionette.Controller.extend({
     scroll: function(responder, e) {
         // noop
     },
-
 
 }); // eof ScrollResponder
 

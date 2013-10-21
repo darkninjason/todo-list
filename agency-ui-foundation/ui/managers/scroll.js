@@ -23,7 +23,6 @@ var ScrollManager = Marionette.Controller.extend({
 
     scrollResponder: null,
     rangeManager   : null,
-    scrollable     : null,
 
     // Backbone & Marionette overrides
 
@@ -41,7 +40,8 @@ var ScrollManager = Marionette.Controller.extend({
      */
     initialize: function(options) {
         this._defaults = {
-            el: null
+            el: null,
+            scrollDebounce: 0
         };
 
         // apply defaults to options
@@ -56,7 +56,6 @@ var ScrollManager = Marionette.Controller.extend({
         this.rangeManager    = this._initializeRangeManager(this.options);
 
         // call this for initial max scroll setting
-        this.calculateMaxScroll();
 
         // compose range manager methods
         Helpers.composeAll(
@@ -69,14 +68,7 @@ var ScrollManager = Marionette.Controller.extend({
             'removeMarkerValues'
         );
 
-        // listen to range manager
-        this.listenTo(
-            this.rangeManager, 'change', _.bind(this._dispatchScroll, this)
-        );
-
-        this.listenTo(
-            this.rangeManager, 'marker', _.bind(this._dispatchMarker, this)
-        );
+        this.calculateMaxScroll();
     },
 
     onClose: function() {
@@ -89,7 +81,8 @@ var ScrollManager = Marionette.Controller.extend({
     _initializeScrollResponder: function(options) {
         return new ScrollResponder({
             el: options.el,
-            scroll: _.bind(this._didReceiveScroll, this)
+            scroll: _.bind(this._didReceiveScroll, this),
+            scrollDebounce: options.scrollDebounce
         });
     },
 
@@ -108,6 +101,10 @@ var ScrollManager = Marionette.Controller.extend({
         var manager, max, listener, scrollable, start;
 
         manager = new RangeManager();
+
+        this.listenTo(manager, 'change', _.bind(this._dispatchScroll, this));
+        this.listenTo(manager, 'marker', _.bind(this._dispatchMarker, this));
+
         return manager;
     },
 
