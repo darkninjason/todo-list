@@ -18,20 +18,40 @@ var getElement = function(value){
     return $el;
 };
 
-// example:
-// scope.func = _bind(origScope.func, origScope);
-// compose(this, this.rangeManager, 'addMarkerPositions')
-// compose(scope, orig, 'origFuncMember')
-
-function compose (scope, orig, func) {
-    scope[func] = _.bind(orig[func], orig);
+/**
+ * compose a function from one module to another and maintain original module scope.
+ * @param  {object} intoScope the scope you wish to compose the method into
+ * @param  {object} fromScope the scope you wish to retrieve the method from
+ * @param  {string} func      the function name, as a string
+ * @return {undefined}
+ *
+ * @example
+ * compose(this, fooModule, 'fooModuleMethod');
+ */
+function compose (intoScope, fromScope, func) {
+    intoScope[func] = _.bind(fromScope[func], fromScope);
 }
 
-function composeAll(scope, orig) {
+/**
+ * Identical to compose, but takes list of n-function names.
+ * @param  {object} intoScope the scope you wish to compose the method into
+ * @param  {object} fromScope the scope you wish to retrieve the method from
+ * @return {undefined}
+ *
+ * @example
+ * composeAll(
+ *     this,
+ *     fooModule,
+ *     'fooModuleMethod1',
+ *     'fooModuleMethod2',
+ *     'fooModuleMethod3'
+ * );
+ */
+function composeAll(intoScope, fromScope) {
     var args;
 
     function iterator(func, i, funcs) {
-        compose(scope, orig, func);
+        compose(intoScope, fromScope, func);
     }
 
     funcs = Array.prototype.slice.call(arguments, 2);
