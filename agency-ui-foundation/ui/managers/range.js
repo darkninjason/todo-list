@@ -92,10 +92,10 @@ var RangeManager = Marionette.Controller.extend({
         _.each(this._markers, iterator, this);
 
         // TODO:
-        // Bug - I noticed that sometimes the same marker was dispatched 2x
-        //       I put this in to try and solve that. Unfortunately, it was
-        //       boarfing any marker that I passed then returne to
-        //       in the opposite direction. :( Need to come back to this.
+        // Revisit - I noticed that sometimes the same marker was dispatched 2x
+        //      I put this in to try and solve that. Unfortunately, it was
+        //      boarfing any marker that I passed then return to
+        //      in the opposite direction. :( Need to come back to this.
         //
         // filter out markers that were already dispatched
         // reached = _.difference(reached, this._lastDispatched);

@@ -11,10 +11,6 @@ var RangeManager    = require('auf/ui/managers/range');
 
 // Module
 
-// TODO:
-// - WindowResponder, resize event implementation. Compose here to get resize.
-// - SmoothScroll, composes scroll manager
-
 var ScrollManager = Marionette.Controller.extend({
 
     EVENT_SCROLL: 'scroll',
@@ -115,16 +111,12 @@ var ScrollManager = Marionette.Controller.extend({
         this.rangeManager.setPosition(position);
     },
 
-    _elementIsWindow: function($el) {
-        return window === _.identity($el[0]);
-    },
-
     // Public API
 
     getScrollable: function($el) {
         var el, isWindow, documentElement, body, scrollTop, scrollLeft;
 
-        isWindow        = this._elementIsWindow($el);
+        isWindow        = window === _.identity($el[0]);
         documentElement = document.documentElement;
         body            = document.body;
 
@@ -140,8 +132,15 @@ var ScrollManager = Marionette.Controller.extend({
         // we check the body for it's scroll top. This technique should
         // always return a value equal to the what window's pageYOffset
         // would have been should pageYOffset be unsupported.
-        scrollTop  = (isWindow) ? (window.pageYOffset || documentElement.scrollTop  || body.scrollTop ) : el.scrollTop;
-        scrollLeft = (isWindow) ? (window.pageXOffset || documentElement.scrollLeft || body.scrollLeft) : el.scrollLeft;
+        scrollTop =
+            (isWindow) ?
+            (window.pageYOffset || documentElement.scrollTop  || body.scrollTop ) :
+            el.scrollTop;
+
+        scrollLeft =
+            (isWindow) ?
+            (window.pageXOffset || documentElement.scrollLeft || body.scrollLeft) :
+            el.scrollLeft;
 
         // see: http://mzl.la/19VEUIo
         // for a guide to these properties
@@ -161,7 +160,7 @@ var ScrollManager = Marionette.Controller.extend({
         var scrollable, max;
 
         scrollable = this.getScrollable(this.$el);
-        max = scrollable.scrollHeight - scrollable.displayHeight;
+        max        = scrollable.scrollHeight - scrollable.displayHeight;
 
         this.rangeManager.setMax(max);
     },
@@ -180,26 +179,36 @@ var ScrollManager = Marionette.Controller.extend({
         var $el, $position, dict, top, position, positions;
 
         function iterator(el, i, list) {
-            $el = $(el);
+            $el       = $(el);
             $position = $el.position();
-            top = $position.top;
+            top       = $position.top;
+
+            // Only add a marker that is less than range max.
+            // This seems redundant, but this avoids a bunch of
+            // mysterious markers at position 1 (range will squash any value
+            // that results in a position > 1). I would rather avoid
+            // adding these all together, than filtering them out later.
+            shouldAddMarker = top < this.rangeManager.getMax();
 
             if(top < this.rangeManager.getMax()) {
-                position = this.rangeManager.calculatePositionForValue(top);
-
-                dict[position+''] = $el;
+                position            = this.rangeManager.calculatePositionForValue(top);
+                dict[position + ''] = $el;
 
                 positions.push(position);
             }
         }
 
         positions = [];
-        dict = {};
+        dict      = {};
 
+        // iterate over elements
         _.each($elements, iterator, this);
 
         this.addMarkerPositions.apply(this, positions);
 
+        // This is a convenience return value that maps {markerPosition: $element}
+        // I thought it would be useful information for the user.
+        // example: {'0.1': $elementRef}
         return dict;
     },
 
@@ -207,9 +216,9 @@ var ScrollManager = Marionette.Controller.extend({
         var $el, $position, top, position, positions;
 
         function iterator(el, i, list) {
-            $el = $(el);
+            $el       = $(el);
             $position = $el.position();
-            top = $position.top;
+            top       = $position.top;
 
             return this.rangeManager.calculatePositionForValue(top);
         }
