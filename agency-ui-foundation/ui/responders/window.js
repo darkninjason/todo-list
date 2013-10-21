@@ -9,6 +9,9 @@ var _          = require('underscore');
 
 var WindowResponder = Marionette.Controller.extend({
 
+    EVENT_ORIENTATION: 'orientationchange.auf.responders.orientation',
+    EVENT_RESIZE     : 'resize.auf.responder.resize',
+
     acceptsOrientation: false,
     acceptsResize     : false,
     resizeDebounce    : 300,
@@ -25,7 +28,7 @@ var WindowResponder = Marionette.Controller.extend({
      *     {
      *         acceptsOrientation: true, // optional, default false, enables orientation delegation
      *         acceptsResize     : true, // optional, default false, enables resize delegation
-     *         resizeDebounce    : 600,  // optional, default 300, debounces (or throttles) resize delegate calls
+     *         resizeDebounce    : 600,  // optional, default 300, debounces (or throttles) resize delegate calls. Pass in 0 to disable.
      *     }
      * );
      */
@@ -39,16 +42,29 @@ var WindowResponder = Marionette.Controller.extend({
         );
 
         if(this.acceptsOrientation) {
-            $(window).on('orientationchange.auf.responders.orientation', this._orientationChange);
+            $(window).on(this.EVENT_ORIENTATION, this._orientationChange);
         }
+
         if(this.acceptsResize) {
-            $(window).on('resize.auf.responder.resize', this._resize);
+
+            if(this.resizeDebounce > 0) {
+                this._resize = _.debounce(
+                    this._resize,
+                    this.resizeDebounce
+                );
+            }
+
+            $(window).on(this.EVENT_RESIZE, this._resize);
         }
     },
 
     onClose: function() {
-        $(window).off('orientationchange.auf.responders.orientation', this._orientationChange);
-        $(window).off('resize.auf.responders.window', this._resize);
+        if(this.acceptsOrientation) {
+            $(window).off(this.EVENT_ORIENTATION, this._orientationChange);
+        }
+        if(this.acceptsResize) {
+            $(window).off(this.EVENT_RESIZE, this._resize);
+        }
     },
 
     // Internal responder delgates
@@ -58,7 +74,7 @@ var WindowResponder = Marionette.Controller.extend({
     },
 
     _resize: function(e) {
-        _.debounce(this.resize, this.resizeDebounce);
+        this.resize(this, e);
     },
 
     // User defined delegates
