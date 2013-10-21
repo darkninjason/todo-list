@@ -53,6 +53,7 @@ var tests = [
   'spec/auf-responders-touches',
   'spec/auf-responders-mouse',
   'spec/auf-responders-orientation',
+  'spec/auf-responders-scroll',
   'spec/auf-gestures-swipe',
   'spec/auf-managers-index',
   'spec/auf-managers-range',

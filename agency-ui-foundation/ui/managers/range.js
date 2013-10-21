@@ -70,14 +70,14 @@ var RangeManager = Marionette.Controller.extend({
         var reached, iterator, direction, inBetween;
 
         function incremental(marker, i, markers) {
-            inBetween = marker >= prevPosition && marker <= position;
+            inBetween = marker > prevPosition && marker <= position;
             if(inBetween) {
                 reached.push(marker);
             }
         }
 
         function decremental(marker, i, markers) {
-            inBetween = marker <= prevPosition && marker >= position;
+            inBetween = marker < prevPosition && marker >= position;
             if(inBetween) {
                 reached.push(marker);
             }
@@ -228,11 +228,7 @@ var RangeManager = Marionette.Controller.extend({
         var sorted;
 
         function iterator(position, i, list) {
-            if(position < 0 || position > 1) {
-                throw 'Position out of range. Valid positions are between 0 and 1, position: ' + position;
-            }
-
-            this._markers.push(position);
+            this._markers.push(this._getNormalizedPosition(position));
         }
 
         sorted = true;
@@ -242,6 +238,8 @@ var RangeManager = Marionette.Controller.extend({
 
         this._markers.sort(this._sortArrayAscending);
         this._markers = _.uniq(this._markers, sorted);
+
+        return this.getMarkers();
     },
 
     removeMarkerPositions: function(__args__) {
@@ -260,6 +258,8 @@ var RangeManager = Marionette.Controller.extend({
         // attempt removal of requested positions
         // non-existing positions are ignored
         _.each(arguments, iterator, this);
+
+        return this.getMarkers();
     },
 
     addMarkerValues: function(__args__) {
@@ -267,11 +267,11 @@ var RangeManager = Marionette.Controller.extend({
 
         positions = _.map(
             arguments,
-            this.rangeManager.calculatePositionForValue,
-            this.rangeManager
+            this.calculatePositionForValue,
+            this
         );
 
-        this.addMarkerPositions.apply(this, positions);
+        return this.addMarkerPositions.apply(this, positions);
     },
 
     removeMarkerValues: function(__args__) {
@@ -279,11 +279,11 @@ var RangeManager = Marionette.Controller.extend({
 
         positions = _.map(
             arguments,
-            this.rangeManager.calculatePositionForValue,
-            this.rangeManager
+            this.calculatePositionForValue,
+            this
         );
 
-        this.removeMarkerPositions.apply(this, positions);
+        return this.removeMarkerPositions.apply(this, positions);
     },
 
     // Event Dispatchers

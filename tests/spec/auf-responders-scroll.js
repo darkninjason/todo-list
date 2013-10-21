@@ -87,5 +87,28 @@ describe('Scroll Responder', function() {
         expect(scroll).not.toHaveBeenCalled();
     });
 
+    it('debounces scroll calls', function(){
+        var responder, scroll, id, count;
+
+        count = -1;
+        scroll = jasmine.createSpy('scroll');
+        responder = getResponder({
+            scrollDebounce: 300,
+            scroll: scroll
+        });
+
+        id = setInterval(function(){
+            EventHelpers.simulateScrollEvent($(window));
+            count++;
+
+            if(count > 4) {
+                clearInterval(id);
+                // if debounce is working, scroll should have only
+                // been called once.
+                expect(scroll.calls.length).toEqual(1);
+            }
+        }, 200);
+    });
+
 }); // eof describe
 }); // eof define
