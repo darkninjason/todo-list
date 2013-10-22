@@ -24,7 +24,7 @@ var HorizontalSlider = Marionette.Controller.extend({
     ranges: null,
     mouseResponders: null,
     touchResponders: null,
-    orientationResponder: null,
+    // orientationResponder: null,
     handleOffsets: [],
 
     // Defaults
@@ -36,7 +36,7 @@ var HorizontalSlider = Marionette.Controller.extend({
         snap: false,
         acceptsMouse: true,
         acceptsTouch: false,
-        acceptsOrientation: false
+        // acceptsOrientation: false
     },
 
     // Backbone & Marionette overrides
@@ -83,9 +83,9 @@ var HorizontalSlider = Marionette.Controller.extend({
         if(this.options.acceptsTouch){
             this.touchResponders = this._initializeTouch(this.options);
         }
-        if(this.options.acceptsOrientation){
-            this.orientationResponder = this._initializeOrientation(this.options);
-        }
+        // if(this.options.acceptsOrientation){
+        //     this.orientationResponder = this._initializeOrientation(this.options);
+        // }
     },
 
     onClose: function() {
@@ -156,12 +156,12 @@ var HorizontalSlider = Marionette.Controller.extend({
         return _.map(this.options.$handles, iterator, this);
     },
 
-    _initializeOrientation: function(options) {
-        return new OrientationResponder({
-            portrait : this.didReceiveOrientationChange,
-            landscape: this.didReceiveOrientationChange
-        });
-    },
+    // _initializeOrientation: function(options) {
+    //     return new OrientationResponder({
+    //         portrait : this.didReceiveOrientationChange,
+    //         landscape: this.didReceiveOrientationChange
+    //     });
+    // },
 
     // 'Private' helper accessors
 
@@ -346,20 +346,20 @@ var HorizontalSlider = Marionette.Controller.extend({
         this._dispatchDragStop(responder.$el, range.getPosition());
     },
 
-    didReceiveOrientationChange: function(responder, e) {
-        function iterator(range, i, list) {
-            // setMax causes range to dispatch change.
-            // that should be suffient to also update this
-            // component should the position change.
-            range.setMax(trackBounds.width - handleBounds[i].width);
-        }
+    // didReceiveOrientationChange: function(responder, e) {
+    //     function iterator(range, i, list) {
+    //         // setMax causes range to dispatch change.
+    //         // that should be suffient to also update this
+    //         // component should the position change.
+    //         range.setMax(trackBounds.width - handleBounds[i].width);
+    //     }
 
-        var $track        = this.options.$track;
-        var handlesBounds = this._getElementsBounds($handles.toArray());
-        var trackBounds   = this._getElementBounds($track[0]);
+    //     var $track        = this.options.$track;
+    //     var handlesBounds = this._getElementsBounds($handles.toArray());
+    //     var trackBounds   = this._getElementBounds($track[0]);
 
-        _.each(this.ranges, iterator, this);
-    },
+    //     _.each(this.ranges, iterator, this);
+    // },
 
     // Event Dispatchers
 
