@@ -42,7 +42,7 @@ describe('Scroll Responder', function() {
 
     // Test Suite
 
-    it('throws when no el is provided.', function(){
+    it('throws when no el is provided.', function() {
         function throwable() {
             var responder = getResponder({
                 el: undefined
@@ -52,9 +52,11 @@ describe('Scroll Responder', function() {
         expect(throwable).toThrow();
     });
 
-    it('calls scroll on window', function(){
-        var scroll    = jasmine.createSpy('scroll');
-        var responder = getResponder({
+    it('calls scroll on window', function() {
+        var scroll, responder;
+
+        scroll    = jasmine.createSpy('scroll');
+        responder = getResponder({
             scroll: scroll
         });
 
@@ -63,10 +65,12 @@ describe('Scroll Responder', function() {
         expect(scroll).toHaveBeenCalled();
     });
 
-    it('calls scroll on element', function(){
-        var scroll    = jasmine.createSpy('scroll');
-        var $el       = getPageElements().$container;
-        var responder = getResponder({
+    it('calls scroll on element', function() {
+        var scroll, $el, responder;
+
+        scroll    = jasmine.createSpy('scroll');
+        $el       = getPageElements().$container;
+        responder = getResponder({
             el: $el,
             scroll: scroll
         });
@@ -75,9 +79,11 @@ describe('Scroll Responder', function() {
         expect(scroll).toHaveBeenCalled();
     });
 
-    it('expects scroll to be removed', function(){
-        var scroll    = jasmine.createSpy('scroll');
-        var responder = getResponder({
+    it('expects scroll to be removed', function() {
+        var scroll, responder;
+
+        scroll    = jasmine.createSpy('scroll');
+        responder = getResponder({
             scroll: scroll
         });
 
@@ -87,27 +93,41 @@ describe('Scroll Responder', function() {
         expect(scroll).not.toHaveBeenCalled();
     });
 
-    it('debounces scroll calls', function(){
-        var responder, scroll, id, count;
+    it('debounces scroll calls', function() {
+        var responder, scrollSpy, id, count, flag;
 
-        count = -1;
-        scroll = jasmine.createSpy('scroll');
+        flag      = false;
+        count     = 0;
+        scrollSpy = jasmine.createSpy('scrollSpy');
         responder = getResponder({
-            scrollDebounce: 300,
-            scroll: scroll
+            scrollDebounce: 150,
+            scroll: scrollSpy
         });
 
-        id = setInterval(function(){
-            EventHelpers.simulateScrollEvent($(window));
-            count++;
+        runs(function() {
+            id = setInterval(function() {
+                EventHelpers.simulateScrollEvent($(window));
+                count++;
 
             if(count > 4) {
                 clearInterval(id);
-                // if debounce is working, scroll should have only
-                // been called once.
-                expect(scroll.calls.length).toEqual(1);
+
+                // allow time for debounce to execute
+                setTimeout(function() {
+                    flag = true;
+                }, 200);
             }
-        }, 200);
+
+            }, 100);
+        });
+
+        waitsFor(function() {
+            return flag;
+        }, 'Timeout expired', 1000);
+
+        runs(function() {
+            expect(scrollSpy.calls.length).toEqual(1);
+        });
     });
 
 }); // eof describe
