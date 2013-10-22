@@ -200,6 +200,10 @@ var SpecHelpers = {
                 'target': {'orientation': 0}});
         },
 
+        simulateWindowResize: function() {
+            this.simulateEvent($(window), 'resize', {});
+        },
+
         simulateScrollEvent: function($el) {
             var payload = {
                 target: $el[0],

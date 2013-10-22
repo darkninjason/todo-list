@@ -6,7 +6,7 @@ var _                    = require('underscore');
 var RangeManager         = require('auf/ui/managers/range');
 var MouseResponder       = require('auf/ui/responders/mouse');
 var TouchResponder       = require('auf/ui/responders/touches');
-var OrientationResponder = require('auf/ui/responders/orientation');
+// var OrientationResponder = require('auf/ui/responders/orientation');
 
 // Module
 
