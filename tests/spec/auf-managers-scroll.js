@@ -13,6 +13,7 @@ describe('Scroll Manager', function() {
 
     beforeEach(function() {
         loadFixtures('manager-scroll.html');
+        // console.log('before', this.description);
     });
 
     afterEach(function() {
@@ -63,19 +64,6 @@ describe('Scroll Manager', function() {
         expect(throwable).toThrow();
     });
 
-    it('returns a list of markers for getMarkers', function(){
-        var manager, positions;
-
-        manager   = getManager();
-        positions = [0, 0.25, 0.5, 0.75, 1];
-
-        manager.addMarkerPositions.apply(manager, positions);
-
-        expect(manager.getMarkers()).toEqual(positions);
-
-        manager.close();
-    });
-
     it('adds marker positions from elements', function(){
         var manager, $elements, markerElDict, expectedMarkers, markerValues;
 
@@ -95,6 +83,8 @@ describe('Scroll Manager', function() {
 
         expect(markerValues).toEqual(expectedMarkers);
         expect(manager.getMarkers()).toEqual(expectedMarkers);
+
+        manager.close();
     });
 
     it('removes marker positions from elements', function(){
@@ -107,30 +97,44 @@ describe('Scroll Manager', function() {
         manager.removeMarkersUsingElements($elements);
 
         expect(manager.getMarkers()).toEqual([]);
+
+        manager.close();
     });
 
-    xit('dispatches marker event when marker is reached', function(){
-        // TODO: implement
-    });
-
-    xit('dispatches scroll for window', function(){
+    it('dispatches scroll for window', function(){
         var manager, spy;
 
         manager = getManager();
-        // spy = jasmine.createSpy('spy');
-        spy = function(){
-            console.log('spy', arguments);
-        };
+        spy     = jasmine.createSpy('spy');
 
         manager.on('scroll', spy);
 
-        $('body')[0].scrollTop = 1000;
+        window.scroll(0, 1000);
+        EventHelpers.simulateScrollEvent($(window));
 
+        expect(spy.calls.length).toEqual(1);
 
+        window.scroll(0,0);
+        manager.close();
     });
 
+    // TODO: Revisit - Testing "scroll" from the fixture
+    // is proving very difficult. The below code works when
+    // done manually; but when done in the fixture it fails.
     xit('dispatches scroll for element', function(){
+        var manager, spy, $container;
 
+        manager = getManager();
+        spy = jasmine.createSpy('spy');
+        $container = getPageElements().$container;
+
+        manager.on('scroll', spy);
+        manager.on('scroll', spy1);
+
+        $container[0].scrollTop = 1000;
+        EventHelpers.simulateScrollEvent($container);
+
+        expect(spy.calls.length).toEqual(1);
     });
 
 
