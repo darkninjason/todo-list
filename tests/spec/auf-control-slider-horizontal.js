@@ -71,11 +71,19 @@ describe('Horizontal Slider Control', function() {
     // Options Tests
 
     it('applies options', function(){
-        var defaults, augments, control, controlDefaults;
+        var hsliderDefaults, augments, control, controlDefaults;
 
-        _defaults         = _.clone(HorizontalSlider.prototype._defaults);
+        // copied from hslider, will need update should these change.
+        hsliderDefaults = {
+            $track: null,
+            $handles: null,
+            steps: 0,
+            snap: false,
+            acceptsMouse: true,
+            acceptsTouch: false,
+        };
 
-        augments          = _.clone(_defaults);
+        augments          = _.clone(hsliderDefaults);
         augments.$track   = getPageElements().$track;
         augments.$handles = getPageElements().$handles;
 
@@ -86,10 +94,10 @@ describe('Horizontal Slider Control', function() {
         expect(control.options.$handles).toEqual(augments.$handles);
 
         // expect unmodified options to equal defaults
-        expect(control.options.acceptsMouse).toEqual(_defaults.acceptsMouse);
-        expect(control.options.acceptsTouch).toEqual(_defaults.acceptsTouch);
-        expect(control.options.snap).toEqual(_defaults.snap);
-        expect(control.options.steps).toEqual(_defaults.steps);
+        expect(control.options.acceptsMouse).toEqual(hsliderDefaults.acceptsMouse);
+        expect(control.options.acceptsTouch).toEqual(hsliderDefaults.acceptsTouch);
+        expect(control.options.snap).toEqual(hsliderDefaults.snap);
+        expect(control.options.steps).toEqual(hsliderDefaults.steps);
     });
 
     it('disables mouse when acceptsMouse is false', function(){
@@ -191,6 +199,39 @@ describe('Horizontal Slider Control', function() {
     });
 
     // Public API Tests
+
+    it('recalculates max position', function(){
+        var $els, $container, $track, $handles, control, positions;
+
+        $els       = getPageElements();
+        $container = $els.$container;
+        $track     = $els.$track;
+        $handles   = $els.$handles;
+        control    = getControl();
+        positions  = [0.25, 0.50, 0.75];
+
+        _.each(positions, function(pos, i, positions){
+            control.setPositionAt(pos, i);
+        });
+
+        // shrink the container
+        $container.css('width', '150px');
+
+        // recalculate positions
+        control.calculateMaxPosition();
+
+        // verify positions and element lefts
+        _.each(positions, function(pos, i, positions){
+            var $handle, trackWidth, expectedWidth;
+
+            $handle      = $handles.eq(i);
+            trackWidth   = getNormalizedTrackWidth($track, $handle);
+            expectedLeft = trackWidth * pos;
+
+            expect(control.getPositionAt(i)).toEqual(positions[i]);
+            expect($handle.css('left')).toEqual(expectedLeft + 'px');
+        });
+    });
 
     it('updates when setPositionAt is called', function(){
         var els, control, pos, left;
