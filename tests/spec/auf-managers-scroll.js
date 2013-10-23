@@ -26,7 +26,6 @@ describe('Scroll Manager', function() {
 
         var testSuiteDefaults = {
             el: $(window),
-            markers: [0.25, 0.5, 0.75, 0.8856]
         };
 
         return _.extend(testSuiteDefaults, augments);
@@ -38,10 +37,11 @@ describe('Scroll Manager', function() {
 
     function getPageElements(){
         return {
-            container: $('.container'),
-            scrollOuter: $('.scroll-outer').eq(0),
-            scrollInner: $('.scroll-inner').eq(0),
-            scrollers: $('.scroll-outer')
+            $window: $(window),
+            $body: $('body'),
+            $container: $('.container'),
+            $content: $('.content'),
+            $paragraphs: $('p'),
         };
     }
 
@@ -49,28 +49,9 @@ describe('Scroll Manager', function() {
         return window === _.identity($el[0]);
     }
 
-    function getScrollable($el) {
-        var bounds, viewableHeight, viewableWidth;
-
-        $el = (elementIsWindow($el)) ? $(document.documentElement) : $el;
-
-        bounds         = $el[0].getBoundingClientRect();
-        viewableHeight = $el[0].clientHeight;
-        viewableWidth  = $el[0].clientWidth;
-
-        return {
-            height: bounds.height,
-            width : bounds.width,
-            viewableHeight: viewableHeight,
-            viewableWidth: viewableWidth,
-            scrollHeight: bounds.height - viewableHeight,
-            scrollWidth: bounds.width - viewableWidth
-        };
-    }
-
     // Test Suite
 
-    xit('throws when no el is provided', function(){
+    it('throws when no el is provided', function(){
         function throwable() {
             var manager = getManager({
                 el: undefined
@@ -82,169 +63,76 @@ describe('Scroll Manager', function() {
         expect(throwable).toThrow();
     });
 
-    xit('returns a list of markers for getMarkers', function(){
-        var manager, opts;
+    it('returns a list of markers for getMarkers', function(){
+        var manager, positions;
 
-        manager = getManager();
-        opts    = getOptions();
+        manager   = getManager();
+        positions = [0, 0.25, 0.5, 0.75, 1];
 
-        // expect manager getMarkers to return the markers we passed in
-        expect(manager.getMarkers()).toEqual(opts.markers);
+        manager.addMarkerPositions.apply(manager, positions);
+
+        expect(manager.getMarkers()).toEqual(positions);
 
         manager.close();
     });
 
-    xit('adds a marker position', function(){
-        var manager;
+    it('adds marker positions from elements', function(){
+        var manager, $elements, markerElDict, expectedMarkers, markerValues;
 
-        manager = getManager({'markers': []});
+        manager         = getManager();
+        $elements       = getPageElements().$paragraphs;
+        expectedMarkers = _.map($elements, function(el, i, $elements){
+            var $el, top, range;
 
-        manager.addMarkerPosition(0.5);
-        manager.addMarkerPosition(0.75);
-        manager.addMarkerPosition(0.25);
+            $el   = $(el);
+            top   = $el.position().top;
+            range = manager.rangeManager;
 
-        // manager should return sorted array
-        expect(manager.getMarkers()).toEqual([0.25, 0.5, 0.75]);
+            return range.calculatePositionForValue(top);
+        });
+        markerElDict = manager.addMarkersUsingElements($elements);
+        markerValues = _.map(_.keys(markerElDict), parseFloat);
 
-        manager.close()
-    });
-
-    xit('does not add an existing marker position', function(){
-        var manager;
-
-        manager = getManager({'markers': [0.5]});
-
-        manager.addMarkerPosition(0.5);
-
-        expect(manager.getMarkers()).toEqual([0.5]);
-
-        manager.close()
-    });
-
-    xit('removes a marker position', function(){
-        var manager, opts;
-
-        manager = getManager();
-        opts    = getOptions();
-        expectedMarkers = opts.markers.slice();
-
-        // manually remove 0.5 from this array
-        expectedMarkers.splice(1, 1);
-
-        manager.removeMarkerPosition(0.5);
-
+        expect(markerValues).toEqual(expectedMarkers);
         expect(manager.getMarkers()).toEqual(expectedMarkers);
-
-        manager.close();
     });
 
-    xit('does not remove a non-existing marker position', function(){
-        var manager, opts;
-
-        manager = getManager();
-        opts = getOptions();
-
-        manager.removeMarkerPosition(0.65);
-
-        expect(manager.getMarkers()).toEqual(opts.markers);
-
-        manager.close();
-    });
-
-    xit('adds a marker position for value', function(){
-        var manager, scrollable;
-
-        manager    = getManager({'markers': null});
-        scrollable = getScrollable($(window)).scrollHeight;
-
-        // add a marker at half the scrollable area
-        manager.addMarkerValue(scrollable/2);
-
-        // should result in a position at 0.5
-        expect(manager.getMarkers()).toEqual([0.5]);
-
-        manager.close();
-    });
-
-    xit('removes a marker position for value', function(){
-        var manager, scrollable;
-
-        manager = getManager({'markers': [0.5]});
-        scrollable = getScrollable($(window)).scrollHeight;
-
-        manager.removeMarkerValue(scrollable/2);
-
-        expect(manager.getMarkers()).toEqual([]);
-
-        manager.close();
-    });
-
-    xit('adds marker positions from elements', function(){
+    it('removes marker positions from elements', function(){
         var manager, $elements;
 
-        manager   = getManager({'markers': null});
-        $elements = getPageElements().scrollers;
-
-        manager.addMarkersUsingElements($elements);
-    });
-
-    xit('removes marker positions from elements', function(){
-        var manager, $elements;
-
-        manager   = getManager({'markers': null});
-        $elements = getPageElements().scrollers;
+        manager   = getManager();
+        $elements = getPageElements().$paragraphs;
 
         manager.addMarkersUsingElements($elements);
         manager.removeMarkersUsingElements($elements);
-    });
 
-    xit('sets scroll when element is window', function(){
-        var manager, scrollable;
-
-        manager    = getManager();
-        scrollable = getScrollable($(window));
-
-        manager.setScrollPosition(0.5);
-        manager.setScrollValue(scrollable * 0.75);
-    });
-
-    xit('sets scroll when element is dom element', function(){
-        var $elements, manager, scrollable;
-
-        $elements  = getPageElements();
-        manager    = getManager({el: $elements.scrollOuter});
-        scrollable = getScrollable($elements.scrollOuter);
-
-        manager.setScrollPosition(0.5);
-        manager.setScrollValue(scrollable * 0.75);
-    });
-
-    xit('gets scroll when element is window', function(){
-        var manager, scrollPos, scrollValue;
-
-        manager = getManager();
-
-        manager.setScrollPosition(0.5);
-
-        scrollPos   = manager.getScrollPosition();
-        scrollValue = manager.getScrollValue();
-    });
-
-    xit('gets scroll when element is dom element', function(){
-        var $elements, manager, scrollPos, scrollValue;
-
-        $elements = getPageElements();
-        manager   = getManager({el: $elements.scrollOuter});
-
-        manager.setScrollPosition(0.5);
-
-        scrollPos   = manager.getScrollPosition();
-        scrollValue = manager.getScrollValue();
+        expect(manager.getMarkers()).toEqual([]);
     });
 
     xit('dispatches marker event when marker is reached', function(){
         // TODO: implement
     });
+
+    xit('dispatches scroll for window', function(){
+        var manager, spy;
+
+        manager = getManager();
+        // spy = jasmine.createSpy('spy');
+        spy = function(){
+            console.log('spy', arguments);
+        };
+
+        manager.on('scroll', spy);
+
+        $('body')[0].scrollTop = 1000;
+
+
+    });
+
+    xit('dispatches scroll for element', function(){
+
+    });
+
 
     xit('expects events to be removed', function(){
         // TODO: implement

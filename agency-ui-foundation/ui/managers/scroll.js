@@ -83,11 +83,11 @@ var ScrollManager = Marionette.Controller.extend({
     },
 
     _didReceiveScroll: function(responder, e) {
-        var scrollable, position;
+        var scrollData, position;
 
-        scrollable = this.getScrollable(this.$el);
+        scrollData = this.getScrollDataForElement(this.$el);
         position   = this.rangeManager.calculatePositionForValue(
-            scrollable.scrollTop
+            scrollData.scrollTop
         );
 
         this._updateRangePosition(position);
@@ -113,7 +113,7 @@ var ScrollManager = Marionette.Controller.extend({
 
     // Public API
 
-    getScrollable: function($el) {
+    getScrollDataForElement: function($el) {
         var el, isWindow, documentElement, body, scrollTop, scrollLeft;
 
         isWindow        = window === _.identity($el[0]);
@@ -159,7 +159,7 @@ var ScrollManager = Marionette.Controller.extend({
     calculateMaxScroll: function() {
         var scrollable, max;
 
-        scrollable = this.getScrollable(this.$el);
+        scrollable = this.getScrollDataForElement(this.$el);
         max        = scrollable.scrollHeight - scrollable.displayHeight;
 
         this.rangeManager.setMax(max);
