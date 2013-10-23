@@ -6,7 +6,7 @@ var _                    = require('underscore');
 var RangeManager         = require('auf/ui/managers/range');
 var MouseResponder       = require('auf/ui/responders/mouse');
 var TouchResponder       = require('auf/ui/responders/touches');
-var OrientationResponder = require('auf/ui/responders/orientation');
+// var OrientationResponder = require('auf/ui/responders/orientation');
 
 // Module
 
@@ -24,20 +24,11 @@ var HorizontalSlider = Marionette.Controller.extend({
     ranges: null,
     mouseResponders: null,
     touchResponders: null,
-    orientationResponder: null,
     handleOffsets: [],
 
     // Defaults
 
-    _defaults: {
-        $track: null,
-        $handles: null,
-        steps: 0,
-        snap: false,
-        acceptsMouse: true,
-        acceptsTouch: false,
-        acceptsOrientation: false
-    },
+    _defaults: null,
 
     // Backbone & Marionette overrides
 
@@ -60,6 +51,15 @@ var HorizontalSlider = Marionette.Controller.extend({
      * );
      */
     initialize: function(options){
+        this._defaults = {
+            $track: null,
+            $handles: null,
+            steps: 0,
+            snap: false,
+            acceptsMouse: true,
+            acceptsTouch: false,
+        };
+
         _.defaults(options, this._defaults);
 
         var hasTrackSetting     = options.$track !== null;
@@ -70,7 +70,6 @@ var HorizontalSlider = Marionette.Controller.extend({
         if(!hasOneTrack) {
             throw 'HorizontalSlider requires at least one track element!';
         }
-
         if(!hasAtLeastOneHandle) {
             throw 'HorizontalSlider requires at least ' + this.minRequiredHandles + ' handle element(s)!';
         }
@@ -82,9 +81,6 @@ var HorizontalSlider = Marionette.Controller.extend({
         }
         if(this.options.acceptsTouch){
             this.touchResponders = this._initializeTouch(this.options);
-        }
-        if(this.options.acceptsOrientation){
-            this.orientationResponder = this._initializeOrientation(this.options);
         }
     },
 
@@ -103,14 +99,16 @@ var HorizontalSlider = Marionette.Controller.extend({
     // Internal initialization
 
     _initializeRanges: function(options) {
-        function iterator(handle, i, list) {
-            var $handle      = $(handle);
-            var handleBounds = handlesBounds[i];
-            var listener     = _.bind(this.rangeDidChange, this, $handle);
+        var $handles, $track;
 
-            var range = new RangeManager({
+        function iterator(handle, i, list) {
+            var $handle, listener, range;
+
+            $handle  = $(handle);
+            listener = _.bind(this.rangeDidChange, this, $handle);
+            range = new RangeManager({
                 min: 0,
-                max: trackBounds.width - handleBounds.width
+                max: this._calculateNormalizedMaxPosition($handle, $track)
             });
 
             this.listenTo(range, 'change', listener);
@@ -118,10 +116,8 @@ var HorizontalSlider = Marionette.Controller.extend({
             return range;
         }
 
-        var $handles      = options.$handles;
-        var $track        = options.$track;
-        var handlesBounds = this._getElementsBounds($handles.toArray());
-        var trackBounds   = this._getElementBounds($track[0]);
+        $handles = options.$handles;
+        $track   = options.$track;
 
         return _.map($handles, iterator, this);
      },
@@ -156,25 +152,21 @@ var HorizontalSlider = Marionette.Controller.extend({
         return _.map(this.options.$handles, iterator, this);
     },
 
-    _initializeOrientation: function(options) {
-        return new OrientationResponder({
-            portrait : this.didReceiveOrientationChange,
-            landscape: this.didReceiveOrientationChange
-        });
-    },
-
     // 'Private' helper accessors
 
-    _getElementBounds: function(el) {
+    _getElementBounds: function($el) {
         // el is raw dom element
         // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
-        return el.getBoundingClientRect();
+        return $el[0].getBoundingClientRect();
     },
 
-    _getElementsBounds: function(elements) {
-        // elements is a list of raw dom elements
-        // returns multiple ClientRects for list of elements.
-        return _.map(elements, this._getElementBounds, this);
+    _calculateNormalizedMaxPosition: function($handle, $track) {
+        var handleBounds, trackBounds;
+
+        handleBounds = this._getElementBounds($handle);
+        trackBounds  = this._getElementBounds($track);
+
+        return Math.abs(trackBounds.width - handleBounds.width);
     },
 
     _getHandleIndex: function($handle) {
@@ -215,6 +207,25 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     // 'Public' Position methods
+
+    calculateMaxPosition: function() {
+        var $handles, $track;
+
+        function iterator(handle, i, $handles) {
+            var $handle, range, max;
+
+            $handle = $(handle);
+            range   = this._getRangeManager(i);
+            max     = this._calculateNormalizedMaxPosition($handle, $track);
+
+            range.setMax(max);
+        }
+
+        $handles = this.options.$handles;
+        $track   = this.options.$track;
+
+        _.each(this.options.$handles, iterator, this);
+    },
 
     getPositionAt: function(index) {
         return this._getRangeManager(index).getPosition();
@@ -306,7 +317,6 @@ var HorizontalSlider = Marionette.Controller.extend({
     rangeDidChange: function($handle, range, position, value) {
         if(this.options.snap) {
             this._updateHandlePositionWithSnap($handle, range, position, value);
-
         }else{
             this._updateHandlePosition($handle, range, position, value);
         }
@@ -344,21 +354,6 @@ var HorizontalSlider = Marionette.Controller.extend({
     handleDidReceiveDragStop: function(range, responder, e) {
         e.preventDefault();
         this._dispatchDragStop(responder.$el, range.getPosition());
-    },
-
-    didReceiveOrientationChange: function(responder, e) {
-        function iterator(range, i, list) {
-            // setMax causes range to dispatch change.
-            // that should be suffient to also update this
-            // component should the position change.
-            range.setMax(trackBounds.width - handleBounds[i].width);
-        }
-
-        var $track        = this.options.$track;
-        var handlesBounds = this._getElementsBounds($handles.toArray());
-        var trackBounds   = this._getElementBounds($track[0]);
-
-        _.each(this.ranges, iterator, this);
     },
 
     // Event Dispatchers

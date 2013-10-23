@@ -198,6 +198,19 @@ var SpecHelpers = {
         simulateOrientationPortrait: function($el){
             this.simulateOrientationEvent($el, {
                 'target': {'orientation': 0}});
+        },
+
+        simulateWindowResize: function() {
+            this.simulateEvent($(window), 'resize', {});
+        },
+
+        simulateScrollEvent: function($el) {
+            var payload = {
+                target: $el[0],
+                currentTarget: $el[0],
+            };
+
+            this.simulateEvent($el, 'scroll', payload);
         }
     }
 
