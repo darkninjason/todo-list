@@ -108,20 +108,17 @@ describe('Scroll Manager', function() {
         spy     = jasmine.createSpy('spy');
 
         manager.on('scroll', spy);
-
-        window.scroll(0, 1000);
-        EventHelpers.simulateScrollEvent($(window));
+        EventHelpers.simulateScrollEvent($(window), 0, 100);
 
         expect(spy.calls.length).toEqual(1);
 
-        window.scroll(0,0);
         manager.close();
     });
 
     // TODO: Revisit - Testing "scroll" from the fixture
     // is proving very difficult. The below code works when
     // done manually; but when done in the fixture it fails.
-    xit('dispatches scroll for element', function(){
+    it('dispatches scroll for element', function(){
         var manager, spy, $container;
 
         manager = getManager();
@@ -129,10 +126,8 @@ describe('Scroll Manager', function() {
         $container = getPageElements().$container;
 
         manager.on('scroll', spy);
-        manager.on('scroll', spy1);
 
-        $container[0].scrollTop = 1000;
-        EventHelpers.simulateScrollEvent($container);
+        EventHelpers.simulateScrollEvent($container, 0, 100);
 
         expect(spy.calls.length).toEqual(1);
     });

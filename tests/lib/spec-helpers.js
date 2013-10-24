@@ -204,10 +204,20 @@ var SpecHelpers = {
             this.simulateEvent($(window), 'resize', {});
         },
 
-        simulateScrollEvent: function($el) {
+        simulateScrollEvent: function($el, x, y) {
+            var merge = {
+                scrollLeft: x || 0,
+                scrollTop: y || 0
+            };
+
+            var isWindow = window === _.identity($el[0]);
+            var target = isWindow ? document.body : $el[0];
+
+            _.extend(target, merge);
+
             var payload = {
                 target: $el[0],
-                currentTarget: $el[0],
+                currentTarget: $el[0]
             };
 
             this.simulateEvent($el, 'scroll', payload);
