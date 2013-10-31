@@ -51,8 +51,6 @@ var ScrollManager = Marionette.Controller.extend({
         this.scrollResponder = this._initializeScrollResponder(this.options);
         this.rangeManager    = this._initializeRangeManager(this.options);
 
-        // call this for initial max scroll setting
-
         // compose range manager methods
         Helpers.composeAll(
             this,
@@ -64,6 +62,7 @@ var ScrollManager = Marionette.Controller.extend({
             'removeMarkerValues'
         );
 
+        // call this for initial max scroll setting
         this.calculateMaxScroll();
     },
 
@@ -85,7 +84,7 @@ var ScrollManager = Marionette.Controller.extend({
     _didReceiveScroll: function(responder, e) {
         var scrollData, position;
 
-        scrollData = this.getScrollDataForElement(this.$el);
+        scrollData = this.getScrollDataForElement($(e.currentTarget));
         position   = this.rangeManager.calculatePositionForValue(
             scrollData.scrollTop
         );
