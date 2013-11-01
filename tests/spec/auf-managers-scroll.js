@@ -74,7 +74,7 @@ describe('Scroll Manager', function() {
 
             $el   = $(el);
             top   = $el.position().top;
-            range = manager.rangeManager;
+            range = manager._rangeManager;
 
             return range.calculatePositionForValue(top);
         });

@@ -59,11 +59,27 @@ function composeAll(intoScope, fromScope) {
     _.each(funcs, iterator);
 }
 
+/**
+ * normalizes an integer against a min and max
+ * @param  {int} value the value you wish to normalize
+ * @param  {int} min   the value's min limit
+ * @param  {int} max   the value's max limit
+ * @return {int}       normalized integer
+ */
+function normalizeInt(value, min, max) {
+    // Ternary is faster than Math.min|max
+    value = value > 1 ? 1 : value;
+    value = value < 0 ? 0 : value;
+
+    return value;
+}
+
 
 // Exports
 
 module.exports.getElement = getElement;
 module.exports.compose    = compose;
 module.exports.composeAll = composeAll;
+module.exports.normalizeInt = normalizeInt;
 
 });
