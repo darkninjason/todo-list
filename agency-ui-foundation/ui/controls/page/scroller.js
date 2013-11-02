@@ -1,4 +1,5 @@
 define(function(require, exports, module){
+
 // Imports
 
 var _ = require('underscore');
@@ -10,6 +11,9 @@ var ScrollManager = require('auf/ui/managers/scroll');
 
 var Scroller = Marionette.Controller.extend({
 
+    MODE_SMOOTH: 'smooth',
+    MODE_BASIC: 'basic',
+
     EASING_LINEAR: 'linear',
     EASING_SWING: 'swing',
 
@@ -17,16 +21,31 @@ var Scroller = Marionette.Controller.extend({
     _scrollManager: null,
     _defaults     : null,
 
+    /**
+     * initialize the Scroller
+     * @param  {object} options options literal
+     * @return {undefined}
+     *
+     * @example
+     * var scroller = new Scroller({
+     *     el            : $(window),  // required, can be any element or $element;
+     *                                    though window must be passed in as $(window)
+     *     scrollDebounce: 0,          // optional, default 0, debounces calls to scroll listeners
+     *     mode          : 'smooth',   // optional, default 'smooth', supports 'smooth' or 'basic'
+     *     easing        : 'swing',    // optional, defulat 'swing', maps directly to default jquery easing
+     *     duration      : 300,        // optional, default 300 (milliseconds), animation duration
+     * });
+     */
     initialize: function(options) {
         this._defaults = {
             el: null,
             scrollDebounce: 0,
-            smooth: true,
-            duration: 300,
-            easing: this.EASING_SWING
+            mode: this.MODE_SMOOTH,
+            easing: this.EASING_SWING,
+            duration: 300
         };
 
-        this.options = options;
+        // apply defaults to options
         this.options = _.defaults(options, this._defaults);
 
         if(_.isEmpty(this.options.el)){
@@ -35,9 +54,6 @@ var Scroller = Marionette.Controller.extend({
 
         this.$el            = Helpers.getElement(this.options.el);
         this._scrollManager = this._initializeScrollManager(this.options);
-
-        // add a local ref to this for convenience
-        // removed in close
         this._rangeManager  = this._scrollManager._rangeManager;
 
         // Proxy scroll manager methods
@@ -66,7 +82,6 @@ var Scroller = Marionette.Controller.extend({
 
     onClose: function() {
         this._scrollManager.close();
-        this._rangeManager = null;
     },
 
     // Initialization
@@ -90,18 +105,11 @@ var Scroller = Marionette.Controller.extend({
     // Private Methods
 
     _animateScroll: function(startPosition, endPosition, duration) {
-        console.log('_setSmoothScroll not implemented.', startPosition, endPosition, duration);
-
-        // animate from startPosition to endPosition
-        // each step calls _scrollManager's setScrollPosition
-
         function step(now, tween) {
-            // console.log('step', arguments);
             this._scrollManager.setScrollPosition(now);
         }
 
         function complete() {
-            // console.log('complete');
             // dispatch scroll complete?
         }
 
@@ -119,12 +127,6 @@ var Scroller = Marionette.Controller.extend({
 
     setScrollPosition: function(position) {
         var startPosition, endPosition;
-
-        console.log('setScrollPosition not implemented.', position);
-
-        // check if smooth is enabled
-        // true, _animateScroll(this._scrollManager.getPosition(), position);
-        // else, call straight into this._scrollManager.setPosition(positin);
 
         if(this.options.smooth) {
 
@@ -144,24 +146,20 @@ var Scroller = Marionette.Controller.extend({
     setScrollValue: function(value) {
         var position;
 
-        console.log('setScrollValue not implemented.', value);
-
-        // get position for value
-        // call setScrollPosition(position)
-
         position = this._rangeManager.calculatePositionForValue(value);
+
         this.setScrollPosition(position);
     },
 
     // Event Dispatchers
 
     _dispatchScroll: function(sender, position, value) {
-        console.log('_dispatchScroll not implemented.', sender, position, value);
+        this.trigger(this._scrollManager.EVENT_SCROLL, this, position, value);
     },
 
     _dispatchMarker: function(sender, markers, direction) {
-        console.log('_dispatchMarker not implemented.', sender, markers, direction);
-    },
+        this.trigger(this._rangeManager.EVENT_MARKER, this, markers, direction);
+    }
 
 
 }); // eof Scroller
