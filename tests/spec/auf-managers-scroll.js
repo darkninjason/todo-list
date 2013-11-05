@@ -5,7 +5,19 @@ define(function(require, exports, module) {
 var _               = require('underscore');
 var $               = require('jquery');
 var EventHelpers    = require('lib/spec-helpers').Events;
-var ScrollManager = require('auf/ui/managers/scroll');
+var ScrollManager   = require('auf/ui/managers/scroll');
+
+// Coverage
+// scroll debounces
+// calculates max scroll
+// gets max scroll
+// gets scroll position
+// sets scroll position
+// gets scroll value
+// sets scroll value
+// dispatches scroll
+// dispatches marker
+// events are removed
 
 describe('Scroll Manager', function() {
 
@@ -130,11 +142,6 @@ describe('Scroll Manager', function() {
         EventHelpers.simulateScrollEvent($container, 0, 100);
 
         expect(spy.calls.length).toEqual(1);
-    });
-
-
-    xit('expects events to be removed', function(){
-        // TODO: implement
     });
 
 

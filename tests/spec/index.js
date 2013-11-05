@@ -19,7 +19,8 @@ define(function() {
      'spec/auf-managers-focus-single',
      'spec/auf-control-slider-horizontal',
      'spec/auf-control-slider-horizontal-range',
-     'spec/auf-control-input-select'
+     'spec/auf-control-input-select',
+     'spec/auf-control-scroller'
     ]
   };
 });
