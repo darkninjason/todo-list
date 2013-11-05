@@ -39,13 +39,8 @@ var ScrollManager = Marionette.Controller.extend({
      * );
      */
     initialize: function(options) {
-        this._defaults = {
-            el: null,
-            scrollDebounce: 0
-        };
-
-        // apply defaults to options
-        this.options = _.defaults(options, this._defaults);
+        this._defaults = this._getDefaults();
+        this.options   = _.defaults(options, this._defaults);
 
         if(_.isEmpty(this.options.el)) {
             throw 'No input element provided.';
@@ -156,6 +151,13 @@ var ScrollManager = Marionette.Controller.extend({
 
     // Helpers
 
+    _getDefaults: function() {
+        return {
+            el: null,
+            scrollDebounce: 0
+        };
+    },
+
     _updateRangePosition: function(position) {
         // All updates to range manager position route through this func.
         this._rangeManager.setPosition(position);
@@ -181,6 +183,10 @@ var ScrollManager = Marionette.Controller.extend({
 
     getMaxScrollValue: function() {
         return this._rangeManager.getMax();
+    },
+
+    getMinScrollValue: function() {
+        return this._rangeManager.getMin();
     },
 
     getScrollPosition: function() {

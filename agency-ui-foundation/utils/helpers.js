@@ -68,8 +68,8 @@ function composeAll(intoScope, fromScope) {
  */
 function normalizeInt(value, min, max) {
     // Ternary is faster than Math.min|max
-    value = value > 1 ? 1 : value;
-    value = value < 0 ? 0 : value;
+    value = value > max ? max : value;
+    value = value < min ? min : value;
 
     return value;
 }
@@ -77,9 +77,9 @@ function normalizeInt(value, min, max) {
 
 // Exports
 
-module.exports.getElement = getElement;
-module.exports.compose    = compose;
-module.exports.composeAll = composeAll;
+module.exports.getElement   = getElement;
+module.exports.compose      = compose;
+module.exports.composeAll   = composeAll;
 module.exports.normalizeInt = normalizeInt;
 
 });

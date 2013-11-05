@@ -2,27 +2,21 @@ define(function(require, exports, module){
 
 // Imports
 
-var _ = require('underscore');
-var Marionette = require('marionette');
-var Helpers = require('auf/utils/helpers');
+var _             = require('underscore');
+var Marionette    = require('marionette');
+var Helpers       = require('auf/utils/helpers');
 var ScrollManager = require('auf/ui/managers/scroll');
 
 // Module
 
-var Scroller = Marionette.Controller.extend({
+var Scroller = ScrollManager.extend({
 
-    MODE_SMOOTH: 'smooth',
-    MODE_BASIC: 'basic',
-
-    EASING_LINEAR: 'linear',
-    EASING_SWING: 'swing',
-
-    _rangeManager : null,
-    _scrollManager: null,
-    _defaults     : null,
+    DEFAULT_DURATION: 300,
+    EASING_LINEAR   : 'linear',
+    EASING_SWING    : 'swing',
 
     /**
-     * initialize the Scroller
+     * initialize the Scroller, extends ScrollManager
      * @param  {object} options options literal
      * @return {undefined}
      *
@@ -31,94 +25,47 @@ var Scroller = Marionette.Controller.extend({
      *     el            : $(window),  // required, can be any element or $element;
      *                                    though window must be passed in as $(window)
      *     scrollDebounce: 0,          // optional, default 0, debounces calls to scroll listeners
-     *     mode          : 'smooth',   // optional, default 'smooth', supports 'smooth' or 'basic'
-     *     easing        : 'swing',    // optional, defulat 'swing', maps directly to default jquery easing
      *     duration      : 300,        // optional, default 300 (milliseconds), animation duration
      * });
      */
     initialize: function(options) {
-        this._defaults = {
-            el            : null,
-            mode          : this.MODE_SMOOTH,
-            easing        : this.EASING_SWING,
-            duration      : 300,
-            scrollDebounce: 0
-        };
-
-        // apply defaults to options
-        this.options = _.defaults(options, this._defaults);
-
-        if(_.isEmpty(this.options.el)){
-            throw 'No imput element provided.';
-        }
-
-        this.$el            = Helpers.getElement(this.options.el);
-        this._scrollManager = this._initializeScrollManager(this.options);
-        this._rangeManager  = this._scrollManager._rangeManager;
-
-        // Proxy scroll manager methods
-        Helpers.composeAll(
-            this,
-            this._scrollManager,
-            'calculateMaxScroll',
-            'getMaxScrollValue',
-            'getScrollPosition',
-            'getScrollValue',
-            'addMarkersUsingElements',
-            'removeMarkersUsingElements'
-        );
-
-        // Proxy scroll manger, range manager methods
-        Helpers.composeAll(
-            this,
-            this._rangeManager,
-            'getMarkers',
-            'addMarkerPositions',
-            'removeMarkerPositions',
-            'addMarkerValues',
-            'removeMarkerValues'
-        );
+        this.constructor.__super__.initialize.apply(this, arguments);
     },
 
     onClose: function() {
-        this._scrollManager.close();
-        this._rangeManager = null;
-    },
-
-    // Initialization
-
-    _initializeScrollManager: function(options) {
-        var manager;
-
-        manager = new ScrollManager({
-            el: this.$el,
-            scrollDebounce: this.options.scrollDebounce
-        });
-
-        // simply bubble events
-        // this is necessary to make sure sender is correctly set
-        this.listenTo(manager, 'scroll', _.bind(this._dispatchScroll, this));
-        this.listenTo(manager, 'marker', _.bind(this._dispatchMarker, this));
-
-        return manager;
+        // TODO: Implement, if necessary.
     },
 
     // Private Methods
 
-    _animateScroll: function(startPosition, endPosition, duration) {
+    /**
+     * Override super _getDefaults to add a few of our own
+     * @return {object} defaults object.
+     */
+    _getDefaults: function() {
+        var defaults;
+
+        defaults = this.constructor.__super__._getDefaults.call(this);
+
+        // extend original return value with new options
+        return _.extend(defaults, {
+            duration: this.DEFAULT_DURATION
+        });
+    },
+
+    _animateScroll: function(start, end, duration) {
         function step(now, tween) {
-            this._scrollManager.setScrollPosition(now);
+            this.constructor.__super__.setScrollValue.call(this, now);
         }
-
         function complete() {
-            // dispatch scroll complete?
+            // do something useful here?
         }
 
-        $({position:startPosition}).animate(
-            { position: endPosition },
+        $({value: start}).animate(
+            {value: end},
             {
                 duration: duration,
-                step    : _.bind(step, this),
+                step: _.bind(step, this),
                 complete: _.bind(complete, this)
             }
         );
@@ -126,40 +73,15 @@ var Scroller = Marionette.Controller.extend({
 
     // Public API
 
-    setScrollPosition: function(position) {
-        var startPosition, endPosition;
-
-        if(this.options.smooth) {
-
-            startPosition = this._scrollManager.getScrollPosition();
-            endPosition   = Helpers.normalizeInt(position);
-
-            this._animateScroll(
-                startPosition, endPosition, this.options.duration
-            );
-
-            return;
-        }
-
-        this._scrollManager.setScrollPosition(position);
-    },
-
     setScrollValue: function(value) {
-        var position;
+        var start, end;
 
-        position = this._rangeManager.calculatePositionForValue(value);
+        start = this.getScrollValue();
+        end   = Helpers.normalizeInt(value, this.getMinScrollValue(), this.getMaxScrollValue());
 
-        this.setScrollPosition(position);
-    },
-
-    // Event Dispatchers
-
-    _dispatchScroll: function(sender, position, value) {
-        this.trigger(this._scrollManager.EVENT_SCROLL, this, position, value);
-    },
-
-    _dispatchMarker: function(sender, markers, direction) {
-        this.trigger(this._rangeManager.EVENT_MARKER, this, markers, direction);
+        this._animateScroll(
+            start, end, this.options.duration
+        );
     }
 
 }); // eof Scroller
