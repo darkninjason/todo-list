@@ -38,11 +38,11 @@ var Scroller = Marionette.Controller.extend({
      */
     initialize: function(options) {
         this._defaults = {
-            el: null,
-            scrollDebounce: 0,
-            mode: this.MODE_SMOOTH,
-            easing: this.EASING_SWING,
-            duration: 300
+            el            : null,
+            mode          : this.MODE_SMOOTH,
+            easing        : this.EASING_SWING,
+            duration      : 300,
+            scrollDebounce: 0
         };
 
         // apply defaults to options
@@ -82,6 +82,7 @@ var Scroller = Marionette.Controller.extend({
 
     onClose: function() {
         this._scrollManager.close();
+        this._rangeManager = null;
     },
 
     // Initialization
@@ -114,7 +115,7 @@ var Scroller = Marionette.Controller.extend({
         }
 
         $({position:startPosition}).animate(
-            {position: endPosition },
+            { position: endPosition },
             {
                 duration: duration,
                 step    : _.bind(step, this),
@@ -160,7 +161,6 @@ var Scroller = Marionette.Controller.extend({
     _dispatchMarker: function(sender, markers, direction) {
         this.trigger(this._rangeManager.EVENT_MARKER, this, markers, direction);
     }
-
 
 }); // eof Scroller
 
