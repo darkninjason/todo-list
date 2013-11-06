@@ -61,6 +61,7 @@ var Scroller = ScrollManager.extend({
             // do something useful here?
         }
 
+        // TODO: Revisit, resulting animation from this chuggy.
         $({value: start}).animate(
             {value: end},
             {

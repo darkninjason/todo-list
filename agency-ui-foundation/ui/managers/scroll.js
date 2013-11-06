@@ -64,9 +64,6 @@ var ScrollManager = Marionette.Controller.extend({
             'calculatePositionForValue',
             'calculateValueForPosition'
         );
-
-        // call this for initial max scroll setting
-        this.calculateMaxScroll();
     },
 
     onClose: function() {
@@ -129,21 +126,23 @@ var ScrollManager = Marionette.Controller.extend({
     },
 
     _didReceiveScroll: function(responder, e) {
-        var scrollable, position;
+        var scrollable;
 
         scrollable = this.$scrollable[0];
 
-        position = this._rangeManager.calculatePositionForValue(
-            scrollable.scrollTop
-        );
-
-        this._updateRangePosition(position);
+        this._rangeManager.setValue(scrollable.scrollTop);
     },
 
     _initializeRangeManager: function(options) {
         var manager, max, listener, scrollable, start;
 
-        manager = new RangeManager();
+        // enable snap so range only ever sends scroll to whole numbers
+        // numbers of steps = number of pixels returned from max scroll
+        // this should result in an incremental distance of 1
+        max = this._calculateMaxScroll();
+        manager = new RangeManager({
+            max  : max
+        });
 
         this.listenTo(manager, 'change', _.bind(this._dispatchScroll, this));
         this.listenTo(manager, 'marker', _.bind(this._dispatchMarker, this));
@@ -160,18 +159,11 @@ var ScrollManager = Marionette.Controller.extend({
         };
     },
 
-    _updateRangePosition: function(position) {
-        // All updates to range manager position route through this func.
-        this._rangeManager.setPosition(position);
-    },
-
     _scrollElement: function($el, value) {
         $el[0].scrollTop = value;
     },
 
-    // Public API
-
-    calculateMaxScroll: function() {
+    _calculateMaxScroll: function() {
         var viewport, scrollable, max;
 
         // when el is NOT window, viewport and scrollable are the same element.
@@ -181,7 +173,17 @@ var ScrollManager = Marionette.Controller.extend({
         // see: http://mzl.la/19VEUIo
         max = scrollable.scrollHeight - viewport.clientHeight;
 
-        this._rangeManager.setMax(max);
+        // this._rangeManager.setMax(max);
+        return max;
+    },
+
+    // Public API
+
+    // a special version of the internal _calculateMaxScroll that is more useful
+    // for the end user as it also updates the max of the internal range
+    calculateMaxScroll: function() {
+        var max;
+        this._rangeManager.setMax(this._calculateMaxScroll());
     },
 
     getMaxScrollValue: function() {
@@ -198,13 +200,13 @@ var ScrollManager = Marionette.Controller.extend({
 
     setScrollPosition: function(position) {
         var value;
-        value = this._rangeManager.calculateValueForPosition(position);
 
+        value = this._rangeManager.calculateValueForPosition(position);
         this.setScrollValue(value);
     },
 
     getScrollValue: function() {
-        return this._rangeManager.getValue();
+        return Math.floor(this._rangeManager.getValue());
     },
 
     setScrollValue: function(value) {

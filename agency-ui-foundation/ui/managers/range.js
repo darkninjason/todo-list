@@ -41,6 +41,7 @@ var RangeManager = Marionette.Controller.extend({
         };
 
         // Apply defaults to options
+        this.options = options;
         _.defaults(options, this._defaults);
 
         this._markers         = [];

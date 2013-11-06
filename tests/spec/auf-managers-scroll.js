@@ -101,7 +101,7 @@ describe('Scroll Manager', function() {
     });
 
     it('gets sets current scroll position for window', function(){
-        var elements, viewport, scrollable, flag, max;
+        var elements, viewport, scrollable, flag, max, expectedPosition;
 
         elements   = getPageElements();
         manager    = getManager();
@@ -109,62 +109,74 @@ describe('Scroll Manager', function() {
         viewport   = document.documentElement;
         max        = scrollable.scrollHeight - viewport.clientHeight;
 
-        expect(manager.getScrollPosition()).toEqual(0);
-        expect(manager.getScrollValue()).toEqual(0);
+        // see note below about math.floor
+        expectedPosition = manager.calculatePositionForValue(Math.floor(max*0.5));
+
+        flag         = false;
+        asyncTimeout = 50;
 
         function doesAsync() {
-            flag = false;
-            manager.setScrollPosition(0.5);
+            // using set position here because set position proxy's in to
+            // set value.
+            manager.setScrollPosition(expectedPosition);
 
             setTimeout(function() {
                 flag = true;
-            }, 100);
+            }, asyncTimeout);
         }
         function waits(){
             return flag;
         }
         function expectsAsync() {
-            expect(manager.getScrollPosition()).toEqual(0.5);
-            expect(manager.getScrollValue()).toEqual(max * 0.5);
+            expect(manager.getScrollPosition()).toEqual(expectedPosition);
+
+            // Math.floor is used because scrollTop can only be whole pixels
+            // Chrome, at least, seems to floor fractional scroll top values
+            expect(manager.getScrollValue()).toEqual(Math.floor(max * 0.5));
         }
 
+        // expect scroll position/value to start at 0
+        expect(manager.getScrollPosition()).toEqual(0);
+        expect(manager.getScrollValue()).toEqual(0);
+
         // jasmine async test
+        // used here because i suspect jasmine is
+        // unloading the fixture too soon, breaking test.
         runs(doesAsync);
-        waitsFor(waits,'Scroll position and value should change', 150);
+        waitsFor(waits,'Scroll position and value should change', asyncTimeout + 50);
         runs(expectsAsync);
     });
 
-    it('gets sets current scroll position for window', function(){
-        var elements, viewport, scrollable, flag, max;
+    it('gets sets current scroll position for container', function(){
+        var elements, viewport, scrollable, asyncTimeout, flag, max;
 
         elements   = getPageElements();
         manager    = getManager({el: elements.$container});
         scrollable = elements.$container[0];
         max        = scrollable.scrollHeight - scrollable.clientHeight;
 
+        flag         = false;
+        asyncTimeout = 100;
+
         expect(manager.getScrollPosition()).toEqual(0);
         expect(manager.getScrollValue()).toEqual(0);
 
         function doesAsync() {
-            flag = false;
             manager.setScrollPosition(0.5);
-
-            setTimeout(function() {
-                flag = true;
-            }, 100);
+            setTimeout(function(){flag=true;}, asyncTimeout);
         }
         function waits(){
             return flag;
         }
-        function expectsAsync() {
+        function doesExpects() {
             expect(manager.getScrollPosition()).toEqual(0.5);
             expect(manager.getScrollValue()).toEqual(max * 0.5);
         }
 
         // jasmine async test
         runs(doesAsync);
-        waitsFor(waits,'Scroll position and value should change', 150);
-        runs(expectsAsync);
+        waitsFor(waits,'Scroll position and value should change', asyncTimeout + 50);
+        runs(doesExpects);
     });
 
     it('adds marker positions from elements', function(){
@@ -199,6 +211,36 @@ describe('Scroll Manager', function() {
         expect(manager.getMarkers()).toEqual([]);
     });
 
+    it('dispatches markers for elements', function(){
+        var spy, elements, asyncTimeout, flag;
+
+        spy      = jasmine.createSpy('spy');
+        elements = getPageElements();
+        manager  = getManager({el: elements.$container});
+
+        asyncTimeout = 100;
+        flag         = false;
+
+        function doesAsync() {
+            setTimeout(function(){flag=true;}, asyncTimeout);
+        }
+        function waits() {
+            return flag;
+        }
+        function doesExpects() {
+            expect(spy).toHaveBeenCalled();
+        }
+
+        manager.addMarkersUsingElements(elements.$paragraphs);
+        manager.on('marker', spy);
+
+        manager.setScrollPosition(1);
+
+        runs(doesAsync);
+        waitsFor(waits, 'Marker should have fired', asyncTimeout + 50);
+        runs(doesExpects);
+    });
+
     it('dispatches scroll for window', function(){
         var spy;
 
@@ -209,10 +251,6 @@ describe('Scroll Manager', function() {
         EventHelpers.simulateScrollEvent($(window), 0, 100);
 
         expect(spy.calls.length).toEqual(1);
-    });
-
-    it('dispatches markers for elements', function(){
-        // TODO: Implement
     });
 
     it('dispatches scroll for element', function(){
