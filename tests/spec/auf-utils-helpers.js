@@ -30,6 +30,23 @@ describe('Utils Helpers', function() {
         expect($el instanceof $).toEqual(true);
     });
 
+    it('normalizes integer', function(){
+        var min, max, values, result;
+
+        min = 0;
+        max = 100;
+        values = [50, -100, 200];
+        results = [
+            helpers.normalizeInt(values[0], min, max),
+            helpers.normalizeInt(values[1], min, max),
+            helpers.normalizeInt(values[2], min, max)
+        ];
+
+        expect(results[0]).toEqual(50);
+        expect(results[1]).toEqual(min);
+        expect(results[2]).toEqual(max);
+    });
+
     it('composes functions and maintains original scope', function() {
         var ModuleA, ModuleB, moduleB;
 

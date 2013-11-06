@@ -1,9 +1,9 @@
 define(function(require, exports, module){
 
 // Imports
+var _          = require('underscore');
 var Backbone   = require('backbone');
 var Marionette = require('marionette');
-var _          = require('underscore');
 
 var Helpers         = require('auf/utils/helpers');
 var ScrollResponder = require('auf/ui/responders/scroll');
@@ -15,10 +15,12 @@ var ScrollManager = Marionette.Controller.extend({
 
     EVENT_SCROLL: 'scroll',
 
-    _defaults: null,
+    $scrollable: null,
+    $viewport  : null,
 
-    scrollResponder: null,
-    rangeManager   : null,
+    _defaults       : null,
+    _scrollResponder: null,
+    _rangeManager   : null,
 
     // Backbone & Marionette overrides
 
@@ -30,48 +32,90 @@ var ScrollManager = Marionette.Controller.extend({
      * @example
      * var scrollManager = new ScrollManager(
      *     {
-     *         el : $(window), // required, can be any element
+     *         el : $(window),     // required, can be any element or $element;
+     *                               though window must be passed in as $(window)
+     *         scrollDebounce: 0,  // optional, default 0, debounces calls to scroll listeners
      *     }
      * );
      */
     initialize: function(options) {
-        this._defaults = {
-            el: null,
-            scrollDebounce: 0
-        };
-
-        // apply defaults to options
-        _.defaults(options, this._defaults);
+        this._defaults = this._getDefaults();
+        this.options   = _.defaults(options, this._defaults);
 
         if(_.isEmpty(this.options.el)) {
             throw 'No input element provided.';
         }
 
-        this.$el             = Helpers.getElement(this.options.el);
-        this.scrollResponder = this._initializeScrollResponder(this.options);
-        this.rangeManager    = this._initializeRangeManager(this.options);
+        this.$el              = Helpers.getElement(this.options.el);
+        this.$viewport        = this._initializeViewport(this.$el);
+        this.$scrollable      = this._initializeScrollable(this.$el);
+        this._scrollResponder = this._initializeScrollResponder(this.options);
+        this._rangeManager    = this._initializeRangeManager(this.options);
 
         // compose range manager methods
         Helpers.composeAll(
             this,
-            this.rangeManager,
+            this._rangeManager,
             'getMarkers',
             'addMarkerPositions',
             'removeMarkerPositions',
             'addMarkerValues',
-            'removeMarkerValues'
+            'removeMarkerValues',
+            'calculatePositionForValue',
+            'calculateValueForPosition'
         );
-
-        // call this for initial max scroll setting
-        this.calculateMaxScroll();
     },
 
     onClose: function() {
-        this.scrollResponder.close();
-        this.rangeManager.close();
+        this._scrollResponder.close();
+        this._rangeManager.close();
     },
 
     // Initialization
+
+    _initializeViewport: function($el) {
+        var isWindow;
+
+        isWindow = window === _.identity($el[0]);
+        $el = (isWindow) ? $(document.documentElement) : $el;
+        return $el;
+    },
+
+    _initializeScrollable: function($el) {
+        var isWindow;
+
+        isWindow = window === _.identity($el[0]);
+        $el = (isWindow) ? this._getWindowScrollable() : $el;
+        return $el;
+    },
+
+    _getWindowScrollable: function() {
+        var docElement, body, scrollables, scrollable, old;
+
+        docElement  = document.documentElement;
+        body        = document.body;
+        scrollables = [docElement, body];
+
+        // iterate over scrollable elements
+        // setting scrollTop on an unsupported element should not update it's value
+        // so do a check to see if the assignment actually changed the value
+        // if it is, set scrollable to that element
+        // reset value added by test
+        //
+        // see: http://mzl.la/19SZOty
+        function iterator(el, i, scrollables) {
+            old = el.scrollTop;
+            el.scrollTop = el.scrollTop + 1;
+
+            if(el.scrollTop > old) {
+                scrollable   = el;
+                el.scrollTop = old;
+            }
+        }
+
+        _.each(scrollables, iterator, this);
+        return $(scrollable);
+    },
 
     _initializeScrollResponder: function(options) {
         return new ScrollResponder({
@@ -82,20 +126,23 @@ var ScrollManager = Marionette.Controller.extend({
     },
 
     _didReceiveScroll: function(responder, e) {
-        var scrollData, position;
+        var scrollable;
 
-        scrollData = this.getScrollDataForElement($(e.currentTarget));
-        position   = this.rangeManager.calculatePositionForValue(
-            scrollData.scrollTop
-        );
+        scrollable = this.$scrollable[0];
 
-        this._updateRangePosition(position);
+        this._rangeManager.setValue(scrollable.scrollTop);
     },
 
     _initializeRangeManager: function(options) {
         var manager, max, listener, scrollable, start;
 
-        manager = new RangeManager();
+        // enable snap so range only ever sends scroll to whole numbers
+        // numbers of steps = number of pixels returned from max scroll
+        // this should result in an incremental distance of 1
+        max = this._calculateMaxScroll();
+        manager = new RangeManager({
+            max  : max
+        });
 
         this.listenTo(manager, 'change', _.bind(this._dispatchScroll, this));
         this.listenTo(manager, 'marker', _.bind(this._dispatchMarker, this));
@@ -105,63 +152,65 @@ var ScrollManager = Marionette.Controller.extend({
 
     // Helpers
 
-    _updateRangePosition: function(position) {
-        // All updates to range manager position route through this func.
-        this.rangeManager.setPosition(position);
+    _getDefaults: function() {
+        return {
+            el: null,
+            scrollDebounce: 0
+        };
+    },
+
+    _scrollElement: function($el, value) {
+        $el[0].scrollTop = value;
+    },
+
+    _calculateMaxScroll: function() {
+        var viewport, scrollable, max;
+
+        // when el is NOT window, viewport and scrollable are the same element.
+        viewport   = this.$viewport[0];
+        scrollable = this.$scrollable[0];
+
+        // see: http://mzl.la/19VEUIo
+        max = scrollable.scrollHeight - viewport.clientHeight;
+
+        // this._rangeManager.setMax(max);
+        return max;
     },
 
     // Public API
 
-    getScrollDataForElement: function($el) {
-        var el, isWindow, documentElement, body, scrollTop, scrollLeft;
-
-        isWindow        = window === _.identity($el[0]);
-        documentElement = document.documentElement;
-        body            = document.body;
-
-        $el = (isWindow) ? $(documentElement) : $el;
-        el  = $el[0];
-
-        // see: http://mzl.la/19SZOty
-        // for detailed explanation of ternary test below
-        //
-        // essentially:
-        // documentElement will sometimes return zero for scroll top,
-        // even when the window was scrolled. If it does return zero,
-        // we check the body for it's scroll top. This technique should
-        // always return a value equal to the what window's pageYOffset
-        // would have been should pageYOffset be unsupported.
-        scrollTop =
-            (isWindow) ?
-            (window.pageYOffset || documentElement.scrollTop  || body.scrollTop ) :
-            el.scrollTop;
-
-        scrollLeft =
-            (isWindow) ?
-            (window.pageXOffset || documentElement.scrollLeft || body.scrollLeft) :
-            el.scrollLeft;
-
-        // see: http://mzl.la/19VEUIo
-        // for a guide to these properties
-        return {
-            height       : el.offsetHeight,
-            width        : el.offsetHeight,
-            displayHeight: el.clientHeight,
-            displayWidth : el.clientWidth,
-            scrollHeight : el.scrollHeight,
-            scrollWidth  : el.scrollWidth,
-            scrollTop    : scrollTop,
-            scrollLeft   : scrollLeft
-        };
+    // a special version of the internal _calculateMaxScroll that is more useful
+    // for the end user as it also updates the max of the internal range
+    calculateMaxScroll: function() {
+        var max;
+        this._rangeManager.setMax(this._calculateMaxScroll());
     },
 
-    calculateMaxScroll: function() {
-        var scrollable, max;
+    getMaxScrollValue: function() {
+        return this._rangeManager.getMax();
+    },
 
-        scrollable = this.getScrollDataForElement(this.$el);
-        max        = scrollable.scrollHeight - scrollable.displayHeight;
+    getMinScrollValue: function() {
+        return this._rangeManager.getMin();
+    },
 
-        this.rangeManager.setMax(max);
+    getScrollPosition: function() {
+        return this._rangeManager.getPosition();
+    },
+
+    setScrollPosition: function(position) {
+        var value;
+
+        value = this._rangeManager.calculateValueForPosition(position);
+        this.setScrollValue(value);
+    },
+
+    getScrollValue: function() {
+        return Math.floor(this._rangeManager.getValue());
+    },
+
+    setScrollValue: function(value) {
+        this._scrollElement(this.$scrollable, value);
     },
 
     /**
@@ -187,10 +236,10 @@ var ScrollManager = Marionette.Controller.extend({
             // mysterious markers at position 1 (range will squash any value
             // that results in a position > 1). I would rather avoid
             // adding these all together, than filtering them out later.
-            shouldAddMarker = top < this.rangeManager.getMax();
+            shouldAddMarker = top < this._rangeManager.getMax();
 
-            if(top < this.rangeManager.getMax()) {
-                position            = this.rangeManager.calculatePositionForValue(top);
+            if(shouldAddMarker) {
+                position            = this._rangeManager.calculatePositionForValue(top);
                 dict[position + ''] = $el;
 
                 positions.push(position);
@@ -219,7 +268,7 @@ var ScrollManager = Marionette.Controller.extend({
             $position = $el.position();
             top       = $position.top;
 
-            return this.rangeManager.calculatePositionForValue(top);
+            return this._rangeManager.calculatePositionForValue(top);
         }
 
         positions = _.map($elements, iterator, this);
@@ -234,7 +283,7 @@ var ScrollManager = Marionette.Controller.extend({
     },
 
     _dispatchMarker: function(sender, markers, direction) {
-        this.trigger(this.rangeManager.EVENT_MARKER, this, markers, direction);
+        this.trigger(this._rangeManager.EVENT_MARKER, this, markers, direction);
     }
 
 }); // eof ScrollManager

@@ -5,19 +5,23 @@ define(function(require, exports, module) {
 var _               = require('underscore');
 var $               = require('jquery');
 var EventHelpers    = require('lib/spec-helpers').Events;
-var ScrollManager = require('auf/ui/managers/scroll');
+var ScrollManager   = require('auf/ui/managers/scroll');
 
 describe('Scroll Manager', function() {
+
+    var manager = null;
 
     // Setup
 
     beforeEach(function() {
         loadFixtures('manager-scroll.html');
-        // console.log('before', this.description);
     });
 
     afterEach(function() {
-
+        if(!_.isEmpty(manager)) {
+            manager.close();
+            manager = null;
+        }
     });
 
     // Helpers
@@ -26,7 +30,7 @@ describe('Scroll Manager', function() {
         augments = augments || {};
 
         var testSuiteDefaults = {
-            el: $(window),
+            el: $(window)
         };
 
         return _.extend(testSuiteDefaults, augments);
@@ -54,41 +58,148 @@ describe('Scroll Manager', function() {
 
     it('throws when no el is provided', function(){
         function throwable() {
-            var manager = getManager({
+            manager = getManager({
                 el: undefined
             });
-
-            manager.close();
         }
 
         expect(throwable).toThrow();
     });
 
+    it('gets max scroll for window', function(){
+        var elements, viewport, scrollable;
+
+        elements   = getPageElements();
+        manager    = getManager();
+        viewport   = document.documentElement;
+        scrollable = manager._getWindowScrollable()[0];
+        max        = scrollable.scrollHeight - viewport.clientHeight;
+
+        expect(manager.getMaxScrollValue()).toEqual(max);
+    });
+
+    it('gets max scroll for container', function(){
+        var elements, viewport, scrollable, max;
+
+        elements   = getPageElements();
+        scrollable = elements.$container[0];
+        max        = scrollable.scrollHeight - scrollable.clientHeight;
+        manager    = getManager({
+            el: elements.$container
+        });
+
+        expect(manager.getMaxScrollValue()).toEqual(max);
+    });
+
+    it('gets min scroll value for window', function(){
+        expect(getManager().getMinScrollValue()).toEqual(0);
+    });
+
+    it('gets min scroll value for container', function(){
+        expect(getManager({el:getPageElements().$container}).getMinScrollValue()).toEqual(0);
+    });
+
+    it('gets sets current scroll position for window', function(){
+        var elements, viewport, scrollable, flag, max, expectedPosition;
+
+        elements   = getPageElements();
+        manager    = getManager();
+        scrollable = manager._getWindowScrollable()[0];
+        viewport   = document.documentElement;
+        max        = scrollable.scrollHeight - viewport.clientHeight;
+
+        // see note below about math.floor
+        expectedPosition = manager.calculatePositionForValue(Math.floor(max*0.5));
+
+        flag         = false;
+        asyncTimeout = 50;
+
+        function doesAsync() {
+            // using set position here because set position proxy's in to
+            // set value.
+            manager.setScrollPosition(expectedPosition);
+
+            setTimeout(function() {
+                flag = true;
+            }, asyncTimeout);
+        }
+        function waits(){
+            return flag;
+        }
+        function expectsAsync() {
+            expect(manager.getScrollPosition()).toEqual(expectedPosition);
+
+            // Math.floor is used because scrollTop can only be whole pixels
+            // Chrome, at least, seems to floor fractional scroll top values
+            expect(manager.getScrollValue()).toEqual(Math.floor(max * 0.5));
+        }
+
+        // expect scroll position/value to start at 0
+        expect(manager.getScrollPosition()).toEqual(0);
+        expect(manager.getScrollValue()).toEqual(0);
+
+        // jasmine async test
+        // used here because i suspect jasmine is
+        // unloading the fixture too soon, breaking test.
+        runs(doesAsync);
+        waitsFor(waits,'Scroll position and value should change', asyncTimeout + 50);
+        runs(expectsAsync);
+    });
+
+    it('gets sets current scroll position for container', function(){
+        var elements, viewport, scrollable, asyncTimeout, flag, max;
+
+        elements   = getPageElements();
+        manager    = getManager({el: elements.$container});
+        scrollable = elements.$container[0];
+        max        = scrollable.scrollHeight - scrollable.clientHeight;
+
+        flag         = false;
+        asyncTimeout = 100;
+
+        expect(manager.getScrollPosition()).toEqual(0);
+        expect(manager.getScrollValue()).toEqual(0);
+
+        function doesAsync() {
+            manager.setScrollPosition(0.5);
+            setTimeout(function(){flag=true;}, asyncTimeout);
+        }
+        function waits(){
+            return flag;
+        }
+        function doesExpects() {
+            expect(manager.getScrollPosition()).toEqual(0.5);
+            expect(manager.getScrollValue()).toEqual(max * 0.5);
+        }
+
+        // jasmine async test
+        runs(doesAsync);
+        waitsFor(waits,'Scroll position and value should change', asyncTimeout + 50);
+        runs(doesExpects);
+    });
+
     it('adds marker positions from elements', function(){
-        var manager, $elements, markerElDict, expectedMarkers, markerValues;
+        var $elements, markerElDict, expectedMarkers, markerValues;
 
         manager         = getManager();
         $elements       = getPageElements().$paragraphs;
         expectedMarkers = _.map($elements, function(el, i, $elements){
-            var $el, top, range;
+            var $el, top;
 
-            $el   = $(el);
-            top   = $el.position().top;
-            range = manager.rangeManager;
+            $el = $(el);
+            top = $el.position().top;
 
-            return range.calculatePositionForValue(top);
+            return manager.calculatePositionForValue(top);
         });
         markerElDict = manager.addMarkersUsingElements($elements);
         markerValues = _.map(_.keys(markerElDict), parseFloat);
 
         expect(markerValues).toEqual(expectedMarkers);
         expect(manager.getMarkers()).toEqual(expectedMarkers);
-
-        manager.close();
     });
 
     it('removes marker positions from elements', function(){
-        var manager, $elements;
+        var $elements;
 
         manager   = getManager();
         $elements = getPageElements().$paragraphs;
@@ -97,12 +208,40 @@ describe('Scroll Manager', function() {
         manager.removeMarkersUsingElements($elements);
 
         expect(manager.getMarkers()).toEqual([]);
+    });
 
-        manager.close();
+    it('dispatches markers for elements', function(){
+        var spy, elements, asyncTimeout, flag;
+
+        spy      = jasmine.createSpy('spy');
+        elements = getPageElements();
+        manager  = getManager({el: elements.$container});
+
+        asyncTimeout = 100;
+        flag         = false;
+
+        function doesAsync() {
+            setTimeout(function(){flag=true;}, asyncTimeout);
+        }
+        function waits() {
+            return flag;
+        }
+        function doesExpects() {
+            expect(spy).toHaveBeenCalled();
+        }
+
+        manager.addMarkersUsingElements(elements.$paragraphs);
+        manager.on('marker', spy);
+
+        manager.setScrollPosition(1);
+
+        runs(doesAsync);
+        waitsFor(waits, 'Marker should have fired', asyncTimeout + 50);
+        runs(doesExpects);
     });
 
     it('dispatches scroll for window', function(){
-        var manager, spy;
+        var spy;
 
         manager = getManager();
         spy     = jasmine.createSpy('spy');
@@ -111,18 +250,13 @@ describe('Scroll Manager', function() {
         EventHelpers.simulateScrollEvent($(window), 0, 100);
 
         expect(spy.calls.length).toEqual(1);
-
-        manager.close();
     });
 
-    // TODO: Revisit - Testing "scroll" from the fixture
-    // is proving very difficult. The below code works when
-    // done manually; but when done in the fixture it fails.
     it('dispatches scroll for element', function(){
-        var manager, spy, $container;
+        var spy, $container;
 
-        manager = getManager();
-        spy = jasmine.createSpy('spy');
+        manager    = getManager();
+        spy        = jasmine.createSpy('spy');
         $container = getPageElements().$container;
 
         manager.on('scroll', spy);
@@ -131,13 +265,6 @@ describe('Scroll Manager', function() {
 
         expect(spy.calls.length).toEqual(1);
     });
-
-
-    xit('expects events to be removed', function(){
-        // TODO: implement
-    });
-
-
 
 }); // eof describe
 }); // eof define
