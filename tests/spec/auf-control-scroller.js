@@ -8,14 +8,6 @@ $ = require('jquery');
 EventHelpers  = require('lib/spec-helpers').Events;
 Scroller      = require('auf/ui/controls/page/scroller');
 
-// Coverage
-// not to animate when "basic" mode is set
-// animates when "smooth" mode is set
-// dispatches scroll
-// debounces scroll
-// dispatches marker
-// events are removed
-
 describe('Scroller', function() {
 
     // Setup
@@ -40,29 +32,13 @@ describe('Scroller', function() {
 
     // Test Suite
 
-    it('composes range and scroll api', function(){
+   it('animates scroll when setting scroll value', function(){
 
-    });
+   });
 
-    it('does not animate when basic mode is set', function(){
+   it('animates scroll when setting scroll position', function(){
 
-    });
-
-    it('animates when smooth mode is set', function(){
-
-    });
-
-    it('dispatches scroll', function(){
-
-    });
-
-    it('debounces scroll', function(){
-
-    });
-
-    it('dispatches marker', function(){
-
-    });
+   });
 
 }); // eof describe
 }); // eof define

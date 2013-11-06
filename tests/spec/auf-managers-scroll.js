@@ -7,18 +7,6 @@ var $               = require('jquery');
 var EventHelpers    = require('lib/spec-helpers').Events;
 var ScrollManager   = require('auf/ui/managers/scroll');
 
-// Coverage
-// scroll debounces
-// calculates max scroll
-// gets max scroll
-// gets scroll position
-// sets scroll position
-// gets scroll value
-// sets scroll value
-// dispatches scroll
-// dispatches marker
-// events are removed
-
 describe('Scroll Manager', function() {
 
     // Setup
@@ -76,6 +64,34 @@ describe('Scroll Manager', function() {
         expect(throwable).toThrow();
     });
 
+    it('calculates max scroll', function(){
+
+    });
+
+    it('gets min scroll value', function(){
+
+    });
+
+    it('gets max scroll value', function(){
+
+    });
+
+    it('gets current scroll position', function(){
+
+    });
+
+    it('sets scroll position', function(){
+
+    });
+
+    it('gets current scroll value', function(){
+
+    });
+
+    it('sets scroll value', function(){
+
+    });
+
     it('adds marker positions from elements', function(){
         var manager, $elements, markerElDict, expectedMarkers, markerValues;
 
@@ -127,9 +143,10 @@ describe('Scroll Manager', function() {
         manager.close();
     });
 
-    // TODO: Revisit - Testing "scroll" from the fixture
-    // is proving very difficult. The below code works when
-    // done manually; but when done in the fixture it fails.
+    it('dispatches markers for elements', function(){
+
+    });
+
     it('dispatches scroll for element', function(){
         var manager, spy, $container;
 
@@ -143,8 +160,6 @@ describe('Scroll Manager', function() {
 
         expect(spy.calls.length).toEqual(1);
     });
-
-
 
 }); // eof describe
 }); // eof define
