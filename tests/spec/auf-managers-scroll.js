@@ -15,7 +15,6 @@ describe('Scroll Manager', function() {
 
     beforeEach(function() {
         loadFixtures('manager-scroll.html');
-        // console.log('before', this.description);
     });
 
     afterEach(function() {
@@ -31,7 +30,7 @@ describe('Scroll Manager', function() {
         augments = augments || {};
 
         var testSuiteDefaults = {
-            el: $(window),
+            el: $(window)
         };
 
         return _.extend(testSuiteDefaults, augments);
