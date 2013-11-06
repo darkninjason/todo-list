@@ -60,7 +60,9 @@ var ScrollManager = Marionette.Controller.extend({
             'addMarkerPositions',
             'removeMarkerPositions',
             'addMarkerValues',
-            'removeMarkerValues'
+            'removeMarkerValues',
+            'calculatePositionForValue',
+            'calculateValueForPosition'
         );
 
         // call this for initial max scroll setting
@@ -172,6 +174,7 @@ var ScrollManager = Marionette.Controller.extend({
     calculateMaxScroll: function() {
         var viewport, scrollable, max;
 
+        // when el is NOT window, viewport and scrollable are the same element.
         viewport   = this.$viewport[0];
         scrollable = this.$scrollable[0];
 
@@ -196,6 +199,7 @@ var ScrollManager = Marionette.Controller.extend({
     setScrollPosition: function(position) {
         var value;
         value = this._rangeManager.calculateValueForPosition(position);
+
         this.setScrollValue(value);
     },
 
