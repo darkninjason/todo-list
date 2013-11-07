@@ -21,14 +21,12 @@ Development Status :: 2 - Pre-Alpha
 
 Vendor dependencies are not versioned with the main AUF codebase. Check out `tests/lib/vendor/` for an up to date list.
 
-Below is a list of dependencies as of October 1st, 2013:
+Below is a list of dependencies as of November 7st, 2013:
 
 - [jQuery v1.10.1]
-- [Modernizr v2.6.2 : Custom Build]
 - [Underscore v1.5.2]
 - [Backbone v1.0.0]
 - [Backbone : Marionette v1.1.0]
-- [Backbone : Stickit]
 
 ## Version
 
