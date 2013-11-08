@@ -1,4 +1,5 @@
 define(function(require, exports, module){
+
 // Imports
 
 var Marionette           = require('marionette');
@@ -6,7 +7,6 @@ var _                    = require('underscore');
 var RangeManager         = require('auf/ui/managers/range');
 var MouseResponder       = require('auf/ui/responders/mouse');
 var TouchResponder       = require('auf/ui/responders/touches');
-// var OrientationResponder = require('auf/ui/responders/orientation');
 
 // Module
 
@@ -20,15 +20,11 @@ var HorizontalSlider = Marionette.Controller.extend({
 
     // Properties
 
-    minRequiredHandles: 1,
-    ranges: null,
-    mouseResponders: null,
-    touchResponders: null,
-    handleOffsets: [],
-
-    // Defaults
-
-    _defaults: null,
+    _minRequiredHandles: 1,
+    _rangeManagers     : null,
+    _mouseResponders   : null,
+    _touchResponders   : null,
+    _handleOffsets     : [],
 
     // Backbone & Marionette overrides
 
@@ -51,49 +47,57 @@ var HorizontalSlider = Marionette.Controller.extend({
      * );
      */
     initialize: function(options){
-        this._defaults = {
+        var hasTrackSetting, hasOneTrack, hasHandleSetting, hasMinHandles;
+
+        this.options = options;
+        _.defaults(options, this._getDefaults());
+
+        hasTrackSetting  = options.$track !== null;
+        hasOneTrack      = hasTrackSetting && options.$track.length == 1;
+        hasHandleSetting = options.$handles !== null;
+        hasMinHandles    = hasHandleSetting && options.$handles.length >= this._minRequiredHandles;
+
+        if(!hasOneTrack) {
+            throw 'HorizontalSlider requires at least one track element!';
+        }
+        if(!hasMinHandles) {
+            throw 'HorizontalSlider requires at least ' + this._minRequiredHandles + ' handle element(s)!';
+        }
+
+        this._rangeManagers = this._initializeRanges(this.options);
+
+        if(this.options.acceptsMouse){
+            this._mouseResponders = this._initializeMouse(this.options);
+        }
+        if(this.options.acceptsTouch){
+            this._touchResponders = this._initializeTouch(this.options);
+        }
+    },
+
+    onClose: function() {
+        var controllers;
+
+        function iterator (controller, i, list) {
+            if(controller) controller.close();
+        }
+
+        controllers = (this._mouseResponders || [])
+            .concat(this._touchResponders || [])
+            .concat(this._rangeManagers || []);
+
+        _.each(controllers, iterator, this);
+    },
+
+    // Override / extend return value here to add additional options
+    _getDefaults: function() {
+        return {
             $track: null,
             $handles: null,
             steps: 0,
             snap: false,
             acceptsMouse: true,
-            acceptsTouch: false,
+            acceptsTouch: false
         };
-
-        _.defaults(options, this._defaults);
-
-        var hasTrackSetting     = options.$track !== null;
-        var hasOneTrack         = hasTrackSetting && options.$track.length == 1;
-        var hasHandleSetting    = options.$handles !== null;
-        var hasAtLeastOneHandle = hasHandleSetting && options.$handles.length >= this.minRequiredHandles;
-
-        if(!hasOneTrack) {
-            throw 'HorizontalSlider requires at least one track element!';
-        }
-        if(!hasAtLeastOneHandle) {
-            throw 'HorizontalSlider requires at least ' + this.minRequiredHandles + ' handle element(s)!';
-        }
-
-        this.ranges = this._initializeRanges(this.options);
-
-        if(this.options.acceptsMouse){
-            this.mouseResponders = this._initializeMouse(this.options);
-        }
-        if(this.options.acceptsTouch){
-            this.touchResponders = this._initializeTouch(this.options);
-        }
-    },
-
-    onClose: function() {
-        function iterator (responder, i, list) {
-            if(responder) responder.close();
-        }
-
-        var responders = this.mouseResponders
-            .concat(this.touchResponders || [])
-            .concat(this.orientationResponder || []);
-
-        _.each(responders, iterator, this);
     },
 
     // Internal initialization
@@ -106,7 +110,7 @@ var HorizontalSlider = Marionette.Controller.extend({
 
             $handle  = $(handle);
             listener = _.bind(this.rangeDidChange, this, $handle);
-            range = new RangeManager({
+            range    = new RangeManager({
                 min: 0,
                 max: this._calculateNormalizedMaxPosition($handle, $track)
             });
@@ -123,6 +127,8 @@ var HorizontalSlider = Marionette.Controller.extend({
      },
 
     _initializeMouse: function(options) {
+        var ranges;
+
         function iterator(el, i, list) {
             return new MouseResponder({
                 el: $(el),
@@ -132,12 +138,14 @@ var HorizontalSlider = Marionette.Controller.extend({
             });
         }
 
-        var ranges = this.ranges;
+        ranges = this._rangeManagers;
 
         return _.map(this.options.$handles, iterator, this);
     },
 
     _initializeTouch: function(options) {
+        var ranges;
+
         function iterator(el, i, list) {
             return new TouchResponder({
                 el: $(el),
@@ -147,7 +155,7 @@ var HorizontalSlider = Marionette.Controller.extend({
             });
         }
 
-        var ranges = this.ranges;
+        ranges = this._rangeManagers;
 
         return _.map(this.options.$handles, iterator, this);
     },
@@ -170,8 +178,10 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     _getHandleIndex: function($handle) {
-        var $handles = this.options.$handles;
-        var index = $handles.index($handle);
+        var $handles, index;
+
+        $handles = this.options.$handles;
+        index = $handles.index($handle);
 
         if(index < 0) {
             throw 'Could not retrieve handle from the currently set $handles option.';
@@ -181,13 +191,15 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     _getRangeManager: function(index) {
-        var outofrange = index > this.ranges.length - 1;
+        var outofrange;
+
+        outofrange = index > this._rangeManagers.length - 1;
 
         if(outofrange) {
-            throw 'Index out of range, this.ranges[' + index + '], when length is ' + this.ranges.length + '.';
+            throw 'Index out of range, this._rangeManagers[' + index + '], when length is ' + this._rangeManagers.length + '.';
         }
 
-        return this.ranges[index];
+        return this._rangeManagers[index];
     },
 
     _updateHandlePosition: function($handle, range, position, value) {
@@ -196,8 +208,10 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     _updateHandlePositionWithSnap: function($handle, range, position, value) {
-        var step      = this.getStepForHandle($handle);
-        var stepDelta = range.getMax() / this.options.steps;
+        var step, stepDelta;
+
+        step      = this.getStepForHandle($handle);
+        stepDelta = range.getMax() / this.options.steps;
 
         // augment position and value
         value = stepDelta * step;
@@ -209,11 +223,9 @@ var HorizontalSlider = Marionette.Controller.extend({
     // 'Public' Position methods
 
     calculateMaxPosition: function() {
-        var $handles, $track;
+        var $handles, $track, $handle, range, max;
 
         function iterator(handle, i, $handles) {
-            var $handle, range, max;
-
             $handle = $(handle);
             range   = this._getRangeManager(i);
             max     = this._calculateNormalizedMaxPosition($handle, $track);
@@ -236,11 +248,13 @@ var HorizontalSlider = Marionette.Controller.extend({
             return this.getPositionAt(i);
         }
 
-        return _.map(this.ranges, iter, this);
+        return _.map(this._rangeManagers, iter, this);
     },
 
     getPositionForHandle: function($handle) {
-        var index = this._getHandleIndex($handle);
+        var index;
+
+        index = this._getHandleIndex($handle);
         return this.getPositionAt(index);
     },
 
@@ -250,14 +264,18 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     setPositionForHandle: function(value, $handle) {
-        var index = this._getHandleIndex($handle);
+        var index;
+
+        index = this._getHandleIndex($handle);
         this.setPositionAt(value, index);
     },
 
     // Step methods
 
     getStepAt: function(index) {
-        var position = this.getPositionAt(index);
+        var position;
+
+        position = this.getPositionAt(index);
 
         // round will round-up if decimal is greater than .5.
         // round will round-down if decimal is less than .5.
@@ -266,21 +284,24 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     getSteps: function() {
-        function iter(el, i, list) {
+        function iterator(el, i, list) {
             return this.getStepAt(i);
         }
 
-        return _.map(this.ranges, iter, this);
+        return _.map(this._rangeManagers, iterator, this);
     },
 
     getStepForHandle: function($handle) {
-        var index = this._getHandleIndex($handle);
+        var index;
+
+        index = this._getHandleIndex($handle);
         return this.getStepAt(index);
     },
 
     setStepAt: function(value, index) {
-        var posiiton;
-        var steps = this.options.steps;
+        var posiiton, steps;
+
+        steps = this.options.steps;
 
         // isNaN check handles 0/0 case
         position = value/steps;
@@ -290,7 +311,9 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     setStepForHandle: function(value, $handle) {
-        var index = this._getHandleIndex($handle);
+        var index;
+
+        index = this._getHandleIndex($handle);
         this.setStepAt(value, index);
     },
 
@@ -325,29 +348,32 @@ var HorizontalSlider = Marionette.Controller.extend({
     },
 
     handleDidReceiveDrag: function(range, responder, e) {
+        var $handle, index, delta, value;
+
         e.preventDefault();
 
-        var $handle = responder.$el;
-        var index   = this._getHandleIndex($handle);
+        $handle = responder.$el;
+        index   = this._getHandleIndex($handle);
 
         // touch returns array, mouse returns single value.
         // we can use some slight-of-hand to get the correct value.
         // if deltaX()[0] is undefined then
         // return the value of deltaX() only.
-        var delta = responder.deltaX()[0] || responder.deltaX();
-        var value = delta + this.handleOffsets[index];
+        delta = responder.deltaX()[0] || responder.deltaX();
+        value = delta + this._handleOffsets[index];
 
         this.setPositionForHandle(range.calculatePositionForValue(value), $handle);
     },
 
     handleDidReceiveDragStart: function(range, responder, e) {
+        var $handle, index;
+
         e.preventDefault();
 
-        var $handle = responder.$el;
-        var index   = this._getHandleIndex($handle);
+        $handle = responder.$el;
+        index   = this._getHandleIndex($handle);
 
-        this.handleOffsets[index] = responder.$el.position().left;
-
+        this._handleOffsets[index] = responder.$el.position().left;
         this._dispatchDragStart(responder.$el, range.getPosition());
     },
 

@@ -5,6 +5,7 @@ define(function(require, exports, module) {
 var _                = require('underscore');
 var Marionette       = require('marionette');
 var HorizontalSlider = require('auf/ui/controls/sliders/horizontal');
+var Helpers          = require('auf/utils/helpers');
 
 // Module
 
@@ -38,7 +39,7 @@ var HorizontalRangeSlider =  HorizontalSlider.extend({
      * );
      */
     initialize: function(options) {
-        this.minRequiredHandles = 2;
+        this._minRequiredHandles = 2;
 
         // call super initialize
         // required, the parent initialize does not get called otherwise.
@@ -49,22 +50,19 @@ var HorizontalRangeSlider =  HorizontalSlider.extend({
 
     setPositionAt: function(value, index) {
         value = this._restrictRangePositions(value, index);
+
         this.constructor.__super__.setPositionAt.call(this, value, index);
     },
 
     // Helper methods
 
     _restrictRangePositions: function(value, index) {
-        var positions = this.getPositions();
-        var min         = positions[index - 1] || 0;
-        var max         = positions[index + 1] || 1;
-        var result      = value;
+        var positions, min, max, result;
 
-        // Perf - ternary is faster then Math.min / max
-        // note that the test against result on the second line,
-        // instead of value.
-        result = value  < min ? min : value;
-        result = result > max ? max : result;
+        positions = this.getPositions();
+        min       = positions[index - 1] || 0;
+        max       = positions[index + 1] || 1;
+        result    = Helpers.normalizeInt(value, min, max);
 
         return result;
     },
@@ -72,11 +70,12 @@ var HorizontalRangeSlider =  HorizontalSlider.extend({
     // "Public" methods
 
     getRanges: function() {
-        var p1, p2;
-        var positions = this.getPositions();
-        var i         = 0;
-        var len       = positions.length;
-        var results   = [];
+        var positions, i, len, results, p1, p2;
+
+        positions = this.getPositions();
+        i         = 0;
+        len       = positions.length;
+        results   = [];
 
         // not using _.map here because for loop was more clear / convenient
         for(i; i < len; i++) {
