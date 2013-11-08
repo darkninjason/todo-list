@@ -2,8 +2,9 @@ define(function(require, exports, module){
 
 // Imports
 
-var Marionette = require('marionette');
 var _          = require('underscore');
+var Marionette = require('marionette');
+var Helpers    = require('auf/utils/helpers');
 
 // Module
 
@@ -35,20 +36,22 @@ var RangeManager = Marionette.Controller.extend({
      * );
      */
     initialize: function(options) {
-        this._defaults = {
-            min: 0,
-            max: 1
-        };
-
-        // Apply defaults to options
         this.options = options;
-        _.defaults(options, this._defaults);
+        _.defaults(options, this._getDefaults());
 
         this._markers         = [];
         this._lastDispatched  = [];
 
         // Calculate computed properties
         this._computeRange();
+    },
+
+    // Override / extend this return value to add additional options
+    _getDefaults: function() {
+        return {
+            min: 0,
+            max: 1
+        };
     },
 
     // Internal computed properties
@@ -60,11 +63,7 @@ var RangeManager = Marionette.Controller.extend({
     // Internal methods
 
     _getNormalizedPosition: function(val){
-        // Ternary is faster than Math.min,max
-        val = val > 1 ? 1 : val;
-        val = val < 0 ? 0 : val;
-
-        return val;
+        return Helpers.normalizeInt(val, 0, 1);
     },
 
     _checkMarkers: function(prevPosition, position) {
@@ -195,11 +194,6 @@ var RangeManager = Marionette.Controller.extend({
 
     // associated marker methods
 
-    _sortArrayAscending: function(a, b) {
-        // see: http://bit.ly/1c0cPTU
-        return a - b;
-    },
-
     getMarkers: function() {
         // return (shallow) copy of markers
         return this._markers.slice();
@@ -228,7 +222,7 @@ var RangeManager = Marionette.Controller.extend({
         // add positions to this._markers
         _.each(arguments, iterator, this);
 
-        this._markers.sort(this._sortArrayAscending);
+        this._markers.sort(Helpers.sortArrayAscending);
         this._markers = _.uniq(this._markers, sorted);
 
         return this.getMarkers();

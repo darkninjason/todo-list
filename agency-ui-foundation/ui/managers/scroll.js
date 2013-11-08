@@ -39,8 +39,8 @@ var ScrollManager = Marionette.Controller.extend({
      * );
      */
     initialize: function(options) {
-        this._defaults = this._getDefaults();
-        this.options   = _.defaults(options, this._defaults);
+        this.options = options;
+        _.defaults(this.options, this._getDefaults());
 
         if(_.isEmpty(this.options.el)) {
             throw 'No input element provided.';

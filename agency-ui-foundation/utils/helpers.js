@@ -74,12 +74,17 @@ function normalizeInt(value, min, max) {
     return value;
 }
 
+function sortArrayAscending(a, b) {
+    // see: http://bit.ly/1c0cPTU
+    return a - b;
+}
 
 // Exports
 
-module.exports.getElement   = getElement;
-module.exports.compose      = compose;
-module.exports.composeAll   = composeAll;
-module.exports.normalizeInt = normalizeInt;
+module.exports.getElement         = getElement;
+module.exports.compose            = compose;
+module.exports.composeAll         = composeAll;
+module.exports.normalizeInt       = normalizeInt;
+module.exports.sortArrayAscending = sortArrayAscending;
 
 });
