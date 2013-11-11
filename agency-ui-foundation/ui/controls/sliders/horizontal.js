@@ -7,6 +7,7 @@ var _                    = require('underscore');
 var RangeManager         = require('auf/ui/managers/range');
 var MouseResponder       = require('auf/ui/responders/mouse');
 var TouchResponder       = require('auf/ui/responders/touches');
+var helpers              = require('auf/utils/helpers');
 
 // Module
 
@@ -160,19 +161,11 @@ var HorizontalSlider = Marionette.Controller.extend({
         return _.map(this.options.$handles, iterator, this);
     },
 
-    // 'Private' helper accessors
-
-    _getElementBounds: function($el) {
-        // el is raw dom element
-        // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
-        return $el[0].getBoundingClientRect();
-    },
-
     _calculateNormalizedMaxPosition: function($handle, $track) {
         var handleBounds, trackBounds;
 
-        handleBounds = this._getElementBounds($handle);
-        trackBounds  = this._getElementBounds($track);
+        handleBounds = helpers.getElementBounds($handle);
+        trackBounds  = helpers.getElementBounds($track);
 
         return Math.abs(trackBounds.width - handleBounds.width);
     },
