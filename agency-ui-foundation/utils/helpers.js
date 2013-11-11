@@ -79,6 +79,12 @@ function sortArrayAscending(a, b) {
     return a - b;
 }
 
+ function getElementBounds($el) {
+    // el is raw dom element
+    // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
+    return $el[0].getBoundingClientRect();
+}
+
 // Exports
 
 module.exports.getElement         = getElement;
@@ -86,5 +92,7 @@ module.exports.compose            = compose;
 module.exports.composeAll         = composeAll;
 module.exports.normalizeInt       = normalizeInt;
 module.exports.sortArrayAscending = sortArrayAscending;
+module.exports.sortArrayAscending = sortArrayAscending;
+module.exports.getElementBounds   = getElementBounds;
 
 });
