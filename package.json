@@ -1,0 +1,30 @@
+{
+  "name": "agency-ui-foundation",
+  "version": "0.0.0",
+  "description": "Agency UI Foundation FTW",
+  "main": "karma.conf.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "karma": "~0.10.4",
+    "karma-firefox-launcher": "~0.1.0",
+    "karma-jasmine": "~0.1.3",
+    "karma-chrome-launcher": "~0.1.0",
+    "karma-phantomjs-launcher": "~0.1.0",
+    "karma-requirejs": "~0.1.0",
+    "karma-script-launcher": "~0.1.0",
+    "karma-html2js-preprocessor": "~0.1.0",
+    "karma-coffee-preprocessor": "~0.1.0",
+    "karma-coverage": "~0.1.2",
+    "istanbul": "~0.1.44"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blitzagency/agency-ui-foundation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/blitzagency/agency-ui-foundation/issues"
+  }
+}
