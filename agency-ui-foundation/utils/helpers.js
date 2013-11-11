@@ -79,7 +79,7 @@ function sortArrayAscending(a, b) {
     return a - b;
 }
 
- function getElementBounds($el) {
+function getElementBounds($el) {
     // el is raw dom element
     // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
     return $el[0].getBoundingClientRect();
