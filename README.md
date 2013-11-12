@@ -10,14 +10,14 @@
 A UI Foundation with a Unix-like philosophy.
 
 ## Getting Started
-
-`# TODO: Add getting started content.`
+	$ npm install -g karma
+	$ npm install
 
 ## Development Status
 
 Development Status :: 2 - Pre-Alpha
 
-## Current Dependencies
+## Current Vendor Dependencies
 
 Vendor dependencies are not versioned with the main AUF codebase. Check out `tests/lib/vendor/` for an up to date list.
 
