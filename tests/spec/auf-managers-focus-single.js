@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var SingleFocusManager = require('auf/ui/managers/focus-single');
+var SingleFocusManager = require('auf/ui/managers/focus-single').SingleFocusManager;
 
 describe('Single Selection Manager', function() {
 

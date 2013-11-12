@@ -72,6 +72,6 @@ var SingleFocusManager = Marionette.Controller.extend({
 
 // Exports
 
-module.exports = SingleFocusManager;
+module.exports.SingleFocusManager = SingleFocusManager;
 
 }); // eof define
