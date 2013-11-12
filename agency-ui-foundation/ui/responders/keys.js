@@ -4,7 +4,7 @@ define(function(require, exports, module){
 
 var Marionette      = require('marionette');
 var _               = require('underscore');
-var KeyInputManager = require('auf/ui/managers/key-input');
+var KeyInputManager = require('auf/ui/managers/key-input').KeyInputManager;
 var helpers         = require('auf/utils/helpers');
 
 // Module

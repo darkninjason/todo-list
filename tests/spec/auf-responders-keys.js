@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 // Imports
 
 var KeyResponder    = require('auf/ui/responders/keys');
-var KeyInputManager = require('auf/ui/managers/key-input');
+var KeyInputManager = require('auf/ui/managers/key-input').KeyInputManager;
 var EventHelpers    = require('lib/spec-helpers').Events;
 
 describe('Key Responder', function() {

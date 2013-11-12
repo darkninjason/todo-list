@@ -43,6 +43,6 @@ KeyInputManager.prototype.interpretKeyEvents = function(events){
 
 // Exports
 
-module.exports = KeyInputManager;
+module.exports.KeyInputManager = KeyInputManager;
 
 }); // eof define
