@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var IndexManager = require('auf/ui/managers/index');
+var IndexManager = require('auf/ui/managers/index').IndexManager;
 
 describe('Index Manager', function() {
 
