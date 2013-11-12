@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require, exports, module){
 
 
     // All values assumed to be ISO 8601 and in UTC
