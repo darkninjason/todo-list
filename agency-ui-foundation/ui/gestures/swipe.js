@@ -156,6 +156,6 @@ var SwipeGesture = Marionette.Controller.extend({
 
 // Exports
 
-module.exports = SwipeGesture;
+module.exports.SwipeGesture = SwipeGesture;
 
 }); // eof define

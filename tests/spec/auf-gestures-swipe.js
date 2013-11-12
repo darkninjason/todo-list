@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var SwipeGesture = require('auf/ui/gestures/swipe');
+var SwipeGesture = require('auf/ui/gestures/swipe').SwipeGesture;
 var SpecHelpers  = require('lib/spec-helpers')
 var EventHelpers = SpecHelpers.Events;
 
