@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 
 var $               = require('jquery');
 var EventHelpers    = require('lib/spec-helpers').Events;
-var ScrollResponder = require('auf/ui/responders/scroll');
+var ScrollResponder = require('auf/ui/responders/scroll').ScrollResponder;
 
 describe('Scroll Responder', function() {
 

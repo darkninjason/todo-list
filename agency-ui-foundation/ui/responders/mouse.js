@@ -195,6 +195,6 @@ var MouseResponder = Marionette.Controller.extend({
 
 // Exports
 
-module.exports = MouseResponder;
+module.exports.MouseResponder = MouseResponder;
 
 }); // eof define

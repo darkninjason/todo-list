@@ -1,8 +1,8 @@
 define(function(require, exports, module){
     var _                  = require('underscore');
     var Marionette         = require('marionette');
-    var KeyResponder       = require('auf/ui/responders/keys');
-    var MouseResponder     = require('auf/ui/responders/mouse');
+    var KeyResponder       = require('auf/ui/responders/keys').KeyResponder;
+    var MouseResponder     = require('auf/ui/responders/mouse').MouseResponder;
     var IndexManager       = require('auf/ui/managers/index').IndexManager;
     var SingleFocusManager = require('auf/ui/managers/focus-single').SingleFocusManager;
     var helpers            = require('auf/utils/helpers');

@@ -111,6 +111,6 @@ var WindowResponder = Marionette.Controller.extend({
 
 // Exports
 
-module.exports = WindowResponder;
+module.exports.WindowResponder = WindowResponder;
 
 }); // eof define

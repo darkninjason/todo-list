@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var KeyResponder    = require('auf/ui/responders/keys');
+var KeyResponder    = require('auf/ui/responders/keys').KeyResponder;
 var KeyInputManager = require('auf/ui/managers/key-input').KeyInputManager;
 var EventHelpers    = require('lib/spec-helpers').Events;
 

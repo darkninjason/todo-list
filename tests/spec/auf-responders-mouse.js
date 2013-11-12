@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 // Imports
 
 var $              = require('jquery');
-var MouseResponder = require('auf/ui/responders/mouse');
+var MouseResponder = require('auf/ui/responders/mouse').MouseResponder;
 var EventHelpers   = require('lib/spec-helpers').Events;
 
 describe('Mouse Responder', function() {

@@ -6,7 +6,7 @@ _ = require('underscore');
 $ = require('jquery');
 
 EventHelpers    = require('lib/spec-helpers').Events;
-WindowResponder = require('auf/ui/responders/window');
+WindowResponder = require('auf/ui/responders/window').WindowResponder;
 
 describe('Window Responder', function() {
 

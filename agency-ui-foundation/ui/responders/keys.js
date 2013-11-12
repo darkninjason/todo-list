@@ -103,6 +103,6 @@ var KeyResponder = Marionette.Controller.extend({
 // Exports
 
 // module.exports.KeyInputManager = KeyInputManager;
-module.exports = KeyResponder;
+module.exports.KeyResponder = KeyResponder;
 
 });

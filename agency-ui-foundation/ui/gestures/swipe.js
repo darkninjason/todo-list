@@ -4,7 +4,7 @@ define(function(require, exports, module){
 
 var Marionette     = require('marionette');
 var _              = require('underscore');
-var TouchResponder = require('auf/ui/responders/touches');
+var TouchResponder = require('auf/ui/responders/touches').TouchResponder;
 
 // Module
 

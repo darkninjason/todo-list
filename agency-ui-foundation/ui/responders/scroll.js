@@ -79,6 +79,6 @@ var ScrollResponder = Marionette.Controller.extend({
 }); // eof ScrollResponder
 
 // Exports
-module.exports = ScrollResponder;
+module.exports.ScrollResponder = ScrollResponder;
 
 }); // eof define

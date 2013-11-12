@@ -151,6 +151,6 @@ var TouchResponder = Marionette.Controller.extend({
 
 // Exports
 
-module.exports = TouchResponder;
+module.exports.TouchResponder = TouchResponder;
 
 }); // eof define
