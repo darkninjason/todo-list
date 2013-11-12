@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var RangeManager = require('auf/ui/managers/range');
+var RangeManager = require('auf/ui/managers/range').RangeManager;
 
 describe('Range Manager', function() {
 

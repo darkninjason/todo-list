@@ -4,7 +4,7 @@ define(function(require, exports, module){
 
 var Marionette   = require('marionette');
 var _            = require('underscore');
-var RangeManager = require('auf/ui/managers/range');
+var RangeManager = require('auf/ui/managers/range').RangeManager;
 
 // Module
 

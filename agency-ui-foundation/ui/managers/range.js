@@ -285,6 +285,6 @@ var RangeManager = Marionette.Controller.extend({
 }); // eof RangeManager
 
 // Exports
-module.exports = RangeManager;
+module.exports.RangeManager = RangeManager;
 
 }); // eof define

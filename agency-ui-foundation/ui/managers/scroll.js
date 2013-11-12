@@ -7,7 +7,7 @@ var Marionette = require('marionette');
 
 var Helpers         = require('auf/utils/helpers');
 var ScrollResponder = require('auf/ui/responders/scroll');
-var RangeManager    = require('auf/ui/managers/range');
+var RangeManager    = require('auf/ui/managers/range').RangeManager;
 
 // Module
 
