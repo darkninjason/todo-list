@@ -20,7 +20,7 @@ function($, Jasmine, index) {
 
     // phantom-jasmine
     // jasmineEnv.addReporter(new Jasmine.TrivialReporter());
-    jasmineEnv.addReporter(new Jasmine.ConsoleReporter());
+    // jasmineEnv.addReporter(new Jasmine.ConsoleReporter());
 
     jasmineEnv.updateInterval = 1000;
 
