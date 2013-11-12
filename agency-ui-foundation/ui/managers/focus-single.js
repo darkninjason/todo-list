@@ -4,7 +4,7 @@ define(function(require, exports, module){
 
 var Marionette       = require('marionette');
 var _                = require('underscore');
-var FocusManager     = require('auf/ui/managers/focus');
+var FocusManager     = require('auf/ui/managers/focus').FocusManager;
 var helpers          = require('auf/utils/helpers');
 
 // Module

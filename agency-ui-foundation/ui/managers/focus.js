@@ -75,6 +75,6 @@ var FocusManager =  Marionette.Controller.extend({
 
 // Exports
 
-module.exports = FocusManager;
+module.exports.FocusManager = FocusManager;
 
 }); // eof define

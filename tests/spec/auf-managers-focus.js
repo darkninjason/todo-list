@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var FocusManager = require('auf/ui/managers/focus');
+var FocusManager = require('auf/ui/managers/focus').FocusManager;
 
 describe('Focus Manager', function() {
 
