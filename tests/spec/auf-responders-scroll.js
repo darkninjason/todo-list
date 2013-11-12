@@ -15,6 +15,7 @@ describe('Scroll Responder', function() {
     });
 
     afterEach(function() {
+        $(window).scrollTop();
     });
 
     // Helpers

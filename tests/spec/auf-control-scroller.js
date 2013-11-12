@@ -19,6 +19,8 @@ describe('Scroller', function() {
     });
 
     afterEach(function() {
+        $(window).scrollTop();
+
         if(!_.isEmpty(control)) {
             control.close();
             control = null;

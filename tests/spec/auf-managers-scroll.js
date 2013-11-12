@@ -18,6 +18,8 @@ describe('Scroll Manager', function() {
     });
 
     afterEach(function() {
+        $(window).scrollTop();
+
         if(!_.isEmpty(manager)) {
             manager.close();
             manager = null;
@@ -46,7 +48,7 @@ describe('Scroll Manager', function() {
             $body: $('body'),
             $container: $('.container'),
             $content: $('.content'),
-            $paragraphs: $('p'),
+            $paragraphs: $('p')
         };
     }
 
