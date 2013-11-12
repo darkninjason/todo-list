@@ -88,6 +88,6 @@ var Scroller = ScrollManager.extend({
 }); // eof Scroller
 
 // Exports
-module.exports = Scroller;
+module.exports.Scroller = Scroller;
 
 }); // eof define

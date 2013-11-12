@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 
 var _                = require('underscore');
 var Marionette       = require('marionette');
-var InputSelect      = require('auf/ui/controls/forms/input-select');
+var InputSelect      = require('auf/ui/controls/forms/input-select').InputSelect;
 var SpecHelpers      = require('lib/spec-helpers');
 var EventHelpers     = SpecHelpers.Events;
 var KeyCodes         = SpecHelpers.KeyCodes;

@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
 
 var _                     = require('underscore');
-var HorizontalRangeSlider = require('auf/ui/controls/sliders/horizontal-range');
+var HorizontalRangeSlider = require('auf/ui/controls/sliders/horizontal-range').HorizontalRangeSlider;
 var SpecHelpers           = require('lib/spec-helpers');
 var EventHelpers          = SpecHelpers.Events;
 

@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 
 var _                = require('underscore');
 var Marionette       = require('marionette');
-var HorizontalSlider = require('auf/ui/controls/sliders/horizontal');
+var HorizontalSlider = require('auf/ui/controls/sliders/horizontal').HorizontalSlider;
 var Helpers          = require('auf/utils/helpers');
 
 // Module
@@ -98,6 +98,6 @@ var HorizontalRangeSlider =  HorizontalSlider.extend({
 
 // Exports
 
-module.exports = HorizontalRangeSlider;
+module.exports.HorizontalRangeSlider = HorizontalRangeSlider;
 
 }); // eof define

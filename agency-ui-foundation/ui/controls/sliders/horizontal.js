@@ -398,6 +398,6 @@ var HorizontalSlider = Marionette.Controller.extend({
 }); // eof HorizontalSlider
 
 // Exports
-module.exports = HorizontalSlider;
+module.exports.HorizontalSlider = HorizontalSlider;
 
 }); // eof define
