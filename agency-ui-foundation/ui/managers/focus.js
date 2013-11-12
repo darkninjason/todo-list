@@ -4,7 +4,7 @@ define(function(require, exports, module){
 
 var Marionette     = require('marionette');
 var _              = require('underscore');
-var Collection     = require('auf/jquery/collection');
+var Collection     = require('auf/jquery/collection').Collection;
 var helpers        = require('auf/utils/helpers');
 
 // Module

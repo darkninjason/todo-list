@@ -84,6 +84,6 @@ var Collection =  Marionette.Controller.extend({
 
 // Exports
 
-module.exports = Collection;
+exports.Collection = Collection;
 
 }); // eof define

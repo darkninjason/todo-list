@@ -13,6 +13,12 @@ A UI Foundation with a Unix-like philosophy.
 	$ npm install -g karma
 	$ npm install
 
+## Run Tests  
+	$ karma start
+
+- :: browser opens ::
+- Click Debug button
+
 ## Development Status
 
 Development Status :: 2 - Pre-Alpha
