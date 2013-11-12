@@ -289,6 +289,6 @@ var ScrollManager = Marionette.Controller.extend({
 }); // eof ScrollManager
 
 // Exports
-module.exports = ScrollManager;
+module.exports.ScrollManager = ScrollManager;
 
 }); // eof define

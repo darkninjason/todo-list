@@ -5,7 +5,7 @@ define(function(require, exports, module){
 var _             = require('underscore');
 var Marionette    = require('marionette');
 var Helpers       = require('auf/utils/helpers');
-var ScrollManager = require('auf/ui/managers/scroll');
+var ScrollManager = require('auf/ui/managers/scroll').ScrollManager;
 
 // Module
 

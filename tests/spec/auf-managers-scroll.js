@@ -5,7 +5,7 @@ define(function(require, exports, module) {
 var _               = require('underscore');
 var $               = require('jquery');
 var EventHelpers    = require('lib/spec-helpers').Events;
-var ScrollManager   = require('auf/ui/managers/scroll');
+var ScrollManager   = require('auf/ui/managers/scroll').ScrollManager;
 
 describe('Scroll Manager', function() {
 
