@@ -1,4 +1,4 @@
-define(function(require){
+define(function(require, exports, module){
 
     var datetime = require('auf/datetime/datetime');
 
@@ -128,22 +128,22 @@ define(function(require){
         }
     }
 
-    return {
-        // 13, 03 -> 1:03 am | pm
-        format12HourTime: format12HourTime,
+    
+    // 13, 03 -> 1:03 am | pm
+    exports.format12HourTime = format12HourTime,
 
-        // 1st, 2nd, 3rd, 4th
-        daySuffix: daySuffix,
+    // 1st, 2nd, 3rd, 4th
+    exports.daySuffix = daySuffix,
 
-        // 20 seconds|minutes|hours|weeks ago
-        relativeDate: relativeDate,
+    // 20 seconds|minutes|hours|weeks ago
+    exports.relativeDate = relativeDate,
 
-        // August 29th 2012
-        monthDayYearStringForDate: monthDayYearStringForDate,
-        monthDayYearStringForUTCString: monthDayYearStringForUTCString,
+    // August 29th 2012
+    exports.monthDayYearStringForDate = monthDayYearStringForDate,
+    exports.monthDayYearStringForUTCString = monthDayYearStringForUTCString,
 
-        // Wed 29 Aug 12:58 PM
-        shortDayMonthTimeStringForDate: shortDayMonthTimeStringForDate,
-        shortDayMonthTimeStringForUTCString: shortDayMonthTimeStringForUTCString
-    };
+    // Wed 29 Aug 12:58 PM
+    exports.shortDayMonthTimeStringForDate = shortDayMonthTimeStringForDate,
+    exports.shortDayMonthTimeStringForUTCString = shortDayMonthTimeStringForUTCString
+    
 });
