@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var Collection = require('auf/jquery/collection');
+var Collection = require('auf/jquery/collection').Collection;
 var _          = require('underscore');
 
 describe('jQuery Collection:', function() {
