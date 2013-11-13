@@ -1,9 +1,8 @@
-define(function(require){
+define(function(require, exports, module){
 
-    var Marionette = require('marionette'),
-        _ = require('underscore'),
-        logging = require('auf/utils/logging'),
-        log = logging.getLogger('auf.injector');
+    var Marionette = require('marionette');
+    var _ = require('underscore');
+    
 
     var Component = Marionette.Controller.extend({
         cls: null,
@@ -34,8 +33,14 @@ define(function(require){
             });
 
             target = this.cls;
-            obj = new target(_.extend(args, kwargs));
-            return obj;
+            
+            if(_.isFunction(target)){
+                obj = new target(_.extend(args, kwargs));
+                return obj;
+            } else {
+                return target;
+            }
+            
         }
     });
 
@@ -45,7 +50,6 @@ define(function(require){
         register: function(name, cls, kwargs){
             var component = new Component({cls:cls});
             component.container = this;
-            log.debug('Registering ' + name);
             this.registry[name.toLowerCase()] = component;
             return component;
         },
@@ -56,7 +60,6 @@ define(function(require){
             return component.call();
         }
     });
-
-    return Container;
+    exports.Container = Container;
 });
 
