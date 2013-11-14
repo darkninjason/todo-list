@@ -29,10 +29,13 @@ var ScrollerView = marionette.ItemView.extend({
         }
     },
     onMarkerHit : function(target, inViewArr, direction){
+        console.log(this.ui.buttons.filter('.active'))
+        this.ui.buttons.filter('.active').removeClass('active');
         for(var i = 0; i < inViewArr.length; i ++){
             var key = inViewArr[i];
             var button = this.positionDict[key];
-            button.addClass(button.data('selected-class'))
+            button.addClass(button.data('selected-class'));
+            button.addClass('active')
         }
     },
     onBtnClick : function(e){
