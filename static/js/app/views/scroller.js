@@ -8,7 +8,8 @@ var ScrollerView = marionette.ItemView.extend({
     positionDict : {},
     template : template,
     ui : {
-        buttons: '.btn'
+        buttons: '.btn',
+        scrollContainer: '.scroll-container'
     },
     events : {
         'click .btn': 'onBtnClick'
@@ -16,7 +17,7 @@ var ScrollerView = marionette.ItemView.extend({
     onShow : function(){
 
         this.scroller = new Scroller({
-            el            : $('.scroll-container'),
+            el            : this.ui.scrollContainer,
             scrollDebounce: 0,
             duration      : 300,
         });
