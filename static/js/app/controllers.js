@@ -2,12 +2,12 @@ define(function(require, exports, module) {
 
 var app = require('app/app');
 var marionette = require('marionette');
-var SliderView = require('app/views/slider-view').SliderView;
+var HorizontalRangeSliderView = require('app/views/horizontal-range-slider').HorizontalRangeSliderView;
     
 var AppController =  marionette.Controller.extend({
 
     initialize:function (options) {
-        app.slider.show(new SliderView());
+        app.hRangeSlider.show(new HorizontalRangeSliderView());
     },
     index:function () {
         
