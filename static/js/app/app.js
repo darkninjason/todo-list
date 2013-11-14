@@ -3,7 +3,8 @@ define(function(require, exports, module) {
     var app = new Backbone.Marionette.Application();
 
     app.addRegions({
-        hRangeSlider:"#horizontal-range-slider"
+        hRangeSlider:'#horizontal-range-slider',
+        scroller:'#scroller'
     });
 
     return app;

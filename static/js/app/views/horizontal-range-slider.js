@@ -14,17 +14,7 @@ var HorizontalRangeSliderView = marionette.ItemView.extend({
         
     },
     onShow : function(){
-        var horizontalRangeSlider = new HorizontalRangeSlider(
-            {
-                $track            : this.ui.track,
-                $handles          : this.ui.handles,
-                steps             : 10,
-                snap              : true,
-                acceptsMouse      : true,
-                acceptsTouch      : false,
-                acceptsOrientation: false,
-            }
-        );
+        // TODO: once auby is done, implement his new slider
     }
 });
 
