@@ -11,8 +11,7 @@ var _            = require('underscore');
 var ListManager = Marionette.Controller.extend({
 
     initialize: function(options){
-        this._list = options.list.slice() || [];
-        this._count = 0;
+        this._list = options.list || [];
     },
 
     setList: function(list){

@@ -207,16 +207,6 @@ define(function(require, exports, module){
             }
         },
 
-        setViews: function(views){
-            var elements = [];
-
-            _.each(views, function(each){
-                elements.push(each.$el[0]);
-            });
-
-            this.setElements($(elements));
-        },
-
         setElements: function($elements){
             helpers.registerElement($elements);
             this._$elements = $elements;
