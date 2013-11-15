@@ -1,29 +1,12 @@
 #scroller{
-    text-align: center;
 
-    *{
-        z-index: 1;
+    .btn-group{
+        margin-bottom: 10px;
     }
-
-    .main {
-        margin: 0 auto;
-        font-family: sans-serif;
-    }
-
-    .section {
-        margin: 20px 0;
-    }
-
-    .section-inner {
-        margin: 10px 0;
-    }
-
-    /* Scroll styles */
 
     .scroll-container {
         width: 500px;
         height: 300px;
-        margin: 0 auto;
         background: lightblue;
         overflow: hidden;
         overflow-y: scroll;
@@ -32,23 +15,6 @@
     .content {
         padding: 30px;
         position: relative;
-    }
-
-    .content p {
-        padding: 0;
-        margin: 0;
-        margin-bottom: 20px;
-        position: relative;
-    }
-
-    .line {
-        height: 1px;
-        width: 100%;
-        background-color: red;
-        position: absolute;
-
-        top: 0;
-        left: 0;
     }
 
 }

@@ -7646,55 +7646,20 @@ td.visible-print {
   position: absolute;
 }
 
-/* line 1, src/controls/_scroller.scss */
-#scroller {
-  text-align: center;
-  /* Scroll styles */
+/* line 3, src/controls/_scroller.scss */
+#scroller .btn-group {
+  margin-bottom: 10px;
 }
-/* line 4, src/controls/_scroller.scss */
-#scroller * {
-  z-index: 1;
-}
-/* line 8, src/controls/_scroller.scss */
-#scroller .main {
-  margin: 0 auto;
-  font-family: sans-serif;
-}
-/* line 13, src/controls/_scroller.scss */
-#scroller .section {
-  margin: 20px 0;
-}
-/* line 17, src/controls/_scroller.scss */
-#scroller .section-inner {
-  margin: 10px 0;
-}
-/* line 23, src/controls/_scroller.scss */
+/* line 7, src/controls/_scroller.scss */
 #scroller .scroll-container {
   width: 500px;
   height: 300px;
-  margin: 0 auto;
   background: lightblue;
   overflow: hidden;
   overflow-y: scroll;
 }
-/* line 32, src/controls/_scroller.scss */
+/* line 15, src/controls/_scroller.scss */
 #scroller .content {
   padding: 30px;
   position: relative;
-}
-/* line 37, src/controls/_scroller.scss */
-#scroller .content p {
-  padding: 0;
-  margin: 0;
-  margin-bottom: 20px;
-  position: relative;
-}
-/* line 44, src/controls/_scroller.scss */
-#scroller .line {
-  height: 1px;
-  width: 100%;
-  background-color: red;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
