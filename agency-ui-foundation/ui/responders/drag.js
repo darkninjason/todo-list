@@ -31,8 +31,7 @@ var DragResponder = Marionette.Controller.extend({
         _.extend(this, options);
         _.bindAll(this, '_dragStart', '_dragEnd');
 
-        if(!this.el) throw 'No input element provided.';
-        this.$el = helpers.getElement(this.el);
+        this.$el = helpers.registerElement(this.el);
 
         this.$el.prop('draggable', true);
         this.$el.on('dragstart.auf.responders.drag', {ctx: this}, this._dragStart);

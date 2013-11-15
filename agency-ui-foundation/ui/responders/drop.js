@@ -31,8 +31,7 @@ var DropResponder = Marionette.Controller.extend({
             '_dragOver', '_dragEnter', '_dragLeave', '_drop',
             'shouldAllowDrop');
 
-        if(!this.el) throw 'No input element provided.';
-        this.$el = helpers.getElement(this.el);
+        this.$el = helpers.registerElement(this.el);
 
         this.$el.on('dragenter.auf.responders.drop', {ctx: this}, this._dragEnter);
         this.$el.on('dragover.auf.responders.drop', {ctx: this}, this._dragOver);
@@ -41,26 +40,17 @@ var DropResponder = Marionette.Controller.extend({
 
     },
 
-    _getElementBounds: function($el) {
-        // el is raw dom element
-        // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
-        return $el[0].getBoundingClientRect();
-    },
-
     _dragEnter: function(e){
         if (!this.shouldAllowDrop(this, e)){
             return;
         }
 
         var bounds = helpers.getElementBounds(this.$el);
-        // this._startX = bounds.left;
-        // this._startY = bounds.top;
-
 
         this._startX = e.originalEvent.pageX;
         this._startY = e.originalEvent.pageY;
 
-        this.draggingEntered(this.$el);
+        this.draggingEntered(this, e);
     },
 
     _dragOver: function(e){
@@ -72,20 +62,16 @@ var DropResponder = Marionette.Controller.extend({
         this._endX = e.originalEvent.pageX;
         this._endY = e.originalEvent.pageY;
 
-        //console.log(this.deltaX(), this.deltaY());
-        //console.log(this._endX, this._endY);
 
         e.preventDefault();
-        this.draggingUpdated(this.$el);
+        this.draggingUpdated(this, e);
     },
 
     _dragLeave: function(e){
         if(e.target == this.$el[0]){
-            this.draggingExited(this.$el);
+            this.draggingExited(this, e);
             return;
         }
-
-        console.log(e.target);
     },
 
     _drop: function(e){
@@ -131,18 +117,9 @@ var DropResponder = Marionette.Controller.extend({
         return result;
     },
 
-    deltaX: function(){
-
-        return this._endX - this._startX;
-    },
-
-    deltaY: function(){
-        return this._endY - this._startY;
-    },
-
-    draggingUpdated: function($el){},
-    draggingEntered: function($el){},
-    draggingExited: function($el){},
+    draggingUpdated: function(responder, e){},
+    draggingEntered: function(responder, e){},
+    draggingExited: function(responder, e){},
     performDragOperation: function($el, dataType, data){},
 
     // Marionette overrides
