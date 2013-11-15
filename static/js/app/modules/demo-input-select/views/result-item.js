@@ -4,7 +4,7 @@ var marionette = require('marionette');
 var template = require('hbs!tpl/input-select/result-item');
 
 var ResultItem = marionette.ItemView.extend({
-    tagName: 'li',
+    tagName: 'a',
     className: 'list-group-item',
     template : template,
     initialize: function(){
@@ -13,10 +13,10 @@ var ResultItem = marionette.ItemView.extend({
         this.listenTo(this, 'select', this.onSelect);
     },
     onFocus: function(){
-        console.log('onFocus');
+        this.$el.addClass('active');
     },
     onBlur: function(){
-        console.log('onBlur');
+        this.$el.removeClass('active');
     },
     onSelect: function(){
         console.log('onSelect');
