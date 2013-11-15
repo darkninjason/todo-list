@@ -6,7 +6,7 @@ var _ = require('underscore');
 
 // Helper functions
 
-var getElement = function(value){
+function getElement(value){
     var $el;
 
     if(_.isString(value)){
@@ -16,7 +16,26 @@ var getElement = function(value){
     }
 
     return $el;
-};
+}
+
+function registerElement(value, required){
+    var id_key = 'auf-id';
+
+    required = _.isUndefined(required) ? true : required;
+    if(required && !value) throw 'No input element provided.';
+
+    var $el = getElement(value);
+
+    _.each($el, function(each){
+        $target = $(each);
+
+        if(!$target.data(id_key)){
+            $target.data(id_key, _.uniqueId());
+        }
+    });
+
+    return $el;
+}
 
 /**
  * compose a function from one module to another and maintain original module scope.
@@ -82,17 +101,23 @@ function sortArrayAscending(a, b) {
 function getElementBounds($el) {
     // el is raw dom element
     // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
+
+    if($el.nodeName){
+        return $el.getBoundingClientRect();
+    }
+
     return $el[0].getBoundingClientRect();
+
 }
 
 // Exports
 
-module.exports.getElement         = getElement;
-module.exports.compose            = compose;
-module.exports.composeAll         = composeAll;
-module.exports.normalizeInt       = normalizeInt;
-module.exports.sortArrayAscending = sortArrayAscending;
-module.exports.sortArrayAscending = sortArrayAscending;
-module.exports.getElementBounds   = getElementBounds;
-
+exports.getElement         = getElement;
+exports.compose            = compose;
+exports.composeAll         = composeAll;
+exports.normalizeInt       = normalizeInt;
+exports.sortArrayAscending = sortArrayAscending;
+exports.sortArrayAscending = sortArrayAscending;
+exports.getElementBounds   = getElementBounds;
+exports.registerElement    = registerElement;
 });
