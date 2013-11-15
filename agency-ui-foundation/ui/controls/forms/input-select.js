@@ -176,8 +176,9 @@ define(function(require, exports, module){
 
         initialize: function(options){
             _.defaults(options, this._defaults);
+
             this.el = options.el || null;
-            if(!this.el) throw 'No input element provided.';
+            this.$el = helpers.registerElement(this.el);
 
             _.bindAll(this, 'receivedText',
                 'mouseDidClick', 'mouseDidEnter', 'mouseDidExit',
@@ -185,7 +186,6 @@ define(function(require, exports, module){
                 'keyNavigationUp', 'keyNavigationDown', 'keyNavigationFirstMove');
 
 
-            this.$el = helpers.getElement(this.el);
             this._initializeKeyResponder();
         },
 
@@ -214,11 +214,11 @@ define(function(require, exports, module){
                 elements.push(each.$el[0]);
             });
 
-
             this.setElements($(elements));
         },
 
         setElements: function($elements){
+            helpers.registerElement($elements);
             this._$elements = $elements;
         },
 
