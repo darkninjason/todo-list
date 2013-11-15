@@ -209,12 +209,15 @@ define(function(require, exports, module){
 
         setViews: function(views){
             var elements = [];
-
+            var mDict = this.mDict = {};
+            var tempId = 0;
             _.each(views, function(each){
+                var key = _.uniqueId();
+                each.$el.data('auf-id', key);
+                mDict[key] = each;
                 elements.push(each.$el[0]);
+                tempId ++;
             });
-
-
             this.setElements($(elements));
         },
 
@@ -371,6 +374,7 @@ define(function(require, exports, module){
         },
 
         _dispatchFocus: function($target) {
+            this.mDict[$target.data('auf-id')].trigger(this.EVENT_FOCUS);
             this.trigger(this.EVENT_FOCUS, this, $target);
         },
 
