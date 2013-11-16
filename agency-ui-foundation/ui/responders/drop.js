@@ -41,37 +41,30 @@ var DropResponder = Marionette.Controller.extend({
     },
 
     _dragEnter: function(e){
+        this._updateMousePosition(e);
+
         if (!this.shouldAllowDrop(this, e)){
             return;
         }
 
-        var bounds = helpers.getElementBounds(this.$el);
-
-        this._startX = e.originalEvent.pageX;
-        this._startY = e.originalEvent.pageY;
-
+        e.preventDefault();
         this.draggingEntered(this, e);
     },
 
     _dragOver: function(e){
+        this._updateMousePosition(e);
+        this.draggingUpdated(this, e);
+
         if (!this.shouldAllowDrop(this, e)){
             return;
         }
 
-        var bounds = helpers.getElementBounds(this.$el);
-        this._endX = e.originalEvent.pageX;
-        this._endY = e.originalEvent.pageY;
-
-
         e.preventDefault();
-        this.draggingUpdated(this, e);
     },
 
     _dragLeave: function(e){
-        if(e.target == this.$el[0]){
-            this.draggingExited(this, e);
-            return;
-        }
+        this._updateMousePosition(e);
+        this.draggingExited(this, e);
     },
 
     _drop: function(e){
@@ -79,10 +72,17 @@ var DropResponder = Marionette.Controller.extend({
         var dataTransfer = originalEvent.dataTransfer;
         e.preventDefault();
 
-        this.performDragOperation(
-            this.$el,
-            this.dataType,
-            dataTransfer.getData(this.dataType));
+        this._setData(dataTransfer.getData(this.dataType));
+        this.performDragOperation(this, e);
+    },
+
+    _updateMousePosition: function (e){
+        var bounds = helpers.getElementBounds(this.$el);
+
+        var positionX = e.originalEvent.pageX - bounds.left;
+        var positionY = e.originalEvent.pageY - bounds.top;
+
+        this._setMousePosition(positionX, positionY);
     },
 
     shouldAllowDrop: function(responder, e){
@@ -117,10 +117,26 @@ var DropResponder = Marionette.Controller.extend({
         return result;
     },
 
-    draggingUpdated: function(responder, e){},
+    _setMousePosition: function(x, y){
+        this._position = {x: x, y: y};
+    },
+
+    getMousePosition: function(){
+        return this._position;
+    },
+
+    _setData: function(data){
+        this._data = data;
+    },
+
+    getData: function(){
+        return this._data;
+    },
+
     draggingEntered: function(responder, e){},
+    draggingUpdated: function(responder, e){},
     draggingExited: function(responder, e){},
-    performDragOperation: function($el, dataType, data){},
+    performDragOperation: function(responder, e){},
 
     // Marionette overrides
 
