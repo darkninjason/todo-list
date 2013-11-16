@@ -5,6 +5,7 @@ define(function(require, exports, module){
 var Marionette = require('marionette');
 var _          = require('underscore');
 var helpers    = require('auf/utils/helpers');
+var dnd    = require('auf/utils/dnd');
 
 // Module
 
@@ -25,6 +26,7 @@ var DragResponder = Marionette.Controller.extend({
     // -    'all'
     // Note that the drop target will check to confirm if it allows this.
     operation: 'all',
+    supressChildPointerEvents: true,
 
     // Initialization
     initialize: function(options){
@@ -109,6 +111,10 @@ var DragResponder = Marionette.Controller.extend({
         $el = helpers.registerElement($el);
         this._managedElements[$el.data('auf-id')] = $el[0];
 
+        if(this.supressChildPointerEvents){
+            dnd.supressChildPointerEvents($el);
+        }
+
         $el.prop('draggable', true);
         $el.on('dragstart.auf.responders.drag', {ctx: this}, this._dragStart);
         $el.on('dragend.auf.responders.drag', {ctx: this}, this._dragEnd);
@@ -121,6 +127,10 @@ var DragResponder = Marionette.Controller.extend({
             'helpers.registerElement?';
 
         delete this._managedElements[$el.data('auf-id')];
+
+        if(this.supressChildPointerEvents){
+            dnd.clearSupressedPointerEvents($el);
+        }
 
         $el.prop('draggable', false);
         $el.off('dragstart.auf.responders.drag', this._dragStart);
