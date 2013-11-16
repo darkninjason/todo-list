@@ -115,6 +115,11 @@ var DragResponder = Marionette.Controller.extend({
     },
 
     removeElement: function($el){
+
+        if(!$el.data('auf-id')) throw 'Unable to remove unregistered AUF ' +
+            'element. Did you register this element with ' +
+            'helpers.registerElement?';
+
         delete this._managedElements[$el.data('auf-id')];
 
         $el.prop('draggable', false);
