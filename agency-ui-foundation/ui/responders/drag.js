@@ -31,11 +31,9 @@ var DragResponder = Marionette.Controller.extend({
         _.extend(this, options);
         _.bindAll(this, '_dragStart', '_dragEnd');
 
-        this.$el = helpers.registerElement(this.el);
-
-        this.$el.prop('draggable', true);
-        this.$el.on('dragstart.auf.responders.drag', {ctx: this}, this._dragStart);
-        this.$el.on('dragend.auf.responders.drag', {ctx: this}, this._dragEnd);
+        this._managedElements = {};
+        this.$el = helpers.getElement(this.el);
+        this.reset(this.$el);
     },
 
     _dragStart: function(e){
@@ -107,6 +105,35 @@ var DragResponder = Marionette.Controller.extend({
         }
     },
 
+    addElement: function($el){
+        $el = helpers.registerElement($el);
+        this._managedElements[$el.data('auf-id')] = $el[0];
+
+        $el.prop('draggable', true);
+        $el.on('dragstart.auf.responders.drag', {ctx: this}, this._dragStart);
+        $el.on('dragend.auf.responders.drag', {ctx: this}, this._dragEnd);
+    },
+
+    removeElement: function($el){
+        delete this._managedElements[$el.data('auf-id')];
+
+        $el.prop('draggable', false);
+        $el.off('dragstart.auf.responders.drag', this._dragStart);
+        $el.off('dragend.auf.responders.drag', this._dragEnd);
+    },
+
+    reset: function($el){
+        _.each(this._managedElements, function(value, key){
+            this.removeElement($(value));
+        }, this);
+
+        if($el){
+            _.each($el, function(each){
+                this.addElement($(each));
+            }, this);
+        }
+    },
+
     draggingStarted: function($el){ },
     draggingEnded: function($el, operation){
         // operation here will be one of:
@@ -117,9 +144,7 @@ var DragResponder = Marionette.Controller.extend({
     },
 
     onClose: function(){
-        this.$el.prop('draggable', false);
-        this.$el.off('dragstart.auf.responders.drag', this._dragStart);
-        this.$el.off('dragend.auf.responders.drag', this._dragEnd);
+        this.reset();
     }
 
 }); // eof DropResponder
