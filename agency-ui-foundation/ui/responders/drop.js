@@ -68,9 +68,12 @@ var DropResponder = Marionette.Controller.extend({
     },
 
     _drop: function(e){
+        // prevent the browser from handling the drop
+        if (e.stopPropagation) e.stopPropagation();
+        if (e.preventDefault) e.preventDefault();
+
         var originalEvent = e.originalEvent;
         var dataTransfer = originalEvent.dataTransfer;
-        e.preventDefault();
 
         this._setData(dataTransfer.getData(this.dataType));
         this.performDragOperation(this, e);

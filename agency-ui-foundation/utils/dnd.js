@@ -25,7 +25,7 @@ function supressChildPointerEvents($el){
 
     });
 
-    return targets;
+    return $el;
 }
 
 function clearSupressedPointerEvents($el){
@@ -45,6 +45,8 @@ function clearSupressedPointerEvents($el){
         $target.off('dragleave.auf.responders.drop', _supressEventHandler);
 
     });
+
+    return $el;
 }
 
 function _supressEventHandler(e){

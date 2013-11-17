@@ -26,7 +26,7 @@ var DragResponder = Marionette.Controller.extend({
     // -    'all'
     // Note that the drop target will check to confirm if it allows this.
     operation: 'all',
-    supressChildPointerEvents: true,
+    supressChildPointerEvents: false,
 
     // Initialization
     initialize: function(options){
@@ -58,6 +58,7 @@ var DragResponder = Marionette.Controller.extend({
         // -    'link'
         // -    'none'
 
+        //console.log('_dragEnd', e.originalEvent.dataTransfer.dropEffect);
         var $target = $(e.currentTarget);
         var dataTransfer = e.originalEvent.dataTransfer;
         this.draggingEnded($target, dataTransfer.dropEffect);
