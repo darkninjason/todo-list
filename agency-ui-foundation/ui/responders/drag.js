@@ -82,6 +82,13 @@ var DragResponder = Marionette.Controller.extend({
         // }
         // See: https://developer.mozilla.org/en-US/docs/DragDrop/Drag_Operations#dragfeedback
         // for more details on creating this image.
+        // OR you can do something like this:
+        //
+        // See: http://www.html5rocks.com/en/tutorials/dnd/basics/#toc-drag-properties
+        // var dragIcon = document.createElement('img');
+        // dragIcon.src = 'logo.png';
+        // dragIcon.width = 100;
+        // return {image: dragIcon };
 
         return false;
     },
