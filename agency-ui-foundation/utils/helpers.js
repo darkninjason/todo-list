@@ -19,7 +19,7 @@ function getElement(value){
 }
 
 function registerElement(value, required){
-    var id_key = 'auf-id';
+    var idKey = 'auf-id';
 
     required = _.isUndefined(required) ? true : required;
     if(required && !value) throw 'No input element provided.';
@@ -29,12 +29,17 @@ function registerElement(value, required){
     _.each($el, function(each){
         $target = $(each);
 
-        if(!$target.data(id_key)){
-            $target.data(id_key, _.uniqueId());
+        if(!$target.data(idKey)){
+            $target.data(idKey, _.uniqueId());
         }
     });
 
     return $el;
+}
+
+function getElementId($el){
+    var idKey = 'auf-id';
+    return $el.data(idKey);
 }
 
 /**

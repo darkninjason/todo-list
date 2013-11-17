@@ -26,26 +26,22 @@ var DragResponder = Marionette.Controller.extend({
     // -    'all'
     // Note that the drop target will check to confirm if it allows this.
     operation: 'all',
-    supressChildPointerEvents: false,
+    supressChildPointerEvents: true,
 
     // Initialization
     initialize: function(options){
         _.extend(this, options);
         _.bindAll(this, '_dragStart', '_dragEnd');
-
         this._managedElements = {};
-        this.$el = helpers.getElement(this.el);
-        this.reset(this.$el);
     },
 
     _dragStart: function(e){
         this.draggingConfiguration(this, e);
         var action = this.draggingStarted;
 
-        _.defer(function($el){
-            action($el);
-        }, $(e.currentTarget));
-
+        _.defer(function(sender, $el){
+            action(sender, $el);
+        }, this, $(e.currentTarget));
     },
 
     _dragEnd: function(e){
@@ -61,10 +57,19 @@ var DragResponder = Marionette.Controller.extend({
         //console.log('_dragEnd', e.originalEvent.dataTransfer.dropEffect);
         var $target = $(e.currentTarget);
         var dataTransfer = e.originalEvent.dataTransfer;
-        this.draggingEnded($target, dataTransfer.dropEffect);
+        this.draggingEnded(this, $target, dataTransfer.dropEffect);
     },
 
-    getData: function($el){
+    draggingStarted: function(responder, $el){ },
+    draggingEnded: function(responder, $el, operation){
+        // operation here will be one of:
+        // -    'copy'
+        // -    'move'
+        // -    'link'
+        // -    'none'
+    },
+
+    getData: function(responder, $el){
         // Should override this
         // One iss here is you are allowed to call setData on the
         // dataTransfer object multiple times. This implementation
@@ -73,7 +78,7 @@ var DragResponder = Marionette.Controller.extend({
         return '';
     },
 
-    getDragImage: function($el){
+    getDragImage: function(responder, $el){
         // to be used, this must return a value in the form of:
         // {
         //   image: {{ the Image }},
@@ -102,10 +107,10 @@ var DragResponder = Marionette.Controller.extend({
 
         dataTransfer.setData(
             this.dataType,
-            this.getData($target)
+            this.getData(this, $target)
         );
 
-        var dragImage = this.getDragImage($target);
+        var dragImage = this.getDragImage(this, $target);
 
         if(dragImage){
             dataTransfer.setDragImage(
@@ -155,15 +160,6 @@ var DragResponder = Marionette.Controller.extend({
                 this.addElement($(each));
             }, this);
         }
-    },
-
-    draggingStarted: function($el){ },
-    draggingEnded: function($el, operation){
-        // operation here will be one of:
-        // -    'copy'
-        // -    'move'
-        // -    'link'
-        // -    'none'
     },
 
     onClose: function(){
