@@ -80,10 +80,9 @@ var DropResponder = Marionette.Controller.extend({
     },
 
     _updateMousePosition: function (e){
-        var bounds = helpers.getElementBounds(this.$el);
 
-        var positionX = e.originalEvent.pageX - bounds.left;
-        var positionY = e.originalEvent.pageY - bounds.top;
+        var positionX = e.originalEvent.pageX;
+        var positionY = e.originalEvent.pageY;
 
         this._setMousePosition(positionX, positionY);
     },

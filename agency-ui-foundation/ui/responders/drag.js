@@ -5,7 +5,7 @@ define(function(require, exports, module){
 var Marionette = require('marionette');
 var _          = require('underscore');
 var helpers    = require('auf/utils/helpers');
-var dnd    = require('auf/utils/dnd');
+var dndutils    = require('auf/utils/dndutils');
 
 // Module
 
@@ -125,7 +125,7 @@ var DragResponder = Marionette.Controller.extend({
         this._managedElements[$el.data('auf-id')] = $el[0];
 
         if(this.supressChildPointerEvents){
-            dnd.supressChildPointerEvents($el);
+            dndutils.supressChildPointerEvents($el);
         }
 
         $el.prop('draggable', true);
@@ -142,7 +142,7 @@ var DragResponder = Marionette.Controller.extend({
         delete this._managedElements[$el.data('auf-id')];
 
         if(this.supressChildPointerEvents){
-            dnd.clearSupressedPointerEvents($el);
+            dndutils.clearSupressedPointerEvents($el);
         }
 
         $el.prop('draggable', false);
