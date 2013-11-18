@@ -125,4 +125,5 @@ exports.sortArrayAscending = sortArrayAscending;
 exports.sortArrayAscending = sortArrayAscending;
 exports.getElementBounds   = getElementBounds;
 exports.registerElement    = registerElement;
+exports.getElementId       = getElementId;
 });
