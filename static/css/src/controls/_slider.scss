@@ -1,0 +1,17 @@
+
+// SCLIDER
+.slider{
+	position: relative;
+	.track{
+		width:200px;
+		height:10px;
+		background-color: #000;
+	}
+	.handle{
+		width:20px;
+		height:20px;
+		background-color: #ff0000;
+		position: absolute;
+	}
+
+}

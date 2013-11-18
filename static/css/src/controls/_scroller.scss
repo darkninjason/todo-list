@@ -1,0 +1,19 @@
+#scroller{
+
+    .btn-group{
+        margin-bottom: 10px;
+    }
+
+    .scroll-container {
+        width: 500px;
+        height: 300px;
+        background: lightblue;
+        overflow: hidden;
+        overflow-y: scroll;
+    }
+
+    .content {
+        padding: 30px;
+    }
+
+}
