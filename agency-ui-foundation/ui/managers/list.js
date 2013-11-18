@@ -11,8 +11,7 @@ var _            = require('underscore');
 var ListManager = Marionette.Controller.extend({
 
     initialize: function(options){
-        this._list = options.list.slice() || [];
-        this._count = 0;
+        this._list = options.list || [];
     },
 
     setList: function(list){
@@ -33,7 +32,11 @@ var ListManager = Marionette.Controller.extend({
         list[to] = objFrom;
     },
 
-    insertAtPositionWith: function(position, item){
+    insertItem: function(item){
+        this._list.push(item);
+    },
+
+    insertAtPosition: function(position, item){
         this._list.splice(position, 0, item);
     },
 

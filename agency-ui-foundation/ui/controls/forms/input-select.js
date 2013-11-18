@@ -53,12 +53,11 @@ define(function(require, exports, module){
     //    how to visually put those choices on the screen and do so.
     //
     // 5) After you have displayed your choices to the user, you then
-    //    need to tell this control about those items. There are 3 ways
+    //    need to tell this control about those items. There are 2 ways
     //    you can do this:
     //
-    //    5a) An array of Backbone/Marionette views via setViews()
-    //    5b) An array of jquery elements [$x, $y, $z] via setjQueryElements()
-    //    5c) The result of a jQuery selector $('.items') via setElements()
+    //    5a) An array of jquery elements [$x, $y, $z] via setjQueryElements()
+    //    5b) The result of a jQuery selector $('.items') via setElements()
     //
     // 6) Now that this control is aware of your choices you inform it
     //    that you would like to start the navigation process via:
@@ -150,7 +149,12 @@ define(function(require, exports, module){
     //               collectionViewRendered: function(){
     //                   var kids = this.myCollectionView.children.toArray()
     //                   this.stopListening(this.myCollectionView, 'render');
-    //                   this.myInputSelect.setViews(kids);
+    //
+    //                    var elements = _.map(kids, function(each){
+    //                          return each.$el[0];
+    //                    });
+    //
+    //                   this.myInputSelect.setElements($(elements));
     //                   this.myInputSelect.beginNavigationPhase();
     //               }
     //           });
@@ -205,16 +209,6 @@ define(function(require, exports, module){
             if (val && val.length > this.options.minLength){
                 this._dispatchInput(this.$el, val);
             }
-        },
-
-        setViews: function(views){
-            var elements = [];
-
-            _.each(views, function(each){
-                elements.push(each.$el[0]);
-            });
-
-            this.setElements($(elements));
         },
 
         setElements: function($elements){

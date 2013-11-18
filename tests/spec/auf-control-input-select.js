@@ -64,7 +64,12 @@ describe('Input Select Control', function() {
             collectionRendered: function(){
                 var kids = myCollectionView.children.toArray();
                 this.stopListening(myCollectionView, 'render');
-                control.setViews(kids);
+
+                var elements = _.map(kids, function(each){
+                    return each.$el[0];
+                });
+
+                control.setElements($(elements));
                 control.beginNavigationPhase();
                 this.hasRendered = true;
                 $items = $collection.find('li');
