@@ -2,16 +2,16 @@ define(function(require, exports, module){
 
 // Imports
 
-var Marionette   = require('marionette');
+var marionette   = require('marionette');
 var _            = require('underscore');
 
 
 // Module
 
-var ArrayManager = Marionette.Controller.extend({
+var ArrayManager = marionette.Controller.extend({
 
     initialize: function(options){
-        this._list = options.list || [];
+        this.setArray(options.list || []);
     },
 
     setArray: function(value){
@@ -55,6 +55,10 @@ var ArrayManager = Marionette.Controller.extend({
     replaceAt: function(position, obj){
         var list = this._list;
         list[position] = obj;
+    },
+
+    onClose: function(){
+
     }
 
 });

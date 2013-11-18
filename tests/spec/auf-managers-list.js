@@ -32,6 +32,23 @@ describe('Array Manager', function() {
 
     // Test Suite
 
+    it('throws error when no non-array provided on init', function(){
+        function badInit() {
+            new array.ArrayManager({list: $items});
+        }
+
+        expect(badInit).toThrow();
+    });
+
+    it('throws error when no non-array provided on set', function(){
+        function badInit() {
+            manager = new array.ArrayManager();
+            manager.setArray(123);
+        }
+
+        expect(badInit).toThrow();
+    });
+
     it('inserts object', function(){
         var list = [1,2,3,4];
 

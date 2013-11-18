@@ -24,9 +24,18 @@ describe('Focus Manager', function() {
 
     // Test Suite
 
-    it('throws error when no input provided', function(){
+    it('throws error when no non-array provided on set', function(){
         function badInit() {
-            new FocusManager({});
+            manager = new FocusManager({});
+            manager.setArray($items);
+        }
+
+        expect(badInit).toThrow();
+    });
+
+    it('throws error when no non-array provided on init', function(){
+        function badInit() {
+            new FocusManager({list: $items});
         }
 
         expect(badInit).toThrow();
@@ -34,15 +43,13 @@ describe('Focus Manager', function() {
 
     it('should trigger focus', function() {
         manager = new FocusManager({
-            el: $items
+            list: $items.toArray()
         });
 
         var focus = jasmine.createSpy('focus');
-        var $target = $items.eq(0);
 
-        manager.listenTo(manager, 'focus', focus);
-        $target.trigger('click');
-        $target.trigger('click');
+        manager.listenTo(manager, manager.EVENT_FOCUS, focus);
+        manager.focusIndex(0);
 
         expect(focus).toHaveBeenCalled();
         expect(focus.calls.length).toEqual(1);
@@ -50,145 +57,107 @@ describe('Focus Manager', function() {
 
     it('should trigger blur', function() {
         manager = new FocusManager({
-            el: $items,
+            list: $items.toArray(),
             allowsDeselect: true
         });
 
         var blur = jasmine.createSpy('blur');
-        var $target = $items.eq(0);
 
-        manager.listenTo(manager, 'blur', blur);
-        $target.trigger('click');
-        $target.trigger('click');
+        manager.listenTo(manager, manager.EVENT_BLUR, blur);
+        manager.focusIndex(0);
+        manager.focusIndex(0);
 
         expect(blur).toHaveBeenCalled();
         expect(blur.calls.length).toEqual(1);
     });
 
-    it('should focus 1st option with click', function() {
+    it('should focus index 0', function() {
         manager = new FocusManager({
-            el: $items
+            list: $items.toArray()
         });
 
         spyOn(manager, 'focus').andCallThrough();
 
         var $target = $items.eq(0);
+        manager.focusIndex(0);
 
-        $target.trigger('click');
+        var focused = manager.getFocusedObjects();
 
-        expect(manager.collection.contains($target)).toEqual(true);
+        expect(focused.indexOf($target[0])).toEqual(0);
         expect(manager.focus).toHaveBeenCalled();
     });
 
     it('should return focused elements', function() {
         manager = new FocusManager({
-            el: $items
+            list: $items.toArray()
         });
 
         manager.focusIndex(1);
-        var val = manager.val();
+        var focused = manager.getFocusedObjects();
 
-        expect(_.isArray(val)).toEqual(true);
-        expect(val.length).toEqual(1);
-        expect(val[0][0]).toEqual($items.eq(1)[0]);
+        expect(_.isArray(focused)).toEqual(true);
+        expect(focused.length).toEqual(1);
+        expect(focused[0]).toEqual($items.eq(1)[0]);
     });
 
     it('should return null for focused elements', function() {
         manager = new FocusManager({
-            el: $items
+            list: $items.toArray()
         });
 
-        expect(manager.val().length).toEqual(0);
+        expect(manager.getFocusedObjects().length).toEqual(0);
     });
 
     it('should blur', function() {
         manager = new FocusManager({
-            el: $items,
+            list: $items.toArray(),
             allowsDeselect: true
         });
 
         var $target = $items.eq(1);
 
         manager.focusIndex(1);
-
-        expect(manager.collection.contains($target)).toEqual(true);
+        var focused = manager.getFocusedObjects();
+        expect(focused.indexOf($target[0])).toEqual(0);
 
         manager.focusIndex(1);
-        expect(manager.collection.contains($target)).not.toEqual(true);
+
+        focused = manager.getFocusedObjects();
+        expect(focused.indexOf($target[0])).toEqual(-1);
     });
 
     it('should not blur', function() {
         manager = new FocusManager({
-            el: $items
+            list: $items.toArray()
         });
 
         var $target = $items.eq(1);
 
         manager.focusIndex(1);
-        expect(manager.collection.contains($target)).toEqual(true);
+        var focused = manager.getFocusedObjects();
+
+        expect(focused.indexOf($target[0])).toEqual(0);
 
         manager.focusIndex(1);
-        expect(manager.collection.contains($target)).toEqual(true);
+        focused = manager.getFocusedObjects();
+        expect(focused.indexOf($target[0])).toEqual(0);
     });
 
-    it('should foucs all options with click', function() {
+    it('should foucs all options', function() {
         manager = new FocusManager({
-            el: $items
-        });
-
-        $items.trigger('click');
-
-        expect(manager.collection.contains($items.eq(0))).toEqual(true);
-        expect(manager.collection.contains($items.eq(1))).toEqual(true);
-        expect(manager.collection.contains($items.eq(2))).toEqual(true);
-    });
-
-    it('should focus index 1', function() {
-
-        manager = new FocusManager({
-            el: $items
-        });
-
-        manager.focusIndex(1);
-
-        var $target = $items.eq(1);
-
-        expect(manager.collection.contains($target)).toEqual(true);
-    });
-
-    it('should focus all indexes', function() {
-
-        manager = new FocusManager({
-            el: $items
+            list: $items.toArray()
         });
 
         manager.focusIndex(0);
         manager.focusIndex(1);
         manager.focusIndex(2);
 
-        expect(manager.collection.contains($items.eq(0))).toEqual(true);
-        expect(manager.collection.contains($items.eq(1))).toEqual(true);
-        expect(manager.collection.contains($items.eq(2))).toEqual(true);
-    });
+        var focused = manager.getFocusedObjects();
+        expect(focused.length).toEqual(3);
 
-    it('should remove events', function() {
-        // we want to test for onClose on this manager
-        // specifically so don't use the module accessible
-        // 'manager' var, as it is closed for us in 'afterEach'
-
-        var scopedManager = new FocusManager({
-                el: $items
-            });
-
-        var $target = $items.eq(0);
-
-        spyOn(scopedManager, 'focus').andCallThrough();
-        scopedManager.close();
-
-        $target.trigger('click');
-
-        expect(scopedManager.focus).not.toHaveBeenCalled();
-        expect(scopedManager.collection.length).toEqual(0);
+        expect(focused.indexOf($items.eq(0)[0])).not.toEqual(-1);
+        expect(focused.indexOf($items.eq(1)[0])).not.toEqual(-1);
+        expect(focused.indexOf($items.eq(2)[0])).not.toEqual(-1);
     });
 
 }); // eof desribe
