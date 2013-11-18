@@ -36,7 +36,7 @@ var ListManager = Marionette.Controller.extend({
         this._list.push(item);
     },
 
-    insertAtPositionWith: function(position, item){
+    insertAtPosition: function(position, item){
         this._list.splice(position, 0, item);
     },
 
