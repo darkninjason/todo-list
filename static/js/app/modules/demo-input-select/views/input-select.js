@@ -21,15 +21,14 @@ var InputSelectView = marionette.CompositeView.extend({
         this.inputSelect = new InputSelect({
             el: this.ui.input
         });
-        this.listenTo(this.inputSelect, 'input', this.onInputChange);
-        this.listenTo(this.inputSelect, 'focus', this.onInputFocusChange);
-        this.listenTo(this.collection,'sync',this.onCollectionSync);
         this.scroller = new Scroller({
             el            : $(window),
             scrollDebounce: 0,
             duration      : 300,
         });
-        scroller = this.scroller;
+        this.listenTo(this.inputSelect, 'input', this.onInputChange);
+        this.listenTo(this.inputSelect, 'focus', this.onInputFocusChange);
+        this.listenTo(this.collection,'sync',this.onCollectionSync);
     },
 
     onInputChange: function(input, $input, value){
@@ -37,7 +36,6 @@ var InputSelectView = marionette.CompositeView.extend({
     },
 
     onInputFocusChange: function(input, $el){
-        foo = input;
         this.scroller.setScrollValue($el.offset().top);
     },
 
