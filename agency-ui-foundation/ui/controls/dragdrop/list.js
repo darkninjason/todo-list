@@ -4,7 +4,7 @@ define(function(require, exports, module) {
     var marionette = require('marionette');
     var DragResponder = require('auf/ui/responders/drag').DragResponder;
     var DropResponder = require('auf/ui/responders/drop').DropResponder;
-    var ListManager = require('auf/ui/managers/list').ListManager;
+    var ArrayManager = require('auf/ui/managers/array').ArrayManager;
     var helpers = require('auf/utils/helpers');
     var dndutils = require('auf/utils/dndutils');
 
@@ -19,7 +19,7 @@ define(function(require, exports, module) {
 
             this.dragResponder = null;
             this.dropResponder = null;
-            this.listManager = new ListManager();
+            this.listManager = new ArrayManager();
             this._placeholderIndex = -1;
             this._placeholderItem = null;
             this._draggingItem = null;
@@ -36,7 +36,7 @@ define(function(require, exports, module) {
             // in terms of data, and UI.
 
             this.dragResponder.addElement($el);
-            this.listManager.insertItem($el[0]);
+            this.listManager.insertObject($el[0]);
         },
 
         insertDragElement: function(position, $el){
@@ -53,12 +53,12 @@ define(function(require, exports, module) {
             var manager = this.listManager;
 
             this.insertAtPosition(position, $el);
-            manager.insertAtPosition(position, $el[0]);
+            manager.insertObjectAt(position, $el[0]);
             this.dragResponder.addElement($el);
         },
 
         reset: function($el){
-            this.listManager.setList($el.toArray());
+            this.listManager.setArray($el.toArray());
             this.dragResponder.reset($el);
         },
 
@@ -168,7 +168,7 @@ define(function(require, exports, module) {
 
         insertAtPosition: function(position, $view){
             var manager = this.listManager;
-            var list = manager.getList();
+            var list = manager.getArray();
 
             if (position === 0){
 
@@ -208,7 +208,7 @@ define(function(require, exports, module) {
         dragResponderDraggingStarted: function(sender, $el){
 
             var manager = this.listManager;
-            var list = manager.getList();
+            var list = manager.getArray();
             var index = list.indexOf($el[0]);
 
             if(index == -1) return;
@@ -216,7 +216,7 @@ define(function(require, exports, module) {
             // exclude the item from the available
             // draggable items for calculating purposes
             // our nearest neighbor.
-            var item = manager.removeItemAtPosition(index);
+            var item = manager.removeObjectAt(index);
             var $item = $(item);
             this._draggingItem = $item;
             this._draggingIndex = index;
@@ -260,7 +260,7 @@ define(function(require, exports, module) {
                 // This same pattern is also found in
                 // this.insertDragElement
                 this.insertAtPosition(index, $view);
-                manager.insertAtPosition(index, $view[0]);
+                manager.insertObjectAt(index, $view[0]);
 
             } else{
                 dndutils.clearSupressedPointerEvents(this._draggingItem);
@@ -312,7 +312,6 @@ define(function(require, exports, module) {
         },
 
         dropResponderPerformDragOperation: function(responder, e){
-            var manager = this.listManager;
             var data = responder.getData();
 
             var position = this._placeholderIndex;
@@ -349,7 +348,7 @@ define(function(require, exports, module) {
 
         getPlaceholderInsertPosition: function(point){
             // point: {x:N, y:N}
-            var list = this.listManager.getList();
+            var list = this.listManager.getArray();
 
             var candidates = _.map(list, function(value, index){
                 var bounds = helpers.getElementBounds(value);
