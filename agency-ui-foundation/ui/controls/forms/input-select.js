@@ -166,6 +166,8 @@ define(function(require, exports, module){
         // Constants
 
         EVENT_FOCUS: 'focus',
+        EVENT_FOCUS_KEY: 'focus:key',
+        EVENT_FOCUS_MOUSE: 'focus:mouse',
         EVENT_BLUR: 'blur',
         EVENT_SELECT: 'select',
         EVENT_CANCEL: 'cancel',
@@ -246,7 +248,7 @@ define(function(require, exports, module){
 
         _initializeNavigationControls: function($elements){
             this.focusManager = new SingleFocusManager({
-                el: $elements
+                list: $elements.toArray()
             });
 
             this.indexManager = new IndexManager();
@@ -270,8 +272,15 @@ define(function(require, exports, module){
                 moveDown: this.keyNavigationFirstMove
              });
 
-            this.listenTo(this.focusManager, 'focus', this.wantsFocus);
-            this.listenTo(this.focusManager, 'blur', this.wantsBlur);
+            this.listenTo(
+                this.focusManager,
+                this.focusManager.EVENT_FOCUS,
+                this.wantsFocus);
+
+            this.listenTo(
+                this.focusManager,
+                this.focusManager.EVENT_BLUR,
+                this.wantsBlur);
         },
 
         // Keyboard Handling
@@ -314,11 +323,18 @@ define(function(require, exports, module){
         keyNavigationUp: function(responder, e){
             this.indexManager.previousIndex();
             this.focusManager.focusIndex(this.indexManager.getIndex());
+
+            this._dispatchFocus(
+                $(this.focusManager.getFocusedObject()),
+                this.EVENT_FOCUS_KEY);
         },
 
         keyNavigationDown: function(responder, e){
             this.indexManager.nextIndex();
             this.focusManager.focusIndex(this.indexManager.getIndex());
+            this._dispatchFocus(
+                $(this.focusManager.getFocusedObject()),
+                this.EVENT_FOCUS_KEY);
         },
 
         // Mouse Handling
@@ -334,19 +350,23 @@ define(function(require, exports, module){
             var $el = $(e.target);
             var index = this._$elements.index($el);
             this.indexManager.setIndex(index);
-            this.focusManager.focus($el);
+            this.focusManager.focus($el[0]);
+
+            this._dispatchFocus(
+                $(this.focusManager.getFocusedObject()),
+                this.EVENT_FOCUS_MOUSE);
         },
 
         mouseDidExit: function(responder, e){
-            this.focusManager.blur($(e.target));
+            this.focusManager.blur(e.target);
         },
 
-        wantsFocus: function($el){
-            this._dispatchFocus($el);
+        wantsFocus: function(obj){
+            this._dispatchFocus($(obj));
         },
 
-        wantsBlur: function($el){
-            this._dispatchBlur($el);
+        wantsBlur: function(obj){
+            this._dispatchBlur($(obj));
         },
 
         wantsSelect: function($el){
@@ -364,8 +384,9 @@ define(function(require, exports, module){
             this.trigger(this.EVENT_INPUT, this, $target, value);
         },
 
-        _dispatchFocus: function($target) {
-            this.trigger(this.EVENT_FOCUS, this, $target);
+        _dispatchFocus: function($target, focusType) {
+            focusType = focusType || this.EVENT_FOCUS;
+            this.trigger(focusType, this, $target);
         },
 
         _dispatchBlur: function($target) {
