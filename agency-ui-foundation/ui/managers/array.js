@@ -8,17 +8,18 @@ var _            = require('underscore');
 
 // Module
 
-var ListManager = Marionette.Controller.extend({
+var ArrayManager = Marionette.Controller.extend({
 
     initialize: function(options){
         this._list = options.list || [];
     },
 
-    setList: function(list){
-        this._list = list;
+    setArray: function(value){
+        if(!_.isArray(value)) throw 'Invalid Value';
+        this._list = value;
     },
 
-    getList: function(){
+    getArray: function(){
         return this._list;
     },
 
@@ -60,6 +61,6 @@ var ListManager = Marionette.Controller.extend({
 
 // Exports
 
-exports.ListManager = ListManager;
+exports.ArrayManager = ArrayManager;
 
 });

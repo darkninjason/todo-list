@@ -2,9 +2,9 @@ define(function(require, exports, module) {
 
 // Imports
 
-var list = require('auf/ui/managers/list');
+var array = require('auf/ui/managers/array');
 
-describe('List Manager', function() {
+describe('Array Manager', function() {
 
 
     // Set Up
@@ -27,7 +27,7 @@ describe('List Manager', function() {
     }
 
     function getManager(augments) {
-        return new list.ListManager(getOptions(augments));
+        return new array.ArrayManager(getOptions(augments));
     }
 
     // Test Suite
@@ -36,10 +36,10 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager();
-        manager.setList(list);
+        manager.setArray(list);
         manager.insertObject(9);
 
-        var target = manager.getList();
+        var target = manager.getArray();
         expect(target.length).toEqual(5);
 
         expect(target[0]).toEqual(1);
@@ -53,10 +53,10 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager();
-        manager.setList(list);
+        manager.setArray(list);
         manager.insertObjectAt(2, 9);
 
-        var target = manager.getList();
+        var target = manager.getArray();
         expect(target.length).toEqual(5);
 
         expect(target[0]).toEqual(1);
@@ -70,11 +70,11 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager();
-        manager.setList(list);
+        manager.setArray(list);
         manager.insertObjectAt(2, 9);
         manager.removeObjectAt(2);
 
-        var target = manager.getList();
+        var target = manager.getArray();
         expect(target.length).toEqual(4);
 
         expect(target[0]).toEqual(1);
@@ -87,10 +87,10 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager();
-        manager.setList(list);
+        manager.setArray(list);
         manager.swap(1, 2);
 
-        var target = manager.getList();
+        var target = manager.getArray();
         expect(target.length).toEqual(4);
 
         expect(target[0]).toEqual(1);
@@ -103,10 +103,10 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager();
-        manager.setList(list);
+        manager.setArray(list);
         manager.swap(0, 3);
 
-        var target = manager.getList();
+        var target = manager.getArray();
         expect(target.length).toEqual(4);
         expect(target[0]).toEqual(4);
         expect(target[1]).toEqual(2);
@@ -118,13 +118,13 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager();
-        manager.setList(list);
+        manager.setArray(list);
 
         // our from value is larger than our to value
         // should still work just fine.
         manager.swap(3, 0);
 
-        var target = manager.getList();
+        var target = manager.getArray();
         expect(target.length).toEqual(4);
         expect(target[0]).toEqual(4);
         expect(target[1]).toEqual(2);
@@ -136,10 +136,10 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager();
-        manager.setList(list);
+        manager.setArray(list);
         manager.replaceAt(0, 9);
 
-        var target = manager.getList();
+        var target = manager.getArray();
 
         expect(target.length).toEqual(4);
         expect(target[0]).toEqual(9);
@@ -152,10 +152,10 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager();
-        manager.setList(list);
+        manager.setArray(list);
         manager.replaceAt(3, 9);
 
-        var target = manager.getList();
+        var target = manager.getArray();
 
         expect(target.length).toEqual(4);
         expect(target[0]).toEqual(1);
@@ -170,7 +170,7 @@ describe('List Manager', function() {
         manager = getManager({list: list});
         manager.replaceAt(2, 9);
 
-        var target = manager.getList();
+        var target = manager.getArray();
 
         expect(target.length).toEqual(4);
         expect(target[0]).toEqual(1);
@@ -185,7 +185,7 @@ describe('List Manager', function() {
         manager = getManager({list: list});
         manager.moveObjectFromTo(3, 0);
 
-        var target = manager.getList();
+        var target = manager.getArray();
         expect(target.length).toEqual(4);
         expect(target[0]).toEqual(4);
         expect(target[1]).toEqual(1);
@@ -199,7 +199,7 @@ describe('List Manager', function() {
         manager = getManager({list: list});
         manager.moveObjectFromTo(0, 3);
 
-        var target = manager.getList();
+        var target = manager.getArray();
         expect(target.length).toEqual(4);
         expect(target[0]).toEqual(2);
         expect(target[1]).toEqual(3);
@@ -213,7 +213,7 @@ describe('List Manager', function() {
         manager = getManager({list: list});
         manager.moveObjectFromTo(2, 1);
 
-        var target = manager.getList();
+        var target = manager.getArray();
         expect(target.length).toEqual(4);
         expect(target[0]).toEqual(1);
         expect(target[1]).toEqual(3);
@@ -227,7 +227,7 @@ describe('List Manager', function() {
         manager = getManager({list: list});
         manager.moveObjectFromTo(1, 3);
 
-        var target = manager.getList();
+        var target = manager.getArray();
         expect(target.length).toEqual(4);
         expect(target[0]).toEqual(1);
         expect(target[1]).toEqual(3);
@@ -241,7 +241,7 @@ describe('List Manager', function() {
         manager = getManager({list: list});
         manager.moveObjectFromTo(2, 0);
 
-        var target = manager.getList();
+        var target = manager.getArray();
         expect(target.length).toEqual(4);
         expect(target[0]).toEqual(3);
         expect(target[1]).toEqual(1);
