@@ -122,7 +122,8 @@ var DragResponder = Marionette.Controller.extend({
 
     addElement: function($el){
         $el = helpers.registerElement($el);
-        this._managedElements[$el.data('auf-id')] = $el[0];
+        var id = helpers.getElementId($el);
+        this._managedElements[id] = $el[0];
 
         if(this.supressChildPointerEvents){
             dndutils.supressChildPointerEvents($el);
@@ -134,12 +135,13 @@ var DragResponder = Marionette.Controller.extend({
     },
 
     removeElement: function($el){
+        var id = helpers.getElementId($el);
 
-        if(!$el.data('auf-id')) throw 'Unable to remove unregistered AUF ' +
+        if(!id) throw 'Unable to remove unregistered AUF ' +
             'element. Did you register this element with ' +
             'helpers.registerElement?';
 
-        delete this._managedElements[$el.data('auf-id')];
+        delete this._managedElements[id];
 
         if(this.supressChildPointerEvents){
             dndutils.clearSupressedPointerEvents($el);
