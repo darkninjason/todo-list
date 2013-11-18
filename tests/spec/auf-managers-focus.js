@@ -160,5 +160,20 @@ describe('Focus Manager', function() {
         expect(focused.indexOf($items.eq(2)[0])).not.toEqual(-1);
     });
 
+    it('should get focused indexes for focused objects', function() {
+        manager = new FocusManager({
+            list: $items.toArray()
+        });
+
+        manager.focusIndex(1);
+        manager.focusIndex(2);
+
+        var focused = manager.getFocusedIndexes();
+
+        expect(focused.length).toEqual(2);
+        expect(focused.indexOf(1)).not.toEqual(-1);
+        expect(focused.indexOf(2)).not.toEqual(-1);
+    });
+
 }); // eof desribe
 }); // eof define

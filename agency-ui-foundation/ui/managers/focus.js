@@ -26,12 +26,25 @@ var FocusManager =  array.ArrayManager.extend({
 
     focusIndex: function(index){
         var obj = this._list[index];
-        this.focus(obj);
+
+        if(obj){
+            this.focus(obj);
+        }
     },
 
-    getfocusedIndexes: function(){
+    blurIndex: function(index){
+        var obj = this._focusedObjects.splice(index, 1)[0];
+
+        if(obj){
+            this._dispatchBlur(obj);
+        }
+    },
+
+    getFocusedIndexes: function(){
+        var list = this._list;
+
         var indexes =  _.map(this._focusedObjects, function(obj){
-            var candidate = this._list.indexOf(obj);
+            var candidate = list.indexOf(obj);
             if (candidate > -1){
                 return candidate;
             }
