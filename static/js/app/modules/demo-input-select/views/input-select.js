@@ -1,10 +1,12 @@
 define(function (require, exports, module) {
 
-var marionette = require('marionette');
-var InputSelect = require('auf/components/input-select').InputSelectMarionette;
-var Scroller = require('auf/ui/controls/page/scroller').Scroller;
-var template = require('hbs!tpl/input-select/composite');
-var ResultItem = require('./result-item').ResultItem;
+var marionette   = require('marionette');
+var InputSelect  = require('auf/components/input-select').InputSelectMarionette;
+var helpers      = require('auf/utils/helpers');
+var Scroller     = require('auf/ui/controls/page/scroller').Scroller;
+var template     = require('hbs!tpl/input-select/composite');
+
+var ResultItem   = require('./result-item').ResultItem;
 var InputResults = require('../collections').InputResults;
 
 var InputSelectView = marionette.CompositeView.extend({
@@ -14,7 +16,8 @@ var InputSelectView = marionette.CompositeView.extend({
     collection : new InputResults(),
 
     ui : {
-        input:'input'
+        input:'input',
+        listGroup: '.list-group'
     },
 
     onShow : function(){
@@ -22,7 +25,7 @@ var InputSelectView = marionette.CompositeView.extend({
             el: this.ui.input
         });
         this.scroller = new Scroller({
-            el            : $(window),
+            el            : this.ui.listGroup,
             scrollDebounce: 0,
             duration      : 300,
         });
@@ -36,7 +39,7 @@ var InputSelectView = marionette.CompositeView.extend({
     },
 
     onInputFocusChange: function(input, $el){
-        this.scroller.setScrollValue($el.offset().top);
+        this.scroller.setScrollValue($el.offset().top - this.scroller.$el.offset().top + this.scroller.$el.scrollTop());
     },
 
     onCollectionSync: function(){

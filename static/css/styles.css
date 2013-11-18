@@ -7661,5 +7661,15 @@ td.visible-print {
 /* line 15, src/controls/_scroller.scss */
 #scroller .content {
   padding: 30px;
-  position: relative;
+}
+
+/* line 1, src/controls/_input-select.scss */
+#input-select {
+  margin-bottom: 30px;
+}
+/* line 3, src/controls/_input-select.scss */
+#input-select .list-group {
+  max-height: 300px;
+  overflow: hidden;
+  overflow-y: scroll;
 }
