@@ -298,7 +298,8 @@ define(function(require, exports, module){
         },
 
         keyNavigationReturn: function(responder, e){
-            this.wantsSelect(this.focusManager.val());
+            var obj = this.focusManager.getFocusedObject();
+            this.wantsSelect(obj);
         },
 
         keyNavigationEscape: function(responder, e){
@@ -342,7 +343,7 @@ define(function(require, exports, module){
             if(responder.clickCount() > 0){
                 // keep the input focused
                 this.$el.focus();
-                this.wantsSelect($(e.target));
+                this.wantsSelect(e.target);
             }
         },
 
@@ -361,16 +362,16 @@ define(function(require, exports, module){
             this.focusManager.blur(e.target);
         },
 
-        wantsFocus: function(obj){
+        wantsFocus: function(sender, obj){
             this._dispatchFocus($(obj));
         },
 
-        wantsBlur: function(obj){
+        wantsBlur: function(sender, obj){
             this._dispatchBlur($(obj));
         },
 
-        wantsSelect: function($el){
-            this._dispatchSelect($el);
+        wantsSelect: function(obj){
+            this._dispatchSelect($(obj));
         },
 
         onClose: function(){
