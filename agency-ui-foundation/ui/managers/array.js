@@ -8,21 +8,22 @@ var _            = require('underscore');
 
 // Module
 
-var ListManager = Marionette.Controller.extend({
+var ArrayManager = Marionette.Controller.extend({
 
     initialize: function(options){
         this._list = options.list || [];
     },
 
-    setList: function(list){
-        this._list = list;
+    setArray: function(value){
+        if(!_.isArray(value)) throw 'Invalid Value';
+        this._list = value;
     },
 
-    getList: function(){
+    getArray: function(){
         return this._list;
     },
 
-    swapPositions: function(from, to){
+    swap: function(from, to){
         var list = this._list;
 
         var objFrom = list[from];
@@ -32,34 +33,34 @@ var ListManager = Marionette.Controller.extend({
         list[to] = objFrom;
     },
 
-    insertItem: function(item){
-        this._list.push(item);
+    insertObject: function(obj){
+        this._list.push(obj);
     },
 
-    insertAtPosition: function(position, item){
-        this._list.splice(position, 0, item);
+    insertObjectAt: function(position, obj){
+        this._list.splice(position, 0, obj);
     },
 
-    removeItemAtPosition: function(position){
+    removeObjectAt: function(position){
         return this._list.splice(position, 1);
     },
 
-    moveItemAtPositionToPosition: function(from, to){
+    moveObjectFromTo: function(from, to){
         var list = this._list;
         var obj = list.splice(from, 1)[0];
         list.splice(to, 0, obj);
         this._list = list;
     },
 
-    replaceAtPositionWith: function(position, item){
+    replaceAt: function(position, obj){
         var list = this._list;
-        list[position] = item;
+        list[position] = obj;
     }
 
 });
 
 // Exports
 
-exports.ListManager = ListManager;
+exports.ArrayManager = ArrayManager;
 
 });
