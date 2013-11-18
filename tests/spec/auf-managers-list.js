@@ -32,12 +32,63 @@ describe('List Manager', function() {
 
     // Test Suite
 
+    it('inserts object', function(){
+        var list = [1,2,3,4];
+
+        manager = getManager();
+        manager.setList(list);
+        manager.insertObject(9);
+
+        var target = manager.getList();
+        expect(target.length).toEqual(5);
+
+        expect(target[0]).toEqual(1);
+        expect(target[1]).toEqual(2);
+        expect(target[2]).toEqual(3);
+        expect(target[3]).toEqual(4);
+        expect(target[4]).toEqual(9);
+    });
+
+    it('inserts object at position', function(){
+        var list = [1,2,3,4];
+
+        manager = getManager();
+        manager.setList(list);
+        manager.insertObjectAt(2, 9);
+
+        var target = manager.getList();
+        expect(target.length).toEqual(5);
+
+        expect(target[0]).toEqual(1);
+        expect(target[1]).toEqual(2);
+        expect(target[2]).toEqual(9);
+        expect(target[3]).toEqual(3);
+        expect(target[4]).toEqual(4);
+    });
+
+    it('removes object at position', function(){
+        var list = [1,2,3,4];
+
+        manager = getManager();
+        manager.setList(list);
+        manager.insertObjectAt(2, 9);
+        manager.removeObjectAt(2);
+
+        var target = manager.getList();
+        expect(target.length).toEqual(4);
+
+        expect(target[0]).toEqual(1);
+        expect(target[1]).toEqual(2);
+        expect(target[2]).toEqual(3);
+        expect(target[3]).toEqual(4);
+    });
+
     it('swaps positions of 2 indexes in the middle', function(){
         var list = [1,2,3,4];
 
         manager = getManager();
         manager.setList(list);
-        manager.swapPositions(1, 2);
+        manager.swap(1, 2);
 
         var target = manager.getList();
         expect(target.length).toEqual(4);
@@ -53,7 +104,7 @@ describe('List Manager', function() {
 
         manager = getManager();
         manager.setList(list);
-        manager.swapPositions(0, 3);
+        manager.swap(0, 3);
 
         var target = manager.getList();
         expect(target.length).toEqual(4);
@@ -71,7 +122,7 @@ describe('List Manager', function() {
 
         // our from value is larger than our to value
         // should still work just fine.
-        manager.swapPositions(3, 0);
+        manager.swap(3, 0);
 
         var target = manager.getList();
         expect(target.length).toEqual(4);
@@ -86,7 +137,7 @@ describe('List Manager', function() {
 
         manager = getManager();
         manager.setList(list);
-        manager.replaceAtPositionWith(0, 9);
+        manager.replaceAt(0, 9);
 
         var target = manager.getList();
 
@@ -102,7 +153,7 @@ describe('List Manager', function() {
 
         manager = getManager();
         manager.setList(list);
-        manager.replaceAtPositionWith(3, 9);
+        manager.replaceAt(3, 9);
 
         var target = manager.getList();
 
@@ -117,7 +168,7 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager({list: list});
-        manager.replaceAtPositionWith(2, 9);
+        manager.replaceAt(2, 9);
 
         var target = manager.getList();
 
@@ -132,7 +183,7 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager({list: list});
-        manager.moveItemAtPositionToPosition(3, 0);
+        manager.moveObjectFromTo(3, 0);
 
         var target = manager.getList();
         expect(target.length).toEqual(4);
@@ -146,7 +197,7 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager({list: list});
-        manager.moveItemAtPositionToPosition(0, 3);
+        manager.moveObjectFromTo(0, 3);
 
         var target = manager.getList();
         expect(target.length).toEqual(4);
@@ -160,7 +211,7 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager({list: list});
-        manager.moveItemAtPositionToPosition(2, 1);
+        manager.moveObjectFromTo(2, 1);
 
         var target = manager.getList();
         expect(target.length).toEqual(4);
@@ -174,7 +225,7 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager({list: list});
-        manager.moveItemAtPositionToPosition(1, 3);
+        manager.moveObjectFromTo(1, 3);
 
         var target = manager.getList();
         expect(target.length).toEqual(4);
@@ -188,7 +239,7 @@ describe('List Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager({list: list});
-        manager.moveItemAtPositionToPosition(2, 0);
+        manager.moveObjectFromTo(2, 0);
 
         var target = manager.getList();
         expect(target.length).toEqual(4);
