@@ -405,6 +405,6 @@ define(function(require, exports, module){
     });
 
 // Exports
-module.exports.InputSelect = InputSelect;
+exports.InputSelect = InputSelect;
 
 }); // eof define
