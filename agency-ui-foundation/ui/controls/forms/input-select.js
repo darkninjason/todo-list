@@ -177,7 +177,8 @@ define(function(require, exports, module){
 
         _defaults: {
             minLength: 2,
-            debounceDelay: 300
+            debounceDelay: 300,
+            acceptsMouseEnterExit:true
         },
 
         initialize: function(options){
@@ -322,6 +323,7 @@ define(function(require, exports, module){
         },
 
         keyNavigationUp: function(responder, e){
+            this.isKeyNavigating = true;
             this.indexManager.previousIndex();
             this.focusManager.focusIndex(this.indexManager.getIndex());
 
@@ -331,6 +333,7 @@ define(function(require, exports, module){
         },
 
         keyNavigationDown: function(responder, e){
+            this.isKeyNavigating = true;
             this.indexManager.nextIndex();
             this.focusManager.focusIndex(this.indexManager.getIndex());
             this._dispatchFocus(
@@ -348,7 +351,10 @@ define(function(require, exports, module){
         },
 
         mouseDidEnter: function(responder, e){
-            var $el = $(e.target);
+            if(!this.options.acceptsMouseEnterExit){
+                return;
+            }
+            var $el = $(e.currentTarget);
             var index = this._$elements.index($el);
             this.indexManager.setIndex(index);
             this.focusManager.focus($el[0]);
@@ -359,6 +365,9 @@ define(function(require, exports, module){
         },
 
         mouseDidExit: function(responder, e){
+            if(!this.options.acceptsMouseEnterExit){
+                return;
+            }
             this.focusManager.blur(e.target);
         },
 

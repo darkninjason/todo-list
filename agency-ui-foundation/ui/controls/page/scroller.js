@@ -11,9 +11,9 @@ var ScrollManager = require('auf/ui/managers/scroll').ScrollManager;
 
 var Scroller = ScrollManager.extend({
 
-    DEFAULT_DURATION: 300,
-    EASING_LINEAR   : 'linear',
-    EASING_SWING    : 'swing',
+    DEFAULT_DURATION   : 300,
+    EASING_LINEAR      :  'linear',
+    EASING_SWING       :  'swing',
 
     /**
      * initialize the Scroller, extends ScrollManager
@@ -54,11 +54,18 @@ var Scroller = ScrollManager.extend({
     },
 
     _animateScroll: function(start, end, duration) {
+        var self = this;
+        if(this.deferred){
+            this.deferred.reject();
+        }
+        this.deferred = $.Deferred();
+
         function step(now, tween) {
             this.constructor.__super__.setScrollValue.call(this, now);
         }
+
         function complete() {
-            // do something useful here?
+            self.deferred.resolve();
         }
 
         // TODO: Revisit, resulting animation from this chuggy.
@@ -70,6 +77,7 @@ var Scroller = ScrollManager.extend({
                 complete: _.bind(complete, this)
             }
         );
+        return this.deferred.promise();
     },
 
     // Public API
@@ -80,10 +88,15 @@ var Scroller = ScrollManager.extend({
         start = this.getScrollValue();
         end   = Helpers.normalizeInt(value, this.getMinScrollValue(), this.getMaxScrollValue());
 
-        this._animateScroll(
+        return this._animateScroll(
             start, end, this.options.duration
         );
-    }
+    },
+
+    scrollToElement: function($el){
+        var toPos = $el.offset().top - this.$el.offset().top + this.$el.scrollTop();
+        return this.setScrollValue(toPos);
+    },
 
 }); // eof Scroller
 
