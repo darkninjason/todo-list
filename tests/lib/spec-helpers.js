@@ -221,6 +221,40 @@ var SpecHelpers = {
             };
 
             this.simulateEvent($el, 'scroll', payload);
+        },
+
+        simulateDragStart: function($el, x, y) {
+            var dt = this.dragAndDropDataTransfer();
+
+            var payload = {
+                originalEvent: {dataTransfer: dt, pageX: x, pageY: y},
+                target: $el[0],
+                currentTarget: $el[0]
+            };
+
+            this.simulateEvent($el, 'dragstart', payload);
+            return payload;
+        },
+
+        dragAndDropDataTransfer: function(){
+
+            DataTransfer = function(){
+                this._data = {};
+                this.effectAllowed = 'all';
+                this.dropEffect = 'none';
+                this.types = [];
+            };
+
+            DataTransfer.prototype.setData = function(type, data){
+                this._data[type] = data;
+                this.types.push(type);
+            };
+
+            DataTransfer.prototype.getData = function(type){
+                return this._data[type];
+            };
+
+            return new DataTransfer();
         }
     }
 
