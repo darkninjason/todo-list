@@ -40,39 +40,108 @@ describe('Drag Responder', function() {
 
     // Test Suite
 
-    xit('throws error when no non-array provided on init', function(){
-        function badInit() {
-            new array.ArrayManager({list: $items});
-        }
-
-        expect(badInit).toThrow();
-    });
-
-    xit('throws error when no non-array provided on set', function(){
-        function badInit() {
-            manager = new array.ArrayManager();
-            manager.setArray(123);
-        }
-
-        expect(badInit).toThrow();
-    });
-
-    it('expects draggingConfiguration to be called on dragstart', function(){
+    it('expects \'draggingConfiguration\' to be called on dragstart', function(){
 
         var actionSpy = jasmine.createSpy('eventSpy');
-        var manager = this.getManager();
+        var manager = getManager();
 
         manager.reset($actionTargets);
 
         manager.draggingConfiguration = actionSpy;
 
-        EventHelpers.simulateDragStart(
+        var payload = EventHelpers.simulateDragStart(
             $actionTargets.eq(0));
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy).toHaveBeenCalledWith(manager);
+        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
         expect(actionSpy.calls.length).toEqual(1);
+    });
 
+    it('expects \'getData\' to be called on dragstart', function(){
+
+        var actionSpy = jasmine.createSpy('eventSpy');
+        var manager = getManager();
+
+        manager.reset($actionTargets);
+
+        manager.getData = actionSpy;
+
+        var payload = EventHelpers.simulateDragStart(
+            $actionTargets.eq(0));
+
+        expect(actionSpy).toHaveBeenCalled();
+        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
+        expect(actionSpy.calls.length).toEqual(1);
+    });
+
+    it('expects \'getDragImage\' to be called on dragstart', function(){
+
+        var actionSpy = jasmine.createSpy('eventSpy');
+        var manager = getManager();
+
+        manager.reset($actionTargets);
+
+        manager.getDragImage = actionSpy;
+
+        var payload = EventHelpers.simulateDragStart(
+            $actionTargets.eq(0));
+
+        expect(actionSpy).toHaveBeenCalled();
+        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
+        expect(actionSpy.calls.length).toEqual(1);
+    });
+
+    it('expects \'draggingStarted\' to be called on dragstart', function(){
+
+        var actionSpy = jasmine.createSpy('eventSpy');
+        var manager = getManager();
+        var flag = false;
+
+        manager.reset($actionTargets);
+
+        // this call is defered, so we need an async test
+        manager.draggingStarted = actionSpy;
+
+        runs(function() {
+            var payload = EventHelpers.simulateDragStart(
+                $actionTargets.eq(0));
+
+            setTimeout(function() {
+                flag = true;
+            }, 100);
+        });
+
+        waitsFor(function(){
+            return flag;
+        }, 200);
+
+        runs(function(){
+            expect(actionSpy).toHaveBeenCalled();
+            expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
+            expect(actionSpy.calls.length).toEqual(1);
+        });
+
+    });
+
+    it('expects \'draggingEnded\' to be called on dragend', function(){
+
+        var actionSpy = jasmine.createSpy('eventSpy');
+        var manager = getManager();
+        var flag = false;
+
+        manager.reset($actionTargets);
+
+        // this call is defered, so we need an async test
+        manager.draggingEnded = actionSpy;
+
+         var payload = EventHelpers.simulateDragEnd(
+            $actionTargets.eq(0));
+
+        expect(actionSpy).toHaveBeenCalled();
+        expect(actionSpy.calls.length).toEqual(1);
+        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
+        expect(actionSpy.mostRecentCall.args[1][0]).toEqual($actionTargets.eq(0)[0]);
+        expect(actionSpy.mostRecentCall.args[2]).toEqual('none');
     });
 
 

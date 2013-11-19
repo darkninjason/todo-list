@@ -65,8 +65,8 @@ var SpecHelpers = {
     Events: {
         simulateEvent: function($el, type, payload) {
             var e = $.Event(type);
-
             _.extend(e, payload);
+
             $el.trigger(e);
 
             return e;
@@ -227,12 +227,25 @@ var SpecHelpers = {
             var dt = this.dragAndDropDataTransfer();
 
             var payload = {
-                originalEvent: {dataTransfer: dt, pageX: x, pageY: y},
+                originalEvent: {dataTransfer: dt, pageX: x || 0, pageY: y || 0},
                 target: $el[0],
                 currentTarget: $el[0]
             };
 
             this.simulateEvent($el, 'dragstart', payload);
+            return payload;
+        },
+
+        simulateDragEnd: function($el, x, y) {
+            var dt = this.dragAndDropDataTransfer();
+
+            var payload = {
+                originalEvent: {dataTransfer: dt, pageX: x || 0, pageY: y || 0},
+                target: $el[0],
+                currentTarget: $el[0]
+            };
+
+            this.simulateEvent($el, 'dragend', payload);
             return payload;
         },
 
