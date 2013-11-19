@@ -118,7 +118,6 @@ describe('Mouse Responder', function() {
                 acceptsUpDown: true
         });
 
-
         EventHelpers.simulateMouseDown($input, 0, 0);
         EventHelpers.simulateMouseUp($input, 0, 0);
 
@@ -383,6 +382,91 @@ describe('Mouse Responder', function() {
             EventHelpers.simulateMouseUp($input, 0, 0);
             expect(responder.clickCount()).toEqual(0);
         });
+    });
+
+    it('expects mouse enter and exit to be toggled', function() {
+        var mouseEntered = jasmine.createSpy('mouseEntered');
+        var mouseExited = jasmine.createSpy('mouseExited');
+
+        responder = new MouseResponder({
+                el: $input,
+                mouseEntered: mouseEntered,
+                mouseExited: mouseExited,
+                acceptsEnterExit: true
+        });
+
+        EventHelpers.simulateMouseEnter($input, 0, 0);
+        EventHelpers.simulateMouseExit($input, 0, 0);
+
+        responder.enableEnterExit(false);
+
+        EventHelpers.simulateMouseEnter($input, 0, 0);
+        EventHelpers.simulateMouseExit($input, 0, 0);
+
+        responder.enableEnterExit(true);
+
+        EventHelpers.simulateMouseEnter($input, 0, 0);
+        EventHelpers.simulateMouseExit($input, 0, 0);
+
+        expect(mouseEntered).toHaveBeenCalled();
+        expect(mouseExited).toHaveBeenCalled();
+
+        expect(mouseEntered.calls.length).toEqual(2);
+        expect(mouseExited.calls.length).toEqual(2);
+    });
+
+    it('expects mouse up and down to be toggled', function() {
+        var mouseUp = jasmine.createSpy('mouseUp');
+        var mouseDown = jasmine.createSpy('mouseDown');
+
+        responder = new MouseResponder({
+                el: $input,
+                mouseUp: mouseUp,
+                mouseDown: mouseDown,
+                acceptsUpDown: true
+        });
+
+        EventHelpers.simulateMouseDown($input, 0, 0);
+        EventHelpers.simulateMouseUp($input, 0, 0);
+
+        responder.enableUpDown(false);
+
+        EventHelpers.simulateMouseDown($input, 0, 0);
+        EventHelpers.simulateMouseUp($input, 0, 0);
+
+        responder.enableUpDown(true);
+
+        EventHelpers.simulateMouseDown($input, 0, 0);
+        EventHelpers.simulateMouseUp($input, 0, 0);
+
+        expect(mouseUp).toHaveBeenCalled();
+        expect(mouseDown).toHaveBeenCalled();
+
+        expect(mouseUp.calls.length).toEqual(2);
+        expect(mouseDown.calls.length).toEqual(2);
+    });
+
+    it('expects mouse move to be toggled', function() {
+        var mouseMoved = jasmine.createSpy('mouseMoved');
+
+        responder = new MouseResponder({
+                el: $input,
+                mouseMoved: mouseMoved,
+                acceptsMove: true
+        });
+
+        EventHelpers.simulateMouseMove($input, 0, 0);
+
+        responder.enableMove(false);
+
+        EventHelpers.simulateMouseMove($input, 0, 0);
+
+        responder.enableMove(true);
+
+        EventHelpers.simulateMouseMove($input, 0, 0);
+
+        expect(mouseMoved).toHaveBeenCalled();
+        expect(mouseMoved.calls.length).toEqual(2);
     });
 
 }); // eof describe
