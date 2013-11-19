@@ -26,36 +26,76 @@ var MouseResponder = Marionette.Controller.extend({
     // in that case, we would have never known to even start listenting
     // for up or down events if we only relied on them being set at
     // initialization time.
-    acceptsUpDown: true,
+    acceptsUpDown: false,
     acceptsMove: false,
     acceptsEnterExit: false,
+
+    _defaults: {
+        acceptsUpDown: true,
+        acceptsMove: false,
+        acceptsEnterExit: false
+    },
+
 
     // Time window, in milliseconds,  to count clicks
     clickCountTimeout: 350,
 
     // Initialization
     initialize: function(options){
-        _.extend(this, options);
+
         _.bindAll(this, '_mouseDown', '_mouseUp',
             '_mouseEntered', '_mouseExited',
             '_mouseDragged', '_mouseMoved');
 
-        if(!this.el) throw 'No input element provided.';
-        this.$el = helpers.getElement(this.el);
+        _.defaults(options, this._defaults);
 
-        if(this.acceptsUpDown){
-            this.$el.on('mousedown.auf.responders.mouse', {ctx: this}, this._mouseDown);
-            this.$el.on('mouseup.auf.responders.mouse', {ctx: this}, this._mouseUp);
+        this.el = options.el;
+        this.$el = helpers.registerElement(this.el);
+
+        this.mouseDown    = options.mouseDown    || this.mouseDown;
+        this.mouseUp      = options.mouseUp      || this.mouseUp;
+        this.mouseMoved   = options.mouseMoved   || this.mouseMoved;
+        this.mouseDragged = options.mouseDragged || this.mouseDragged;
+        this.mouseEntered = options.mouseEntered || this.mouseEntered;
+        this.mouseExited  = options.mouseExited  || this.mouseExited;
+
+        this.enableUpDown(options.acceptsUpDown);
+        this.enableMove(options.acceptsMove);
+        this.enableEnterExit(options.acceptsEnterExit);
+    },
+
+    enableUpDown: function(bool){
+        if(bool && !this.acceptsUpDown){
+            this.$el.on('mousedown.built.responders.mouse', {ctx: this}, this._mouseDown);
+            this.$el.on('mouseup.built.responders.mouse', {ctx: this}, this._mouseUp);
+        } else if(!bool && this.acceptsUpDown){
+            this.$el.off('mousedown.built.responders.mouse', this._mouseDown);
+            this.$el.off('mouseup.built.responders.mouse', this._mouseUp);
         }
 
-        if (this.acceptsMove){
-            this.$el.on('mousemove.auf.responders.mouse', {ctx: this}, this._mouseMoved);
+        this.acceptsUpDown = bool;
+    },
+
+    enableMove: function(bool){
+        if(bool && !this.acceptsMove){
+            this.$el.on('mousemove.built.responders.mouse', {ctx: this}, this._mouseMoved);
+        } else if (!bool && this.acceptsMove){
+            this.$el.off('mousemove.built.responders.mouse', this._mouseMoved);
         }
 
-        if (this.acceptsEnterExit){
-            this.$el.on('mouseenter.auf.responders.mouse', {ctx: this}, this._mouseEntered);
-            this.$el.on('mouseleave.auf.responders.mouse', {ctx: this}, this._mouseExited);
+        this.acceptsMove = bool;
+    },
+
+    enableEnterExit: function(bool){
+        if(bool && !this.acceptsEnterExit){
+            this.$el.on('mouseenter.built.responders.mouse', {ctx: this}, this._mouseEntered);
+            this.$el.on('mouseleave.built.responders.mouse', {ctx: this}, this._mouseExited);
+        } else if(!bool && this.acceptsEnterExit) {
+            this.$el.off('mouseenter.built.responders.mouse', this._mouseEntered);
+            this.$el.off('mouseleave.built.responders.mouse', this._mouseExited);
         }
+
+        this.acceptsEnterExit = bool;
     },
 
     _clickCounter: function(){
@@ -89,8 +129,8 @@ var MouseResponder = Marionette.Controller.extend({
         this._clickCounter();
 
         // watch for dragging
-        $(document).on('mousemove.auf.responders.mouse', this._mouseDragged);
-        $(document).on('mouseup.auf.responders.mouse', this._mouseUp);
+        $(document).on('mousemove.built.responders.mouse', this._mouseDragged);
+        $(document).on('mouseup.built.responders.mouse', this._mouseUp);
         this.mouseDown(this, e);
     },
 
@@ -110,8 +150,8 @@ var MouseResponder = Marionette.Controller.extend({
         this._clicks = (now - this._lastClick) > this.clickCountTimeout ? 0 : this._clicks;
 
         // disable for dragging
-        $(document).off('mousemove.auf.responders.mouse', this._mouseDragged);
-        $(document).off('mouseup.auf.responders.mouse', this._mouseUp);
+        $(document).off('mousemove.built.responders.mouse', this._mouseDragged);
+        $(document).off('mouseup.built.responders.mouse', this._mouseUp);
         this.mouseUp(this, e);
     },
 
@@ -174,21 +214,11 @@ var MouseResponder = Marionette.Controller.extend({
 
     onClose: function(){
         // to ensure it's gone
-        $('body').off('mousemove.auf.responders.mouse', this._mouseDragged);
+        $('body').off('mousemove.built.responders.mouse', this._mouseDragged);
 
-        if(this.acceptsUpDown){
-            this.$el.off('mousedown.auf.responders.mouse', this._mouseDown);
-            this.$el.off('mouseup.auf.responders.mouse', this._mouseUp);
-        }
-
-        if (this.acceptsEnterExit){
-            this.$el.off('mouseenter.auf.responders.mouse', this._mouseEntered);
-            this.$el.off('mouseleave.auf.responders.mouse', this._mouseExited);
-        }
-
-        if (this.acceptsMove){
-            this.$el.off('mousemove.auf.responders.mouse', this._mouseMoved);
-        }
+        this.enableUpDown(false);
+        this.enableMove(false);
+        this.enableEnterExit(false);
     }
 
 }); // eof MouseResponder
