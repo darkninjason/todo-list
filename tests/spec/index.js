@@ -8,6 +8,7 @@ define(function() {
      'spec/auf-datetime-formats',
      'spec/auf-responders-keys',
      'spec/auf-responders-drag',
+     'spec/auf-responders-drop',
      'spec/auf-responders-touches',
      'spec/auf-responders-mouse',
      'spec/auf-responders-window',

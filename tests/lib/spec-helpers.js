@@ -64,6 +64,10 @@ var SpecHelpers = {
 
     Events: {
         simulateEvent: function($el, type, payload) {
+            payload = payload || {};
+            payload.target = payload.target || $el[0];
+            payload.currentTarget = payload.currentTarget || $el[0];
+
             var e = $.Event(type);
             _.extend(e, payload);
 
@@ -223,30 +227,47 @@ var SpecHelpers = {
             this.simulateEvent($el, 'scroll', payload);
         },
 
-        simulateDragStart: function($el, x, y) {
-            var dt = this.dragAndDropDataTransfer();
-
-            var payload = {
-                originalEvent: {dataTransfer: dt, pageX: x || 0, pageY: y || 0},
-                target: $el[0],
-                currentTarget: $el[0]
-            };
-
-            this.simulateEvent($el, 'dragstart', payload);
-            return payload;
+        simulateDragStart: function($el, dataTransfer, x, y) {
+            return this.simulateDragEvent(
+                $el, 'dragstart', dataTransfer, x, y);
         },
 
-        simulateDragEnd: function($el, x, y) {
-            var dt = this.dragAndDropDataTransfer();
+        simulateDragEnd: function($el, dataTransfer, x, y) {
+            return this.simulateDragEvent(
+                $el, 'dragend', dataTransfer, x, y);
+        },
+
+        simulateDragEnter: function($el, dataTransfer, x, y) {
+            return this.simulateDragEvent(
+                $el, 'dragenter', dataTransfer, x, y);
+        },
+
+        simulateDragOver: function($el, dataTransfer, x, y) {
+
+            return this.simulateDragEvent(
+                $el, 'dragover', dataTransfer, x, y);
+        },
+
+        simulateDragLeave: function($el, dataTransfer, x, y) {
+
+            return this.simulateDragEvent(
+                $el, 'dragleave', dataTransfer, x, y);
+        },
+
+        simulateDrop: function($el, dataTransfer, x, y) {
+
+            return this.simulateDragEvent(
+                $el, 'drop', dataTransfer, x, y);
+        },
+
+        simulateDragEvent: function($el, type, dataTransfer, x, y) {
+            var dt = dataTransfer || this.dragAndDropDataTransfer();
 
             var payload = {
-                originalEvent: {dataTransfer: dt, pageX: x || 0, pageY: y || 0},
-                target: $el[0],
-                currentTarget: $el[0]
+                originalEvent: {dataTransfer: dt, pageX: x || 0, pageY: y || 0}
             };
 
-            this.simulateEvent($el, 'dragend', payload);
-            return payload;
+            return this.simulateEvent($el, type, payload);
         },
 
         dragAndDropDataTransfer: function(){

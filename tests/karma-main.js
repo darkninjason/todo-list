@@ -55,6 +55,7 @@ var tests = [
   'spec/auf-responders-window',
   'spec/auf-responders-scroll',
   'spec/auf-responders-drag',
+  'spec/auf-responders-drop',
   'spec/auf-gestures-swipe',
   'spec/auf-managers-index',
   'spec/auf-managers-focus',

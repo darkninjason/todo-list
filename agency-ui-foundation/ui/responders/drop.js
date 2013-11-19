@@ -79,18 +79,9 @@ var DropResponder = Marionette.Controller.extend({
         this.performDragOperation(this, e);
     },
 
-    _updateMousePosition: function (e){
-
-        var positionX = e.originalEvent.pageX;
-        var positionY = e.originalEvent.pageY;
-
-        this._setMousePosition(positionX, positionY);
-    },
-
     shouldAllowDrop: function(responder, e){
         var originalEvent = e.originalEvent;
         var dataTransfer = originalEvent.dataTransfer;
-
 
         //event.dataTransfer.dropEffect = "copy";
         var result = false;
@@ -117,6 +108,14 @@ var DropResponder = Marionette.Controller.extend({
         }
 
         return result;
+    },
+
+    _updateMousePosition: function (e){
+
+        var positionX = e.originalEvent.pageX;
+        var positionY = e.originalEvent.pageY;
+
+        this._setMousePosition(positionX, positionY);
     },
 
     _setMousePosition: function(x, y){
