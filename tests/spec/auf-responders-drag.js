@@ -247,8 +247,5 @@ describe('Drag Responder', function() {
         expect(badAction).toThrow();
     });
 
-
-
-
 }); // Eof describe
 }); // Eof define
