@@ -4,6 +4,7 @@ define(function(require, exports, module) {
 
 var $              = require('jquery');
 var MouseResponder = require('auf/ui/responders/mouse').MouseResponder;
+var helpers        = require('auf/utils/helpers');
 var EventHelpers   = require('lib/spec-helpers').Events;
 
 describe('Mouse Responder', function() {
@@ -32,6 +33,17 @@ describe('Mouse Responder', function() {
         }
 
         expect(badInit).toThrow();
+    });
+
+    it('expects AUF ID to be set', function(){
+
+        expect(helpers.getElementId($input)).toEqual(undefined);
+
+        responder = new MouseResponder({
+            el: $input
+        });
+
+        expect(helpers.getElementId($input)).not.toEqual(undefined);
     });
 
     it('expects UI will trigger mousedown', function(){
