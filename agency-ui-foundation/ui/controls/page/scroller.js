@@ -12,8 +12,8 @@ var ScrollManager = require('auf/ui/managers/scroll').ScrollManager;
 var Scroller = ScrollManager.extend({
 
     DEFAULT_DURATION   : 300,
-    EASING_LINEAR      :  'linear',
-    EASING_SWING       :  'swing',
+    EASING_LINEAR      : 'linear',
+    EASING_SWING       : 'swing',
 
     /**
      * initialize the Scroller, extends ScrollManager
@@ -55,9 +55,11 @@ var Scroller = ScrollManager.extend({
 
     _animateScroll: function(start, end, duration) {
         var self = this;
+
         if(this.deferred){
             this.deferred.reject();
         }
+
         this.deferred = $.Deferred();
 
         function step(now, tween) {
@@ -66,6 +68,12 @@ var Scroller = ScrollManager.extend({
 
         function complete() {
             self.deferred.resolve();
+        }
+
+        if(duration === 0){
+            this.constructor.__super__.setScrollValue.call(this, end);
+            self.deferred.resolve();
+            return this.deferred.promise();
         }
 
         // TODO: Revisit, resulting animation from this chuggy.
