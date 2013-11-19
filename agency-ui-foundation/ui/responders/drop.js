@@ -53,13 +53,13 @@ var DropResponder = Marionette.Controller.extend({
 
     _dragOver: function(e){
         this._updateMousePosition(e);
-        this.draggingUpdated(this, e);
 
         if (!this.shouldAllowDrop(this, e)){
             return;
         }
 
         e.preventDefault();
+        this.draggingUpdated(this, e);
     },
 
     _dragLeave: function(e){
@@ -145,6 +145,7 @@ var DropResponder = Marionette.Controller.extend({
         this.$el.off('dragenter.auf.responders.drop', this._dragEnter);
         this.$el.off('dragover.auf.responders.drop', this._dragOver);
         this.$el.off('dragleave.auf.responders.drop', this._dragLeave);
+        this.$el.off('drop.auf.responders.drop', this._drop);
     }
 
 }); // eof DropResponder

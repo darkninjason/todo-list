@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 // Imports
 
 var DropResponder = require('auf/ui/responders/drop').DropResponder;
+var helpers  = require('auf/utils/helpers');
 var spechelpers  = require('lib/spec-helpers');
 var EventHelpers = spechelpers.Events;
 
@@ -51,6 +52,15 @@ describe('Drop Responder', function() {
 
     // Test Suite
 
+    it('expects AUF ID to be set', function(){
+
+        expect(helpers.getElementId($dropZone)).toEqual(undefined);
+
+        var manager = getManager({el:$dropZone});
+
+        expect(helpers.getElementId($dropZone)).not.toEqual(undefined);
+    });
+
     it('expects \'draggingEntered\' to be called on dragenter', function(){
 
         var actionSpy = jasmine.createSpy('eventSpy');
@@ -72,10 +82,55 @@ describe('Drop Responder', function() {
         expect(actionSpy.calls.length).toEqual(1);
         expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
         expect(actionSpy.mostRecentCall.args[1].currentTarget).toEqual($dropZone[0]);
+    });
+
+    it('expects \'draggingEntered\' to be called on dragenter with array of dataTypes', function(){
+
+        var actionSpy = jasmine.createSpy('eventSpy');
+        var manager = getManager({el:$dropZone});
+        manager.dataType = ['com.auf.generic', 'com.auf.lucy', 'com.auf.ollie'];
+
+        manager.draggingEntered = actionSpy;
+
+        var dataTransfer = getDataTransfer('com.auf.lucy', 'lucy');
+        var e = EventHelpers.simulateDragEnter(
+            // $el,    dataTransfer, x,  y
+            $dropZone, dataTransfer, 10, 20);
+
+        var mouse = manager.getMousePosition();
+        expect(mouse.x).toEqual(10);
+        expect(mouse.y).toEqual(20);
+
+
+        expect(actionSpy).toHaveBeenCalled();
+        expect(actionSpy.calls.length).toEqual(1);
+        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
+        expect(actionSpy.mostRecentCall.args[1].currentTarget).toEqual($dropZone[0]);
 
     });
 
-    it('expects \'draggingEntered\' NOT to be called on dragenter', function(){
+    it('expects \'draggingEntered\' NOT to be called on dragenter with array of dataTypes', function(){
+
+        var actionSpy = jasmine.createSpy('eventSpy');
+        var manager = getManager({el:$dropZone});
+        manager.dataType = ['com.auf.generic', 'com.auf.lucy', 'com.auf.ollie'];
+
+        manager.draggingEntered = actionSpy;
+
+        var dataTransfer = getDataTransfer('com.auf.foo', 'lucy');
+        var e = EventHelpers.simulateDragEnter(
+            // $el,    dataTransfer, x,  y
+            $dropZone, dataTransfer, 10, 20);
+
+        var mouse = manager.getMousePosition();
+        expect(mouse.x).toEqual(10);
+        expect(mouse.y).toEqual(20);
+
+
+        expect(actionSpy).not.toHaveBeenCalled();
+    });
+
+    it('expects \'draggingEntered\' NOT to be called on dragenter with mismatched dataType', function(){
 
         var actionSpy = jasmine.createSpy('eventSpy');
         var manager = getManager({el:$dropZone});
@@ -86,6 +141,96 @@ describe('Drop Responder', function() {
         var e = EventHelpers.simulateDragEnter(
             // $el,    dataTransfer, x,  y
             $dropZone, dataTransfer, 10, 10);
+
+        expect(actionSpy).not.toHaveBeenCalled();
+    });
+
+    it('expects \'draggingEntered\' NOT to be called on dragenter with mismatched operation', function(){
+
+        var actionSpy = jasmine.createSpy('eventSpy');
+        var manager = getManager({el:$dropZone, operation:'move'});
+
+        manager.draggingEntered = actionSpy;
+
+        var dataTransfer = getDataTransfer(manager.dataType, 'lucy');
+        dataTransfer.effectAllowed = 'copy';
+
+        var e = EventHelpers.simulateDragEnter(
+            // $el,    dataTransfer, x,  y
+            $dropZone, dataTransfer, 10, 10);
+
+        expect(actionSpy).not.toHaveBeenCalled();
+    });
+
+    it('expects \'draggingUpdated\' NOT to be called on dragover with mismatched dataType', function(){
+
+        var actionSpy = jasmine.createSpy('eventSpy');
+        var manager = getManager({el:$dropZone});
+
+        manager.draggingEntered = actionSpy;
+
+        var dataTransfer = getDataTransfer('foo.bar.baz', 'lucy');
+        var e = EventHelpers.simulateDragOver(
+            // $el,    dataTransfer, x,  y
+            $dropZone, dataTransfer, 10, 10);
+
+        expect(actionSpy).not.toHaveBeenCalled();
+    });
+
+    it('expects \'draggingUpdated\' NOT to be called on dragover with mismatched operation', function(){
+
+        var actionSpy = jasmine.createSpy('eventSpy');
+        var manager = getManager({el:$dropZone, operation:'move'});
+
+        manager.draggingEntered = actionSpy;
+
+        var dataTransfer = getDataTransfer(manager.dataType, 'lucy');
+        dataTransfer.effectAllowed = 'copy';
+
+        var e = EventHelpers.simulateDragOver(
+            // $el,    dataTransfer, x,  y
+            $dropZone, dataTransfer, 10, 10);
+
+        expect(actionSpy).not.toHaveBeenCalled();
+    });
+
+    it('expects \'draggingUpdated\' to be called on dragover with array of dataTypes', function(){
+
+        var actionSpy = jasmine.createSpy('eventSpy');
+        var manager = getManager({el:$dropZone});
+        manager.dataType = ['com.auf.generic', 'com.auf.lucy', 'com.auf.ollie'];
+
+        manager.draggingUpdated = actionSpy;
+
+        var dataTransfer = getDataTransfer('com.auf.lucy', 'lucy');
+        var e = EventHelpers.simulateDragOver(
+            // $el,    dataTransfer, x,  y
+            $dropZone, dataTransfer, 10, 20);
+
+        var mouse = manager.getMousePosition();
+        expect(mouse.x).toEqual(10);
+        expect(mouse.y).toEqual(20);
+
+
+        expect(actionSpy).toHaveBeenCalled();
+        expect(actionSpy.calls.length).toEqual(1);
+        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
+        expect(actionSpy.mostRecentCall.args[1].currentTarget).toEqual($dropZone[0]);
+
+    });
+
+    it('expects \'draggingUpdated\' NOT to be called on dragover with array of dataTypes', function(){
+
+        var actionSpy = jasmine.createSpy('eventSpy');
+        var manager = getManager({el:$dropZone});
+
+        manager.dataType = ['com.auf.generic', 'com.auf.lucy', 'com.auf.ollie'];
+        manager.draggingUpdated = actionSpy;
+
+        var dataTransfer = getDataTransfer('com.auf.foo', 'lucy');
+        var e = EventHelpers.simulateDragOver(
+            // $el,    dataTransfer, x,  y
+            $dropZone, dataTransfer, 10, 20);
 
         expect(actionSpy).not.toHaveBeenCalled();
     });
@@ -162,6 +307,43 @@ describe('Drop Responder', function() {
         expect(manager.getData()).toEqual('lucy');
         expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
         expect(actionSpy.mostRecentCall.args[1].currentTarget).toEqual($dropZone[0]);
+
+    });
+
+    it('disables all drop related events on close', function(){
+
+        var actionSpy = jasmine.createSpy('eventSpy');
+        var manager = getManager({el:$dropZone});
+        manager.close();
+
+        // draggingStarted is a defered call,
+        // so we need an async test
+        manager.draggingEntered = actionSpy;
+        manager.draggingUpdated = actionSpy;
+        manager.draggingExited = actionSpy;
+        manager.performDragOperation = actionSpy;
+
+        var dataTransfer = EventHelpers.dragAndDropDataTransfer();
+        dataTransfer.setData(manager.dataType, 'lucy');
+
+        EventHelpers.simulateDragEnter(
+            // $el,    dataTransfer, x,  y
+            $dropZone, dataTransfer, 10, 20);
+
+        EventHelpers.simulateDragOver(
+            // $el,    dataTransfer, x,  y
+            $dropZone, dataTransfer, 10, 20);
+
+        EventHelpers.simulateDragLeave(
+            // $el,    dataTransfer, x,  y
+            $dropZone, dataTransfer, 10, 20);
+
+        EventHelpers.simulateDrop(
+            // $el,    dataTransfer, x,  y
+            $dropZone, dataTransfer);
+
+        expect(actionSpy).not.toHaveBeenCalled();
+        expect(actionSpy.calls.length).toEqual(0);
 
     });
 
