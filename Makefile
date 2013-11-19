@@ -1,3 +1,16 @@
+SHELL=/bin/bash
+JS_TEST_LOC = $(shell find ./tests/spec/ -name '*.js' | xargs cat | sed '/^$$/d' | wc -l)
+JS_LOC = $(shell find ./agency-ui-foundation/ -name '*.js' | xargs cat | sed '/^$$/d' | wc -l)
+
+.PHONY: count-js
+count-js:
+	@echo ''
+	@echo 'JavaScript Test LOC:' $(JS_TEST_LOC)
+	@echo '     JavaScript LOC:' $(JS_LOC)
+	@echo '              -----------'
+	@echo '                     '$$(( $(JS_TEST_LOC) + $(JS_LOC) ))
+	@echo ''
+
 release:
 	git subtree split --prefix agency-ui-foundation -b release
 	git checkout master
