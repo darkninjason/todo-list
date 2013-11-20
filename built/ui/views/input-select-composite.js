@@ -1,9 +1,9 @@
 define(function (require, exports, module) {
 
 var marionette = require('marionette');
-var InputSelect  = require('built/components/controls/input-select').InputSelectMarionette;
-var helpers      = require('built/utils/helpers');
-var Scroller     = require('built/ui/controls/page/scroller').Scroller;
+var InputSelect  = require('built/ui/controls/input-select').InputSelectMarionette;
+var helpers      = require('built/core/utils/helpers');
+var Scroller     = require('built/core/controls/page/scroller').Scroller;
 
 
 var InputSelectComposite =  marionette.CompositeView.extend({
@@ -12,10 +12,12 @@ var InputSelectComposite =  marionette.CompositeView.extend({
     },
 
     onShow : function(){
+
         _.bindAll(this,'onMouseMove');
         this.inputSelect = new InputSelect({
             el: this.ui.input
         });
+
         this.scroller = new Scroller({
             el            : this.ui.listGroup,
             scrollDebounce: 0,

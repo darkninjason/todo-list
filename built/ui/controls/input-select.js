@@ -10,10 +10,12 @@ define(function (require, exports, module) {
         },
 
         initialize: function() {
+
             InputSelect.prototype.initialize.apply(this,arguments);
             this.on('blur', this._onItemBlur);
             this.on('focus', this._onItemFocus);
             this.on('select', this._onItemSelect);
+
         },
 
         setViews : function(children){

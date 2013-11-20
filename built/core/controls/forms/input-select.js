@@ -188,7 +188,7 @@ define(function(require, exports, module){
             this.$el = helpers.registerElement(this.el);
 
             _.bindAll(this, 'receivedText',
-                'mouseDidClick', 'mouseDidEnter', 'mouseDidExit', 'mouseDidMove',
+                'mouseDidClick', 'mouseDidEnter', 'mouseDidExit',
                 '_keyNavigationKeyDown', 'keyNavigationReturn', 'keyNavigationEscape',
                 'keyNavigationUp', 'keyNavigationDown', 'keyNavigationFirstMove');
 
@@ -262,8 +262,7 @@ define(function(require, exports, module){
                 acceptsMove: false,
                 mouseEntered: this.mouseDidEnter,
                 mouseExited: this.mouseDidExit,
-                mouseUp: this.mouseDidClick,
-                mouseMoved: this.mouseDidMove
+                mouseUp: this.mouseDidClick
             });
 
             this.keyNavigation = new KeyResponder({
@@ -350,11 +349,6 @@ define(function(require, exports, module){
                 this.$el.focus();
                 this.wantsSelect(e.target);
             }
-        },
-
-        mouseDidMove: function(responder, e){
-            this.mouseResponder.enableMove(false);
-            this.mouseResponder.enableEnterExit(true);
         },
 
         mouseDidEnter: function(responder, e){
