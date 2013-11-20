@@ -56,7 +56,12 @@ var MouseResponder = Marionette.Controller.extend({
         // Javascript by default will fire a mousemove event when you move
         // elements under the mouse...wow Javascript...well played, you can
         // go burn in a lake of fire i hate you with everything in me...
-        // on that note, we by default shut off that behavior, but will
+        // on that note, we add a flag here so that if you want to have the
+        // paper move and the 'pen wrote' event to fire, it won't
+        // if you add accpetsTraditionalMouseMove = false, events will wait
+        // for 2 pixel changes to actually fire off a mousemove event
+        // adam and I disagreed on this....i said default should be false,
+        // i am tired and don't feel like arguing, so he won :)
         this.accpetsTraditionalMouseMove = options.accpetsTraditionalMouseMove;
 
         this.mouseDown    = options.mouseDown    || this.mouseDown;
