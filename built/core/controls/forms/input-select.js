@@ -297,8 +297,6 @@ define(function(require, exports, module){
 
         _keyNavigationKeyDown: function(responder, e){
             this._keyNavigationSupressLateralCursorMovement(e);
-            this.mouseResponder.enableMove(true);
-            this.mouseResponder.enableEnterExit(false);
             this.keyNavigation.interpretKeyEvents([e]);
         },
 
