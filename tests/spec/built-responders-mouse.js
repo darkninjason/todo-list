@@ -280,11 +280,6 @@ describe('Mouse Responder', function() {
         expect(mouseMoved.calls.length).toEqual(1);
     });
 
-
-
-
-
-
     it('expects mouse move not to be called', function() {
         var mouseMoved = jasmine.createSpy('mouseMoved');
 
