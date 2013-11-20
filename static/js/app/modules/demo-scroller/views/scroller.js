@@ -2,7 +2,7 @@ define(function (require, exports, module) {
 
 var marionette = require('marionette');
 var template = require('hbs!tpl/scroller');
-var Scroller = require('auf/ui/controls/page/scroller').Scroller;
+var Scroller = require('built/ui/controls/page/scroller').Scroller;
 
 var ScrollerView = marionette.ItemView.extend({
     positionDict : {},

@@ -1,9 +1,9 @@
 define(function (require, exports, module) {
 
 var marionette   = require('marionette');
-var InputSelect  = require('auf/components/input-select').InputSelectMarionette;
-var helpers      = require('auf/utils/helpers');
-var Scroller     = require('auf/ui/controls/page/scroller').Scroller;
+var InputSelect  = require('built/components/input-select').InputSelectMarionette;
+var helpers      = require('built/utils/helpers');
+var Scroller     = require('built/ui/controls/page/scroller').Scroller;
 var template     = require('hbs!tpl/input-select/composite');
 
 var ResultItem   = require('./result-item').ResultItem;
