@@ -92,8 +92,8 @@ var MouseResponder = marionette.Controller.extend({
         if(bool && !this.acceptsMove){
             this.$el.on('mousemove.built.responders.mouse', {ctx: this}, this._mouseMoved);
         } else if (!bool && this.acceptsMove){
-            this._mouseX = null;
-            this._mouseY = null;
+            this._mouseX = undefined;
+            this._mouseY = undefined;
             this.$el.off('mousemove.built.responders.mouse', this._mouseMoved);
         }
 
