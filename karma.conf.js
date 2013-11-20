@@ -17,9 +17,9 @@ module.exports = function(config) {
     files: [
         // using jasmine-jquery, we would like to serve our fixtures:
         {pattern: 'tests/fixtures/*.html', included: false, served: true},
-        {pattern: 'tests/spec/auf*.js', included: false},
+        {pattern: 'tests/spec/built*.js', included: false},
         {pattern: 'tests/lib/**/*.js', included: false, served: true},
-        {pattern: 'agency-ui-foundation/**/*.js', included: false, served: true},
+        {pattern: 'built/**/*.js', included: false, served: true},
 
         'tests/karma-main.js'
     ],
@@ -30,7 +30,7 @@ module.exports = function(config) {
     preprocessors: {
         // Istanbul required for coverage (npm install -g istanbul)
         // karma-coverage required for coverage (npm install -g karma-coverage)
-        'agency-ui-foundation/**/*.js': 'coverage'
+        'built/**/*.js': 'coverage'
     },
 
 

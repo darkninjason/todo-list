@@ -9,7 +9,7 @@ requirejs.config({
         'vendor': 'tests/lib/vendor',
         'jasmine': 'tests/lib/jasmine',
         'spec': 'tests/spec',
-        'auf': 'agency-ui-foundation',
+        'built': 'built',
         'jquery': 'tests/lib/vendor/jquery',
 
     },

@@ -44,30 +44,30 @@
 // }
 
 var tests = [
-  'spec/auf-utils-helpers',
-  'spec/auf-jquery-collection',
-  'spec/auf-calendar',
-  'spec/auf-datetime',
-  'spec/auf-datetime-formats',
-  'spec/auf-responders-keys',
-  'spec/auf-responders-touches',
-  'spec/auf-responders-mouse',
-  'spec/auf-responders-window',
-  'spec/auf-responders-scroll',
-  'spec/auf-responders-drag',
-  'spec/auf-responders-drop',
-  'spec/auf-gestures-swipe',
-  'spec/auf-managers-index',
-  'spec/auf-managers-focus',
-  'spec/auf-managers-focus-single',
-  'spec/auf-managers-list',
-  'spec/auf-managers-range',
-  'spec/auf-managers-scroll',
-  'spec/auf-control-slider-horizontal',
-  'spec/auf-control-slider-horizontal-range',
-  'spec/auf-control-input-select',
-  'spec/auf-control-scroller',
-  'spec/auf-utils-ioc'
+  'spec/built-utils-helpers',
+  'spec/built-jquery-collection',
+  'spec/built-calendar',
+  'spec/built-datetime',
+  'spec/built-datetime-formats',
+  'spec/built-responders-keys',
+  'spec/built-responders-touches',
+  'spec/built-responders-mouse',
+  'spec/built-responders-window',
+  'spec/built-responders-scroll',
+  'spec/built-responders-drag',
+  'spec/built-responders-drop',
+  'spec/built-gestures-swipe',
+  'spec/built-managers-array',
+  'spec/built-managers-index',
+  'spec/built-managers-focus',
+  'spec/built-managers-focus-single',
+  'spec/built-managers-range',
+  'spec/built-managers-scroll',
+  'spec/built-control-slider-horizontal',
+  'spec/built-control-slider-horizontal-range',
+  'spec/built-control-input-select',
+  'spec/built-control-scroller',
+  'spec/built-utils-ioc'
 ];
 
 var path = '';
@@ -85,7 +85,7 @@ requirejs.config({
         'vendor': 'tests/lib/vendor',
         'jasmine': 'tests/lib/jasmine',
         'spec': 'tests/spec',
-        'auf': 'agency-ui-foundation',
+        'built': 'built',
 
         // Only jquery is allowed to do this as it's a named module
         // https://github.com/jrburke/requirejs/wiki/Updating-existing-libraries#wiki-anon

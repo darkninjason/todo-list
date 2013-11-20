@@ -1,6 +1,6 @@
 SHELL=/bin/bash
 JS_TEST_LOC = $(shell find ./tests/spec/ -name '*.js' | xargs cat | sed '/^$$/d' | wc -l)
-JS_LOC = $(shell find ./agency-ui-foundation/ -name '*.js' | xargs cat | sed '/^$$/d' | wc -l)
+JS_LOC = $(shell find ./built/ -name '*.js' | xargs cat | sed '/^$$/d' | wc -l)
 
 .PHONY: count-js
 count-js:
@@ -12,7 +12,7 @@ count-js:
 	@echo ''
 
 release:
-	git subtree split --prefix agency-ui-foundation -b release
+	git subtree split --prefix built -b release
 	git checkout master
 	git merge -s subtree --no-commit --squash release
 	git branch -D release
