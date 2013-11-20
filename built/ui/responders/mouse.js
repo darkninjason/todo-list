@@ -33,8 +33,7 @@ var MouseResponder = marionette.Controller.extend({
     _defaults: {
         acceptsUpDown: true,
         acceptsMove: false,
-        acceptsEnterExit: false,
-        accpetsTraditionalMouseMove: true
+        acceptsEnterExit: false
     },
 
 
@@ -52,19 +51,6 @@ var MouseResponder = marionette.Controller.extend({
 
         this.el = options.el;
         this.$el = helpers.registerElement(this.el);
-        this._mouseX = null;
-        this._mouseY = null;
-
-        // Javascript by default will fire a mousemove event when you move
-        // elements under the mouse...wow Javascript...well played, you can
-        // go burn in a lake of fire i hate you with everything in me...
-        // on that note, we add a flag here so that if you want to have the
-        // paper move and the 'pen wrote' event to fire, it won't
-        // if you add accpetsTraditionalMouseMove = false, events will wait
-        // for 2 pixel changes to actually fire off a mousemove event
-        // adam and I disagreed on this....i said default should be false,
-        // i am tired and don't feel like arguing, so he won :)
-        this.accpetsTraditionalMouseMove = options.accpetsTraditionalMouseMove;
 
         this.mouseDown    = options.mouseDown    || this.mouseDown;
         this.mouseUp      = options.mouseUp      || this.mouseUp;
@@ -94,8 +80,6 @@ var MouseResponder = marionette.Controller.extend({
         if(bool && !this.acceptsMove){
             this.$el.on('mousemove.built.responders.mouse', {ctx: this}, this._mouseMoved);
         } else if (!bool && this.acceptsMove){
-            this._mouseX = null;
-            this._mouseY = null;
             this.$el.off('mousemove.built.responders.mouse', this._mouseMoved);
         }
 
@@ -178,26 +162,7 @@ var MouseResponder = marionette.Controller.extend({
     },
 
     _mouseMoved: function(e){
-        if(this.accpetsTraditionalMouseMove){
-            this.mouseMoved(this, e);
-            return;
-        }
-
-        var hasMouseX = !_.isNull(this._mouseX);
-        var hasMouseY = !_.isNull(this._mouseY);
-        var hasPreviousMousePosition = hasMouseX && hasMouseY;
-        var mouseXMoved = hasPreviousMousePosition && (this._mouseX != e.pageX);
-        var mouseYMoved = hasPreviousMousePosition && (this._mouseY != e.pageY);
-
-        if(mouseXMoved || mouseYMoved){
-            this._mouseX = e.pageX;
-            this._mouseY = e.pageY;
-            this.mouseMoved(this, e);
-            return;
-        }
-
-        this._mouseX = e.pageX;
-        this._mouseY = e.pageY;
+        this.mouseMoved(this, e);
     },
 
     _mouseEntered: function(e){

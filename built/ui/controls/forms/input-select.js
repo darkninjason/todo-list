@@ -260,7 +260,6 @@ define(function(require, exports, module){
                 acceptsEnterExit: true,
                 acceptsUpDown: true,
                 acceptsMove: false,
-                accpetsTraditionalMouseMove: false,
                 mouseEntered: this.mouseDidEnter,
                 mouseExited: this.mouseDidExit,
                 mouseUp: this.mouseDidClick,
