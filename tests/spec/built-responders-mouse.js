@@ -280,7 +280,7 @@ describe('Mouse Responder', function() {
         expect(mouseMoved.calls.length).toEqual(1);
     });
 
-    it('expects non-traditional mouse move to be called ', function() {
+    it('expects non-traditional mouse move to be called with x, y change', function() {
         var mouseMoved = jasmine.createSpy('mouseMoved');
 
         responder = new MouseResponder({
@@ -294,6 +294,55 @@ describe('Mouse Responder', function() {
         EventHelpers.simulateMouseMove($input, 10, 10);
 
         expect(mouseMoved).toHaveBeenCalled();
+    });
+
+    it('expects non-traditional mouse move to be called with x change only', function() {
+        var mouseMoved = jasmine.createSpy('mouseMoved');
+
+        responder = new MouseResponder({
+                el: $input,
+                mouseMoved: mouseMoved,
+                acceptsMove: true,
+                accpetsTraditionalMouseMove: false
+        });
+
+        EventHelpers.simulateMouseMove($input, 0, 0);
+        EventHelpers.simulateMouseMove($input, 10, 0);
+
+        expect(mouseMoved).toHaveBeenCalled();
+    });
+
+    it('expects non-traditional mouse move to be called with y change only', function() {
+        var mouseMoved = jasmine.createSpy('mouseMoved');
+
+        responder = new MouseResponder({
+                el: $input,
+                mouseMoved: mouseMoved,
+                acceptsMove: true,
+                accpetsTraditionalMouseMove: false
+        });
+
+        EventHelpers.simulateMouseMove($input, 0, 0);
+        EventHelpers.simulateMouseMove($input, 0, 10);
+
+        expect(mouseMoved).toHaveBeenCalled();
+    });
+
+    it('expects non-traditional mouse move NOT to be called ', function() {
+        var mouseMoved = jasmine.createSpy('mouseMoved');
+
+        responder = new MouseResponder({
+                el: $input,
+                mouseMoved: mouseMoved,
+                acceptsMove: true,
+                accpetsTraditionalMouseMove: false
+        });
+
+        EventHelpers.simulateMouseMove($input, 10, 10);
+        EventHelpers.simulateMouseMove($input, 10, 10);
+        EventHelpers.simulateMouseMove($input, 10, 10);
+
+        expect(mouseMoved).not.toHaveBeenCalled();
     });
 
     it('expects normal mouse move to not be called ', function() {
