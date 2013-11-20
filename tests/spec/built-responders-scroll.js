@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 
 var $               = require('jquery');
 var EventHelpers    = require('lib/spec-helpers').Events;
-var ScrollResponder = require('built/ui/responders/scroll').ScrollResponder;
+var ScrollResponder = require('built/core/responders/scroll').ScrollResponder;
 
 describe('Scroll Responder', function() {
 

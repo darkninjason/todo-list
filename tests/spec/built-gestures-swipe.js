@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var SwipeGesture = require('built/ui/gestures/swipe').SwipeGesture;
+var SwipeGesture = require('built/core/gestures/swipe').SwipeGesture;
 var SpecHelpers  = require('lib/spec-helpers');
 var EventHelpers = SpecHelpers.Events;
 

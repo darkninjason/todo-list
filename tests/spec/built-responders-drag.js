@@ -2,8 +2,8 @@ define(function(require, exports, module) {
 
 // Imports
 
-var DragResponder = require('built/ui/responders/drag').DragResponder;
-var helpers  = require('built/utils/helpers');
+var DragResponder = require('built/core/responders/drag').DragResponder;
+var helpers  = require('built/core/utils/helpers');
 var spechelpers  = require('lib/spec-helpers');
 var EventHelpers = spechelpers.Events;
 

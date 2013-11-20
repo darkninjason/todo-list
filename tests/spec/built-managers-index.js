@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var IndexManager = require('built/ui/managers/index').IndexManager;
+var IndexManager = require('built/core/managers/index').IndexManager;
 
 describe('Index Manager', function() {
 

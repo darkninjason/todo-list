@@ -4,9 +4,9 @@ define(function(require, exports, module){
 var _          = require('underscore');
 var marionette = require('marionette');
 
-var Helpers         = require('built/utils/helpers');
-var ScrollResponder = require('built/ui/responders/scroll').ScrollResponder;
-var RangeManager    = require('built/ui/managers/range').RangeManager;
+var Helpers         = require('built/core/utils/helpers');
+var ScrollResponder = require('built/core/responders/scroll').ScrollResponder;
+var RangeManager    = require('built/core/managers/range').RangeManager;
 
 // Module
 

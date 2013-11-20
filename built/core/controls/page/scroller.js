@@ -3,8 +3,8 @@ define(function(require, exports, module){
 // Imports
 
 var _             = require('underscore');
-var Helpers       = require('built/utils/helpers');
-var ScrollManager = require('built/ui/managers/scroll').ScrollManager;
+var Helpers       = require('built/core/utils/helpers');
+var ScrollManager = require('built/core/managers/scroll').ScrollManager;
 
 // Module
 

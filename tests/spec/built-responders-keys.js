@@ -2,8 +2,8 @@ define(function(require, exports, module) {
 
 // Imports
 
-var KeyResponder    = require('built/ui/responders/keys').KeyResponder;
-var KeyInputManager = require('built/ui/managers/key-input').KeyInputManager;
+var KeyResponder    = require('built/core/responders/keys').KeyResponder;
+var KeyInputManager = require('built/core/managers/key-input').KeyInputManager;
 var EventHelpers    = require('lib/spec-helpers').Events;
 
 describe('Key Responder', function() {

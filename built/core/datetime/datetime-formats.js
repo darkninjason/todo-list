@@ -1,6 +1,6 @@
 define(function(require, exports, module){
 
-    var datetime = require('built/datetime/datetime');
+    var datetime = require('built/core/datetime/datetime');
 
     var months = ['January', 'February', 'March', 'April', 'May',
                   'June', 'July', 'August', 'September', 'October',

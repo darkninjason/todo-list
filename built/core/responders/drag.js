@@ -4,8 +4,8 @@ define(function(require, exports, module){
 
 var Marionette = require('marionette');
 var _          = require('underscore');
-var helpers    = require('built/utils/helpers');
-var dndutils    = require('built/utils/dndutils');
+var helpers    = require('built/core/utils/helpers');
+var dndutils    = require('built/core/utils/dndutils');
 
 // Module
 

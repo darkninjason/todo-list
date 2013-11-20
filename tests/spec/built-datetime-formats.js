@@ -2,8 +2,8 @@ define(function(require, exports, module) {
 
 // Imports
 
-var formats  = require('built/datetime/datetime-formats');
-var datetime = require('built/datetime/datetime');
+var formats  = require('built/core/datetime/datetime-formats');
+var datetime = require('built/core/datetime/datetime');
 
 describe('Datetime: Formats', function() {
     // [WARNING] these tests assume you are in PDT!

@@ -4,7 +4,7 @@ define(function(require, exports, module){
 
 var marionette     = require('marionette');
 var _              = require('underscore');
-var TouchResponder = require('built/ui/responders/touches').TouchResponder;
+var TouchResponder = require('built/core/responders/touches').TouchResponder;
 
 // Module
 

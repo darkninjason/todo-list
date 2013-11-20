@@ -3,8 +3,8 @@ define(function(require, exports, module) {
 // Imports
 
 var $              = require('jquery');
-var MouseResponder = require('built/ui/responders/mouse').MouseResponder;
-var helpers        = require('built/utils/helpers');
+var MouseResponder = require('built/core/responders/mouse').MouseResponder;
+var helpers        = require('built/core/utils/helpers');
 var EventHelpers   = require('lib/spec-helpers').Events;
 
 describe('Mouse Responder', function() {

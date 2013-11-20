@@ -2,8 +2,8 @@ define(function(require, exports, module) {
 
 // Imports
 
-var datetime = require('built/datetime/datetime');
-var calendar = require('built/calendar/calendar');
+var datetime = require('built/core/datetime/datetime');
+var calendar = require('built/core/calendar/calendar');
 
 describe('Datetime:', function() {
 

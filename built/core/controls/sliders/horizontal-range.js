@@ -3,8 +3,8 @@ define(function(require, exports, module) {
 // Imports
 
 var _                = require('underscore');
-var HorizontalSlider = require('built/ui/controls/sliders/horizontal').HorizontalSlider;
-var Helpers          = require('built/utils/helpers');
+var HorizontalSlider = require('built/core/controls/sliders/horizontal').HorizontalSlider;
+var Helpers          = require('built/core/utils/helpers');
 
 // Module
 

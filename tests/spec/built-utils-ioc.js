@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var Container = require('built/utils/ioc').Container;
+var Container = require('built/core/utils/ioc').Container;
 var marionette = require('marionette');
 
 describe('Dependency Injection', function() {

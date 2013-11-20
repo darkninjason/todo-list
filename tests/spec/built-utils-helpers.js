@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 // Imports
 
 var $       = require('jquery');
-var helpers = require('built/utils/helpers');
+var helpers = require('built/core/utils/helpers');
 
 describe('Utils Helpers', function() {
 

@@ -2,8 +2,8 @@ define(function(require, exports, module) {
 
 // Imports
 
-var DropResponder = require('built/ui/responders/drop').DropResponder;
-var helpers  = require('built/utils/helpers');
+var DropResponder = require('built/core/responders/drop').DropResponder;
+var helpers  = require('built/core/utils/helpers');
 var spechelpers  = require('lib/spec-helpers');
 var EventHelpers = spechelpers.Events;
 

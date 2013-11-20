@@ -4,10 +4,10 @@ define(function(require, exports, module){
 
 var marionette           = require('marionette');
 var _                    = require('underscore');
-var RangeManager         = require('built/ui/managers/range').RangeManager;
-var MouseResponder       = require('built/ui/responders/mouse').MouseResponder;
-var TouchResponder       = require('built/ui/responders/touches').TouchResponder;
-var helpers              = require('built/utils/helpers');
+var RangeManager         = require('built/core/managers/range').RangeManager;
+var MouseResponder       = require('built/core/responders/mouse').MouseResponder;
+var TouchResponder       = require('built/core/responders/touches').TouchResponder;
+var helpers              = require('built/core/utils/helpers');
 
 // Module
 

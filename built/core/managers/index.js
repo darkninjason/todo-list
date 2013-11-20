@@ -4,7 +4,7 @@ define(function(require, exports, module){
 
 var marionette   = require('marionette');
 var _            = require('underscore');
-var RangeManager = require('built/ui/managers/range').RangeManager;
+var RangeManager = require('built/core/managers/range').RangeManager;
 
 // Module
 

@@ -1,7 +1,7 @@
 define(function(require, exports, module){
 
 var _ = require('underscore');
-var cssPointer = require('built/features/css-pointer-events');
+var cssPointer = require('built/core/features/css-pointer-events');
 
 
 function supressChildPointerEvents($el){

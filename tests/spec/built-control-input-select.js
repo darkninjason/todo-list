@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 
 var _                = require('underscore');
 var marionette       = require('marionette');
-var InputSelect      = require('built/ui/controls/forms/input-select').InputSelect;
+var InputSelect      = require('built/core/controls/forms/input-select').InputSelect;
 var SpecHelpers      = require('lib/spec-helpers');
 var EventHelpers     = SpecHelpers.Events;
 var KeyCodes         = SpecHelpers.KeyCodes;

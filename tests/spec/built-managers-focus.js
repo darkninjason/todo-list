@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var FocusManager = require('built/ui/managers/focus').FocusManager;
+var FocusManager = require('built/core/managers/focus').FocusManager;
 
 describe('Focus Manager', function() {
 

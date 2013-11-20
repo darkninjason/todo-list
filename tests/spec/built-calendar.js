@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var calendar = require('built/calendar/calendar');
+var calendar = require('built/core/calendar/calendar');
 var _        = require('underscore');
 
 describe('Calendar:', function() {

@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var SingleFocusManager = require('built/ui/managers/focus-single').SingleFocusManager;
+var SingleFocusManager = require('built/core/managers/focus-single').SingleFocusManager;
 
 describe('Single Focus Manager', function() {
 

@@ -2,11 +2,11 @@ define(function(require, exports, module) {
     var $ = require('jquery');
     var _ = require('underscore');
     var marionette = require('marionette');
-    var DragResponder = require('built/ui/responders/drag').DragResponder;
-    var DropResponder = require('built/ui/responders/drop').DropResponder;
-    var ArrayManager = require('built/ui/managers/array').ArrayManager;
-    var helpers = require('built/utils/helpers');
-    var dndutils = require('built/utils/dndutils');
+    var DragResponder = require('built/core/responders/drag').DragResponder;
+    var DropResponder = require('built/core/responders/drop').DropResponder;
+    var ArrayManager = require('built/core/managers/array').ArrayManager;
+    var helpers = require('built/core/utils/helpers');
+    var dndutils = require('built/core/utils/dndutils');
 
 
     var DragDropList = marionette.Controller.extend({

@@ -4,9 +4,9 @@ define(function(require, exports, module){
 
 var marionette     = require('marionette');
 var _              = require('underscore');
-var Collection     = require('built/jquery/collection').Collection;
-var array          = require('built/ui/managers/array');
-var helpers        = require('built/utils/helpers');
+var Collection     = require('built/core/jquery/collection').Collection;
+var array          = require('built/core/managers/array');
+var helpers        = require('built/core/utils/helpers');
 // Module
 
 var FocusManager =  array.ArrayManager.extend({

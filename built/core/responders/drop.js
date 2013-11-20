@@ -4,7 +4,7 @@ define(function(require, exports, module){
 
 var Marionette = require('marionette');
 var _          = require('underscore');
-var helpers    = require('built/utils/helpers');
+var helpers    = require('built/core/utils/helpers');
 
 // Module
 var DropResponder = Marionette.Controller.extend({

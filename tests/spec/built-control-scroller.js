@@ -6,7 +6,7 @@ _ = require('underscore');
 $ = require('jquery');
 
 EventHelpers  = require('lib/spec-helpers').Events;
-Scroller      = require('built/ui/controls/page/scroller').Scroller;
+Scroller      = require('built/core/controls/page/scroller').Scroller;
 
 describe('Scroller', function() {
 

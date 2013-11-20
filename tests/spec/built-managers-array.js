@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var array = require('built/ui/managers/array');
+var array = require('built/core/managers/array');
 
 describe('Array Manager', function() {
 

@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 // Import
 
 var $              = require('jquery');
-var TouchResponder = require('built/ui/responders/touches').TouchResponder;
+var TouchResponder = require('built/core/responders/touches').TouchResponder;
 var EventHelpers   = require('lib/spec-helpers').Events;
 
 describe('Responder: Touch', function() {

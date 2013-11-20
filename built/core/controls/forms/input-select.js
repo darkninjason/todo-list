@@ -1,11 +1,11 @@
 define(function(require, exports, module){
     var _                  = require('underscore');
     var marionette         = require('marionette');
-    var KeyResponder       = require('built/ui/responders/keys').KeyResponder;
-    var MouseResponder     = require('built/ui/responders/mouse').MouseResponder;
-    var IndexManager       = require('built/ui/managers/index').IndexManager;
-    var SingleFocusManager = require('built/ui/managers/focus-single').SingleFocusManager;
-    var helpers            = require('built/utils/helpers');
+    var KeyResponder       = require('built/core/responders/keys').KeyResponder;
+    var MouseResponder     = require('built/core/responders/mouse').MouseResponder;
+    var IndexManager       = require('built/core/managers/index').IndexManager;
+    var SingleFocusManager = require('built/core/managers/focus-single').SingleFocusManager;
+    var helpers            = require('built/core/utils/helpers');
 
     // Some requirements when using this control.
     //

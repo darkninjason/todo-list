@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var Collection = require('built/jquery/collection').Collection;
+var Collection = require('built/core/jquery/collection').Collection;
 var _          = require('underscore');
 
 describe('jQuery Collection:', function() {

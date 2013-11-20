@@ -4,8 +4,8 @@ define(function(require, exports, module){
 
 var Marionette      = require('marionette');
 var _               = require('underscore');
-var KeyInputManager = require('built/ui/managers/key-input').KeyInputManager;
-var helpers         = require('built/utils/helpers');
+var KeyInputManager = require('built/core/managers/key-input').KeyInputManager;
+var helpers         = require('built/core/utils/helpers');
 
 // Module
 

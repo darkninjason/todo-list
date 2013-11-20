@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
 // Imports
 
-var RangeManager = require('built/ui/managers/range').RangeManager;
+var RangeManager = require('built/core/managers/range').RangeManager;
 
 describe('Range Manager', function() {
 
