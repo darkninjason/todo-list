@@ -181,15 +181,22 @@ var MouseResponder = marionette.Controller.extend({
             return;
         }
 
+        var hasMouseX = !_.isUndefined(this._mouseX);
+        var hasMouseY = !_.isUndefined(this._mouseY);
 
-        if(!this._mouseX || !this._mouseY || (this._mouseX == e.pageX  && this._mouseY == e.pageY)){
+        var hasPreviousMousePosition = hasMouseX && hasMouseY;
+        var mouseXMoved = hasPreviousMousePosition && (this._mouseX != e.pageX);
+        var mouseYMoved = hasPreviousMousePosition && (this._mouseY != e.pageY);
+
+        if(mouseXMoved || mouseYMoved){
             this._mouseX = e.pageX;
             this._mouseY = e.pageY;
+            this.mouseMoved(this, e);
             return;
         }
+
         this._mouseX = e.pageX;
         this._mouseY = e.pageY;
-        this.mouseMoved(this, e);
     },
 
     _mouseEntered: function(e){

@@ -280,7 +280,7 @@ describe('Mouse Responder', function() {
         expect(mouseMoved.calls.length).toEqual(1);
     });
 
-    it('expects normal mouse move to be called ', function() {
+    it('expects non-traditional mouse move to be called ', function() {
         var mouseMoved = jasmine.createSpy('mouseMoved');
 
         responder = new MouseResponder({
@@ -289,9 +289,9 @@ describe('Mouse Responder', function() {
                 acceptsMove: true,
                 accpetsTraditionalMouseMove: false
         });
-        responder._mouseX = 1;
-        responder._mouseY = 1;
+
         EventHelpers.simulateMouseMove($input, 0, 0);
+        EventHelpers.simulateMouseMove($input, 10, 10);
 
         expect(mouseMoved).toHaveBeenCalled();
     });
