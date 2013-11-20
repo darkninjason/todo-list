@@ -1,10 +1,14 @@
 #input-select{
-
+    @extend .row;
+    >div{
+        @extend .col-md-5;
+    }
     .list-group {
+
         max-height: 300px;
         overflow: hidden;
         overflow-y: scroll;
-        border: 1px solid black;
+        border-bottom: 1px solid $gray-lighter;
     }
     margin-bottom: 30px;
 }
