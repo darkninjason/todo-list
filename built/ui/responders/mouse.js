@@ -52,6 +52,8 @@ var MouseResponder = marionette.Controller.extend({
 
         this.el = options.el;
         this.$el = helpers.registerElement(this.el);
+        this._mouseX = null;
+        this._mouseY = null;
 
         // Javascript by default will fire a mousemove event when you move
         // elements under the mouse...wow Javascript...well played, you can
@@ -92,8 +94,8 @@ var MouseResponder = marionette.Controller.extend({
         if(bool && !this.acceptsMove){
             this.$el.on('mousemove.built.responders.mouse', {ctx: this}, this._mouseMoved);
         } else if (!bool && this.acceptsMove){
-            this._mouseX = undefined;
-            this._mouseY = undefined;
+            this._mouseX = null;
+            this._mouseY = null;
             this.$el.off('mousemove.built.responders.mouse', this._mouseMoved);
         }
 
@@ -181,9 +183,8 @@ var MouseResponder = marionette.Controller.extend({
             return;
         }
 
-        var hasMouseX = !_.isUndefined(this._mouseX);
-        var hasMouseY = !_.isUndefined(this._mouseY);
-
+        var hasMouseX = !_.isNull(this._mouseX);
+        var hasMouseY = !_.isNull(this._mouseY);
         var hasPreviousMousePosition = hasMouseX && hasMouseY;
         var mouseXMoved = hasPreviousMousePosition && (this._mouseX != e.pageX);
         var mouseYMoved = hasPreviousMousePosition && (this._mouseY != e.pageY);

@@ -328,6 +328,27 @@ describe('Mouse Responder', function() {
         expect(mouseMoved).toHaveBeenCalled();
     });
 
+    it('expects non-traditional mouse move to be called after enabling and disableing', function() {
+        var mouseMoved = jasmine.createSpy('mouseMoved');
+
+        responder = new MouseResponder({
+                el: $input,
+                mouseMoved: mouseMoved,
+                acceptsMove: true,
+                accpetsTraditionalMouseMove: false
+        });
+
+        EventHelpers.simulateMouseMove($input, 2, 2);
+        EventHelpers.simulateMouseMove($input, 10, 10);
+        responder.enableMove(false);
+        responder.enableMove(true);
+        mouseMoved.reset();
+        EventHelpers.simulateMouseMove($input, 3, 3);
+        expect(mouseMoved).not.toHaveBeenCalled();
+        EventHelpers.simulateMouseMove($input, 10, 10);
+        expect(mouseMoved).toHaveBeenCalled();
+    });
+
     it('expects non-traditional mouse move NOT to be called ', function() {
         var mouseMoved = jasmine.createSpy('mouseMoved');
 
