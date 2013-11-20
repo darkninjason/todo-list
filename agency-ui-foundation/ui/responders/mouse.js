@@ -33,7 +33,8 @@ var MouseResponder = Marionette.Controller.extend({
     _defaults: {
         acceptsUpDown: true,
         acceptsMove: false,
-        acceptsEnterExit: false
+        acceptsEnterExit: false,
+        accpetsTraditionalMouseMove: true
     },
 
 
@@ -51,6 +52,12 @@ var MouseResponder = Marionette.Controller.extend({
 
         this.el = options.el;
         this.$el = helpers.registerElement(this.el);
+
+        // Javascript by default will fire a mousemove event when you move
+        // elements under the mouse...wow Javascript...well played, you can
+        // go burn in a lake of fire i hate you with everything in me...
+        // on that note, we by default shut off that behavior, but will
+        this.accpetsTraditionalMouseMove = options.accpetsTraditionalMouseMove;
 
         this.mouseDown    = options.mouseDown    || this.mouseDown;
         this.mouseUp      = options.mouseUp      || this.mouseUp;
@@ -80,6 +87,8 @@ var MouseResponder = Marionette.Controller.extend({
         if(bool && !this.acceptsMove){
             this.$el.on('mousemove.built.responders.mouse', {ctx: this}, this._mouseMoved);
         } else if (!bool && this.acceptsMove){
+            this._mouseX = null;
+            this._mouseY = null;
             this.$el.off('mousemove.built.responders.mouse', this._mouseMoved);
         }
 
@@ -162,6 +171,19 @@ var MouseResponder = Marionette.Controller.extend({
     },
 
     _mouseMoved: function(e){
+        if(this.accpetsTraditionalMouseMove){
+            this.mouseMoved(this, e);
+            return;
+        }
+
+
+        if(!this._mouseX || !this._mouseY || (this._mouseX == e.pageX  && this._mouseY == e.pageY)){
+            this._mouseX = e.pageX;
+            this._mouseY = e.pageY;
+            return;
+        }
+        this._mouseX = e.pageX;
+        this._mouseY = e.pageY;
         this.mouseMoved(this, e);
     },
 

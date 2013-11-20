@@ -7672,4 +7672,5 @@ td.visible-print {
   max-height: 300px;
   overflow: hidden;
   overflow-y: scroll;
+  border: 1px solid black;
 }

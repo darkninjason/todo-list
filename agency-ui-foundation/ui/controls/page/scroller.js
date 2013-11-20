@@ -54,26 +54,17 @@ var Scroller = ScrollManager.extend({
     },
 
     _animateScroll: function(start, end, duration) {
-        var self = this;
-
-        if(this.deferred){
-            this.deferred.reject();
-        }
-
-        this.deferred = $.Deferred();
 
         function step(now, tween) {
             this.constructor.__super__.setScrollValue.call(this, now);
         }
 
         function complete() {
-            self.deferred.resolve();
+            // do something usefull here
         }
 
         if(duration === 0){
             this.constructor.__super__.setScrollValue.call(this, end);
-            self.deferred.resolve();
-            return this.deferred.promise();
         }
 
         // TODO: Revisit, resulting animation from this chuggy.
@@ -85,7 +76,6 @@ var Scroller = ScrollManager.extend({
                 complete: _.bind(complete, this)
             }
         );
-        return this.deferred.promise();
     },
 
     // Public API

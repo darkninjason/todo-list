@@ -32,6 +32,7 @@ var InputSelectView = marionette.CompositeView.extend({
         this.listenTo(this.inputSelect, this.inputSelect.EVENT_INPUT, this.onInputChange);
         this.listenTo(this.inputSelect, this.inputSelect.EVENT_FOCUS_KEY, this.onInputFocusChange);
         this.listenTo(this.collection,'sync',this.onCollectionSync);
+        // this.inputSelect.options.acceptsMouseEnterExit = false;
     },
 
     onInputChange: function(input, $input, value){
@@ -39,12 +40,7 @@ var InputSelectView = marionette.CompositeView.extend({
     },
 
     onInputFocusChange: function(input, $el){
-        var promise = this.scroller.scrollToElement($el);
-        console.log(this.inputSelect.options.acceptsMouseEnterExit);
-        this.inputSelect.options.acceptsMouseEnterExit = false;
-        promise.then(_.bind(function(){
-            this.inputSelect.options.acceptsMouseEnterExit = true;
-        },this));
+        this.scroller.scrollToElement($el);
     },
 
     onCollectionSync: function(){
