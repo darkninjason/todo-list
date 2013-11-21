@@ -19,7 +19,7 @@ var InputSelectComposite =  marionette.CompositeView.extend({
         });
 
         this.scroller = new Scroller({
-            el            : this.ui.listGroup,
+            el            : this.itemViewContainer,
             scrollDebounce: 0,
             duration      : 300,
         });

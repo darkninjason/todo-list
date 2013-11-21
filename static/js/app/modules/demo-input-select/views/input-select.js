@@ -13,13 +13,9 @@ var InputSelectView = InputSelectComposite.extend({
     itemViewContainer: '.list-group',
     template : template,
     collection : new InputResults(),
-
     ui : {
-        input:'input',
-        listGroup: '.list-group'
-    },
-
-
+        input:'input'
+    }
 });
 
 exports.InputSelectView = InputSelectView;
