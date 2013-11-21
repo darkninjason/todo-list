@@ -5,9 +5,10 @@ define(function(require, exports, module) {
 var _                = require('underscore');
 var marionette       = require('marionette');
 var InputSelect      = require('built/core/controls/forms/input-select').InputSelect;
-var SpecHelpers      = require('lib/spec-helpers');
+var helpers          = require('built/core/utils/helpers');
 var focus            = require('built/core/events/focus');
 var events           = require('built/core/events/event');
+var SpecHelpers      = require('lib/spec-helpers');
 var eventHelpers     = SpecHelpers.Events;
 var KeyCodes         = SpecHelpers.KeyCodes;
 
@@ -122,6 +123,12 @@ describe('Input Select Control', function() {
         }
 
         expect(badInit).toThrow();
+    });
+
+    it('registers BUILT ID for input', function(){
+        // in beforeEach we create an InputSelect which
+        // means the $input element should have a BUILT ID.
+        expect(helpers.getElementId($input)).not.toEqual(undefined);
     });
 
     it('sets default values on init', function(){

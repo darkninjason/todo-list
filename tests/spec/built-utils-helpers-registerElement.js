@@ -61,6 +61,27 @@ describe('Core Helpers: registerElement', function() {
         expect(getElementId($targets.eq(2))).not.toEqual(undefined);
     });
 
+    it('does not replace ID for previously registered element', function() {
+        var selector = '#helper-target';
+        var $el = $(selector);
+        var builtId = getElementId($el);
+        var testId;
+
+        expect(builtId).toEqual(undefined);
+
+        $el = registerElement($el);
+        builtId = getElementId($el);
+
+        expect(builtId).not.toEqual(undefined);
+
+        // re-register the same element to ensure
+        // the BUILT ID does not change.
+        $el = registerElement($el);
+
+        testId = getElementId($el);
+        expect(builtId).toEqual(testId);
+    });
+
 
 }); // Eof describe
 }); // Eof define
