@@ -8,7 +8,7 @@ var InputSelect      = require('built/core/controls/forms/input-select').InputSe
 var SpecHelpers      = require('lib/spec-helpers');
 var focus            = require('built/core/events/focus');
 var events           = require('built/core/events/event');
-var EventHelpers     = SpecHelpers.Events;
+var eventHelpers     = SpecHelpers.Events;
 var KeyCodes         = SpecHelpers.KeyCodes;
 
 describe('Input Select Control', function() {
@@ -116,7 +116,7 @@ describe('Input Select Control', function() {
 
     // Test Suite
     it('throws error when no input provided', function(){
-        //EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+        //eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
         function badInit() {
             new InputSelect({});
         }
@@ -160,10 +160,10 @@ describe('Input Select Control', function() {
         obj.listenTo(control, 'input', obj.receivedInput);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
 
             setTimeout(function() {
                 flag = true;
@@ -189,15 +189,15 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
                 return true;
             }
             return false;
@@ -217,15 +217,15 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
                 return true;
             }
             return false;
@@ -244,15 +244,15 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
                 return true;
             }
             return false;
@@ -271,16 +271,16 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
                 return true;
             }
             return false;
@@ -299,16 +299,16 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
                 return true;
             }
             return false;
@@ -327,18 +327,18 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
                 return true;
             }
             return false;
@@ -358,18 +358,18 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
                 return true;
             }
             return false;
@@ -389,16 +389,16 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.BLUR, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
                 return true;
             }
             return false;
@@ -417,16 +417,16 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.BLUR, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
                 return true;
             }
             return false;
@@ -445,17 +445,17 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.BLUR, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
                 return true;
             }
             return false;
@@ -474,17 +474,17 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.BLUR, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
                 return true;
             }
             return false;
@@ -503,19 +503,19 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.BLUR, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
                 return true;
             }
             return false;
@@ -535,19 +535,19 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.BLUR, focusSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
                 return true;
             }
             return false;
@@ -567,16 +567,16 @@ describe('Input Select Control', function() {
         obj.listenTo(control, events.SELECT, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.return);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.return);
                 return true;
             }
             return false;
@@ -595,16 +595,16 @@ describe('Input Select Control', function() {
         obj.listenTo(control, events.SELECT, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.return);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.return);
                 return true;
             }
             return false;
@@ -623,17 +623,17 @@ describe('Input Select Control', function() {
         obj.listenTo(control, events.SELECT, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.return);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.return);
                 return true;
             }
             return false;
@@ -652,17 +652,17 @@ describe('Input Select Control', function() {
         obj.listenTo(control, events.CANCEL, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.escape);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.escape);
                 return true;
             }
             return false;
@@ -681,17 +681,17 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.FOCUS, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
                 control.endNavigationPhase();
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
                 return true;
             }
             return false;
@@ -709,19 +709,19 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.BLUR, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
                 control.endNavigationPhase();
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
                 return true;
             }
             return false;
@@ -739,17 +739,17 @@ describe('Input Select Control', function() {
         obj.listenTo(control, events.SELECT, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
                 control.endNavigationPhase();
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.return);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.return);
                 return true;
             }
             return false;
@@ -767,17 +767,17 @@ describe('Input Select Control', function() {
         obj.listenTo(control, events.CANCEL, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
                 control.endNavigationPhase();
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                EventHelpers.simulateKeyDown($input, KeyCodes.escape);
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateKeyDown($input, KeyCodes.escape);
                 return true;
             }
             return false;
@@ -797,15 +797,15 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.FOCUS, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateMouseEnter($items.eq(0));
+                eventHelpers.simulateMouseEnter($items.eq(0));
                 return true;
             }
             return false;
@@ -824,16 +824,16 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.BLUR, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateMouseEnter($items.eq(0));
-                EventHelpers.simulateMouseExit($items.eq(0));
+                eventHelpers.simulateMouseEnter($items.eq(0));
+                eventHelpers.simulateMouseExit($items.eq(0));
                 return true;
             }
             return false;
@@ -852,16 +852,16 @@ describe('Input Select Control', function() {
         obj.listenTo(control, events.SELECT, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateMouseDown($items.eq(1));
-                EventHelpers.simulateMouseUp($items.eq(1));
+                eventHelpers.simulateMouseDown($items.eq(1));
+                eventHelpers.simulateMouseUp($items.eq(1));
                 return true;
             }
             return false;
@@ -880,17 +880,17 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.FOCUS, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateMouseEnter($items.eq(0));
-                EventHelpers.simulateMouseEnter($items.eq(1));
-                EventHelpers.simulateMouseEnter($items.eq(2));
+                eventHelpers.simulateMouseEnter($items.eq(0));
+                eventHelpers.simulateMouseEnter($items.eq(1));
+                eventHelpers.simulateMouseEnter($items.eq(2));
                 return true;
             }
             return false;
@@ -911,22 +911,22 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.BLUR, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateMouseEnter($items.eq(0));
-                EventHelpers.simulateMouseExit($items.eq(0));
+                eventHelpers.simulateMouseEnter($items.eq(0));
+                eventHelpers.simulateMouseExit($items.eq(0));
 
-                EventHelpers.simulateMouseEnter($items.eq(1));
-                EventHelpers.simulateMouseExit($items.eq(1));
+                eventHelpers.simulateMouseEnter($items.eq(1));
+                eventHelpers.simulateMouseExit($items.eq(1));
 
-                EventHelpers.simulateMouseEnter($items.eq(2));
-                EventHelpers.simulateMouseExit($items.eq(2));
+                eventHelpers.simulateMouseEnter($items.eq(2));
+                eventHelpers.simulateMouseExit($items.eq(2));
                 return true;
             }
             return false;
@@ -947,16 +947,16 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.FOCUS, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
                 control.endNavigationPhase();
-                EventHelpers.simulateMouseEnter($items.eq(0));
+                eventHelpers.simulateMouseEnter($items.eq(0));
                 return true;
             }
             return false;
@@ -974,17 +974,17 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.BLUR, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
                 control.endNavigationPhase();
-                EventHelpers.simulateMouseEnter($items.eq(0));
-                EventHelpers.simulateMouseExit($items.eq(0));
+                eventHelpers.simulateMouseEnter($items.eq(0));
+                eventHelpers.simulateMouseExit($items.eq(0));
                 return true;
             }
             return false;
@@ -1002,17 +1002,17 @@ describe('Input Select Control', function() {
         obj.listenTo(control, events.SELECT, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
                 control.endNavigationPhase();
-                EventHelpers.simulateMouseDown($items.eq(0));
-                EventHelpers.simulateMouseUp($items.eq(0));
+                eventHelpers.simulateMouseDown($items.eq(0));
+                eventHelpers.simulateMouseUp($items.eq(0));
                 return true;
             }
             return false;
@@ -1032,16 +1032,16 @@ describe('Input Select Control', function() {
         obj.listenTo(control, focus.FOCUS, actionSpy);
 
         runs(function() {
-            EventHelpers.insertChar($input, 'l');
-            EventHelpers.insertChar($input, 'u');
-            EventHelpers.insertChar($input, 'c');
-            EventHelpers.insertChar($input, 'y');
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
         });
 
         waitsFor(function() {
             if(obj.hasRendered){
-                EventHelpers.simulateMouseEnter($items.eq(1));
-                EventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                eventHelpers.simulateMouseEnter($items.eq(1));
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
                 return true;
             }
             return false;
