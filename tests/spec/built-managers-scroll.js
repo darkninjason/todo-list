@@ -6,6 +6,7 @@ var _               = require('underscore');
 var $               = require('jquery');
 var EventHelpers    = require('lib/spec-helpers').Events;
 var ScrollManager   = require('built/core/managers/scroll').ScrollManager;
+var events          = require('built/core/events/event');
 
 describe('Scroll Manager', function() {
 
@@ -233,7 +234,7 @@ describe('Scroll Manager', function() {
         }
 
         manager.addMarkersUsingElements(elements.$paragraphs);
-        manager.on('marker', spy);
+        manager.on(events.MARKER, spy);
 
         manager.setScrollPosition(1);
 
@@ -248,7 +249,7 @@ describe('Scroll Manager', function() {
         manager = getManager();
         spy     = jasmine.createSpy('spy');
 
-        manager.on('scroll', spy);
+        manager.on(events.SCROLL, spy);
         EventHelpers.simulateScrollEvent($(window), 0, 100);
 
         expect(spy.calls.length).toEqual(1);
@@ -261,7 +262,7 @@ describe('Scroll Manager', function() {
         spy        = jasmine.createSpy('spy');
         $container = getPageElements().$container;
 
-        manager.on('scroll', spy);
+        manager.on(events.SCROLL, spy);
 
         EventHelpers.simulateScrollEvent($container, 0, 100);
 

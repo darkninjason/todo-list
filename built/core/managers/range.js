@@ -5,13 +5,11 @@ define(function(require, exports, module){
 var _          = require('underscore');
 var marionette = require('marionette');
 var helpers    = require('built/core/utils/helpers');
+var events     = require('built/core/events/event');
 
 // Module
 
 var RangeManager = marionette.Controller.extend({
-
-    EVENT_CHANGE: 'change',
-    EVENT_MARKER: 'marker',
 
     _defaults: null,
     _range   : null,
@@ -275,11 +273,11 @@ var RangeManager = marionette.Controller.extend({
     // Event Dispatchers
 
     _dispatchChange: function() {
-        this.trigger(this.EVENT_CHANGE, this, this.getPosition(), this.getValue());
+        this.trigger(events.CHANGE, this, this.getPosition(), this.getValue());
     },
 
     _dispatchMarker: function(markers, direction) {
-        this.trigger(this.EVENT_MARKER, this, markers, direction);
+        this.trigger(events.MARKER, this, markers, direction);
     }
 
 }); // eof RangeManager

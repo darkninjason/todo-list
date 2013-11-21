@@ -7,12 +7,11 @@ var marionette = require('marionette');
 var Helpers         = require('built/core/utils/helpers');
 var ScrollResponder = require('built/core/responders/scroll').ScrollResponder;
 var RangeManager    = require('built/core/managers/range').RangeManager;
+var events          = require('built/core/events/event');
 
 // Module
 
 var ScrollManager = marionette.Controller.extend({
-
-    EVENT_SCROLL: 'scroll',
 
     $scrollable: null,
     $viewport  : null,
@@ -278,11 +277,11 @@ var ScrollManager = marionette.Controller.extend({
     // Event dispatchers
 
     _dispatchScroll: function(sender, position, value) {
-        this.trigger(this.EVENT_SCROLL, this, position, value);
+        this.trigger(events.SCROLL, this, position, value);
     },
 
     _dispatchMarker: function(sender, markers, direction) {
-        this.trigger(this._rangeManager.EVENT_MARKER, this, markers, direction);
+        this.trigger(events.MARKER, this, markers, direction);
     }
 
 }); // eof ScrollManager

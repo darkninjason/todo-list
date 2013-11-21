@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 // Imports
 
 var RangeManager = require('built/core/managers/range').RangeManager;
+var events = require('built/core/events/event');
 
 describe('Range Manager', function() {
 
@@ -273,7 +274,7 @@ describe('Range Manager', function() {
 
         var spy = jasmine.createSpy('spy');
 
-        manager.listenTo(manager, 'change', spy);
+        manager.listenTo(manager, events.CHANGE, spy);
         manager.setPosition(0.5);
         manager.setValue(75);
 
@@ -391,7 +392,7 @@ describe('Range Manager', function() {
         markerSpy = jasmine.createSpy('marker');
         positions = [0, 0.25, 0.5, 0.75, 1];
 
-        manager.on('marker', markerSpy);
+        manager.on(events.MARKER, markerSpy);
 
         // add some markers using various methods
         manager.addMarkerPositions(0, 0.25);
