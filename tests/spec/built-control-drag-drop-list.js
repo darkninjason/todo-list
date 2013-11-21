@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
 
 var helpers = require('built/core/utils/helpers');
-var DragDropList = require('built/core/controls/dragdrop/list').DragDropList
+var DragDropList = require('built/core/controls/dragdrop/list').DragDropList;
 var getElementBounds = require('built/ui/helpers/dom').getElementBounds;
 var spechelpers  = require('lib/spec-helpers');
 var eventHelpers = spechelpers.Events;
@@ -62,7 +62,15 @@ describe('Drag Drop List Control', function() {
         },
 
         dropResponderDraggingExited: function(responder, e){
-            responder.$el.parent().removeClass('highlight');
+            // if setDropElement() is not done,
+            // this will throw an error because responder
+            // will be null. the dropResponder is only
+            // initialized once setDropElement is called.
+
+            if(!_.isNull(responder)){
+                responder.$el.parent().removeClass('highlight');
+            }
+
         }
 
     });
@@ -116,6 +124,7 @@ describe('Drag Drop List Control', function() {
 
         var l1 = new ColorDropList();
         l1.reset($source.children());
+        l1.setDropElement($source);
 
         _.each($source.children(), function(each){
             expect(helpers.getElementId($(each))).not.toEqual(undefined);
@@ -123,11 +132,13 @@ describe('Drag Drop List Control', function() {
     });
 
     it('should call getDragDataForElement on drag start', function(){
-        var l1 = new ColorDropList();
+
         var $preDragChildren = $source.children();
         var $drag = $preDragChildren.eq(0);
 
+        var l1 = new ColorDropList();
         l1.reset($preDragChildren);
+        l1.setDropElement($source);
 
         spyOn(l1, 'getDragDataForElement').andCallThrough();
         eventHelpers.simulateDragStart($drag, null, 20, 20);
@@ -141,6 +152,7 @@ describe('Drag Drop List Control', function() {
         var $drag = $preDragChildren.eq(0);
 
         l1.reset($preDragChildren);
+        l1.setDropElement($source);
 
         spyOn(l1, 'getDragImageForElement').andCallThrough();
         eventHelpers.simulateDragStart($drag, null, 20, 20);
@@ -148,14 +160,144 @@ describe('Drag Drop List Control', function() {
         expect(l1.getDragImageForElement).toHaveBeenCalledWith($drag);
     });
 
-    it('should replace the first element on drag start with placeholder', function(){
+    it('should call renderPlaceholderForElement', function(){
+        var $preDragChildren = $source.children();
+        var $drag = $preDragChildren.eq(0);
+        var flag = false;
+
         var l1 = new ColorDropList();
+        l1.reset($preDragChildren);
+        l1.setDropElement($source);
+
+        spyOn(l1, 'renderPlaceholderForElement').andCallThrough();
+
+        var dragPoint  = elementPoint($drag, 10, 10);
+        eventHelpers.simulateDragStart($drag, null, dragPoint.x, dragPoint.y);
+
+        runs(function(){
+
+            setTimeout(function(){
+                flag = true;
+            }, 30);
+        });
+
+        waitsFor(function(){
+            return flag;
+        });
+
+        runs(function(){
+            expect(l1.renderPlaceholderForElement).toHaveBeenCalled();
+        });
+    });
+
+    it('should call dropResponderDraggingEntered', function(){
+        var $preDragChildren = $source.children();
+        var $drag = $preDragChildren.eq(0);
+        var flag = false;
+
+        var l1 = new ColorDropList();
+        l1.reset($preDragChildren);
+        l1.setDropElement($source);
+
+        spyOn(l1, 'dropResponderDraggingEntered').andCallThrough();
+
+        var dragPoint  = elementPoint($drag, 10, 10);
+        var e = eventHelpers.simulateDragStart($drag, null, dragPoint.x, dragPoint.y);
+        var dt = e.originalEvent.dataTransfer;
+
+        runs(function(){
+            var dropPoint = elementPoint($source, 10, 10);
+            eventHelpers.simulateDragOver($source, dt, dropPoint.x, dropPoint.y);
+
+            setTimeout(function(){
+                flag = true;
+            }, 30);
+        });
+
+        waitsFor(function(){
+            return flag;
+        });
+
+        runs(function(){
+            expect(l1.dropResponderDraggingEntered).toHaveBeenCalled();
+        });
+    });
+
+    it('should call dropResponderDraggingExited', function(){
+        var $preDragChildren = $source.children();
+        var $drag = $preDragChildren.eq(0);
+        var flag = false;
+
+        var l1 = new ColorDropList();
+        l1.reset($preDragChildren);
+        l1.setDropElement($source);
+
+        spyOn(l1, 'dropResponderDraggingExited').andCallThrough();
+        eventHelpers.simulateDragStart($drag, null, 20, 20);
+
+        runs(function(){
+            setTimeout(function(){
+                flag = true;
+            }, l1.exitDelay + 50);
+        });
+
+        waitsFor(function(){
+            return flag;
+        });
+
+        runs(function(){
+            expect(l1.dropResponderDraggingExited).toHaveBeenCalled();
+        });
+    });
+
+    it('should call renderDropElementForData', function(){
+        var $preDragChildren = $source.children();
+        var $drag = $preDragChildren.eq(0);
+        var flag = false;
+
+        var l1 = new ColorDropList();
+        l1.reset($preDragChildren);
+        l1.setDropElement($source);
+
+        spyOn(l1, 'renderDropElementForData').andCallThrough();
+
+        var dragPoint  = elementPoint($drag, 10, 10);
+        var e = eventHelpers.simulateDragStart($drag, null, dragPoint.x, dragPoint.y);
+        var dt = e.originalEvent.dataTransfer;
+
+        runs(function(){
+
+            setTimeout(function(){
+                var dropPoint = elementPoint($source, 10, 10);
+                eventHelpers.simulateDragOver($source, dt, dropPoint.x, dropPoint.y);
+
+                eventHelpers.simulateDrop($source, dt, dropPoint.x, dropPoint.y);
+                dt.dropEffect = 'move';
+
+                eventHelpers.simulateDragEnd($drag, dt, dragPoint.x, dragPoint.y);
+                flag = true;
+
+            }, 30);
+        });
+
+        waitsFor(function(){
+            return flag;
+        });
+
+        runs(function(){
+            expect(l1.renderDropElementForData).toHaveBeenCalled();
+        });
+    });
+
+    it('should replace the first element on drag start with placeholder', function(){
         var $preDragChildren = $source.children();
         var $postDragChildren;
         var $drag = $preDragChildren.eq(0);
         var flag = false;
 
+        var l1 = new ColorDropList();
         l1.reset($preDragChildren);
+        l1.setDropElement($source);
 
         expect(l1.listManager.getArray().length).toEqual(4);
         var point = elementPoint($drag, 10, 10);
@@ -178,17 +320,22 @@ describe('Drag Drop List Control', function() {
             $postDragChildren = $source.children();
             expect(l1.listManager.getArray().length).toEqual(3);
             expect($postDragChildren.eq(0)).toHaveClass('placeholder');
+            flag = false;
+            setTimeout(function(){
+                flag = true;
+            }, 1000);
         });
     });
 
     it('should replace the second element on drag start with placeholder', function(){
-        var l1 = new ColorDropList();
         var $preDragChildren = $source.children();
         var $postDragChildren;
         var $drag = $preDragChildren.eq(1);
         var flag = false;
 
+        var l1 = new ColorDropList();
         l1.reset($preDragChildren);
+        l1.setDropElement($source);
 
         expect(l1.listManager.getArray().length).toEqual(4);
         var point = elementPoint($drag, 10, 10);
@@ -215,13 +362,14 @@ describe('Drag Drop List Control', function() {
     });
 
     it('should replace the third element on drag start with placeholder', function(){
-        var l1 = new ColorDropList();
         var $preDragChildren = $source.children();
         var $postDragChildren;
         var $drag = $preDragChildren.eq(2);
         var flag = false;
 
+        var l1 = new ColorDropList();
         l1.reset($preDragChildren);
+        l1.setDropElement($source);
 
         expect(l1.listManager.getArray().length).toEqual(4);
         var point = elementPoint($drag, 10, 10);
@@ -248,13 +396,14 @@ describe('Drag Drop List Control', function() {
     });
 
     it('should replace the fourth element on drag start with placeholder', function(){
-        var l1 = new ColorDropList();
         var $preDragChildren = $source.children();
         var $postDragChildren;
         var $drag = $preDragChildren.eq(3);
         var flag = false;
 
+        var l1 = new ColorDropList();
         l1.reset($preDragChildren);
+        l1.setDropElement($source);
 
         expect(l1.listManager.getArray().length).toEqual(4);
         var point = elementPoint($drag, 10, 10);
@@ -281,12 +430,12 @@ describe('Drag Drop List Control', function() {
     });
 
     it('should drop first element in first position', function(){
-        var l1 = new ColorDropList();
         var $preDragChildren = $source.children();
         var $postDragChildren;
         var $drag = $preDragChildren.eq(0);
         var flag = false;
 
+        var l1 = new ColorDropList();
         l1.setDropElement($source);
         l1.reset($preDragChildren);
 
@@ -332,12 +481,12 @@ describe('Drag Drop List Control', function() {
     });
 
     it('should drop first element in second position', function(){
-        var l1 = new ColorDropList();
         var $preDragChildren = $source.children();
         var $postDragChildren;
         var $drag = $preDragChildren.eq(0);
         var flag = false;
 
+        var l1 = new ColorDropList();
         l1.setDropElement($source);
         l1.reset($preDragChildren);
 
@@ -386,12 +535,12 @@ describe('Drag Drop List Control', function() {
     });
 
     it('should drop first element in third position', function(){
-        var l1 = new ColorDropList();
         var $preDragChildren = $source.children();
         var $postDragChildren;
         var $drag = $preDragChildren.eq(0);
         var flag = false;
 
+        var l1 = new ColorDropList();
         l1.setDropElement($source);
         l1.reset($preDragChildren);
 
@@ -440,12 +589,12 @@ describe('Drag Drop List Control', function() {
     });
 
     it('should drop first element in last position', function(){
-        var l1 = new ColorDropList();
         var $preDragChildren = $source.children();
         var $postDragChildren;
         var $drag = $preDragChildren.eq(0);
         var flag = false;
 
+        var l1 = new ColorDropList();
         l1.setDropElement($source);
         l1.reset($preDragChildren);
 
