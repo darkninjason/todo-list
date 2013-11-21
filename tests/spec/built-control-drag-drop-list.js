@@ -181,6 +181,39 @@ describe('Drag Drop List Control', function() {
         });
     });
 
+    it('should replace the second element on drag start with placeholder', function(){
+        var l1 = new ColorDropList();
+        var $preDragChildren = $source.children();
+        var $postDragChildren;
+        var $drag = $preDragChildren.eq(1);
+        var flag = false;
+
+        l1.reset($preDragChildren);
+
+        expect(l1.listManager.getArray().length).toEqual(4);
+        var point = elementPoint($drag, 10, 10);
+
+        // drag start is a deferred call,
+        // so we need to do these tests async.
+        runs(function(){
+            eventHelpers.simulateDragStart($drag, null, point.x, point.y);
+
+            setTimeout(function(){
+                flag = true;
+            }, 30);
+        });
+
+        waitsFor(function(){
+            return flag;
+        }, 100);
+
+        runs(function(){
+            $postDragChildren = $source.children();
+            expect(l1.listManager.getArray().length).toEqual(3);
+            expect($postDragChildren.eq(1)).toHaveClass('placeholder');
+        });
+    });
+
     it('should replace the third element on drag start with placeholder', function(){
         var l1 = new ColorDropList();
         var $preDragChildren = $source.children();
@@ -214,6 +247,39 @@ describe('Drag Drop List Control', function() {
         });
     });
 
+    it('should replace the fourth element on drag start with placeholder', function(){
+        var l1 = new ColorDropList();
+        var $preDragChildren = $source.children();
+        var $postDragChildren;
+        var $drag = $preDragChildren.eq(3);
+        var flag = false;
+
+        l1.reset($preDragChildren);
+
+        expect(l1.listManager.getArray().length).toEqual(4);
+        var point = elementPoint($drag, 10, 10);
+
+        // drag start is a deferred call,
+        // so we need to do these tests async.
+        runs(function(){
+            eventHelpers.simulateDragStart($drag, null, point.x, point.y);
+
+            setTimeout(function(){
+                flag = true;
+            }, 30);
+        });
+
+        waitsFor(function(){
+            return flag;
+        }, 100);
+
+        runs(function(){
+            $postDragChildren = $source.children();
+            expect(l1.listManager.getArray().length).toEqual(3);
+            expect($postDragChildren.eq(3)).toHaveClass('placeholder');
+        });
+    });
+
     it('should drop first element in first position', function(){
         var l1 = new ColorDropList();
         var $preDragChildren = $source.children();
@@ -226,6 +292,7 @@ describe('Drag Drop List Control', function() {
 
         var dropPoint = elementPoint($source, 5, 5);
         var dragPoint  = elementPoint($drag, 10, 10);
+        var dropPosition = 0;
 
         // drag start is a deferred call,
         // so we need to do these tests async.
@@ -235,13 +302,13 @@ describe('Drag Drop List Control', function() {
             var e = eventHelpers.simulateDragStart($drag, null, dragPoint.x, dragPoint.y);
             var dt = e.originalEvent.dataTransfer;
 
-
-
-            // because drag start is deferred
+            // because drag start is deferred, let the drag start
+            // actually fire. before continuing
             setTimeout(function(){
                 expect(l1.listManager.getArray().length).toEqual(3);
 
                 eventHelpers.simulateDragOver($source, dt, dropPoint.x, dropPoint.y);
+                expect($source.children().eq(dropPosition)).toHaveClass('placeholder');
                 eventHelpers.simulateDrop($source, dt, dropPoint.x, dropPoint.y);
 
                 // update the drop effect
@@ -260,7 +327,115 @@ describe('Drag Drop List Control', function() {
         runs(function(){
             $postDragChildren = $source.children();
             expect(l1.listManager.getArray().length).toEqual(4);
-            expect($postDragChildren.eq(0)).toHaveClass('red');
+            expect($postDragChildren.eq(dropPosition)).toHaveClass('red');
+        });
+    });
+
+    it('should drop first element in second position', function(){
+        var l1 = new ColorDropList();
+        var $preDragChildren = $source.children();
+        var $postDragChildren;
+        var $drag = $preDragChildren.eq(0);
+        var flag = false;
+
+        l1.setDropElement($source);
+        l1.reset($preDragChildren);
+
+        var dropPoint;
+        var dragPoint  = elementPoint($drag, 10, 10);
+        var dropPosition = 1;
+
+        // drag start is a deferred call,
+        // so we need to do these tests async.
+        expect(l1.listManager.getArray().length).toEqual(4);
+
+        runs(function(){
+            var e = eventHelpers.simulateDragStart($drag, null, dragPoint.x, dragPoint.y);
+            var dt = e.originalEvent.dataTransfer;
+
+            // because drag start is deferred, let the drag start
+            // actually fire. before continuing
+            setTimeout(function(){
+                var $obj = $source.children().eq(dropPosition);
+                var objBounds = getElementBounds($obj);
+
+                dropPoint = elementPoint($obj, 10, (objBounds.height / 2) + 5);
+
+                eventHelpers.simulateDragOver($source, dt, dropPoint.x, dropPoint.y);
+                expect($source.children().eq(dropPosition)).toHaveClass('placeholder');
+
+                eventHelpers.simulateDrop($source, dt);
+
+                // update the drop effect
+                // to ensure the drop counted as a drop
+                dt.dropEffect = 'move';
+                eventHelpers.simulateDragEnd($drag, dt, dragPoint.x, dragPoint.y);
+                flag = true;
+            }, 30);
+        });
+
+        waitsFor(function(){
+            return flag;
+        }, 100);
+
+        runs(function(){
+            $postDragChildren = $source.children();
+            expect(l1.listManager.getArray().length).toEqual(4);
+            expect($postDragChildren.eq(dropPosition)).toHaveClass('red');
+        });
+    });
+
+    it('should drop first element in third position', function(){
+        var l1 = new ColorDropList();
+        var $preDragChildren = $source.children();
+        var $postDragChildren;
+        var $drag = $preDragChildren.eq(0);
+        var flag = false;
+
+        l1.setDropElement($source);
+        l1.reset($preDragChildren);
+
+        var dropPoint;
+        var dragPoint  = elementPoint($drag, 10, 10);
+        var dropPosition = 2;
+
+        // drag start is a deferred call,
+        // so we need to do these tests async.
+        expect(l1.listManager.getArray().length).toEqual(4);
+
+        runs(function(){
+            var e = eventHelpers.simulateDragStart($drag, null, dragPoint.x, dragPoint.y);
+            var dt = e.originalEvent.dataTransfer;
+
+            // because drag start is deferred, let the drag start
+            // actually fire. before continuing
+            setTimeout(function(){
+                var $obj = $source.children().eq(dropPosition);
+                var objBounds = getElementBounds($obj);
+
+                dropPoint = elementPoint($obj, 10, (objBounds.height / 2) + 5);
+
+                eventHelpers.simulateDragOver($source, dt, dropPoint.x, dropPoint.y);
+                expect($source.children().eq(dropPosition)).toHaveClass('placeholder');
+
+                eventHelpers.simulateDrop($source, dt);
+
+                // update the drop effect
+                // to ensure the drop counted as a drop
+                dt.dropEffect = 'move';
+                eventHelpers.simulateDragEnd($drag, dt, dragPoint.x, dragPoint.y);
+                flag = true;
+            }, 30);
+        });
+
+        waitsFor(function(){
+            return flag;
+        }, 100);
+
+        runs(function(){
+            $postDragChildren = $source.children();
+            expect(l1.listManager.getArray().length).toEqual(4);
+            expect($postDragChildren.eq(dropPosition)).toHaveClass('red');
         });
     });
 
@@ -285,7 +460,8 @@ describe('Drag Drop List Control', function() {
             var e = eventHelpers.simulateDragStart($drag, null, dragPoint.x, dragPoint.y);
             var dt = e.originalEvent.dataTransfer;
 
-            // because drag start is deferred
+            // because drag start is deferred, let the drag start
+            // actually fire. before continuing
             setTimeout(function(){
                 var $last = $source.children().eq(3);
                 var lastBounds = getElementBounds($last);
