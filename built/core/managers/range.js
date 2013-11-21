@@ -4,7 +4,7 @@ define(function(require, exports, module){
 
 var _          = require('underscore');
 var marionette = require('marionette');
-var Helpers    = require('built/core/utils/helpers');
+var helpers    = require('built/core/utils/helpers');
 
 // Module
 
@@ -63,7 +63,7 @@ var RangeManager = marionette.Controller.extend({
     // Internal methods
 
     _getNormalizedPosition: function(val){
-        return Helpers.normalizeInt(val, 0, 1);
+        return helpers.normalizeInt(val, 0, 1);
     },
 
     _checkMarkers: function(prevPosition, position) {
@@ -222,7 +222,7 @@ var RangeManager = marionette.Controller.extend({
         // add positions to this._markers
         _.each(arguments, iterator, this);
 
-        this._markers.sort(Helpers.sortArrayAscending);
+        this._markers.sort(helpers.sortArrayAscending);
         this._markers = _.uniq(this._markers, sorted);
 
         return this.getMarkers();
