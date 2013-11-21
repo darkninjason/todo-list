@@ -92,18 +92,110 @@ describe('Drag Drop List Control', function() {
 
     // Helpers
 
-    /*
-    var $source = $('#source ul');
-    var $destination = $('#destination ul');
+    it('throws with default implementation of getDragDataForElement', function(){
+        var $drag = $source.children().eq(0);
 
-    l1 = new ColorDropList();
-    l1.setDropElement($source);
-    l1.reset($source.children());
+        // these methods also throw,
+        // so implement no-op defaults
+        var l1 = new DragDropList({
+            renderPlaceholderForElement: function(){},
+            renderDropElementForData: function(){}
+        });
 
-    l2 = new ColorDropList();
-    l2.setDropElement($destination);
-    // l2.reset($destination.children());
-    */
+        l1.setDropElement($source);
+        l1.reset($source.children());
+
+        function throwable() {
+            eventHelpers.simulateDragStart($drag, null, 20, 20);
+        }
+
+        expect(throwable).toThrow();
+    });
+
+    it('throws with default implementation of renderPlaceholderForElement', function(){
+        var $drag = $source.children().eq(0);
+
+        // these methods also throw,
+        // so implement no-op defaults
+        var l1 = new DragDropList({
+            getDragDataForElement: function(){},
+            renderDropElementForData: function(){}
+        });
+
+        l1.setDropElement($source);
+        l1.reset($source.children());
+
+        function throwable() {
+            eventHelpers.simulateDragStart($drag, null, 20, 20);
+        }
+
+        expect(l1.renderPlaceholderForElement).toThrow();
+    });
+
+    it('throws with default implementation of renderDropElementForData', function(){
+        var $drag = $source.children().eq(0);
+        var flag = false;
+
+        // these methods also throw,
+        // so implement, what is effectively, no-op defaults
+        var l1 = new DragDropList({
+            getDragDataForElement: function(){ return ''; },
+            renderPlaceholderForElement: function(){ return $('<p></p>'); }
+        });
+
+        l1.setDropElement($source);
+        l1.reset($source.children());
+        spyOn(l1, 'renderDropElementForData').andCallThrough();
+
+        var dt, e, dropPoint;
+
+        runs(function(){
+            var dragPoint = elementPoint($drag, 10, 10);
+            e = eventHelpers.simulateDragStart($drag, null, dragPoint.x, dragPoint.y);
+            dt = e.originalEvent.dataTransfer;
+
+            // because drag start is deferred, let the drag start
+            // actually fire. before continuing
+            setTimeout(function(){
+                expect(l1.listManager.getArray().length).toEqual(3);
+                dropPoint = elementPoint($source, 10, 10);
+                eventHelpers.simulateDragOver($source, dt, dropPoint.x, dropPoint.y);
+                flag = true;
+            }, 30);
+        });
+
+        waitsFor(function(){
+            return flag;
+        }, 100);
+
+        runs(function(){
+
+            function throwable() {
+                eventHelpers.simulateDrop($source, dt, dropPoint.x, dropPoint.y);
+            }
+
+            expect(throwable).toThrow();
+        });
+    });
+
+    it('return false for default implementation of getDragImageForElement', function(){
+        var $drag = $source.children().eq(0);
+
+        // these methods also throw,
+        // so implement no-op defaults
+        var l1 = new DragDropList({
+            getDragDataForElement: function(){ return ''; },
+            renderPlaceholderForElement: function(){ return $('<p></p>'); }
+        });
+
+        l1.setDropElement($source);
+        l1.reset($source.children());
+        spyOn(l1, 'getDragImageForElement').andCallThrough();
+
+        eventHelpers.simulateDragStart($drag, null, 20, 20);
+
+        expect(l1.getDragImageForElement).toHaveBeenCalled();
+    });
 
     // Test Suite
     it('Drop Element Receives BUILT ID', function(){
@@ -319,9 +411,6 @@ describe('Drag Drop List Control', function() {
             expect(l1.listManager.getArray().length).toEqual(3);
             expect($postDragChildren.eq(0)).toHaveClass('placeholder');
             flag = false;
-            setTimeout(function(){
-                flag = true;
-            }, 1000);
         });
     });
 
