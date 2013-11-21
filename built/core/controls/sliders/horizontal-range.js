@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 
 var _                = require('underscore');
 var HorizontalSlider = require('built/core/controls/sliders/horizontal').HorizontalSlider;
-var Helpers          = require('built/core/utils/helpers');
+var helpers          = require('built/core/utils/helpers');
 
 // Module
 
@@ -60,7 +60,7 @@ var HorizontalRangeSlider =  HorizontalSlider.extend({
         positions = this.getPositions();
         min       = positions[index - 1] || 0;
         max       = positions[index + 1] || 1;
-        result    = Helpers.normalizeInt(value, min, max);
+        result    = helpers.normalizeInt(value, min, max);
 
         return result;
     },
