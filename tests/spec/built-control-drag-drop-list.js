@@ -705,6 +705,53 @@ describe('Drag Drop List Control', function() {
         });
     });
 
+    it('should restore first element on drag end', function(){
+        var $preDragChildren = $source.children();
+        var $postDragChildren;
+        var $drag = $preDragChildren.eq(0);
+        var flag = false;
+
+        var l1 = new ColorDropList();
+        l1.setDropElement($source);
+        l1.reset($preDragChildren);
+
+        var dropPoint;
+        var dragPoint  = elementPoint($drag, 10, 10);
+
+        // drag start is a deferred call,
+        // so we need to do these tests async.
+        runs(function(){
+            var e = eventHelpers.simulateDragStart($drag, null, dragPoint.x, dragPoint.y);
+            var dt = e.originalEvent.dataTransfer;
+
+            // because drag start is deferred, let the drag start
+            // actually fire. before continuing
+            setTimeout(function(){
+                dropPoint = elementPoint($source, 10, 10);
+
+                // set the placeholder
+                eventHelpers.simulateDragOver($source, dt, dropPoint.x, dropPoint.y);
+                expect($source.children().eq(0)).toHaveClass('placeholder');
+
+                // update the drop effect
+                // so it looks like nothing happened.
+                dt.dropEffect = 'none';
+                eventHelpers.simulateDragEnd($drag, dt, dragPoint.x, dragPoint.y);
+                flag = true;
+            }, l1.exitDelay + 20); // ensure we are past the exitDelay
+        });
+
+        waitsFor(function(){
+            return flag;
+        }, l1.exitDelay + 30);
+
+        runs(function(){
+            $postDragChildren = $source.children();
+            expect(l1.listManager.getArray().length).toEqual(4);
+            expect($postDragChildren.eq(0)).toHaveClass('red');
+        });
+    });
+
 }); // Eof describe
 }); // Eof define
 
