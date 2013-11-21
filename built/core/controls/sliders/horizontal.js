@@ -8,6 +8,8 @@ var RangeManager         = require('built/core/managers/range').RangeManager;
 var MouseResponder       = require('built/core/responders/mouse').MouseResponder;
 var TouchResponder       = require('built/core/responders/touches').TouchResponder;
 var helpers              = require('built/core/utils/helpers');
+var events               = require('built/core/events/event');
+var drag                 = require('built/core/events/drag');
 
 // Module
 
@@ -15,7 +17,6 @@ var HorizontalSlider = marionette.Controller.extend({
 
     // Constants
 
-    EVENT_CHANGE:     'change',
     EVENT_DRAG_START: 'drag:start',
     EVENT_DRAG_STOP:  'drag:stop',
 
@@ -384,7 +385,7 @@ var HorizontalSlider = marionette.Controller.extend({
     // - Args is also optional and can be any number of args.
     //   - Use args to pass along useful, additional information.
     _dispatchChange: function($handle, position) {
-        this.trigger(this.EVENT_CHANGE, this, $handle, position);
+        this.trigger(events.CHANGE, this, $handle, position);
     },
 
     _dispatchDragStart: function($handle, position) {

@@ -2,6 +2,7 @@ define(function(require, exports, module) {
 
 var _                     = require('underscore');
 var HorizontalRangeSlider = require('built/core/controls/sliders/horizontal-range').HorizontalRangeSlider;
+var events                = require('built/core/events/event');
 var SpecHelpers           = require('lib/spec-helpers');
 var EventHelpers          = SpecHelpers.Events;
 
@@ -232,7 +233,7 @@ describe('Horizontal Range Slider', function() {
         els       = getPageElements();
         control   = getControl();
 
-        control.on('change', change);
+        control.on(events.CHANGE, change);
 
         control.setPositionAt(0.5, 0);
 
@@ -246,7 +247,7 @@ describe('Horizontal Range Slider', function() {
         els       = getPageElements();
         control   = getControl();
 
-        control.on('change', change);
+        control.on(events.CHANGE, change);
 
         doBasicMouseDrag(els.$leftHandle, 100);
 
@@ -288,7 +289,7 @@ describe('Horizontal Range Slider', function() {
         els       = getPageElements();
         control   = getControl();
 
-        control.on('change', change);
+        control.on(events.CHANGE, change);
 
         doBasicTouchDrag(els.$leftHandle, 100);
 
