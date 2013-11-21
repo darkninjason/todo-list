@@ -3,21 +3,10 @@ define(function(require, exports, module){
 // Imports
 
 var _ = require('underscore');
+var getElement = require('built/ui/helpers/dom').getElement;
+
 
 // Helper functions
-
-function getElement(value){
-    var $el;
-
-    if(_.isString(value)){
-        $el = $(value);
-    } else {
-        $el = value;
-    }
-
-    return $el;
-}
-
 function registerElement(value, required){
     var idKey = 'auf-id';
 

@@ -18,18 +18,6 @@ describe('Utils Helpers', function() {
     });
 
     // Test Suite
-
-    it('expects $element for string', function() {
-        var $el = helpers.getElement('#helper-target');
-        expect($el instanceof $).toEqual(true);
-    });
-
-    it('expects $element for $element', function() {
-        var $target = $('#helper-target');
-        var $el = helpers.getElement($target);
-        expect($el instanceof $).toEqual(true);
-    });
-
     it('normalizes integer', function(){
         var min, max, values, result;
 
