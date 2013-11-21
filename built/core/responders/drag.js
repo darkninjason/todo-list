@@ -55,6 +55,7 @@ var DragResponder = Marionette.Controller.extend({
         // -    'none'
 
         //console.log('_dragEnd', e.originalEvent.dataTransfer.dropEffect);
+        //debugger;
         var $target = $(e.currentTarget);
         var dataTransfer = e.originalEvent.dataTransfer;
         this.draggingEnded(this, $target, dataTransfer.dropEffect);
@@ -104,7 +105,6 @@ var DragResponder = Marionette.Controller.extend({
         var dataTransfer = originalEvent.dataTransfer;
 
         dataTransfer.effectAllowed = this.operation;
-
         dataTransfer.setData(
             this.dataType,
             this.getData(this, $target)

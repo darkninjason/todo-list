@@ -2,6 +2,7 @@ define(function() {
   return {
     specs: [
      'spec/built-calendar',
+     'spec/built-control-drag-drop-list',
      'spec/built-control-input-select',
      'spec/built-control-scroller',
      'spec/built-control-slider-horizontal-range',

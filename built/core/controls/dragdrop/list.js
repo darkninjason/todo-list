@@ -5,8 +5,8 @@ define(function(require, exports, module) {
     var DragResponder = require('built/core/responders/drag').DragResponder;
     var DropResponder = require('built/core/responders/drop').DropResponder;
     var ArrayManager = require('built/core/managers/array').ArrayManager;
-    var helpers = require('built/core/utils/helpers');
     var dndutils = require('built/core/utils/dndutils');
+    var getElementBounds = require('built/ui/helpers/dom').getElementBounds;
 
 
     var DragDropList = marionette.Controller.extend({
@@ -206,7 +206,6 @@ define(function(require, exports, module) {
         },
 
         dragResponderDraggingStarted: function(sender, $el){
-
             var manager = this.listManager;
             var list = manager.getArray();
             var index = list.indexOf($el[0]);
@@ -236,7 +235,8 @@ define(function(require, exports, module) {
             // of insurance against that case.
 
             // !!! WARNING !!!, THE EVENT IS AN EMPTY OBJECT IN THIS CASE
-            _.defer(this._dropResponderLazyDraggingExited, this.dropResponder, {});
+            //_.defer(this._dropResponderLazyDraggingExited, this.dropResponder, {});
+            this._dropResponderLazyDraggingExited(this.dropResponder, {});
         },
 
         dragResponderDraggingEnded: function(sender, $el, operation) {
@@ -300,7 +300,8 @@ define(function(require, exports, module) {
             var position = this.getPlaceholderInsertPosition(point);
             this.insertPlaceholderAtPosition(position);
 
-            _.defer(this._dropResponderLazyDraggingExited, responder, e);
+            //_.defer(this._dropResponderLazyDraggingExited, responder, e);
+            this._dropResponderLazyDraggingExited(responder, e);
         },
 
         dropResponderDraggingEntered: function(responder, e){
@@ -351,7 +352,7 @@ define(function(require, exports, module) {
             var list = this.listManager.getArray();
 
             var candidates = _.map(list, function(value, index){
-                var bounds = helpers.getElementBounds(value);
+                var bounds = getElementBounds(value);
                 return {
                     x: bounds.left,
                     y: bounds.top,

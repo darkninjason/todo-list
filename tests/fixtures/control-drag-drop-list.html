@@ -1,0 +1,80 @@
+<style type="text/css">
+    .column{
+        float:left;
+        width: 200px;
+        border: 1px solid #cecece;
+        margin-right: 30px;
+        min-height:220px;
+    }
+
+    .column.highlight{
+        border: 1px solid #ff0000;
+    }
+
+    .column h2{
+        text-align:center;
+        text-decoration:underline;
+        margin:10px 0 32px 0;
+    }
+
+    .column ul{
+        margin:0;
+        padding:0;
+        list-style-type:none;
+        min-height:150px;
+        background-color:#ccc;
+    }
+
+    .row{
+        width: 200px;
+        height:50px;
+    }
+
+    .row.placeholder{
+        background-color: #ccc;
+        border-radius: 7px;
+        height: 20px;
+        text-align: center;
+        padding:5px 0;
+
+    }
+
+    .row div{
+        background-color: #000;
+        color:#fff;
+        height:30px;
+        width:100%;
+        opacity: 0.25;
+    }
+
+    .red{
+        background-color: #cc0000;
+    }
+
+    .green{
+        background-color: #00cc00;
+    }
+
+    .blue{
+        background-color: #0000cc;
+    }
+
+    .purple{
+        background-color: purple;
+    }
+</style>
+
+<div class="column" id="source">
+    <h2>Source</h2>
+    <ul>
+        <li class="row red"></li>
+        <li class="row green"></li>
+        <li class="row blue"></li>
+        <li class="row purple"></li>
+    </ul>
+</div>
+
+<div class="column" id="destination">
+    <h2>Destination</h2>
+    <ul></ul>
+</div>
