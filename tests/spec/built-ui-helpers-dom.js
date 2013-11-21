@@ -4,7 +4,7 @@ var helpers = require('built/ui/helpers/dom');
 
 
 
-describe('ui dom helpers', function() {
+describe('DOM helpers: modelFromElement', function() {
 
 
     // Set Up

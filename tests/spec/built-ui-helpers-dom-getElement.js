@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 var getElement = require('built/ui/helpers/dom').getElement;
 
 
-describe('UI DOM Helpers: getElement', function() {
+describe('DOM Helpers: getElement', function() {
 
 
     // Set Up
