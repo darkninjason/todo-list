@@ -3,6 +3,8 @@ define(function(require, exports, module) {
 // Imports
 
 var SingleFocusManager = require('built/core/managers/focus-single').SingleFocusManager;
+var focusEvents = require('built/core/events/focus');
+
 
 describe('Single Focus Manager', function() {
 
@@ -33,8 +35,8 @@ describe('Single Focus Manager', function() {
         var focus = jasmine.createSpy('focus');
         var blur = jasmine.createSpy('blur');
 
-        manager.listenTo(manager, manager.EVENT_FOCUS, focus);
-        manager.listenTo(manager, manager.EVENT_BLUR, blur);
+        manager.listenTo(manager, focusEvents.FOCUS, focus);
+        manager.listenTo(manager, focusEvents.BLUR, blur);
 
         manager.focusIndex(0);
 
@@ -52,7 +54,7 @@ describe('Single Focus Manager', function() {
 
         var blur = jasmine.createSpy('blur');
 
-        manager.listenTo(manager, manager.EVENT_BLUR, blur);
+        manager.listenTo(manager, focusEvents.BLUR, blur);
 
         manager.focusIndex(0);
         manager.focusIndex(0);
