@@ -239,10 +239,10 @@ describe('Drag Drop List Control', function() {
 
             // because drag start is deferred
             setTimeout(function(){
+                expect(l1.listManager.getArray().length).toEqual(3);
+
                 eventHelpers.simulateDragOver($source, dt, dropPoint.x, dropPoint.y);
                 eventHelpers.simulateDrop($source, dt, dropPoint.x, dropPoint.y);
-
-                expect(l1.listManager.getArray().length).toEqual(3);
 
                 // update the drop effect
                 // to ensure the drop counted as a drop
@@ -285,23 +285,21 @@ describe('Drag Drop List Control', function() {
             var e = eventHelpers.simulateDragStart($drag, null, dragPoint.x, dragPoint.y);
             var dt = e.originalEvent.dataTransfer;
 
-
-
             // because drag start is deferred
             setTimeout(function(){
-                var $last = $source.children(3);
+                var $last = $source.children().eq(3);
                 var lastBounds = getElementBounds($last);
 
-                dropPoint = elementPoint($last, 10, (lastBounds.height / 2 + 5));
-                debugger;
+                dropPoint = elementPoint($last, 10, (lastBounds.height / 2) + 5);
+
                 eventHelpers.simulateDragOver($source, dt, dropPoint.x, dropPoint.y);
+                expect($source.children().eq(3)).toHaveClass('placeholder');
 
                 eventHelpers.simulateDrop($source, dt);
 
                 // update the drop effect
                 // to ensure the drop counted as a drop
                 dt.dropEffect = 'move';
-
                 eventHelpers.simulateDragEnd($drag, dt, dragPoint.x, dragPoint.y);
                 flag = true;
             }, 30);
@@ -314,10 +312,9 @@ describe('Drag Drop List Control', function() {
         runs(function(){
             $postDragChildren = $source.children();
             expect(l1.listManager.getArray().length).toEqual(4);
-            expect($postDragChildren.eq(0)).toHaveClass('red');
+            expect($postDragChildren.eq(3)).toHaveClass('red');
         });
     });
-
 
 }); // Eof describe
 }); // Eof define
