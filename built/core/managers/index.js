@@ -72,6 +72,6 @@ var IndexManager = marionette.Controller.extend({
 
 // Exports
 
-module.exports.IndexManager = IndexManager;
+exports.IndexManager = IndexManager;
 
 });
