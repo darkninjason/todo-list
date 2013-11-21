@@ -167,9 +167,6 @@ define(function(require, exports, module){
 
         // Constants
 
-        EVENT_FOCUS: 'focus',
-        EVENT_FOCUS_KEY: 'focus:key',
-        EVENT_FOCUS_MOUSE: 'focus:mouse',
         EVENT_BLUR: 'blur',
         EVENT_SELECT: 'select',
         EVENT_CANCEL: 'cancel',
@@ -332,7 +329,7 @@ define(function(require, exports, module){
 
             this._dispatchFocus(
                 $(this.focusManager.getFocusedObject()),
-                this.EVENT_FOCUS_KEY);
+                focus.FOCUS_KEY);
         },
 
         keyNavigationDown: function(responder, e){
@@ -341,7 +338,7 @@ define(function(require, exports, module){
             this.focusManager.focusIndex(this.indexManager.getIndex());
             this._dispatchFocus(
                 $(this.focusManager.getFocusedObject()),
-                this.EVENT_FOCUS_KEY);
+                focus.FOCUS_KEY);
         },
 
         // Mouse Handling
@@ -364,7 +361,7 @@ define(function(require, exports, module){
 
             this._dispatchFocus(
                 $(this.focusManager.getFocusedObject()),
-                this.EVENT_FOCUS_MOUSE);
+                focus.FOCUS_MOUSE);
         },
 
         mouseDidExit: function(responder, e){
@@ -398,12 +395,12 @@ define(function(require, exports, module){
         },
 
         _dispatchFocus: function($target, focusType) {
-            focusType = focusType || this.EVENT_FOCUS;
+            focusType = focusType || focus.FOCUS;
             this.trigger(focusType, this, $target);
         },
 
         _dispatchBlur: function($target) {
-            this.trigger(this.EVENT_BLUR, this, $target);
+            this.trigger(focus.BLUR, this, $target);
         },
 
         _dispatchSelect: function($target) {
