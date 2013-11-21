@@ -131,6 +131,34 @@ describe('Input Select Control', function() {
         expect(helpers.getElementId($input)).not.toEqual(undefined);
     });
 
+    it('registers BUILT IDs for list elements', function(){
+        var obj = getEventHandler();
+
+        runs(function() {
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+
+            var $items = $collection.find('li');
+            expect($items.length).toEqual(3);
+            expect(helpers.getElementId($items.eq(0))).not.toEqual(undefined);
+            expect(helpers.getElementId($items.eq(1))).not.toEqual(undefined);
+            expect(helpers.getElementId($items.eq(2))).not.toEqual(undefined);
+        });
+    });
+
+
     it('sets default values on init', function(){
         var obj = new InputSelect({el: $input});
         expect(obj.options.debounceDelay).toEqual(obj._defaults.debounceDelay);
