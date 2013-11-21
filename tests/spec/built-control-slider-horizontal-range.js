@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 var _                     = require('underscore');
 var HorizontalRangeSlider = require('built/core/controls/sliders/horizontal-range').HorizontalRangeSlider;
 var events                = require('built/core/events/event');
+var drag                  = require('built/core/events/drag');
 var SpecHelpers           = require('lib/spec-helpers');
 var EventHelpers          = SpecHelpers.Events;
 
@@ -261,7 +262,7 @@ describe('Horizontal Range Slider', function() {
         els       = getPageElements();
         control   = getControl();
 
-        control.on('drag:start', dragStart);
+        control.on(drag.DRAG_START, dragStart);
 
         doBasicMouseDrag(els.$leftHandle, 100);
 
@@ -275,7 +276,7 @@ describe('Horizontal Range Slider', function() {
         els       = getPageElements();
         control   = getControl();
 
-        control.on('drag:stop', dragStop);
+        control.on(drag.DRAG_END, dragStop);
 
         doBasicMouseDrag(els.$leftHandle, 100);
 
@@ -303,7 +304,7 @@ describe('Horizontal Range Slider', function() {
         els       = getPageElements();
         control   = getControl();
 
-        control.on('drag:start', dragStart);
+        control.on(drag.DRAG_START, dragStart);
 
         doBasicTouchDrag(els.$leftHandle, 100);
 
@@ -317,7 +318,7 @@ describe('Horizontal Range Slider', function() {
         els       = getPageElements();
         control   = getControl();
 
-        control.on('drag:stop', dragStop);
+        control.on(drag.DRAG_END, dragStop);
 
         doBasicTouchDrag(els.$leftHandle, 100);
 

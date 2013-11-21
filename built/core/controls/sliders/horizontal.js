@@ -15,11 +15,6 @@ var drag                 = require('built/core/events/drag');
 
 var HorizontalSlider = marionette.Controller.extend({
 
-    // Constants
-
-    EVENT_DRAG_START: 'drag:start',
-    EVENT_DRAG_STOP:  'drag:stop',
-
     // Properties
 
     _minRequiredHandles: 1,
@@ -389,11 +384,11 @@ var HorizontalSlider = marionette.Controller.extend({
     },
 
     _dispatchDragStart: function($handle, position) {
-        this.trigger(this.EVENT_DRAG_START, this, $handle, position);
+        this.trigger(drag.DRAG_START, this, $handle, position);
     },
 
     _dispatchDragStop: function($handle, position) {
-        this.trigger(this.EVENT_DRAG_STOP, this, $handle, position);
+        this.trigger(drag.DRAG_END, this, $handle, position);
     }
 
 }); // eof HorizontalSlider
