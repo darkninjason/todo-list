@@ -9,7 +9,7 @@ var MouseResponder       = require('built/core/responders/mouse').MouseResponder
 var TouchResponder       = require('built/core/responders/touches').TouchResponder;
 var events               = require('built/core/events/event');
 var drag                 = require('built/core/events/drag');
-var getElementBounds     = require('built/ui/helpers/dom').getElementBounds
+var getElementBounds     = require('built/ui/helpers/dom').getElementBounds;
 
 // Module
 
