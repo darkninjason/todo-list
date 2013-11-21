@@ -1,61 +1,62 @@
 define(function (require, exports, module) {
-    var _                  = require('underscore');
-    var Marionette         = require('marionette');
-    var InputSelect        = require('built/core/controls/forms/input-select').InputSelect;
-    var focus              = require('built/core/events/focus');
-    var events             = require('built/core/events/event');
 
-    var InputSelectMarionette = InputSelect.extend({
+var _                  = require('underscore');
+var Marionette         = require('marionette');
+var InputSelect        = require('built/core/controls/forms/input-select').InputSelect;
+var focus              = require('built/core/events/focus');
+var events             = require('built/core/events/event');
 
-        onClose : function(){
-            this.marionetteDict = [];
-        },
+var InputSelectMarionette = InputSelect.extend({
 
-        initialize: function() {
+    onClose : function(){
+        this.marionetteDict = [];
+    },
 
-            InputSelect.prototype.initialize.apply(this,arguments);
-            this.on(focus.BLUR, this._onItemBlur);
-            this.on(focus.FOCUS, this._onItemFocus);
-            this.on(events.SELECT, this._onItemSelect);
+    initialize : function() {
 
-        },
+        InputSelect.prototype.initialize.apply(this,arguments);
+        this.on(focus.BLUR, this._onItemBlur);
+        this.on(focus.FOCUS, this._onItemFocus);
+        this.on(events.SELECT, this._onItemSelect);
 
-        setViews : function(children){
-            var elements = [];
-            var views = children.toArray();
-            _.each(views, function(each){
-                elements.push(each.$el[0]);
-            });
-            this.setElements($(elements));
-            var marionetteDict = this.marionetteDict = {};
-            _.each(views, function(each){
-                var key = each.$el.data('auf-id');
-                marionetteDict[key] = each;
-                elements.push(each.$el[0]);
-            });
-        },
+    },
 
-        _triggerEventOnViewForElement: function(event, $element){
-            var key = $element.data('auf-id');
-            var itemView = this.marionetteDict[key];
-            if(itemView){
-                itemView.trigger(event);
-            }
-        },
+    setViews : function(children){
+        var elements = [];
+        var views = children.toArray();
+        _.each(views, function(each){
+            elements.push(each.$el[0]);
+        });
+        this.setElements($(elements));
+        var marionetteDict = this.marionetteDict = {};
+        _.each(views, function(each){
+            var key = each.$el.data('auf-id');
+            marionetteDict[key] = each;
+            elements.push(each.$el[0]);
+        });
+    },
 
-        _onItemBlur: function(input, $element){
-            this._triggerEventOnViewForElement(focus.BLUR, $element);
-        },
-
-        _onItemFocus: function(input, $element){
-            this._triggerEventOnViewForElement(focus.FOCUS, $element);
-        },
-
-        _onItemSelect: function(input, $element){
-            this._triggerEventOnViewForElement(events.SELECT, $element);
+    _triggerEventOnViewForElement : function(event, $element){
+        var key = $element.data('auf-id');
+        var itemView = this.marionetteDict[key];
+        if(itemView){
+            itemView.trigger(event);
         }
-    });
+    },
 
-    exports.InputSelectMarionette = InputSelectMarionette;
+    _onItemBlur : function(input, $element){
+        this._triggerEventOnViewForElement(focus.BLUR, $element);
+    },
+
+    _onItemFocus : function(input, $element){
+        this._triggerEventOnViewForElement(focus.FOCUS, $element);
+    },
+
+    _onItemSelect : function(input, $element){
+        this._triggerEventOnViewForElement(events.SELECT, $element);
+    }
+});
+
+exports.InputSelectMarionette = InputSelectMarionette;
 
 });
