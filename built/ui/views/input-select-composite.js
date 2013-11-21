@@ -4,7 +4,7 @@ var marionette = require('marionette');
 var InputSelect  = require('built/ui/controls/input-select').InputSelectMarionette;
 var helpers      = require('built/core/utils/helpers');
 var Scroller     = require('built/core/controls/page/scroller').Scroller;
-
+var focus        = require('built/core/events/focus');
 
 var InputSelectComposite =  marionette.CompositeView.extend({
     initialize : function(){
@@ -19,12 +19,12 @@ var InputSelectComposite =  marionette.CompositeView.extend({
         });
 
         this.scroller = new Scroller({
-            el            : this.itemViewContainer,
-            scrollDebounce: 0,
-            duration      : 300,
+            el             : this.itemViewContainer,
+            scrollDebounce : 0,
+            duration       : 300
         });
         this.listenTo(this.inputSelect, this.inputSelect.EVENT_INPUT, this.onInputChange);
-        this.listenTo(this.inputSelect, this.inputSelect.EVENT_FOCUS_KEY, this.onInputFocusChange);
+        this.listenTo(this.inputSelect, focus.FOCUS_KEY, this.onInputFocusChange);
         this.listenTo(this.collection,'sync',this.onCollectionSync);
 
     },
@@ -49,6 +49,7 @@ var InputSelectComposite =  marionette.CompositeView.extend({
         var mouseYMoved = hasPreviousMousePosition && (this._mouseY != e.pageY);
         this._mouseX = e.pageX;
         this._mouseY = e.pageY;
+
         if(mouseXMoved || mouseYMoved){
             $(window).off('mousemove', this.onMouseMove);
             this.inputSelect.mouseResponder.enableEnterExit(true);

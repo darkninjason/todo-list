@@ -2,6 +2,8 @@ define(function (require, exports, module) {
     var _                  = require('underscore');
     var Marionette         = require('marionette');
     var InputSelect        = require('built/core/controls/forms/input-select').InputSelect;
+    var focus              = require('built/core/events/focus');
+    var events             = require('built/core/events/event');
 
     var InputSelectMarionette = InputSelect.extend({
 
@@ -12,9 +14,9 @@ define(function (require, exports, module) {
         initialize: function() {
 
             InputSelect.prototype.initialize.apply(this,arguments);
-            this.on('blur', this._onItemBlur);
-            this.on('focus', this._onItemFocus);
-            this.on('select', this._onItemSelect);
+            this.on(focus.BLUR, this._onItemBlur);
+            this.on(focus.FOCUS, this._onItemFocus);
+            this.on(events.SELECT, this._onItemSelect);
 
         },
 
@@ -42,15 +44,15 @@ define(function (require, exports, module) {
         },
 
         _onItemBlur: function(input, $element){
-            this._triggerEventOnViewForElement('blur', $element);
+            this._triggerEventOnViewForElement(focus.BLUR, $element);
         },
 
         _onItemFocus: function(input, $element){
-            this._triggerEventOnViewForElement('focus', $element);
+            this._triggerEventOnViewForElement(focus.FOCUS, $element);
         },
 
         _onItemSelect: function(input, $element){
-            this._triggerEventOnViewForElement('select', $element);
+            this._triggerEventOnViewForElement(events.SELECT, $element);
         }
     });
 
