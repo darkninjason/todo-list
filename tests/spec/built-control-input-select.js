@@ -182,7 +182,7 @@ describe('Input Select Control', function() {
     });
 
     // Key Events
-    it('disptches \'focus\' event for first item with down arrow key', function() {
+    it('disptches \'focus.FOCUS\' event for first item with down arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
@@ -236,7 +236,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('disptches \'focus\' event for first item set with jquery elements with down arrow key', function() {
+    it('disptches \'focus.FOCUS\' event for first item set with jquery elements with down arrow key', function() {
 
         var obj = getEventHandlerJqueryElements();
         var focusSpy = jasmine.createSpy('focusSpy');
@@ -264,7 +264,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('disptches \'focus\' event for last item with up arrow key', function() {
+    it('disptches \'focus.FOCUS\' event for last item with up arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
@@ -318,7 +318,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('disptches \'focus\' event for middle item with down arrow key', function() {
+    it('disptches \'focus.FOCUS\' event for middle item with down arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
@@ -346,7 +346,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('disptches \'focus\' event for middle item with up arrow key', function() {
+    it('disptches \'focus.FOCUS\' event for middle item with up arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
@@ -374,7 +374,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('cycles \'focus\' events with down arrow key', function() {
+    it('cycles \'focus.FOCUS\' events with down arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
@@ -405,7 +405,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('cycles \'focus\' events with up arrow key', function() {
+    it('cycles \'focus.FOCUS\' events with up arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
@@ -436,7 +436,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('disptches \'blur\' event for first item with down arrow key', function() {
+    it('disptches \'focus.BLUR\' event for first item with down arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
@@ -464,7 +464,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('disptches \'blur\' event for last item with up arrow key', function() {
+    it('disptches \'focus.BLUR\' event for last item with up arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
@@ -492,7 +492,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('disptches \'blur\' event for middle item with down arrow key', function() {
+    it('disptches \'focus.BLUR\' event for middle item with down arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
@@ -521,7 +521,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('disptches \'blur\' event for middle item with up arrow key', function() {
+    it('disptches \'focus.BLUR\' event for middle item with up arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
@@ -550,7 +550,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('cycles \'blur\' events with down arrow key', function() {
+    it('cycles \'focus.BLUR\' events with down arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
@@ -582,7 +582,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('cycles \'blur\' events with up arrow key', function() {
+    it('cycles \'focus.BLUR\' events with up arrow key', function() {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
@@ -614,7 +614,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('dispatches \'select\' event for first item with return key', function() {
+    it('dispatches \'event.SELECT\' event for first item with return key', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('actionSpy');
 
@@ -642,7 +642,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('dispatches \'select\' event for last item with return key', function() {
+    it('dispatches \'event.SELECT\' event for last item with return key', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('actionSpy');
 
@@ -670,7 +670,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('dispatches \'select\' event for middle item with return key', function() {
+    it('dispatches \'event.SELECT\' event for middle item with return key', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('actionSpy');
 
@@ -699,7 +699,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('dispatches \'cancel\' event with escape key', function() {
+    it('dispatches \'event.CANCEL\' event with escape key', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('actionSpy');
 
@@ -728,7 +728,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('does not dispatch \'focus\' event with key down or up', function() {
+    it('does not dispatch \'focus.FOCUS\' event with key down or up', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -756,7 +756,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('does not dispatch \'blur\' event with key down or up', function() {
+    it('does not dispatch \'focus.BLUR\' event with key down or up', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -786,7 +786,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('does not dispatch \'select\' event with key', function() {
+    it('does not dispatch \'event.SELECT\' event with key', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -814,7 +814,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('does not dispatch \'cancel\' event with key', function() {
+    it('does not dispatch \'event.CANCEL\' event with key', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -844,7 +844,7 @@ describe('Input Select Control', function() {
 
     // Mouse Events
 
-    it('dispatches \'focus\' event with mouse', function() {
+    it('dispatches \'focus.FOCUS\' event with mouse', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -898,7 +898,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('dispatches \'blur\' event with mouse', function() {
+    it('dispatches \'focus.BLUR\' event with mouse', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -926,7 +926,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('dispatches \'select\' event with mouse', function() {
+    it('dispatches \'event.SELECT\' event with mouse', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -954,7 +954,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('dispatches \'focus\' events for all items with mouse', function() {
+    it('dispatches \'focus.FOCUS\' events for all items with mouse', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -985,7 +985,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('dispatches \'blur\' events for all items with mouse', function() {
+    it('dispatches \'focus.BLUR\' events for all items with mouse', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -1021,7 +1021,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('does not dispatch \'focus\' event with mouse', function() {
+    it('does not dispatch \'focus.FOCUS\' event with mouse', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -1048,7 +1048,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('does not dispatch \'blur\' event with mouse', function() {
+    it('does not dispatch \'focus.BLUR\' event with mouse', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -1076,7 +1076,7 @@ describe('Input Select Control', function() {
         });
     });
 
-    it('does not dispatch \'select\' event with mouse', function() {
+    it('does not dispatch \'event.SELECT\' event with mouse', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
@@ -1106,7 +1106,7 @@ describe('Input Select Control', function() {
 
     // Mouse & Key Events
 
-    it('dispatches \'focus\' event with mouse then down arrow key', function() {
+    it('dispatches \'focus.FOCUS\' event with mouse then down arrow key', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
