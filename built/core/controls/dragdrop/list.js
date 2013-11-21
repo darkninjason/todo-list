@@ -13,6 +13,7 @@ define(function(require, exports, module) {
         el: null,
         dataType: 'com.built.generic',
         operation: 'move',
+        exitDelay: 150,
 
         initialize: function(options){
             _.extend(this, options);
@@ -95,7 +96,7 @@ define(function(require, exports, module) {
 
             // You probably shouldn't be messing with this anyway.
             this._dropResponderLazyDraggingExited = _.debounce(
-                this._dropResponderLazyDraggingExited, 150);
+                this._dropResponderLazyDraggingExited, this.exitDelay);
         },
 
         initializeDragResponder: function(){
@@ -235,8 +236,7 @@ define(function(require, exports, module) {
             // of insurance against that case.
 
             // !!! WARNING !!!, THE EVENT IS AN EMPTY OBJECT IN THIS CASE
-            //_.defer(this._dropResponderLazyDraggingExited, this.dropResponder, {});
-            this._dropResponderLazyDraggingExited(this.dropResponder, {});
+            _.defer(this._dropResponderLazyDraggingExited, this.dropResponder, {});
         },
 
         dragResponderDraggingEnded: function(sender, $el, operation) {
@@ -300,8 +300,7 @@ define(function(require, exports, module) {
             var position = this.getPlaceholderInsertPosition(point);
             this.insertPlaceholderAtPosition(position);
 
-            //_.defer(this._dropResponderLazyDraggingExited, responder, e);
-            this._dropResponderLazyDraggingExited(responder, e);
+            _.defer(this._dropResponderLazyDraggingExited, responder, e);
         },
 
         dropResponderDraggingEntered: function(responder, e){
@@ -332,7 +331,6 @@ define(function(require, exports, module) {
             if(this._placeholderIndex != -1){
                 this.removePlaceholder();
              }
-
             this.dropResponderDraggingExited(responder, e);
         },
 

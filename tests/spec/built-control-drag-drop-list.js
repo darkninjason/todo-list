@@ -90,8 +90,6 @@ describe('Drag Drop List Control', function() {
         return dt;
     }
 
-
-
     // Helpers
 
     /*
@@ -638,6 +636,72 @@ describe('Drag Drop List Control', function() {
             $postDragChildren = $source.children();
             expect(l1.listManager.getArray().length).toEqual(4);
             expect($postDragChildren.eq(3)).toHaveClass('red');
+        });
+    });
+
+    it('should drag element from source and drop in destination', function(){
+        var $preDragSourceChildren = $source.children();
+        var $preDragDestinationChildren = $destination.children();
+        var $drag = $preDragSourceChildren.eq(0);
+        var flag = false;
+
+        var l1 = new ColorDropList();
+        l1.setDropElement($source);
+        l1.reset($preDragSourceChildren);
+
+        var l2 = new ColorDropList();
+        l2.setDropElement($destination);
+
+        var dropPoint;
+        var dragPoint  = elementPoint($drag, 10, 10);
+
+        expect($preDragSourceChildren.length).toEqual(4);
+        expect($preDragDestinationChildren.length).toEqual(0);
+
+        // drag start is a deferred call,
+        // so we need to do these tests async.
+        runs(function(){
+            var e = eventHelpers.simulateDragStart($drag, null, dragPoint.x, dragPoint.y);
+            var dt = e.originalEvent.dataTransfer;
+
+            // because drag start is deferred, let the drag start
+            // actually fire. before continuing
+            setTimeout(function(){
+                dropPoint = elementPoint($destination, 10, 75);
+
+                eventHelpers.simulateDragOver($destination, dt, dropPoint.x, dropPoint.y);
+                expect($destination.children().eq(0)).toHaveClass('placeholder');
+
+                eventHelpers.simulateDrop($destination, dt);
+
+                // update the drop effect
+                // to ensure the drop counted as a drop
+                dt.dropEffect = 'move';
+                eventHelpers.simulateDragEnd($drag, dt, dragPoint.x, dragPoint.y);
+                flag = true;
+            }, 30);
+        });
+
+        waitsFor(function(){
+            return flag;
+        }, 100);
+
+        runs(function(){
+
+            $postDragSourceChildren = $source.children();
+            $postDragDestinationChildren = $destination.children();
+
+            expect($postDragSourceChildren.length)
+                  .toEqual(3);
+
+            expect($postDragDestinationChildren.length)
+                  .toEqual(1);
+
+            expect($postDragSourceChildren.eq(0))
+                  .toHaveClass('green');
+
+            expect($postDragDestinationChildren.eq(0))
+                  .toHaveClass('red');
         });
     });
 
