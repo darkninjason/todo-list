@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 // Imports
 
 var array = require('built/core/managers/array');
+var events = require('built/core/events/event');
 
 describe('Array Manager', function() {
 
@@ -54,10 +55,15 @@ describe('Array Manager', function() {
 
         manager = getManager();
         manager.setArray(list);
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
         manager.insertObject(9);
+
 
         var target = manager.getArray();
         expect(target.length).toEqual(5);
+        expect(eventSpy).toHaveBeenCalled();
 
         expect(target[0]).toEqual(1);
         expect(target[1]).toEqual(2);
@@ -71,10 +77,14 @@ describe('Array Manager', function() {
 
         manager = getManager();
         manager.setArray(list);
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
         manager.insertObjectAt(2, 9);
 
         var target = manager.getArray();
         expect(target.length).toEqual(5);
+        expect(eventSpy).toHaveBeenCalled();
 
         expect(target[0]).toEqual(1);
         expect(target[1]).toEqual(2);
@@ -88,11 +98,18 @@ describe('Array Manager', function() {
 
         manager = getManager();
         manager.setArray(list);
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
         manager.insertObjectAt(2, 9);
         manager.removeObjectAt(2);
 
         var target = manager.getArray();
         expect(target.length).toEqual(4);
+
+        expect(eventSpy).toHaveBeenCalled();
+        expect(eventSpy.calls.length).toEqual(2);
 
         expect(target[0]).toEqual(1);
         expect(target[1]).toEqual(2);
@@ -105,10 +122,15 @@ describe('Array Manager', function() {
 
         manager = getManager();
         manager.setArray(list);
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
         manager.swap(1, 2);
 
         var target = manager.getArray();
         expect(target.length).toEqual(4);
+        expect(eventSpy).toHaveBeenCalled();
 
         expect(target[0]).toEqual(1);
         expect(target[1]).toEqual(3);
@@ -116,15 +138,41 @@ describe('Array Manager', function() {
         expect(target[3]).toEqual(4);
     });
 
+    it('does not swap positions of 2 indexes in the middle', function(){
+
+        // target swap indexs are the same
+        // in this case
+        var list = [1,2,2,4];
+
+
+        manager = getManager();
+        manager.setArray(list);
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
+        manager.swap(1, 2);
+
+        var target = manager.getArray();
+        expect(target.length).toEqual(4);
+        expect(eventSpy).not.toHaveBeenCalled();
+    });
+
     it('swaps positions of 2 indexes from the beginning <-> end', function(){
         var list = [1,2,3,4];
 
         manager = getManager();
         manager.setArray(list);
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
         manager.swap(0, 3);
 
         var target = manager.getArray();
         expect(target.length).toEqual(4);
+        expect(eventSpy).toHaveBeenCalled();
+
         expect(target[0]).toEqual(4);
         expect(target[1]).toEqual(2);
         expect(target[2]).toEqual(3);
@@ -139,10 +187,15 @@ describe('Array Manager', function() {
 
         // our from value is larger than our to value
         // should still work just fine.
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
         manager.swap(3, 0);
 
         var target = manager.getArray();
         expect(target.length).toEqual(4);
+        expect(eventSpy).toHaveBeenCalled();
+
         expect(target[0]).toEqual(4);
         expect(target[1]).toEqual(2);
         expect(target[2]).toEqual(3);
@@ -154,11 +207,17 @@ describe('Array Manager', function() {
 
         manager = getManager();
         manager.setArray(list);
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
         manager.replaceAt(0, 9);
 
         var target = manager.getArray();
 
         expect(target.length).toEqual(4);
+        expect(eventSpy).toHaveBeenCalled();
+
         expect(target[0]).toEqual(9);
         expect(target[1]).toEqual(2);
         expect(target[2]).toEqual(3);
@@ -170,11 +229,17 @@ describe('Array Manager', function() {
 
         manager = getManager();
         manager.setArray(list);
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
         manager.replaceAt(3, 9);
 
         var target = manager.getArray();
 
         expect(target.length).toEqual(4);
+        expect(eventSpy).toHaveBeenCalled();
+
         expect(target[0]).toEqual(1);
         expect(target[1]).toEqual(2);
         expect(target[2]).toEqual(3);
@@ -185,11 +250,17 @@ describe('Array Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager({list: list});
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
         manager.replaceAt(2, 9);
 
         var target = manager.getArray();
 
         expect(target.length).toEqual(4);
+        expect(eventSpy).toHaveBeenCalled();
+
         expect(target[0]).toEqual(1);
         expect(target[1]).toEqual(2);
         expect(target[2]).toEqual(9);
@@ -200,10 +271,16 @@ describe('Array Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager({list: list});
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
         manager.moveObjectFromTo(3, 0);
 
         var target = manager.getArray();
         expect(target.length).toEqual(4);
+        expect(eventSpy).toHaveBeenCalled();
+
         expect(target[0]).toEqual(4);
         expect(target[1]).toEqual(1);
         expect(target[2]).toEqual(2);
@@ -214,10 +291,16 @@ describe('Array Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager({list: list});
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
         manager.moveObjectFromTo(0, 3);
 
         var target = manager.getArray();
         expect(target.length).toEqual(4);
+        expect(eventSpy).toHaveBeenCalled();
+
         expect(target[0]).toEqual(2);
         expect(target[1]).toEqual(3);
         expect(target[2]).toEqual(4);
@@ -228,10 +311,16 @@ describe('Array Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager({list: list});
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
         manager.moveObjectFromTo(2, 1);
 
         var target = manager.getArray();
         expect(target.length).toEqual(4);
+        expect(eventSpy).toHaveBeenCalled();
+
         expect(target[0]).toEqual(1);
         expect(target[1]).toEqual(3);
         expect(target[2]).toEqual(2);
@@ -242,10 +331,16 @@ describe('Array Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager({list: list});
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
         manager.moveObjectFromTo(1, 3);
 
         var target = manager.getArray();
         expect(target.length).toEqual(4);
+        expect(eventSpy).toHaveBeenCalled();
+
         expect(target[0]).toEqual(1);
         expect(target[1]).toEqual(3);
         expect(target[2]).toEqual(4);
@@ -256,10 +351,16 @@ describe('Array Manager', function() {
         var list = [1,2,3,4];
 
         manager = getManager({list: list});
+
+        var eventSpy = jasmine.createSpy('eventSpy');
+        manager.on(events.CHANGE, eventSpy);
+
         manager.moveObjectFromTo(2, 0);
 
         var target = manager.getArray();
         expect(target.length).toEqual(4);
+        expect(eventSpy).toHaveBeenCalled();
+
         expect(target[0]).toEqual(3);
         expect(target[1]).toEqual(1);
         expect(target[2]).toEqual(2);
