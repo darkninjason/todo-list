@@ -25,8 +25,10 @@ define(function() {
      'spec/built-responders-window',
      'spec/built-utils-helpers',
      'spec/built-utils-ioc',
+     'spec/built-utils-helpers-registerElement',
      'spec/built-ui-helpers-dom',
      'spec/built-ui-helpers-dom-getElement'
+
     ]
   };
 });
