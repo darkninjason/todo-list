@@ -209,6 +209,33 @@ describe('Input Select Control', function() {
         });
     });
 
+    it('disptches \'focus.FOCUS_KEY\' event for first item with down arrow key', function() {
+        var obj = getEventHandler();
+        var focusSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, focus.FOCUS_KEY, focusSpy);
+
+        runs(function() {
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(focusSpy).toHaveBeenCalled();
+            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(0));
+        });
+    });
+
     it('disptches \'focus\' event for first item set with jquery elements with down arrow key', function() {
 
         var obj = getEventHandlerJqueryElements();
@@ -242,6 +269,33 @@ describe('Input Select Control', function() {
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, focusSpy);
+
+        runs(function() {
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(focusSpy).toHaveBeenCalled();
+            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(2));
+        });
+    });
+
+    it('disptches \'focus.FOCUS_KEY\' event for last item with up arrow key', function() {
+        var obj = getEventHandler();
+        var focusSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, focus.FOCUS_KEY, focusSpy);
 
         runs(function() {
             eventHelpers.insertChar($input, 'l');
@@ -795,6 +849,33 @@ describe('Input Select Control', function() {
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, actionSpy);
+
+        runs(function() {
+            eventHelpers.insertChar($input, 'l');
+            eventHelpers.insertChar($input, 'u');
+            eventHelpers.insertChar($input, 'c');
+            eventHelpers.insertChar($input, 'y');
+        });
+
+        waitsFor(function() {
+            if(obj.hasRendered){
+                eventHelpers.simulateMouseEnter($items.eq(0));
+                return true;
+            }
+            return false;
+        }, 'No input received', 500);
+
+        runs(function() {
+            expect(actionSpy).toHaveBeenCalled();
+            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
+        });
+    });
+
+    it('dispatches \'focus.FOCUS_MOUSE\' event with mouse', function() {
+        var obj = getEventHandler();
+        var actionSpy = jasmine.createSpy('focusSpy');
+
+        obj.listenTo(control, focus.FOCUS_MOUSE, actionSpy);
 
         runs(function() {
             eventHelpers.insertChar($input, 'l');

@@ -307,6 +307,9 @@ define(function(require, exports, module){
             if (e.keyCode == 40){ // down
                 if(this.indexManager.getIndex() === 0){
                     this.focusManager.focusIndex(0);
+                    this._dispatchFocus(
+                        $(this.focusManager.getFocusedObject()),
+                        focus.FOCUS_KEY);
                 } else {
                     this.keyNavigationDown(responder, e);
                 }
