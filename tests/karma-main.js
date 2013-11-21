@@ -68,7 +68,8 @@ var tests = [
     'spec/built-control-input-select',
     'spec/built-control-scroller',
     'spec/built-utils-ioc',
-    'spec/built-ui-helpers-dom'
+    'spec/built-ui-helpers-dom',
+    'spec/built-ui-helpers-dom-getElement'
 ];
 
 var path = '';
