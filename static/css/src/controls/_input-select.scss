@@ -1,17 +1,17 @@
+#input-select-scrollable,
 #input-select{
     @extend .row;
     >div{
         @extend .col-md-5;
     }
-    .list-group {
+}
 
+#input-select-scrollable{
+    .list-group {
         max-height: 300px;
         overflow: hidden;
         overflow-y: scroll;
         border-bottom: 1px solid $gray-lighter;
     }
-    margin-bottom: 30px;
 }
-
-
 

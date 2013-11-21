@@ -5,7 +5,8 @@ define(function(require, exports, module) {
     app.addRegions({
         hRangeSlider: '#horizontal-range-slider',
         scroller: '#scroller',
-        inputSelect: '#input-select'
+        inputSelect: '#input-select',
+        inputSelectScrollable: '#input-select-scrollable'
     });
 
     return app;
