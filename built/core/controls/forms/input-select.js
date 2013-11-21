@@ -6,6 +6,8 @@ define(function(require, exports, module){
     var IndexManager       = require('built/core/managers/index').IndexManager;
     var SingleFocusManager = require('built/core/managers/focus-single').SingleFocusManager;
     var helpers            = require('built/core/utils/helpers');
+    var focus              = require('built/core/events/focus');
+    var events             = require('built/core/events/event');
 
     // Some requirements when using this control.
     //
@@ -276,12 +278,12 @@ define(function(require, exports, module){
 
             this.listenTo(
                 this.focusManager,
-                this.focusManager.EVENT_FOCUS,
+                focus.FOCUS,
                 this.wantsFocus);
 
             this.listenTo(
                 this.focusManager,
-                this.focusManager.EVENT_BLUR,
+                focus.BLUR,
                 this.wantsBlur);
         },
 
