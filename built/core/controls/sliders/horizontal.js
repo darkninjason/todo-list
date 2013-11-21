@@ -7,9 +7,9 @@ var _                    = require('underscore');
 var RangeManager         = require('built/core/managers/range').RangeManager;
 var MouseResponder       = require('built/core/responders/mouse').MouseResponder;
 var TouchResponder       = require('built/core/responders/touches').TouchResponder;
-var helpers              = require('built/core/utils/helpers');
 var events               = require('built/core/events/event');
 var drag                 = require('built/core/events/drag');
+var getElementBounds     = require('built/ui/helpers/dom').getElementBounds
 
 // Module
 
@@ -160,8 +160,8 @@ var HorizontalSlider = marionette.Controller.extend({
     _calculateNormalizedMaxPosition: function($handle, $track) {
         var handleBounds, trackBounds;
 
-        handleBounds = helpers.getElementBounds($handle);
-        trackBounds  = helpers.getElementBounds($track);
+        handleBounds = getElementBounds($handle);
+        trackBounds  = getElementBounds($track);
 
         return Math.abs(trackBounds.width - handleBounds.width);
     },

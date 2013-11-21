@@ -4,7 +4,7 @@ define(function(require, exports, module){
 var _          = require('underscore');
 var marionette = require('marionette');
 
-var Helpers         = require('built/core/utils/helpers');
+var helpers         = require('built/core/utils/helpers');
 var ScrollResponder = require('built/core/responders/scroll').ScrollResponder;
 var RangeManager    = require('built/core/managers/range').RangeManager;
 var events          = require('built/core/events/event');
@@ -40,18 +40,14 @@ var ScrollManager = marionette.Controller.extend({
         this.options = options;
         _.defaults(this.options, this._getDefaults());
 
-        if(_.isEmpty(this.options.el)) {
-            throw 'No input element provided.';
-        }
-
-        this.$el              = Helpers.getElement(this.options.el);
+        this.$el              = helpers.registerElement(this.options.el);
         this.$viewport        = this._initializeViewport(this.$el);
         this.$scrollable      = this._initializeScrollable(this.$el);
         this._scrollResponder = this._initializeScrollResponder(this.options);
         this._rangeManager    = this._initializeRangeManager(this.options);
 
         // compose range manager methods
-        Helpers.composeAll(
+        helpers.composeAll(
             this,
             this._rangeManager,
             'getMarkers',

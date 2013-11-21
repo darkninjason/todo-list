@@ -14,6 +14,18 @@ function getElement(value){
     return $el;
 }
 
+function getElementBounds($el) {
+    // el is raw dom element
+    // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
+
+    if($el.nodeName){
+        return $el.getBoundingClientRect();
+    }
+
+    return $el[0].getBoundingClientRect();
+}
+
+
 
 function objectFromElement($element, map){
     var key;
@@ -43,5 +55,6 @@ function modelFromElement($element, Model, map){
 exports.modelFromElement = modelFromElement;
 exports.objectFromElement = objectFromElement;
 exports.getElement = getElement;
+exports.getElementBounds = getElementBounds;
 
 });

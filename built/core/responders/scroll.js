@@ -40,11 +40,7 @@ var ScrollResponder = marionette.Controller.extend({
             '_didReceiveScroll'
         );
 
-        if(_.isEmpty(this.el)) {
-            throw 'No input element provided.';
-        }
-
-        this.$el = helpers.getElement(this.el);
+        this.$el = helpers.registerElement(this.el);
 
         // decorate internal _didReceiveScroll if debounce is enabled
         if(this.scrollDebounce > 0) {

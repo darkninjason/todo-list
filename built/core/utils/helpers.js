@@ -92,27 +92,13 @@ function sortArrayAscending(a, b) {
     return a - b;
 }
 
-function getElementBounds($el) {
-    // el is raw dom element
-    // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
-
-    if($el.nodeName){
-        return $el.getBoundingClientRect();
-    }
-
-    return $el[0].getBoundingClientRect();
-
-}
-
 // Exports
 
-exports.getElement         = getElement;
 exports.compose            = compose;
 exports.composeAll         = composeAll;
 exports.normalizeInt       = normalizeInt;
 exports.sortArrayAscending = sortArrayAscending;
 exports.sortArrayAscending = sortArrayAscending;
-exports.getElementBounds   = getElementBounds;
 exports.registerElement    = registerElement;
 exports.getElementId       = getElementId;
 });
