@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 // Imports
 
 var IndexManager = require('built/core/managers/index').IndexManager;
+var events = require('built/core/events/event');
 
 describe('Index Manager', function() {
 
@@ -84,6 +85,27 @@ describe('Index Manager', function() {
         manager.previousIndex();
         manager.previousIndex();
         expect(manager.getIndex()).toEqual(2);
+    });
+
+    it('should dispatch change event', function() {
+        var actionSpy = jasmine.createSpy('actionSpy');
+        manager.on(events.CHANGE, actionSpy);
+        manager.setLength(3);
+        manager.setIndex(1);
+        expect(actionSpy).toHaveBeenCalled();
+    });
+
+    it('should not dispatch change event', function() {
+        var actionSpy = jasmine.createSpy('actionSpy');
+
+        manager.setLength(3);
+
+        manager.setIndex(1);
+        manager.on(events.CHANGE, actionSpy);
+        manager.setIndex(1);
+
+        expect(actionSpy).not.toHaveBeenCalled();
+
     });
 
 }); // eof describe

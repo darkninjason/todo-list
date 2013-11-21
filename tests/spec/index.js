@@ -23,9 +23,11 @@ define(function() {
      'spec/built-responders-scroll',
      'spec/built-responders-touches',
      'spec/built-responders-window',
+     'spec/built-ui-helpers-dom-getElement',
+     'spec/built-ui-helpers-dom',
+     'spec/built-utils-helpers-registerElement',
      'spec/built-utils-helpers',
      'spec/built-utils-ioc',
-     'spec/built-ui-helpers-dom'
     ]
   };
 });

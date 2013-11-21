@@ -67,8 +67,12 @@ var tests = [
     'spec/built-control-slider-horizontal-range',
     'spec/built-control-input-select',
     'spec/built-control-scroller',
+    'spec/built-ui-helpers-dom-getElement',
+    'spec/built-ui-helpers-dom',
+    'spec/built-utils-helpers-registerElement',
+    'spec/built-utils-helpers',
     'spec/built-utils-ioc',
-    'spec/built-ui-helpers-dom'
+
 ];
 
 var path = '';

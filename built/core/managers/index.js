@@ -5,6 +5,7 @@ define(function(require, exports, module){
 var marionette   = require('marionette');
 var _            = require('underscore');
 var RangeManager = require('built/core/managers/range').RangeManager;
+var events       = require('built/core/events/event');
 
 // Module
 
@@ -24,7 +25,12 @@ var IndexManager = marionette.Controller.extend({
     },
 
     setIndex: function(value){
+        if(value == this.range.getValue()){
+            return;
+        }
+
         this.range.setValue(value);
+        this._dispatchChange(value);
     },
 
     getIndex: function(){
@@ -57,6 +63,10 @@ var IndexManager = marionette.Controller.extend({
 
         this.setIndex(nextIndex);
         return nextIndex;
+    },
+
+    _dispatchChange: function() {
+        this.trigger(events.CHANGE, this);
     }
 });
 
