@@ -564,7 +564,7 @@ describe('Input Select Control', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('actionSpy');
 
-        obj.listenTo(control, 'select', actionSpy);
+        obj.listenTo(control, events.SELECT, actionSpy);
 
         runs(function() {
             EventHelpers.insertChar($input, 'l');
@@ -592,7 +592,7 @@ describe('Input Select Control', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('actionSpy');
 
-        obj.listenTo(control, 'select', actionSpy);
+        obj.listenTo(control, events.SELECT, actionSpy);
 
         runs(function() {
             EventHelpers.insertChar($input, 'l');
@@ -620,7 +620,7 @@ describe('Input Select Control', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('actionSpy');
 
-        obj.listenTo(control, 'select', actionSpy);
+        obj.listenTo(control, events.SELECT, actionSpy);
 
         runs(function() {
             EventHelpers.insertChar($input, 'l');
@@ -649,7 +649,7 @@ describe('Input Select Control', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('actionSpy');
 
-        obj.listenTo(control, 'cancel', actionSpy);
+        obj.listenTo(control, events.CANCEL, actionSpy);
 
         runs(function() {
             EventHelpers.insertChar($input, 'l');
@@ -736,7 +736,7 @@ describe('Input Select Control', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
-        obj.listenTo(control, 'select', actionSpy);
+        obj.listenTo(control, events.SELECT, actionSpy);
 
         runs(function() {
             EventHelpers.insertChar($input, 'l');
@@ -764,7 +764,7 @@ describe('Input Select Control', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
-        obj.listenTo(control, 'cancel', actionSpy);
+        obj.listenTo(control, events.CANCEL, actionSpy);
 
         runs(function() {
             EventHelpers.insertChar($input, 'l');
@@ -849,7 +849,7 @@ describe('Input Select Control', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
-        obj.listenTo(control, 'select', actionSpy);
+        obj.listenTo(control, events.SELECT, actionSpy);
 
         runs(function() {
             EventHelpers.insertChar($input, 'l');
@@ -999,7 +999,7 @@ describe('Input Select Control', function() {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
-        obj.listenTo(control, 'select', actionSpy);
+        obj.listenTo(control, events.SELECT, actionSpy);
 
         runs(function() {
             EventHelpers.insertChar($input, 'l');

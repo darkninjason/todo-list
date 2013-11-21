@@ -166,10 +166,6 @@ define(function(require, exports, module){
     var InputSelect = marionette.Controller.extend({
 
         // Constants
-
-        EVENT_BLUR: 'blur',
-        EVENT_SELECT: 'select',
-        EVENT_CANCEL: 'cancel',
         EVENT_INPUT: 'input',
 
         el: null, // needs to be an <input> or contenteditable
@@ -404,11 +400,11 @@ define(function(require, exports, module){
         },
 
         _dispatchSelect: function($target) {
-            this.trigger(this.EVENT_SELECT, this, $target);
+            this.trigger(events.SELECT, this, $target);
         },
 
         _dispatchCancel: function() {
-            this.trigger(this.EVENT_CANCEL, this);
+            this.trigger(events.CANCEL, this);
         }
 
     });
