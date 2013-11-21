@@ -7,11 +7,10 @@ var _              = require('underscore');
 var Collection     = require('built/core/jquery/collection').Collection;
 var array          = require('built/core/managers/array');
 var helpers        = require('built/core/utils/helpers');
+var focus          = require('built/core/events/focus');
 // Module
 
 var FocusManager =  array.ArrayManager.extend({
-    EVENT_FOCUS: 'focus',
-    EVENT_BLUR: 'blur',
 
     // Object vars
     allowsDeselect: false,
@@ -84,11 +83,11 @@ var FocusManager =  array.ArrayManager.extend({
     },
 
     _dispatchFocus: function(obj) {
-        this.trigger(this.EVENT_FOCUS, this, obj);
+        this.trigger(focus.FOCUS, this, obj);
     },
 
     _dispatchBlur: function(obj) {
-        this.trigger(this.EVENT_BLUR, this, obj);
+        this.trigger(focus.BLUR, this, obj);
     },
 
     // marionette overrides

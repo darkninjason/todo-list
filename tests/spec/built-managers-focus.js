@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 // Imports
 
 var FocusManager = require('built/core/managers/focus').FocusManager;
+var focus = require('built/core/events/focus');
 
 describe('Focus Manager', function() {
 
@@ -46,13 +47,13 @@ describe('Focus Manager', function() {
             list: $items.toArray()
         });
 
-        var focus = jasmine.createSpy('focus');
+        var spy = jasmine.createSpy('focus');
 
-        manager.listenTo(manager, manager.EVENT_FOCUS, focus);
+        manager.listenTo(manager, focus.FOCUS, spy);
         manager.focusIndex(0);
 
-        expect(focus).toHaveBeenCalled();
-        expect(focus.calls.length).toEqual(1);
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls.length).toEqual(1);
     });
 
     it('should trigger blur', function() {
@@ -63,7 +64,7 @@ describe('Focus Manager', function() {
 
         var blur = jasmine.createSpy('blur');
 
-        manager.listenTo(manager, manager.EVENT_BLUR, blur);
+        manager.listenTo(manager, focus.BLUR, blur);
         manager.focusIndex(0);
         manager.focusIndex(0);
 
