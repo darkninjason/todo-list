@@ -1,46 +1,18 @@
 define(function(require, exports, module) {
 
-// Imports
-
-var _                = require('underscore');
+var _ = require('underscore');
 var HorizontalSlider = require('built/core/controls/sliders/horizontal').HorizontalSlider;
-var helpers          = require('built/core/utils/helpers');
-
-// Module
-
-// TODO
-// - Explore - See what using BB's extend on HorizontalSlider looks like.
+var normalizeInt = require('built/core/utils/helpers').normalizeInt;
+var composeAll = require('built/core/utils/helpers').composeAll;
 
 var HorizontalRangeSlider =  HorizontalSlider.extend({
-
-    // Backbone & Marionette overrides
 
     /**
      * Initialize HorizontalRangeSlider
      *
-     * @description HorizontalRangeSlider simply extends a HorizontalSlider
-     * performing some overrides of internal HorizontalSlider methods to
-     * @param  {object} options options literal
-     * @return {undefined}
-     *
-     * @example
-     * horizontalRangeSlider = new HorizontalRangeSlider(
-     *     {
-     *         $track            : $('.slider .track'),    // required
-     *         $handles          : $('.slider .handle'),   // min 2 required
-     *         steps             : 10,                     // default 0
-     *         snap              : true,                   // default false
-     *         acceptsMouse      : true                    // default true
-     *         acceptsTouch      : false                   // default false
-     *         acceptsOrientation: false                   // default false
-     *     }
-     * );
+     * @see built/core/controls/sliders/horizontal.js
      */
     initialize: function(options) {
-        this._minRequiredHandles = 2;
-
-        // call super initialize
-        // required, the parent initialize does not get called otherwise.
         this.constructor.__super__.initialize.apply(this, arguments);
     },
 
@@ -48,8 +20,17 @@ var HorizontalRangeSlider =  HorizontalSlider.extend({
 
     setPositionAt: function(value, index) {
         value = this._restrictRangePositions(value, index);
-
         this.constructor.__super__.setPositionAt.call(this, value, index);
+    },
+
+    compose: function(container) {
+        composeAll(
+            container,
+            this,
+            'getRanges'
+        );
+
+        this.constructor.__super__.compose.call(this, container);
     },
 
     // Helper methods
@@ -58,22 +39,23 @@ var HorizontalRangeSlider =  HorizontalSlider.extend({
         var positions, min, max, result;
 
         positions = this.getPositions();
-        min       = positions[index - 1] || 0;
-        max       = positions[index + 1] || 1;
-        result    = helpers.normalizeInt(value, min, max);
+        min = positions[index - 1] || 0;
+        max = positions[index + 1] || 1;
+        result = normalizeInt(value, min, max);
 
         return result;
     },
 
-    // "Public" methods
+    // Public Methods
+    // TODO: Revisit - Make this api more useful.
 
     getRanges: function() {
         var positions, i, len, results, p1, p2;
 
         positions = this.getPositions();
-        i         = 0;
-        len       = positions.length;
-        results   = [];
+        i = 0;
+        len = positions.length;
+        results = [];
 
         // not using _.map here because for loop was more clear / convenient
         for(i; i < len; i++) {
@@ -93,8 +75,6 @@ var HorizontalRangeSlider =  HorizontalSlider.extend({
     }
 
 }); // eof HorizontalRangeSlider
-
-// Exports
 
 module.exports.HorizontalRangeSlider = HorizontalRangeSlider;
 
