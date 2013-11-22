@@ -23,7 +23,9 @@ var AppController =  marionette.Controller.extend({
 
         _.each($colorLists, function(each){
              var $el = $(each);
-             var l = new ColorDropList();
+             var l = new ColorDropList({
+                dataType: 'com.built.colors'
+             });
              l.setDropElement($el);
              l.reset($el.children());
         });
