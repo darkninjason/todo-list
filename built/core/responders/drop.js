@@ -85,8 +85,8 @@ var DropResponder = Marionette.Controller.extend({
 
         //event.dataTransfer.dropEffect = "copy";
         var result = false;
-
         if (this.operation != 'all' &&
+            dataTransfer.effectAllowed != 'all' &&  // here for safari.
             dataTransfer.effectAllowed != this.operation){
             return result;
         }

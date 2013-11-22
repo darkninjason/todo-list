@@ -151,8 +151,7 @@ define(function(require, exports, module) {
                 return;
             }
 
-            var $placeholder = this.renderPlaceholderForData(
-                this.dropResponder.getData());
+            var $placeholder = this.renderPlaceholderForData();
 
             dndutils.supressChildPointerEvents($placeholder);
 
