@@ -237,7 +237,8 @@ define(function(require, exports, module) {
             // of insurance against that case.
 
             // !!! WARNING !!!, THE EVENT IS AN EMPTY OBJECT IN THIS CASE
-            _.defer(this._dropResponderLazyDraggingExited, this.dropResponder, {});
+            //_.defer(this._dropResponderLazyDraggingExited, this.dropResponder, {});
+            this._dropResponderLazyDraggingExited(this.dropResponder, {});
         },
 
         dragResponderDraggingEnded: function(sender, $el, operation) {
@@ -301,7 +302,8 @@ define(function(require, exports, module) {
             var position = this.getPlaceholderInsertPosition(point);
             this.insertPlaceholderAtPosition(position);
 
-            _.defer(this._dropResponderLazyDraggingExited, responder, e);
+            //_.defer(this._dropResponderLazyDraggingExited, responder, e);
+            this._dropResponderLazyDraggingExited(responder, e);
         },
 
         dropResponderDraggingEntered: function(responder, e){
