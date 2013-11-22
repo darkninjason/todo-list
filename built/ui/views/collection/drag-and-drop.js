@@ -24,7 +24,6 @@ var DragAndDropCollectionView =  marionette.CollectionView.extend({
             draggingEndedRestoreElementAtPosition: this.draggingEndedRestoreElementAtPosition,
             dataType:options.dataType
         });
-
         this.dragDropList.setDropElement(this.$el);
     },
 
