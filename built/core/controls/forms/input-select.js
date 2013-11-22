@@ -8,6 +8,7 @@ define(function(require, exports, module){
     var helpers            = require('built/core/utils/helpers');
     var focus              = require('built/core/events/focus');
     var events             = require('built/core/events/event');
+    var data               = require('built/core/events/data');
 
     // Some requirements when using this control.
     //
@@ -390,7 +391,7 @@ define(function(require, exports, module){
         // Event Dispatchers
         // event, sender, [target, [args ...]]
         _dispatchInput: function($target, value) {
-            this.trigger(this.EVENT_INPUT, this, $target, value);
+            this.trigger(data.DATA, this, $target, value);
         },
 
         _dispatchFocus: function($target, focusType) {

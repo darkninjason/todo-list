@@ -8,6 +8,7 @@ var InputSelect      = require('built/core/controls/forms/input-select').InputSe
 var helpers          = require('built/core/utils/helpers');
 var focus            = require('built/core/events/focus');
 var events           = require('built/core/events/event');
+var data             = require('built/core/events/data');
 var SpecHelpers      = require('lib/spec-helpers');
 var eventHelpers     = SpecHelpers.Events;
 var KeyCodes         = SpecHelpers.KeyCodes;
@@ -100,7 +101,7 @@ describe('Input Select Control', function() {
 
     function getEventHandler() {
         var obj =  _.extend({}, inputHandler, collectionHandler, Backbone.Events);
-        obj.listenTo(control, 'input', obj.receivedInput);
+        obj.listenTo(control, data.DATA, obj.receivedInput);
         obj.listenTo(myCollectionView, 'render', obj.collectionRendered);
 
         return obj;
@@ -108,7 +109,7 @@ describe('Input Select Control', function() {
 
     function getEventHandlerJqueryElements() {
         var obj =  _.extend({}, inputHandler, collectionHandlerjQueryElements, Backbone.Events);
-        obj.listenTo(control, 'input', obj.receivedInput);
+        obj.listenTo(control, data.DATA, obj.receivedInput);
         obj.listenTo(myCollectionView, 'render', obj.collectionRendered);
 
         return obj;
@@ -192,7 +193,7 @@ describe('Input Select Control', function() {
           receivedInput: jasmine.createSpy('receivedInput')
         }, Backbone.Events);
 
-        obj.listenTo(control, 'input', obj.receivedInput);
+        obj.listenTo(control, data.DATA, obj.receivedInput);
 
         runs(function() {
             eventHelpers.insertChar($input, 'l');
