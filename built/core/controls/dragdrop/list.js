@@ -246,10 +246,11 @@ define(function(require, exports, module) {
                 this.removePlaceholder();
             }
 
+            var index = this._draggingIndex;
+            var $view = this._draggingItem;
+
             if(operation == 'none'){
                 var manager = this.listManager;
-                var index = this._draggingIndex;
-                var $view = this._draggingItem;
 
                 // need to insert into the DOM
                 // before we update the list manager
@@ -261,17 +262,55 @@ define(function(require, exports, module) {
                 //
                 // This same pattern is also found in
                 // this.insertDragElement
-                this.insertAtPosition(index, $view);
+                //
+
+                // user override point
+                this.draggingEndedRestoreElementAtPosition(index, $view);
+
                 manager.insertObjectAt(index, $view[0]);
 
             } else{
-                dndutils.clearSupressedPointerEvents(this._draggingItem);
-                this.dragResponder.removeElement(this._draggingItem);
-                this._draggingItem.remove();
+                dndutils.clearSupressedPointerEvents($view);
+                this.dragResponder.removeElement($view);
+
+                // user override point
+                this.draggingEndedRemoveElementAtPosition(index, $view);
             }
 
             this._draggingItem = null;
             this._draggingIndex = -1;
+        },
+
+        draggingEndedRestoreElementAtPosition: function(position, $el){
+            // this function is here to allow for easy override
+            // for custom restore behavior. All of the internals
+            // are handeled before and after this call. This gives
+            // the implementer a chance to decide how an element
+            // gets back into the DOM.
+            //
+            // This function is called when the drag operation
+            // was canceled.
+            //
+            // the position variable refers to where in the list
+            // the view element should be inserted.
+
+            this.insertAtPosition(position, $el);
+        },
+
+        draggingEndedRemoveElementAtPosition: function(position, $el){
+            // this function is here to allow for easy override
+            // for custom remove behavior. All of the internals
+            // are handeled before and after this call. This gives
+            // the implementer a chance to decide how an element
+            // gets removed from the DOM permanently.
+            //
+            // This function is called when the drag operation
+            // was successful.
+            //
+            // the position variable refers to where in the list
+            // the view element was removed from at the start of
+            // the drag operation.
+            $el.remove();
         },
 
         _dropResponderDraggingUpdated: function(responder, e){
