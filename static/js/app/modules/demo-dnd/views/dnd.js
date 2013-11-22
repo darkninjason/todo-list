@@ -45,10 +45,18 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
 
         this.dragDropList.setDropElement(this.$el);
         this.on("after:item:added", this._onViewAdded);
+        this.initDragImage();
+    },
+
+    initDragImage: function(){
+        this.icon = new Image();
+        this.icon.src = 'static/img/dnd_blitz.png';
+        this.icon.width = 140;
+        this.icon.height = 40;
     },
 
     _onViewAdded: function(view){
-        this.dragDropList.insertDragElement(view.model.get('position'), view.$el);
+        // this.dragDropList.insertDragElement(view.model.get('position'), view.$el);
     },
 
     getViewForEl: function($el){
@@ -67,32 +75,8 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
     },
 
     getDragImage: function(){
-        // to be used, this must return a value in the form of:
-        // {
-        //   image: {{ the Image }},
-        //   xOffset: {{ the X Offset Value }},
-        //   yOffset: {{ the Y Offset Value }}
-        // }
-        //
-        // See: https://developer.mozilla.org/en-US/docs/DragDrop/Drag_Operations#dragfeedback
-        // for more details on creating this image.
-        // OR you can do something like this:
-        //
-        // See: http://www.html5rocks.com/en/tutorials/dnd/basics/#toc-drag-properties
-        // var dragIcon = document.createElement('img');
-        // dragIcon.src = 'logo.png';
-        // dragIcon.width = 100;
-        // return {image: dragIcon };
-
-        var $src = $('#drag-icon');
-        var icon = document.createElement('img');
-        icon.src = $src.attr('src');
-        icon.width = $src.attr('width');
-        icon.height = $src.attr('height');
-
-        //return false;
         return {
-            image: icon,
+            image: this.icon,
             offsetX: 5,
             offsetY: 18
         };
@@ -116,20 +100,23 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
     dropResponderPerformDragOperation: function(responder, e){
         var model = this.deserializeModel(responder.getData());
         var position = this.dragDropList._placeholderIndex;
-        model.position = position;
+        this.dragDropList.removePlaceholder();
         this.collection.add(model,{at:position});
     },
 
     draggingEndedRestoreElementAtPosition: function(position, $el){
         var model = this.getViewForEl($el).model.toJSON();
-        model.position = position;
         this.collection.add(model,{at:position});
     },
 
     renderPlaceholderForData: function(data){
         // var model = this.deserializeModel(data);
         return $('<a class="list-group-item"> --> HERE <--</a>');
-    }
+    },
+
+    appendHtml: function(collectionView, itemView, index){
+        this.dragDropList.insertDragElement(index, itemView.$el);
+    },
 });
 
 exports.DragAndDropCollectionView = DragAndDropCollectionView;

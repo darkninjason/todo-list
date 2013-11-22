@@ -53,7 +53,7 @@ define(function(require, exports, module) {
             // this.dragResponderDraggingEnded
             var manager = this.listManager;
 
-            if(!position){
+            if(_.isNull(position)|| _.isUndefined(position)){
                 position = manager.getArray().length;
             }
 
