@@ -125,8 +125,8 @@ define(function(require, exports, module) {
             return false;
         },
 
-        renderPlaceholderForElement: function($el){
-            throw 'renderPlaceholderForElement Not Implemented';
+        renderPlaceholderForData: function(data){
+            throw 'renderPlaceholderForData Not Implemented';
         },
 
         renderDropElementForData: function(data){
@@ -151,7 +151,9 @@ define(function(require, exports, module) {
                 return;
             }
 
-            var $placeholder = this.renderPlaceholderForElement(this._draggingItem);
+            var $placeholder = this.renderPlaceholderForData(
+                this.dropResponder.getData());
+
             dndutils.supressChildPointerEvents($placeholder);
 
             // We are intentionally not rebuilding all of the nodes here.

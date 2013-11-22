@@ -49,7 +49,7 @@ describe('Drag Drop List Control', function() {
             return false;
         },
 
-        renderPlaceholderForElement: function($el){
+        renderPlaceholderForData: function($el){
             return $('<li class="row placeholder"> --> HERE <--</li>');
         },
 
@@ -98,7 +98,7 @@ describe('Drag Drop List Control', function() {
         // these methods also throw,
         // so implement no-op defaults
         var l1 = new DragDropList({
-            renderPlaceholderForElement: function(){},
+            renderPlaceholderForData: function(){},
             renderDropElementForData: function(){}
         });
 
@@ -112,7 +112,7 @@ describe('Drag Drop List Control', function() {
         expect(throwable).toThrow();
     });
 
-    it('throws with default implementation of renderPlaceholderForElement', function(){
+    it('throws with default implementation of renderPlaceholderForData', function(){
         var $drag = $source.children().eq(0);
 
         // these methods also throw,
@@ -129,7 +129,7 @@ describe('Drag Drop List Control', function() {
             eventHelpers.simulateDragStart($drag, null, 20, 20);
         }
 
-        expect(l1.renderPlaceholderForElement).toThrow();
+        expect(l1.renderPlaceholderForData).toThrow();
     });
 
     it('throws with default implementation of renderDropElementForData', function(){
@@ -140,7 +140,7 @@ describe('Drag Drop List Control', function() {
         // so implement, what is effectively, no-op defaults
         var l1 = new DragDropList({
             getDragDataForElement: function(){ return ''; },
-            renderPlaceholderForElement: function(){ return $('<p></p>'); }
+            renderPlaceholderForData: function(){ return $('<p></p>'); }
         });
 
         l1.setDropElement($source);
@@ -185,7 +185,7 @@ describe('Drag Drop List Control', function() {
         // so implement no-op defaults
         var l1 = new DragDropList({
             getDragDataForElement: function(){ return ''; },
-            renderPlaceholderForElement: function(){ return $('<p></p>'); }
+            renderPlaceholderForData: function(){ return $('<p></p>'); }
         });
 
         l1.setDropElement($source);
@@ -250,7 +250,7 @@ describe('Drag Drop List Control', function() {
         expect(l1.getDragImageForElement).toHaveBeenCalledWith($drag);
     });
 
-    it('should call renderPlaceholderForElement', function(){
+    it('should call renderPlaceholderForData', function(){
         var $preDragChildren = $source.children();
         var $drag = $preDragChildren.eq(0);
         var flag = false;
@@ -259,7 +259,7 @@ describe('Drag Drop List Control', function() {
         l1.reset($preDragChildren);
         l1.setDropElement($source);
 
-        spyOn(l1, 'renderPlaceholderForElement').andCallThrough();
+        spyOn(l1, 'renderPlaceholderForData').andCallThrough();
 
         var dragPoint  = elementPoint($drag, 10, 10);
         eventHelpers.simulateDragStart($drag, null, dragPoint.x, dragPoint.y);
@@ -276,7 +276,7 @@ describe('Drag Drop List Control', function() {
         });
 
         runs(function(){
-            expect(l1.renderPlaceholderForElement).toHaveBeenCalled();
+            expect(l1.renderPlaceholderForData).toHaveBeenCalled();
         });
     });
 
