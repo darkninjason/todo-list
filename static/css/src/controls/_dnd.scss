@@ -2,4 +2,14 @@
     .list-group{
         min-height:150px;
     }
+    .danger{
+        li{
+            background-color: $brand-danger;
+        }
+    }
+    .success{
+        li{
+            background-color: $brand-success;
+        }
+    }
 }
