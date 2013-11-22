@@ -6,7 +6,10 @@ define(function(require, exports, module) {
         hRangeSlider: '#horizontal-range-slider',
         scroller: '#scroller',
         inputSelect: '#input-select',
-        inputSelectScrollable: '#input-select-scrollable'
+        inputSelectScrollable: '#input-select-scrollable',
+        dndTop: '#dnd-top',
+        dndMid: '#dnd-mid',
+        dndBottom: '#dnd-bottom',
     });
 
     return app;
