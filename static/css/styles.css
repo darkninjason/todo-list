@@ -7683,8 +7683,8 @@ td.visible-print {
   min-height: 150px;
 }
 /* line 6, src/controls/_dnd.scss */
-.dnd .danger li {
-  background-color: #d9534f;
+.dnd .info li {
+  background-color: #5bc0de;
 }
 /* line 11, src/controls/_dnd.scss */
 .dnd .success li {

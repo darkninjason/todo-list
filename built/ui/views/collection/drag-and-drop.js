@@ -79,6 +79,7 @@ var DragAndDropCollectionView =  marionette.CollectionView.extend({
 
     appendHtml: function(collectionView, itemView, index){
         this.dragDropList.insertDragElement(index, itemView.$el);
+
     },
 
 });
