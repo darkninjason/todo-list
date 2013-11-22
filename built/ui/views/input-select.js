@@ -5,6 +5,7 @@ var InputSelect  = require('built/ui/controls/input-select').InputSelectMarionet
 var helpers      = require('built/core/utils/helpers');
 var Scroller     = require('built/core/controls/page/scroller').Scroller;
 var focus        = require('built/core/events/focus');
+var data         = require('built/core/events/data');
 
 var InputSelectComposite =  marionette.CompositeView.extend({
     initialize : function(){
@@ -19,7 +20,7 @@ var InputSelectComposite =  marionette.CompositeView.extend({
 
         this.listenTo(this.collection,'sync',this.onCollectionSync);
         this.listenTo(this.collection,'change',this.onCollectionSync);
-        this.listenTo(this.inputSelect, this.inputSelect.EVENT_INPUT, this.onInputChange);
+        this.listenTo(this.inputSelect, data.DATA, this.onInputChange);
     },
 
     onInputChange: function(input, $input, value){

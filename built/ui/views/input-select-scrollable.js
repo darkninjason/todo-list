@@ -3,6 +3,7 @@ define(function (require, exports, module) {
 var InputSelectComposite = require('./input-select').InputSelectComposite;
 var Scroller             = require('built/core/controls/page/scroller').Scroller;
 var focus                = require('built/core/events/focus');
+var data                 = require('built/core/events/data');
 
 var InputSelectScrollableComposite =  InputSelectComposite.extend({
     initialize : function(){
