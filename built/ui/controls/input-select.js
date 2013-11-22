@@ -19,7 +19,6 @@ var InputSelectMarionette = InputSelect.extend({
         this.on(focus.BLUR, this._onItemBlur);
         this.on(focus.FOCUS, this._onItemFocus);
         this.on(events.SELECT, this._onItemSelect);
-
     },
 
     setViews : function(children){
