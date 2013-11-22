@@ -7,6 +7,8 @@ var InputSelectView = require('app/modules/demo-input-select/views/input-select'
 var InputSelectScrollableView = require('app/modules/demo-input-select/views/input-select').InputSelectScrollableView;
 var DragAndDropCollectionView = require('app/modules/demo-dnd/views/dnd').DragAndDropCollectionView;
 
+var ColorDropList = require('app/modules/demo-dnd/views/color-list').ColorDropList;
+
 var AppController =  marionette.Controller.extend({
 
     initialize:function (options) {
@@ -16,6 +18,16 @@ var AppController =  marionette.Controller.extend({
         app.dndTop.show(new DragAndDropCollectionView());
         app.dndMid.show(new DragAndDropCollectionView());
         app.dndBottom.show(new DragAndDropCollectionView());
+
+        var $colorLists = $('section.dnd.classic ul');
+
+        _.each($colorLists, function(each){
+             var $el = $(each);
+             var l = new ColorDropList();
+             l.setDropElement($el);
+             l.reset($el.children());
+        });
+
     },
     index:function () {
 

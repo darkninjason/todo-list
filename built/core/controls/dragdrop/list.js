@@ -444,7 +444,6 @@ define(function(require, exports, module) {
             // would probably be more appropriate.
             // knowing that, we are using the naive approach
             // for now.
-
             _.each(candidates, function(each, index){
                 var d = Math.abs(point.y - each.y);
 
