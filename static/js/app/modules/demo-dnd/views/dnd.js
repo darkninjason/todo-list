@@ -33,12 +33,14 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
                 'getDragImage',
                 'getDragDataForElement',
                 'renderPlaceholderForData',
-                'dropResponderPerformDragOperation');
+                'dropResponderPerformDragOperation',
+                'draggingEndedRestoreElementAtPosition');
         this.dragDropList = new DragDropList({
             getDragImage: this.getDragImage,
             getDragDataForElement: this.getDragDataForElement,
             renderPlaceholderForData: this.renderPlaceholderForData,
-            dropResponderPerformDragOperation: this.dropResponderPerformDragOperation
+            dropResponderPerformDragOperation: this.dropResponderPerformDragOperation,
+            draggingEndedRestoreElementAtPosition: this.draggingEndedRestoreElementAtPosition
         });
         this.on("after:item:added", this._onViewAdded);
     },
@@ -116,6 +118,12 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
     dropResponderPerformDragOperation: function(responder, e){
         var model = this.deserializeModel(responder.getData());
         var position = this.dragDropList._placeholderIndex;
+        model.position = position;
+        this.collection.add(model,{at:position});
+    },
+
+    draggingEndedRestoreElementAtPosition: function(position, $el){
+        var model = this.getViewForEl($el).model.toJSON();
         model.position = position;
         this.collection.add(model,{at:position});
     },
