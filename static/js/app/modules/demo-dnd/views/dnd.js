@@ -40,14 +40,14 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
             renderPlaceholderForData:this.renderPlaceholderForData,
             dropResponderPerformDragOperation:this.dropResponderPerformDragOperation
         });
-        this.on("after:item:added", this.onViewAdded);
+        this.on("after:item:added", this._onViewAdded);
     },
 
     onShow : function(){
         this.dragDropList.setDropElement(this.$el);
     },
 
-    onViewAdded: function(view){
+    _onViewAdded: function(view){
         this.dragDropList.insertDragElement(view.model.get('position'),view.$el);
     },
 
@@ -74,6 +74,7 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
         var view = this.getViewForEl($el);
         var model = view.model;
         this.collection.remove(model,{silent:true});
+        console.log(this.collection.length);
         return this.serializeModel(model);
     },
 
@@ -90,10 +91,11 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
         var position = this.dragDropList._placeholderIndex;
         model.position = position;
         this.collection.add(model,{at:position});
+        console.log(this.collection.length);
     },
 
     renderPlaceholderForData: function(data){
-        var model = this.deserializeModel(data);
+        // var model = this.deserializeModel(data);
         return $('<a class="list-group-item"> --> HERE <--</a>');
     }
 });
