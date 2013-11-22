@@ -53,6 +53,10 @@ define(function(require, exports, module) {
             // this.dragResponderDraggingEnded
             var manager = this.listManager;
 
+            if(!position){
+                position = manager.getArray().length;
+            }
+
             this.insertAtPosition(position, $el);
             manager.insertObjectAt(position, $el[0]);
             this.dragResponder.addElement($el);
@@ -349,7 +353,7 @@ define(function(require, exports, module) {
 
             // This updating handler is intentionally responsible
             // for triggering the dropResponderDraggingEntered
-            // there were issues with the natural draggingEntered event.
+            // there were issues with the natural draggingEntered
             if (!this._entered){
                 this._entered = true;
                 this.dropResponderDraggingEntered(responder, e);

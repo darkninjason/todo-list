@@ -42,15 +42,13 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
             dropResponderPerformDragOperation: this.dropResponderPerformDragOperation,
             draggingEndedRestoreElementAtPosition: this.draggingEndedRestoreElementAtPosition
         });
+
+        this.dragDropList.setDropElement(this.$el);
         this.on("after:item:added", this._onViewAdded);
     },
 
-    onShow : function(){
-        this.dragDropList.setDropElement(this.$el);
-    },
-
     _onViewAdded: function(view){
-        this.dragDropList.insertDragElement(view.model.get('position'),view.$el);
+        this.dragDropList.insertDragElement(view.model.get('position'), view.$el);
     },
 
     getViewForEl: function($el){
