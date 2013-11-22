@@ -38,7 +38,7 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
             getDragImageForElement: this.getDragImageForElement,
             getDragDataForElement:this.getDragDataForElement,
             renderPlaceholderForData:this.renderPlaceholderForData,
-            dropResponderPerformDragOperation:this.dropResponderPerformDragOperation
+            dropResponderPerformDragOperation:this.dropResponderPerformDragOperation,
         });
         this.on("after:item:added", this._onViewAdded);
     },
@@ -74,7 +74,6 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
         var view = this.getViewForEl($el);
         var model = view.model;
         this.collection.remove(model,{silent:true});
-        console.log(this.collection.length);
         return this.serializeModel(model);
     },
 
@@ -91,7 +90,6 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
         var position = this.dragDropList._placeholderIndex;
         model.position = position;
         this.collection.add(model,{at:position});
-        console.log(this.collection.length);
     },
 
     renderPlaceholderForData: function(data){
