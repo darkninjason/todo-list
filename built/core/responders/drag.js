@@ -83,8 +83,8 @@ var DragResponder = Marionette.Controller.extend({
         // to be used, this must return a value in the form of:
         // {
         //   image: {{ the Image }},
-        //   xOffset: {{ the X Offset Value }},
-        //   yOffset: {{ the Y Offset Value }}
+        //   offsetX: {{ the X Offset Value }},
+        //   offsetY: {{ the Y Offset Value }}
         // }
         // See: https://developer.mozilla.org/en-US/docs/DragDrop/Drag_Operations#dragfeedback
         // for more details on creating this image.
@@ -110,13 +110,13 @@ var DragResponder = Marionette.Controller.extend({
             this.getData(this, $target)
         );
 
-        var dragImage = this.getDragImage(this, $target);
+        var dragImage = this.getDragImage(this);
 
         if(dragImage){
             dataTransfer.setDragImage(
                 dragImage.image,
-                dragImage.xOffset,
-                dragImage.yOffset);
+                dragImage.offsetX || 0,
+                dragImage.offsetY || 0);
         }
     },
 

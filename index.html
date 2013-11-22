@@ -10,11 +10,20 @@
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="static/css/styles.css">
         <script src="static/js/libs/require.js" data-main="static/js/main"></script>
+        <style type="text/css" media="screen">
+            #drag-icon{
+                visibility: hidden;
+                position: absolute;
+                top: -140px;
+                left: -40px;
+            }
+        </style>
     </head>
     <body>
         <div class="container">
             <section>
                 <h2>Drag and Drop</h2>
+                <img id="drag-icon" src="static/img/dnd_blitz.png" width="140" height="40">
                 <div id="dnd-top"></div>
                 <div id="dnd-mid"></div>
                 <div id="dnd-bottom"></div>

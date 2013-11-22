@@ -121,7 +121,23 @@ define(function(require, exports, module) {
             throw 'getDragDataForElement Not Implemented';
         },
 
-        getDragImageForElement: function($el){
+        getDragImage: function(){
+            // to be used, this must return a value in the form of:
+            // {
+            //   image: {{ the Image }},
+            //   offsetX: {{ the X Offset Value }},
+            //   offsetY: {{ the Y Offset Value }}
+            // }
+            //
+            // See: https://developer.mozilla.org/en-US/docs/DragDrop/Drag_Operations#dragfeedback
+            // for more details on creating this image.
+            // OR you can do something like this:
+            //
+            // See: http://www.html5rocks.com/en/tutorials/dnd/basics/#toc-drag-properties
+            // var dragIcon = document.createElement('img');
+            // dragIcon.src = 'logo.png';
+            // dragIcon.width = 100;
+            // return {image: dragIcon };
             return false;
         },
 
@@ -203,8 +219,8 @@ define(function(require, exports, module) {
             return this.getDragDataForElement($el);
         },
 
-        dragResponderGetDragImage: function(sender, $el){
-            return this.getDragImageForElement($el);
+        dragResponderGetDragImage: function(sender){
+            return this.getDragImage();
         },
 
         dragResponderDraggingStarted: function(sender, $el){

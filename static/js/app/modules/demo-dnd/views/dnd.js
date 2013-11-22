@@ -30,15 +30,15 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
             {label:'new blitz'}]
         );
         _.bindAll(this,
-                'getDragImageForElement',
+                'getDragImage',
                 'getDragDataForElement',
                 'renderPlaceholderForData',
                 'dropResponderPerformDragOperation');
         this.dragDropList = new DragDropList({
-            getDragImageForElement: this.getDragImageForElement,
-            getDragDataForElement:this.getDragDataForElement,
-            renderPlaceholderForData:this.renderPlaceholderForData,
-            dropResponderPerformDragOperation:this.dropResponderPerformDragOperation,
+            getDragImage: this.getDragImage,
+            getDragDataForElement: this.getDragDataForElement,
+            renderPlaceholderForData: this.renderPlaceholderForData,
+            dropResponderPerformDragOperation: this.dropResponderPerformDragOperation
         });
         this.on("after:item:added", this._onViewAdded);
     },
@@ -66,8 +66,36 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
         return output;
     },
 
-    getDragImageForElement: function($el){
-        return false;
+    getDragImage: function(){
+        // to be used, this must return a value in the form of:
+        // {
+        //   image: {{ the Image }},
+        //   xOffset: {{ the X Offset Value }},
+        //   yOffset: {{ the Y Offset Value }}
+        // }
+        //
+        // See: https://developer.mozilla.org/en-US/docs/DragDrop/Drag_Operations#dragfeedback
+        // for more details on creating this image.
+        // OR you can do something like this:
+        //
+        // See: http://www.html5rocks.com/en/tutorials/dnd/basics/#toc-drag-properties
+        // var dragIcon = document.createElement('img');
+        // dragIcon.src = 'logo.png';
+        // dragIcon.width = 100;
+        // return {image: dragIcon };
+
+        var $src = $('#drag-icon');
+        var icon = document.createElement('img');
+        icon.src = $src.attr('src');
+        icon.width = $src.attr('width');
+        icon.height = $src.attr('height');
+
+        //return false;
+        return {
+            image: icon,
+            offsetX: 5,
+            offsetY: 18
+        };
     },
 
     getDragDataForElement: function($el){

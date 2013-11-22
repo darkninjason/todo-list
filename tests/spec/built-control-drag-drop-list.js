@@ -45,7 +45,7 @@ describe('Drag Drop List Control', function() {
             return 'unknown';
         },
 
-        getDragImageForElement: function($el){
+        getDragImage: function(){
             return false;
         },
 
@@ -178,7 +178,7 @@ describe('Drag Drop List Control', function() {
         });
     });
 
-    it('return false for default implementation of getDragImageForElement', function(){
+    it('return false for default implementation of getDragImage', function(){
         var $drag = $source.children().eq(0);
 
         // these methods also throw,
@@ -190,11 +190,11 @@ describe('Drag Drop List Control', function() {
 
         l1.setDropElement($source);
         l1.reset($source.children());
-        spyOn(l1, 'getDragImageForElement').andCallThrough();
+        spyOn(l1, 'getDragImage').andCallThrough();
 
         eventHelpers.simulateDragStart($drag, null, 20, 20);
 
-        expect(l1.getDragImageForElement).toHaveBeenCalled();
+        expect(l1.getDragImage).toHaveBeenCalled();
     });
 
     // Test Suite
@@ -236,7 +236,7 @@ describe('Drag Drop List Control', function() {
         expect(l1.getDragDataForElement).toHaveBeenCalledWith($drag);
     });
 
-    it('should call getDragImageForElement on drag start', function(){
+    it('should call getDragImage on drag start', function(){
         var l1 = new ColorDropList();
         var $preDragChildren = $source.children();
         var $drag = $preDragChildren.eq(0);
@@ -244,10 +244,10 @@ describe('Drag Drop List Control', function() {
         l1.reset($preDragChildren);
         l1.setDropElement($source);
 
-        spyOn(l1, 'getDragImageForElement').andCallThrough();
+        spyOn(l1, 'getDragImage').andCallThrough();
         eventHelpers.simulateDragStart($drag, null, 20, 20);
 
-        expect(l1.getDragImageForElement).toHaveBeenCalledWith($drag);
+        expect(l1.getDragImage).toHaveBeenCalled();
     });
 
     it('should call renderPlaceholderForData', function(){
