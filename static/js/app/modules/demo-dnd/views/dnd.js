@@ -32,12 +32,12 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
         _.bindAll(this,
                 'getDragImageForElement',
                 'getDragDataForElement',
-                'renderPlaceholderForElement',
+                'renderPlaceholderForData',
                 'dropResponderPerformDragOperation');
         this.dragDropList = new DragDropList({
             getDragImageForElement: this.getDragImageForElement,
             getDragDataForElement:this.getDragDataForElement,
-            renderPlaceholderForElement:this.renderPlaceholderForElement,
+            renderPlaceholderForData:this.renderPlaceholderForData,
             dropResponderPerformDragOperation:this.dropResponderPerformDragOperation
         });
         this.on("after:item:added", this.onViewAdded);
@@ -92,7 +92,8 @@ var DragAndDropCollectionView = marionette.CollectionView.extend({
         this.collection.add(model,{at:position});
     },
 
-    renderPlaceholderForElement: function($el){
+    renderPlaceholderForData: function(data){
+        var model = this.deserializeModel(data);
         return $('<a class="list-group-item"> --> HERE <--</a>');
     }
 });
