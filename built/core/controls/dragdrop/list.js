@@ -347,6 +347,9 @@ define(function(require, exports, module) {
             // mimic the entered/exited states. Which is what we
             // do here.
 
+            // This updating handler is intentionally responsible
+            // for triggering the dropResponderDraggingEntered
+            // there were issues with the natural draggingEntered event.
             if (!this._entered){
                 this._entered = true;
                 this.dropResponderDraggingEntered(responder, e);
