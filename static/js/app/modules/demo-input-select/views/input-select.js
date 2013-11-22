@@ -2,8 +2,8 @@ define(function (require, exports, module) {
 
 var marionette                      = require('marionette');
 
-var InputSelectScrollableComposite  = require('built/ui/views/input-select-scrollable').InputSelectScrollableComposite;
-var InputSelectComposite            = require('built/ui/views/input-select').InputSelectComposite;
+var InputSelectScrollableComposite  = require('built/ui/views/composite/input-select-scrollable').InputSelectScrollableComposite;
+var InputSelectComposite            = require('built/ui/views/composite/input-select').InputSelectComposite;
 
 var template                        = require('hbs!tpl/input-select/composite');
 var ResultItem                      = require('./result-item').ResultItem;
