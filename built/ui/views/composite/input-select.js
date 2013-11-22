@@ -19,8 +19,8 @@ var InputSelectComposite =  marionette.CompositeView.extend({
             el: this.ui.input
         });
 
-        this.listenTo(this.collection,'sync',this.onCollectionSync);
-        this.listenTo(this.collection,'change',this.onCollectionSync);
+        this.listenTo(this.collection,'sync', this.onCollectionSync);
+        this.listenTo(this.collection,'change', this.onCollectionSync);
         this.listenTo(this.inputSelect, data.DATA, this.onInputChange);
         this.listenTo(this.inputSelect, events.CANCEL, this.onCancel);
     },
