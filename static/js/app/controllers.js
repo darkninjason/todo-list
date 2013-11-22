@@ -16,8 +16,7 @@ var AppController =  marionette.Controller.extend({
         app.inputSelectScrollable.show(new InputSelectScrollableView());
         app.dndTop.show(new DragAndDropDemoView());
         app.dndMid.show(new DragAndDropDemoView());
-        app.dndBottom.show(new DragAndDropDemoView());
-
+        app.dndBottom.show(new DragAndDropDemoView({dataType:'foo'}));
     },
     index:function () {
 

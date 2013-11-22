@@ -7682,3 +7682,11 @@ td.visible-print {
 .dnd .list-group {
   min-height: 150px;
 }
+/* line 6, src/controls/_dnd.scss */
+.dnd .info li {
+  background-color: #5bc0de;
+}
+/* line 11, src/controls/_dnd.scss */
+.dnd .success li {
+  background-color: #5cb85c;
+}

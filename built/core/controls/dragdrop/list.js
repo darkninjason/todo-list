@@ -270,7 +270,7 @@ define(function(require, exports, module) {
             var $view = this._draggingItem;
 
             if(operation == 'none'){
-                var manager = this.listManager;
+
 
                 // need to insert into the DOM
                 // before we update the list manager
@@ -285,9 +285,11 @@ define(function(require, exports, module) {
                 //
 
                 // user override point
-                this.draggingEndedRestoreElementAtPosition(index, $view);
+                var $insert = this.draggingEndedRestoreElementAtPosition(index, $view);
+                if($insert){
+                    this.listManager.insertObjectAt(index, $insert[0]);
+                }
 
-                manager.insertObjectAt(index, $view[0]);
 
             } else{
                 dndutils.clearSupressedPointerEvents($view);
@@ -315,6 +317,7 @@ define(function(require, exports, module) {
             // the view element should be inserted.
 
             this.insertAtPosition(position, $el);
+            return $el;
         },
 
         draggingEndedRemoveElementAtPosition: function(position, $el){

@@ -2,4 +2,14 @@
     .list-group{
         min-height:150px;
     }
+    .info{
+        li{
+            background-color: $brand-info;
+        }
+    }
+    .success{
+        li{
+            background-color: $brand-success;
+        }
+    }
 }
