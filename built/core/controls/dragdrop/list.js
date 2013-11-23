@@ -421,7 +421,9 @@ define(function(require, exports, module) {
             var bounds = getElementBounds(value);
 
             return {
-                x: bounds.left, //bounds.left,
+                x: bounds.left,
+                // need to include scrollTop() as a component
+                // or the math gets all weird.
                 y: bounds.top + $(window).scrollTop(),
                 width: bounds.width,
                 height: bounds.height};
