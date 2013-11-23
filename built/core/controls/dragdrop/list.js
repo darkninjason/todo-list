@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var ArrayManager = require('built/core/managers/array').ArrayManager;
     var dndutils = require('built/core/utils/dndutils');
     var getElementBounds = require('built/ui/helpers/dom').getElementBounds;
+    var getElementPosition = require('built/ui/helpers/dom').getElementPosition;
 
 
     var DragDropList = marionette.Controller.extend({
@@ -417,11 +418,14 @@ define(function(require, exports, module) {
             // point: {x:N, y:N}
             var list = this.listManager.getArray();
 
+
             var candidates = _.map(list, function(value, index){
                 var bounds = getElementBounds(value);
+                var location = getElementPosition(value);
+
                 return {
-                    x: bounds.left,
-                    y: bounds.top,
+                    x: location.x, //bounds.left,
+                    y: location.y, //bounds.top,
                     width: bounds.width,
                     height: bounds.height};
             });

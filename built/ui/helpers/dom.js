@@ -14,6 +14,30 @@ function getElement(value){
     return $el;
 }
 
+function getElementPosition ($el) {
+    // http://stackoverflow.com/questions/4500758/getting-relative-mouse-x-y-in-javascript
+    // http://www.quirksmode.org/js/findpos.html
+
+    var curleft = 0;
+    var curtop = 0;
+    var obj;
+
+    if($el.nodeName){
+        obj = $el;
+    } else {
+        obj = $el[0];
+    }
+
+    if (obj.offsetParent) {
+        do {
+            curleft += obj.offsetLeft;
+            curtop += obj.offsetTop;
+        } while (obj = obj.offsetParent);
+
+        return { x: curleft, y: curtop };
+    }
+}
+
 function getElementBounds($el) {
     // el is raw dom element
     // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
