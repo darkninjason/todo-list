@@ -12,6 +12,13 @@ count-js:
 	@echo ''
 
 release:
+	# git checkout --orphan release
+	# git read-tree --prefix= -u develop:built/
+	# git commit -am "release"
+	# git checkout master
+	# git merge --squash --no-commit release
+	# git ca "release"
+	
 	git subtree split --prefix built -b release
 	git checkout master
 	git merge -s subtree --no-commit --squash release
