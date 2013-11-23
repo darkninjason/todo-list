@@ -80,5 +80,6 @@ exports.modelFromElement = modelFromElement;
 exports.objectFromElement = objectFromElement;
 exports.getElement = getElement;
 exports.getElementBounds = getElementBounds;
+exports.getElementPosition = getElementPosition;
 
 });

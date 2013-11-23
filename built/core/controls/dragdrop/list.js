@@ -7,7 +7,6 @@ define(function(require, exports, module) {
     var ArrayManager = require('built/core/managers/array').ArrayManager;
     var dndutils = require('built/core/utils/dndutils');
     var getElementBounds = require('built/ui/helpers/dom').getElementBounds;
-    var getElementPosition = require('built/ui/helpers/dom').getElementPosition;
 
 
     var DragDropList = marionette.Controller.extend({
@@ -418,16 +417,14 @@ define(function(require, exports, module) {
             // point: {x:N, y:N}
             var list = this.listManager.getArray();
 
-
             var candidates = _.map(list, function(value, index){
-                var bounds = getElementBounds(value);
-                var location = getElementPosition(value);
+            var bounds = getElementBounds(value);
 
-                return {
-                    x: location.x, //bounds.left,
-                    y: location.y, //bounds.top,
-                    width: bounds.width,
-                    height: bounds.height};
+            return {
+                x: bounds.left, //bounds.left,
+                y: bounds.top + $(window).scrollTop(),
+                width: bounds.width,
+                height: bounds.height};
             });
 
             var position = this.getClosestPosition(point, candidates);
