@@ -92,6 +92,14 @@ function sortArrayAscending(a, b) {
     return a - b;
 }
 
+function mixins(Source, Destination, names){
+    _.each(names, function(name){
+        Destination.prototype[name] = function(){
+            return Source.prototype[name].apply(this, arguments);
+        };
+    });
+}
+
 // Exports
 
 exports.compose            = compose;
@@ -101,4 +109,5 @@ exports.sortArrayAscending = sortArrayAscending;
 exports.sortArrayAscending = sortArrayAscending;
 exports.registerElement    = registerElement;
 exports.getElementId       = getElementId;
+exports.mixins              = mixins;
 });
