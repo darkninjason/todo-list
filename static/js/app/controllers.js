@@ -6,6 +6,7 @@ var ScrollerView              = require('app/modules/demo-scroller/views/scrolle
 var InputSelectView           = require('app/modules/demo-input-select/views/input-select').InputSelectView;
 var InputSelectScrollableView = require('app/modules/demo-input-select/views/input-select').InputSelectScrollableView;
 var DragAndDropDemoView = require('app/modules/demo-dnd/views/dnd').DragAndDropDemoView;
+var DragAndDropDemoCompositeView = require('app/modules/demo-dnd/views/dnd').DragAndDropDemoCompositeView;
 
 
 var AppController =  marionette.Controller.extend({
@@ -16,7 +17,7 @@ var AppController =  marionette.Controller.extend({
         app.inputSelectScrollable.show(new InputSelectScrollableView());
         app.dndTop.show(new DragAndDropDemoView());
         app.dndMid.show(new DragAndDropDemoView());
-        app.dndBottom.show(new DragAndDropDemoView({dataType:'foo'}));
+        app.dndBottom.show(new DragAndDropDemoCompositeView({dataType:'foo'}));
     },
     index:function () {
 
