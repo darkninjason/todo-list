@@ -92,7 +92,8 @@ function sortArrayAscending(a, b) {
     return a - b;
 }
 
-function mixins(Source, Destination, names){
+function mixins(Source, Destination){
+    names = Array.prototype.slice.call(arguments, 2);
     _.each(names, function(name){
         Destination.prototype[name] = function(){
             return Source.prototype[name].apply(this, arguments);
