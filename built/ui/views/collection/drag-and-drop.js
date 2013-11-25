@@ -25,7 +25,17 @@ var DragAndDropCollectionView =  marionette.CollectionView.extend({
             dataType:options.dataType
         });
         this.dragDropList.setDropElement(this.$el);
+        this.on('show', this.onShow);
     },
+
+    onClose: function(){
+        this.dragDropList.close();
+    },
+
+    onShow: function(){
+
+    },
+
 
     getViewForEl: function($el){
         return this.getViewForId(getElementId($el));
@@ -78,7 +88,6 @@ var DragAndDropCollectionView =  marionette.CollectionView.extend({
 
     appendHtml: function(collectionView, itemView, index){
         this.dragDropList.insertDragElement(index, itemView.$el);
-
     },
 
 });
