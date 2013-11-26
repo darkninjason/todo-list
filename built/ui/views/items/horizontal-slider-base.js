@@ -23,8 +23,8 @@ var HorizontalSliderBase =  marionette.ItemView.extend({
 
         var options = {
             $container: this.$el,
-            $track: this.$('.track'),
-            $handles: this.$('.handle'),
+            $track: this.getTrack(),
+            $handles: this.getHandles(),
             steps: this.steps,
             snap: this.snap
         };
@@ -55,6 +55,14 @@ var HorizontalSliderBase =  marionette.ItemView.extend({
 
     getDriver: function(options){
         throw new Error('getDriver Not Implemented');
+    },
+
+    getTrack: function(options){
+        throw new Error('getTrack Not Implemented');
+    },
+
+    getHandles: function(options){
+        throw new Error('getHandles Not Implemented');
     }
 });
 

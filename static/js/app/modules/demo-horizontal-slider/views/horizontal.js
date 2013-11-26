@@ -12,6 +12,14 @@ var HorizontalSlider = slider.HorizontalSlider.extend({
 
     onShow: function(){
         this.initializeSliderControl();
+    },
+
+    getTrack: function(){
+        return this.$('.track');
+    },
+
+    getHandles: function(options){
+        return this.$('.handle');
     }
 });
 

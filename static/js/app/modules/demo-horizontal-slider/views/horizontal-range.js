@@ -13,6 +13,14 @@ var HorizontalRangeSlider = slider.HorizontalRangeSlider.extend({
     onShow: function(){
         this.initializeSliderControl();
         this.setPositionAt(1, 1);
+    },
+
+    getTrack: function(){
+        return this.$('.track');
+    },
+
+    getHandles: function(options){
+        return this.$('.handle');
     }
 });
 
