@@ -19,6 +19,14 @@
                 <div id="horizontal-slider-fluid"></div>
                 <h5>Snapping (N Steps)</h5>
                 <div id="horizontal-slider-snapping"></div>
+                <section class="built-breakdown">
+                    <h6>BUILT Breakdown</h6>
+                    <ul>
+                        <li>RangeManager</li>
+                        <li>MouseResponder</li>
+                        <li>TouchResponder</li>
+                    </ul>
+                </section>
             </section>
             <hr/>
             <section>
@@ -27,6 +35,15 @@
                 <div id="horizontal-range-slider-fluid"></div>
                 <h5>Snapping (N Steps)</h5>
                 <div id="horizontal-range-slider-snapping"></div>
+                <section class="built-breakdown">
+                    <h6>BUILT Breakdown</h6>
+                    <ul>
+                        <li>RangeManager</li>
+                        <li>MouseResponder</li>
+                        <li>TouchResponder</li>
+                    </ul>
+                </section>
+            </section>
             </section>
             <hr/>
             <section class="dnd row">
@@ -36,6 +53,14 @@
             </section>
             <section class="dnd row">
                 <div class="target col-md-4 success" id="dnd-bottom"></div>
+            </section>
+            <section class="built-breakdown">
+                <h6>BUILT Breakdown</h6>
+                <ul>
+                    <li>DragResponder</li>
+                    <li>DropResponder</li>
+                    <li>ArrayManager</li>
+                </ul>
             </section>
             <hr/>
             <section>
@@ -48,11 +73,39 @@
                     <h5>Input Select With Scroll</h5>
                     <div id="input-select-scrollable"></div>
                 </section>
+                <section class="built-breakdown">
+                    <h6>BUILT Breakdown</h6>
+                    <ul>
+                        <li>KeyResponder</li>
+                        <li>MouseResponder</li>
+                        <li>IndexManager
+                            <ul>
+                                <li>RangeManager</li>
+                            </ul>
+                        </li>
+                        <li>SingleFocusManager
+                            <ul>
+                                <li>FocusManager</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
             </section>
             <hr/>
             <section>
                 <h2>Scrolling <small>'scroll to here', and 'listen to scrolling'</small></h2>
                 <div id="scroller"></div>
+                <section class="built-breakdown">
+                    <h6>BUILT Breakdown</h6>
+                    <ul>
+                        <li>ScrollManager
+                            <ul>
+                                <li>ScrollResponder</li>
+                                <li>RangeManager</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
             </section>
             <hr/>
         </div>

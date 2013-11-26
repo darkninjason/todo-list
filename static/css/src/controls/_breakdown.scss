@@ -1,0 +1,40 @@
+section.built-breakdown{
+    h6{
+        font-size: 14px;
+        background-color: #dedede;
+        padding:10px;
+        margin-bottom:0;
+        border-bottom: 1px solid #ccc;
+    }
+    +ul{
+        margin-left: 5px;
+    }
+    ul{
+        list-style-type: none;
+        margin: 0;
+
+        font-size: 13px;
+        background-color: #efefef;
+        padding: 5px 0 10px 5px;
+
+        li:before{
+            content: '└ ';
+            font-weight: normal;
+        }
+
+        li{
+            font-weight: bold;
+        }
+
+        li ul{
+            padding: 0 0 0 0;
+        }
+
+        li ul li{
+            padding-left: 10px;
+            font-style:italic;
+            font-size: 0.95em;
+            font-weight: normal;
+        }
+    }
+}
