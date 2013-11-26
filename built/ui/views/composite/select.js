@@ -31,6 +31,7 @@ var SelectCompositeView = marionette.CompositeView.extend({
         this.listenTo(this.select, focus.FOCUS, this.onOptionFocus);
         this.listenTo(this.select, focus.BLUR, this.onOptionBlur);
         this.listenTo(this.select, event.SELECT , this.onOptionSelected);
+        this.listenTo(this.model, 'change', this._onModelChange)
     },
 
     onShow: function(){
@@ -46,6 +47,16 @@ var SelectCompositeView = marionette.CompositeView.extend({
             marionetteDict[key] = each;
         });
         this.hideList();
+    },
+
+    _onModelChange: function(){
+        var selected = this.collection.where(this.model.toJSON())[0];
+        var child = this.children.findByModel(selected);
+        if(this._selectedChild){
+            this._selectedChild.trigger(event.DESELECT);
+        }
+        this._selectedChild = child;
+        child.trigger(event.SELECT);
     },
 
     hideList: function(){

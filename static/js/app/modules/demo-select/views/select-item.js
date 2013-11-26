@@ -15,6 +15,14 @@ var SelectItem = marionette.ItemView.extend({
     initialize: function(){
         this.on(focus.FOCUS, this.setFocus);
         this.on(focus.BLUR, this.setBlur);
+        this.on(event.DESELECT, this.onDeselect);
+        this.on(event.SELECT, this.onSelect);
+    },
+    onDeselect: function(){
+        this.$el.removeClass('selected');
+    },
+    onSelect: function(){
+        this.$el.addClass('selected');
     },
     setFocus: function(){
         this.$el.addClass('active');
