@@ -99,7 +99,7 @@ var SelectDemoComposite = marionette.CompositeView.extend({
         this.focusManager.focus(view.$el);
         var count = 0;
         var children = this.children.toArray();
-        for(var i=0; i< children.length; i++){
+        for(var i=0; i < children.length; i++){
             if(children[i] == view){
                 break;
             }
