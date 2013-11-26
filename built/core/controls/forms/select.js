@@ -33,6 +33,7 @@ var Select = marionette.Controller.extend({
             moveUp:this.moveUp,
             moveDown:this.moveDown
         });
+        this.$el.on('click', this.onOpenPress);
     },
 
     insertText: function(responder, e){
@@ -72,6 +73,38 @@ var Select = marionette.Controller.extend({
         }
         this.focusManager.focusIndex(this.indexManager.getIndex());
         e.preventDefault();
+    },
+
+    onClose: function(){
+        this.enableWindowListener(false);
+        this.keyResponder.close();
+        this.indexManager.close();
+        this.focusManager.close();
+    },
+
+    onOpenPress: function(e){
+        this.showList(true);
+        this.enableWindowListener(true);
+    },
+
+    enableWindowListener: function(bool){
+        bool = _.isUndefined(bool) ? true : bool;
+        if(bool){
+            $(window).on('click', this.onWindowPress);
+        }else{
+            $(window).off('click', this.onWindowPress);
+        }
+    },
+
+    elIsChild: function($el){
+        return this.$el.has($el).length > 0;
+    },
+
+    onWindowPress: function(evt){
+        if(!this.elIsChild($(evt.target))){
+            this.showList();
+            this.enableWindowListener(false);
+        }
     },
 
     setElements: function($elements){
