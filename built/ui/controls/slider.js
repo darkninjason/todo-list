@@ -59,7 +59,6 @@ var Slider = marionette.Controller.extend({
     },
 
     _updateUi: function($handle, range, position, value) {
-        console.log(value);
         $handle.css({'left': value + 'px'});
     },
 
