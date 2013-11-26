@@ -37,6 +37,22 @@ var HorizontalSliderBase =  marionette.ItemView.extend({
         });
     },
 
+    getPosition: function() {
+        return this.slider._driver.getPosition(value);
+    },
+
+    setPosition: function(value) {
+        this.slider._driver.setPosition(value);
+    },
+
+    getStep: function() {
+        return this.slider._driver.getStepAt(0);
+    },
+
+    setStep: function(value) {
+        this.slider._driver.setStepAt(value, 0);
+    },
+
     getDriver: function(options){
         throw new Error('getDriver Not Implemented');
     }

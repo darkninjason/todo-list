@@ -19,7 +19,32 @@ var HorizontalRangeSlider =  HorizontalSliderBase.extend({
             acceptsOrientation: true
 
         });
+    },
+
+    setPositionAt: function(value, index) {
+        this.slider._driver.setPositionAt(value, index);
+    },
+
+    getPositionAt: function(index) {
+        return this.slider._driver.getPositionAt(index);
+    },
+
+    getPositions: function() {
+        return this.slider._driver.getPositions(value);
+    },
+
+    setStepAt: function(value, index) {
+        this.slider._driver.setStepAt(value, index);
+    },
+
+    getStepAt: function(index) {
+        return this.slider._driver.getStepAt(index);
+    },
+
+    getSteps: function() {
+        return this.slider._driver.getSteps();
     }
+
 });
 
 

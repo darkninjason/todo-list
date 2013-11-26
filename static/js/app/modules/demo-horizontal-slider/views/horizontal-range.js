@@ -12,6 +12,7 @@ var HorizontalRangeSlider = slider.HorizontalRangeSlider.extend({
 
     onShow: function(){
         this.initializeSliderControl();
+        this.setPositionAt(1, 1);
     }
 });
 
