@@ -2,13 +2,13 @@ define(function (require, exports, module) {
 
 var marionette = require('marionette');
 var HorizontalSliderBase = require('./horizontal-slider-base').HorizontalSliderBase;
-var driver = require('built/core/controls/sliders/horizontal');
+var driver = require('built/core/controls/sliders/horizontal-range');
 
-var HorizontalSlider =  HorizontalSliderBase.extend({
+var HorizontalRangeSlider =  HorizontalSliderBase.extend({
 
     getDriver: function(options){
 
-        return new driver.HorizontalSlider({
+        return new driver.HorizontalRangeSlider({
             $container: options.$container,
             $track: options.$track,
             $handles: options.$handles,
@@ -23,7 +23,7 @@ var HorizontalSlider =  HorizontalSliderBase.extend({
 });
 
 
-exports.HorizontalSlider = HorizontalSlider;
+exports.HorizontalRangeSlider = HorizontalRangeSlider;
 
 });
 

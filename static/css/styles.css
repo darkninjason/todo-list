@@ -7636,15 +7636,11 @@ td.visible-print {
   }
 }
 /* line 3, src/controls/_slider.scss */
-.slider-demo {
-  padding-bottom: 20px;
-}
-
-/* line 6, src/controls/_slider.scss */
 .slider {
   position: relative;
+  margin-bottom: 40px;
 }
-/* line 9, src/controls/_slider.scss */
+/* line 7, src/controls/_slider.scss */
 .slider .track {
   position: relative;
   width: 400px;
@@ -7655,7 +7651,7 @@ td.visible-print {
   background-color: #eee;
   border: 1px solid #dfdfdf;
 }
-/* line 24, src/controls/_slider.scss */
+/* line 22, src/controls/_slider.scss */
 .slider .handle {
   width: 20px;
   height: 20px;
