@@ -12,7 +12,9 @@ define(function(require, exports, module) {
         horizontalRangeSliderSnapping: '#horizontal-range-slider-snapping',
         dndTop: '#dnd-top',
         dndMid: '#dnd-mid',
-        dndBottom: '#dnd-bottom'
+        dndBottom: '#dnd-bottom',
+        select: '#select',
+        selectFancy: '#select-fancy',
     });
 
     return app;

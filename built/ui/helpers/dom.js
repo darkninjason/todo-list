@@ -76,10 +76,20 @@ function modelFromElement($element, Model, map){
     return new Model(obj);
 }
 
+function modelFromElements($elements, Model, map){
+    var arr = [];
+    _.each($elements, function(element){
+        arr.push(modelFromElement($(element), Model, map));
+    });
+    return arr;
+}
+
 exports.modelFromElement = modelFromElement;
+exports.modelFromElements = modelFromElements;
 exports.objectFromElement = objectFromElement;
 exports.getElement = getElement;
 exports.getElementBounds = getElementBounds;
 exports.getElementPosition = getElementPosition;
+
 
 });
