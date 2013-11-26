@@ -10,6 +10,7 @@ define(function(require, exports, module) {
         dndTop: '#dnd-top',
         dndMid: '#dnd-mid',
         dndBottom: '#dnd-bottom',
+        select: '#select',
     });
 
     return app;
