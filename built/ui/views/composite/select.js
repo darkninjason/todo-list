@@ -6,6 +6,7 @@ var Select = require('built/core/controls/forms/select').Select;
 var helpers = require('built/core/utils/helpers');
 var focus = require('built/core/events/focus');
 var event = require('built/core/events/event');
+var modelFromElements = require('built/ui/helpers/dom').modelFromElements;
 
 require('stickit');
 
@@ -14,9 +15,10 @@ var SelectCompositeView = marionette.CompositeView.extend({
         'click .btn':'onOpenPress'
     },
     bindings:{
-        '.title':'value'
+        '.title':'option'
     },
-    initialize : function(){
+    initialize : function(options){
+        _.extend(this, options);
         _.bindAll(this,
             'hideList',
             'showList',
@@ -102,6 +104,32 @@ var SelectCompositeView = marionette.CompositeView.extend({
 
 });
 
+function selectFromSelect(SelectClass, $select, options){
+
+    options = options || {};
+    var selectData = modelFromElements($select.find('option').toArray(), null, {content:'option'});
+    var selectCollection = new Backbone.Collection(selectData);
+    options = _.extend(options,{collection:selectCollection});
+    var createdSelect = new SelectClass(options);
+    $select.hide();
+
+    createdSelect.model.on('change', function(){
+        var val = this.get('value');
+        $select.val(val);
+    });
+
+    $select.on('change', function(){
+        var selectedVal = $select.val();
+        var model = selectCollection.where({value:selectedVal})[0];
+        createdSelect.model.set(model.toJSON());
+    });
+
+
+
+    return createdSelect;
+}
+
 exports.SelectCompositeView = SelectCompositeView;
+exports.selectFromSelect = selectFromSelect;
 
 });

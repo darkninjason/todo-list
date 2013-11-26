@@ -11,6 +11,7 @@ define(function(require, exports, module) {
         dndMid: '#dnd-mid',
         dndBottom: '#dnd-bottom',
         select: '#select',
+        selectFancy: '#select-fancy',
     });
 
     return app;

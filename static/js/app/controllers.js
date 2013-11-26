@@ -8,6 +8,7 @@ var InputSelectScrollableView    = require('app/modules/demo-input-select/views/
 var DragAndDropDemoView          = require('app/modules/demo-dnd/views/dnd').DragAndDropDemoView;
 var DragAndDropDemoCompositeView = require('app/modules/demo-dnd/views/dnd').DragAndDropDemoCompositeView;
 var SelectDemoComposite          = require('app/modules/demo-select/views/select').SelectDemoComposite;
+var selectFromSelect             = require('built/ui/views/composite/select').selectFromSelect;
 var modelFromElements = require('built/ui/helpers/dom').modelFromElements;
 
 var AppController =  marionette.Controller.extend({
@@ -20,9 +21,14 @@ var AppController =  marionette.Controller.extend({
         app.dndMid.show(new DragAndDropDemoView());
         app.dndBottom.show(new DragAndDropDemoCompositeView({dataType:'foo'}));
 
+        // don't bind them
         var selectData = modelFromElements($('#select-data').find('option').toArray(), null, {content:'option'});
         var selectCollection = new Backbone.Collection(selectData);
         app.select.show(new SelectDemoComposite({collection:selectCollection}));
+
+        // bind them and hide select
+        var select = selectFromSelect(SelectDemoComposite, $('#select-data-fancy'), {});
+        app.selectFancy.show(select);
     },
     index:function () {
 

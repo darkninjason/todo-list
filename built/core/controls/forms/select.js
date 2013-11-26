@@ -51,6 +51,7 @@ var Select = marionette.Controller.extend({
 
     insertNewline: function(responder, e){
         this.hideList();
+        this.enableWindowListener(false);
         this._triggerSelected();
     },
 
@@ -62,6 +63,7 @@ var Select = marionette.Controller.extend({
 
     cancelOperation: function(responder, e){
         this.hideList();
+        this.enableWindowListener(false);
     },
 
     moveUp: function(responder, e){
@@ -88,6 +90,7 @@ var Select = marionette.Controller.extend({
         this.focusManager.close();
         this._$elements.off('click', this.onOptionClicked);
         this.$el.off('click', this.onOpenPress);
+        this.enableWindowListener(false);
     },
 
     onOpenPress: function(e){
@@ -118,6 +121,7 @@ var Select = marionette.Controller.extend({
     onOptionClicked: function(e){
         this.setSelectedOption(e.currentTarget);
         this.hideList();
+        this.enableWindowListener(false);
     },
 
     setSelectedOption: function(obj){

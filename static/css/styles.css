@@ -7691,8 +7691,18 @@ td.visible-print {
   background-color: #5cb85c;
 }
 
-/* line 3, src/controls/_select.scss */
-#select .list-group-item:hover,
-#select .active {
+/* line 2, src/controls/_select.scss */
+.built-select > div {
+  position: relative;
+}
+/* line 5, src/controls/_select.scss */
+.built-select .list-group {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+}
+/* line 11, src/controls/_select.scss */
+.built-select .list-group-item:hover,
+.built-select .active {
   background-color: #428bca;
 }
