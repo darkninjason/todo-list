@@ -85,12 +85,17 @@ var SelectDemoComposite = marionette.CompositeView.extend({
             view = null;
         }
         if(view){
-            this.focusManager.focus(view.$el);
+            this.focusOnView(view);
         }
-
     },
 
     onItemClick: function(view){
+        this.focusOnView(view);
+        this.hideList();
+        this.model.set(view.model.toJSON());
+    },
+
+    focusOnView: function(view){
         this.focusManager.focus(view.$el);
         var count = 0;
         var children = this.children.toArray();
@@ -101,8 +106,6 @@ var SelectDemoComposite = marionette.CompositeView.extend({
             count ++;
         }
         this.indexManager.setIndex(count);
-        this.hideList();
-        this.model.set(view.model.toJSON());
     },
 
     insertNewline: function(responder, e){
