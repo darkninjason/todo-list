@@ -16,7 +16,8 @@ var SelectItem = marionette.ItemView.extend({
         'click':'click'
     },
     initialize: function(){
-
+        this.on(focus.FOCUS, this.setFocus);
+        this.on(focus.BLUR, this.setBlur);
     },
     setFocus: function(){
         this.$el.addClass('active');

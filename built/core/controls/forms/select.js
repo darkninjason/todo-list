@@ -23,7 +23,9 @@ var Select = marionette.Controller.extend({
             'moveUp',
             'moveDown',
             'wantsFocus',
-            'wantsBlur'
+            'wantsBlur',
+            'onOpenPress',
+            'onOptionClicked'
             );
         this.keyResponder = new KeyResponder({
             el: this.$el,
@@ -59,20 +61,20 @@ var Select = marionette.Controller.extend({
     },
 
     moveUp: function(responder, e){
+        e.preventDefault();
         this._hasRunOnce = true;
         this.indexManager.previousIndex();
         this.focusManager.focusIndex(this.indexManager.getIndex());
-        e.preventDefault();
     },
 
     moveDown: function(responder, e){
+        e.preventDefault();
         if(!this._hasRunOnce){
             this._hasRunOnce = true;
         }else{
             this.indexManager.nextIndex();
         }
         this.focusManager.focusIndex(this.indexManager.getIndex());
-        e.preventDefault();
     },
 
     onClose: function(){
@@ -80,6 +82,8 @@ var Select = marionette.Controller.extend({
         this.keyResponder.close();
         this.indexManager.close();
         this.focusManager.close();
+        this._$elements.off('click', this.onOptionClicked);
+        this.$el.off('click', this.onOpenPress);
     },
 
     onOpenPress: function(e){
@@ -107,9 +111,16 @@ var Select = marionette.Controller.extend({
         }
     },
 
+    onOptionClicked: function(e){
+        this.focusManager.focus(e.currentTarget);
+        this.hideList();
+    },
+
     setElements: function($elements){
+        this._$elements = $elements;
         this.closeManagers();
         helpers.registerElement($elements);
+        $elements.on('click', this.onOptionClicked);
         this.focusManager = new SingleFocusManager({
             list:$elements.toArray()
         });
@@ -140,11 +151,11 @@ var Select = marionette.Controller.extend({
     },
 
     wantsFocus: function(sender, obj){
-        this.trigger(focus.FOCUS, this, $(obj));
+        this.trigger(focus.FOCUS, this, obj);
     },
 
     wantsBlur: function(sender, obj){
-        this.trigger(focus.BLUR, this, $(obj));
+        this.trigger(focus.BLUR, this, obj);
     },
 
     hideList: function(){
