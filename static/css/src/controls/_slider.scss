@@ -1,17 +1,41 @@
 
 // SCLIDER
+.slider-demo{
+    padding-bottom: 20px;
+}
 .slider{
-	position: relative;
-	.track{
-		width:200px;
-		height:10px;
-		background-color: #000;
-	}
-	.handle{
-		width:20px;
-		height:20px;
-		background-color: #ff0000;
-		position: absolute;
-	}
+    position: relative;
+
+    .track{
+        position: relative;
+        width:400px;
+        top: 8px;
+
+        //background-color: transparent;
+        border-radius: 6px;
+        height: 5px;
+        box-shadow:
+            rgba(255,255,255,0.1) 0 1px 1px 1px inset,
+            rgba(255,255,255,0.2) 0 1px inset;
+        background-color: #d3ecf6;
+        border: 1px solid #a1dbe9;
+    }
+
+    .handle{
+        width:20px;
+        height:20px;
+        border-radius:50px;
+        box-shadow:
+            rgba(255,255,255, 0.1) 0 1px 1px 1px inset,
+            rgba(255,255,255, 0.2) 0 1px inset,
+            rgba(40,98,122,0.1) 0 -1px 1px inset,
+            rgba(40,98,122,0.1) 0 0 1px 1px;
+        border: 1px solid #79b9c9;
+        background:
+        -webkit-linear-gradient(top,
+            #e0f8ff,
+            #fff
+            );
+    }
 
 }
