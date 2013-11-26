@@ -4,6 +4,7 @@ var _                  = require('underscore');
 var marionette         = require('marionette');
 var KeyResponder       = require('built/core/responders/keys').KeyResponder;
 var IndexManager       = require('built/core/managers/index').IndexManager;
+var MouseResponder     = require('built/core/responders/mouse').MouseResponder;
 var SingleFocusManager = require('built/core/managers/focus-single').SingleFocusManager;
 var helpers            = require('built/core/utils/helpers');
 var focus              = require('built/core/events/focus');
@@ -25,7 +26,10 @@ var Select = marionette.Controller.extend({
             'wantsFocus',
             'wantsBlur',
             'onOpenPress',
-            'onOptionClicked'
+            'onOptionClicked',
+            'mouseDidEnter',
+            'mouseDidExit',
+            'mouseDidClick'
             );
         this.keyResponder = new KeyResponder({
             el: this.$el,
@@ -88,7 +92,7 @@ var Select = marionette.Controller.extend({
         this.keyResponder.close();
         this.indexManager.close();
         this.focusManager.close();
-        this._$elements.off('click', this.onOptionClicked);
+        this.mouseResponder.close();
         this.$el.off('click', this.onOpenPress);
         this.enableWindowListener(false);
     },
@@ -135,7 +139,7 @@ var Select = marionette.Controller.extend({
         this._$elements = $elements;
         this.closeManagers();
         helpers.registerElement($elements);
-        $elements.on('click', this.onOptionClicked);
+        // $elements.on('click', this.onOptionClicked);
         this.focusManager = new SingleFocusManager({
             list:$elements.toArray()
         });
@@ -150,6 +154,15 @@ var Select = marionette.Controller.extend({
                 this.wantsBlur);
         this.indexManager = new IndexManager();
         this.indexManager.setLength($elements.length);
+        this.mouseResponder = new MouseResponder({
+                el: $elements,
+                acceptsEnterExit: true,
+                acceptsUpDown: true,
+                acceptsMove: false,
+                mouseEntered: this.mouseDidEnter,
+                mouseExited: this.mouseDidExit,
+                mouseUp: this.mouseDidClick
+            });
     },
 
     closeManagers: function(){
@@ -163,6 +176,21 @@ var Select = marionette.Controller.extend({
 
         this.focusManager = null;
         this.indexManager = null;
+    },
+
+    mouseDidEnter: function(responder, e){
+        var $el = $(e.currentTarget);
+        var index = this._$elements.index($el);
+        this.indexManager.setIndex(index);
+        this.focusManager.focus($el[0]);
+    },
+
+    mouseDidExit: function(responder, e){
+        this.focusManager.blur(e.target);
+    },
+
+    mouseDidClick: function(responder, e){
+        this.onOptionClicked(e);
     },
 
     wantsFocus: function(sender, obj){
