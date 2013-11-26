@@ -1,6 +1,8 @@
 define(function (require, exports, module) {
 
 var marionette = require('marionette');
+var focus = require('built/core/events/focus');
+var event = require('built/core/events/event');
 var template = require('hbs!tpl/select/item');
 
 var SelectItem = marionette.ItemView.extend({
@@ -14,14 +16,12 @@ var SelectItem = marionette.ItemView.extend({
         'click':'click'
     },
     initialize: function(){
-        this.listenTo(this, focus.FOCUS, this.onFocus);
-        this.listenTo(this, focus.BLUR, this.onBlur);
-        this.listenTo(this, event.SELECT, this.onSelect);
+
     },
-    onFocus: function(){
+    setFocus: function(){
         this.$el.addClass('active');
     },
-    onBlur: function(){
+    setBlur: function(){
         this.$el.removeClass('active');
     }
 });
