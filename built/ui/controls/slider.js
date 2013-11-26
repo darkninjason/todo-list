@@ -7,51 +7,51 @@ var composeAll = require('built/core/utils/helpers').composeAll;
 
 var Slider = marionette.Controller.extend({
 
-    _backer: null,
+    _driver: null,
     _uiUpdater: null,
 
     initialize: function(options){
         this.options = options;
         _.defaults(options, this._getDefaults());
 
-        this._backer = this._initializeBacker(this.options);
-        this._backer.compose(this);
+        this._driver = this._initializeDriver(this.options);
+        this._driver.compose(this);
 
-        this._uiUpdater = this._initializeUiUpdater(this._backer.options);
+        this._uiUpdater = this._initializeUiUpdater(this._driver.options);
     },
 
     onClose: function() {
-        this._backer.close();
+        this._driver.close();
     },
 
     _getDefaults: function() {
         return {};
     },
 
-    _initializeBacker: function(options) {
-        var backer = options.backer;
+    _initializeDriver: function(options) {
+        var driver = options.driver;
 
-        if(_.isEmpty(backer)) throw 'Undefined backer.';
+        if(_.isEmpty(driver)) throw 'Undefined driver.';
 
-        this.listenTo(backer, dragEvents.DRAG_UPDATE, this._dragDidUpdate);
-        this.listenTo(backer, dragEvents.DRAG_START, this._dragDidStart);
-        this.listenTo(backer, dragEvents.DRAG_END, this._dragDidEnd);
+        this.listenTo(driver, dragEvents.DRAG_UPDATE, this._dragDidUpdate);
+        this.listenTo(driver, dragEvents.DRAG_START, this._dragDidStart);
+        this.listenTo(driver, dragEvents.DRAG_END, this._dragDidEnd);
 
-        backer.options.$container.css({
+        driver.options.$container.css({
             position: 'relative'
         });
 
-        backer.options.$track.css({
+        driver.options.$track.css({
             position: 'relative'
         });
 
-        backer.options.$handles.css({
+        driver.options.$handles.css({
             position: 'absolute',
             top: '0',
             left: '0'
         });
 
-        return backer;
+        return driver;
     },
 
     _initializeUiUpdater: function(options) {
@@ -65,8 +65,8 @@ var Slider = marionette.Controller.extend({
     _updateUiWithSnap: function($handle, range, position, value) {
         var step, stepDelta;
 
-        step = this._backer.getStepForHandle($handle);
-        stepDelta = range.getMax() / this._backer.options.steps;
+        step = this._driver.getStepForHandle($handle);
+        stepDelta = range.getMax() / this._driver.options.steps;
 
         // augment position and value
         value = stepDelta * step;
@@ -78,15 +78,15 @@ var Slider = marionette.Controller.extend({
     _dragDidUpdate: function(sender, $handle, range, position, value) {
         this._uiUpdater($handle, range, position, value);
 
-        this._backer._dispatchDragUpdate.apply(this, arguments);
+        this._driver._dispatchDragUpdate.apply(this, arguments);
     },
 
     _dragDidStart: function(sender, $handle, range, position, value) {
-        this._backer._dispatchDragStart.apply(this, arguments);
+        this._driver._dispatchDragStart.apply(this, arguments);
     },
 
     _dragDidEnd: function(sender, $handle, range, position, value) {
-        this._backer._dispatchDragEnd.apply(this, arguments);
+        this._driver._dispatchDragEnd.apply(this, arguments);
     }
 
 }); // eof Slider

@@ -10,6 +10,8 @@ var DragAndDropDemoCompositeView = require('app/modules/demo-dnd/views/dnd').Dra
 var SelectDemoComposite          = require('app/modules/demo-select/views/select').SelectDemoComposite;
 var selectFromSelect             = require('built/ui/views/composite/select').selectFromSelect;
 var modelFromElements = require('built/ui/helpers/dom').modelFromElements;
+var HorizontalSlider    = require('app/modules/demo-horizontal-slider/views/horizontal').HorizontalSlider;
+var HorizontalRangeSlider    = require('app/modules/demo-horizontal-slider/views/horizontal-range').HorizontalRangeSlider;
 
 var AppController =  marionette.Controller.extend({
 
@@ -21,7 +23,7 @@ var AppController =  marionette.Controller.extend({
         app.dndMid.show(new DragAndDropDemoView());
         app.dndBottom.show(new DragAndDropDemoCompositeView({dataType:'foo'}));
 
-        // don't bind them
+        // doesn't bind them
         var selectData = modelFromElements($('#select-data').find('option').toArray(), null, {content:'option'});
         var selectCollection = new Backbone.Collection(selectData);
         app.select.show(new SelectDemoComposite({collection:selectCollection}));
@@ -29,6 +31,13 @@ var AppController =  marionette.Controller.extend({
         // bind them and hide select
         var select = selectFromSelect(SelectDemoComposite, $('#select-data-fancy'), {});
         app.selectFancy.show(select);
+
+        app.dndBottom.show(new DragAndDropDemoView({dataType:'foo'}));
+        app.horizontalSliderFluid.show(new HorizontalSlider());
+        app.horizontalSliderSnapping.show(new HorizontalSlider({snap: true, steps: 10}));
+        app.horizontalRangeSliderFluid.show(new HorizontalRangeSlider());
+        app.horizontalRangeSliderSnapping.show(new HorizontalRangeSlider({snap: true, steps: 10}));
+
     },
     index:function () {
 

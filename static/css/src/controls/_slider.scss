@@ -1,17 +1,38 @@
 
 // SCLIDER
 .slider{
-	position: relative;
-	.track{
-		width:200px;
-		height:10px;
-		background-color: #000;
-	}
-	.handle{
-		width:20px;
-		height:20px;
-		background-color: #ff0000;
-		position: absolute;
-	}
+    position: relative;
+    margin-bottom: 40px;
+
+    .track{
+        position: relative;
+        width:400px;
+        top: 8px;
+
+        //background-color: transparent;
+        border-radius: 0px;
+        height: 5px;
+        box-shadow:
+            rgba(255,255,255,0.1) 0 1px 1px 1px inset,
+            rgba(255,255,255,0.2) 0 1px inset;
+        background-color: #eee;
+        border: 1px solid #dfdfdf;
+    }
+
+    .handle{
+        width:20px;
+        height:20px;
+        border-radius:50px;
+        box-shadow:
+            rgba(255, 255, 255, 0.1) 0 1px 1px 1px inset,
+            rgba(255, 255, 255, 0.2) 0 1px inset,
+            rgba(40, 98, 122, 0.1) 0 0px 0px inset,
+            rgba(0, 0, 0, 0.05) 0 0 0px 3px;
+        border: 1px solid #c2c2c2;
+        background:
+        -webkit-linear-gradient(top,
+            #fff,
+            #fff);
+    }
 
 }
