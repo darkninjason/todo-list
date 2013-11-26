@@ -7649,20 +7649,20 @@ td.visible-print {
   position: relative;
   width: 400px;
   top: 8px;
-  border-radius: 6px;
+  border-radius: 0px;
   height: 5px;
   box-shadow: rgba(255, 255, 255, 0.1) 0 1px 1px 1px inset, rgba(255, 255, 255, 0.2) 0 1px inset;
-  background-color: #d3ecf6;
-  border: 1px solid #a1dbe9;
+  background-color: #eee;
+  border: 1px solid #dfdfdf;
 }
 /* line 24, src/controls/_slider.scss */
 .slider .handle {
   width: 20px;
   height: 20px;
   border-radius: 50px;
-  box-shadow: rgba(255, 255, 255, 0.1) 0 1px 1px 1px inset, rgba(255, 255, 255, 0.2) 0 1px inset, rgba(40, 98, 122, 0.1) 0 -1px 1px inset, rgba(40, 98, 122, 0.1) 0 0 1px 1px;
-  border: 1px solid #79b9c9;
-  background: -webkit-linear-gradient(top, #e0f8ff, white);
+  box-shadow: rgba(255, 255, 255, 0.1) 0 1px 1px 1px inset, rgba(255, 255, 255, 0.2) 0 1px inset, rgba(40, 98, 122, 0.1) 0 0px 0px inset, rgba(0, 0, 0, 0.05) 0 0 0px 3px;
+  border: 1px solid #c2c2c2;
+  background: -webkit-linear-gradient(top, white, white);
 }
 
 /* line 3, src/controls/_scroller.scss */
