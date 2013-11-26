@@ -7,6 +7,7 @@ define(function(require, exports, module) {
         scroller: '#scroller',
         inputSelect: '#input-select',
         inputSelectScrollable: '#input-select-scrollable',
+        horizontalSlider: '#horizontal-slider',
         dndTop: '#dnd-top',
         dndMid: '#dnd-mid',
         dndBottom: '#dnd-bottom',
