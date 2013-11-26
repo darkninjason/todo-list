@@ -15,6 +15,8 @@ require('stickit');
 var SelectDemoComposite = marionette.CompositeView.extend({
     template : template,
     itemView : SelectItem,
+    searchText: '',
+    searchTimeout: 300,
     itemViewContainer : '.list-group',
     className : 'built-select',
     events:{
@@ -25,7 +27,6 @@ var SelectDemoComposite = marionette.CompositeView.extend({
     },
     initialize : function(){
         this.model = new Backbone.Model();
-        this.on('itemview:click', this.onItemViewClick);
         _.bindAll(this,
             'onWindowPress',
             'insertText',
@@ -59,7 +60,34 @@ var SelectDemoComposite = marionette.CompositeView.extend({
     insertText: function(responder, e){
         var char = String.fromCharCode(e.keyCode);
         //todo see what they are searching for after a delay
+        this.searchText += char;
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(_.bind(function(){
+            this.searchForText(this.searchText);
+            this.searchText = '';
+        },this), this.searchTimeout);
         if(/(32)/.test(e.keyCode)) e.preventDefault();
+    },
+
+    searchForText: function(label){
+        label = label.toLowerCase();
+        var coll = this.children.toArray();
+        var lowestIndex = null;
+        var view;
+        for(var i=0; i < coll.length; i ++){
+            view = coll[i];
+            var model = view.model;
+            var index = model.get('value').indexOf(label);
+
+            if(index === 0){
+                break;
+            }
+            view = null;
+        }
+        if(view){
+            this.focusManager.focus(view.$el);
+        }
+
     },
 
     onItemClick: function(view){
@@ -74,7 +102,7 @@ var SelectDemoComposite = marionette.CompositeView.extend({
         }
         this.indexManager.setIndex(count);
         this.hideList();
-        // this.focusManager.setFocused($el);
+        this.model.set(view.model.toJSON());
     },
 
     insertNewline: function(responder, e){
@@ -196,10 +224,7 @@ var SelectDemoComposite = marionette.CompositeView.extend({
         }else{
             $container.show();
         }
-    },
-    onItemViewClick: function(view){
-        this.model.set(view.model.toJSON());
-    },
+    }
 });
 
 exports.SelectDemoComposite = SelectDemoComposite;
