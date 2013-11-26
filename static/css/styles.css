@@ -7691,7 +7691,8 @@ td.visible-print {
   background-color: #5cb85c;
 }
 
-/* line 2, src/controls/_select.scss */
+/* line 3, src/controls/_select.scss */
+#select .list-group-item:hover,
 #select .active {
   background-color: #428bca;
 }

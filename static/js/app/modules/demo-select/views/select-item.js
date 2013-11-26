@@ -9,9 +9,6 @@ var SelectItem = marionette.ItemView.extend({
     tagName:'li',
     className:'list-group-item',
     template : template,
-    ui : {
-
-    },
     triggers : {
         'click':'click'
     },

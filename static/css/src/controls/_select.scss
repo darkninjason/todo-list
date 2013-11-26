@@ -1,4 +1,5 @@
 #select{
+    .list-group-item:hover,
     .active{
         background-color: $brand-primary;
     }

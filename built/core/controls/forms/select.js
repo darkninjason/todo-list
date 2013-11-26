@@ -7,12 +7,12 @@ var IndexManager       = require('built/core/managers/index').IndexManager;
 var SingleFocusManager = require('built/core/managers/focus-single').SingleFocusManager;
 var helpers            = require('built/core/utils/helpers');
 var focus              = require('built/core/events/focus');
-var events             = require('built/core/events/event');
+var event              = require('built/core/events/event');
 var data               = require('built/core/events/data');
 
 var Select = marionette.Controller.extend({
-    EVENT_SELECTED: 'selected',
     _searchText:'',
+    searchTimeout: 300,
     initialize: function(options){
         _.extend(this, options);
         _.bindAll(this,
@@ -40,7 +40,6 @@ var Select = marionette.Controller.extend({
 
     insertText: function(responder, e){
         var char = String.fromCharCode(e.keyCode);
-        //todo see what they are searching for after a delay
         this._searchText += char;
         clearTimeout(this.timeout);
         this.timeout = setTimeout(_.bind(function(){
@@ -51,9 +50,14 @@ var Select = marionette.Controller.extend({
     },
 
     insertNewline: function(responder, e){
-        var obj = this.focusManager.getFocusedObject();
-        this.trigger(this.EVENT_SELECTED, $(obj));
         this.hideList();
+        this._triggerSelected();
+    },
+
+    _triggerSelected: function(){
+        var obj = this.focusManager.getFocusedObject();
+        this.trigger(event.SELECT, $(obj));
+        this._hasRunOnce = true;
     },
 
     cancelOperation: function(responder, e){
@@ -87,7 +91,7 @@ var Select = marionette.Controller.extend({
     },
 
     onOpenPress: function(e){
-        this.showList(true);
+        this.showList();
         this.enableWindowListener(true);
     },
 
@@ -106,14 +110,21 @@ var Select = marionette.Controller.extend({
 
     onWindowPress: function(evt){
         if(!this.elIsChild($(evt.target))){
-            this.showList();
+            this.hideList();
             this.enableWindowListener(false);
         }
     },
 
     onOptionClicked: function(e){
-        this.focusManager.focus(e.currentTarget);
+        this.setSelectedOption(e.currentTarget);
         this.hideList();
+    },
+
+    setSelectedOption: function(obj){
+        this.focusManager.focus(obj);
+        var index = this.focusManager.getFocusedIndexes()[0];
+        this.indexManager.setIndex(index);
+        this._triggerSelected();
     },
 
     setElements: function($elements){
