@@ -13,6 +13,9 @@ var SelectDemoComposite = SelectCompositeView.extend({
     className : 'built-select',
     ui:{
         list:'.list-group'
+    },
+    bindings:{
+        '.title':'option'
     }
 });
 

@@ -7,9 +7,9 @@
     .scroll-container {
         width: 500px;
         height: 300px;
-        background: lightblue;
         overflow: hidden;
         overflow-y: scroll;
+        border: 1px solid $gray-lighter;
     }
 
     .content {

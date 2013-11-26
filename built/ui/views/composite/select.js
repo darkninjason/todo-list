@@ -14,9 +14,6 @@ var SelectCompositeView = marionette.CompositeView.extend({
     events:{
         'click .btn':'onOpenPress'
     },
-    bindings:{
-        '.title':'option'
-    },
     initialize : function(options){
         _.extend(this, options);
         _.bindAll(this,
