@@ -27,6 +27,14 @@ describe('DOM Helpers: getElement', function() {
         expect($el instanceof $).toEqual(true);
     });
 
+    it('expects $element for string in $context', function() {
+        var target = '#target';
+        var $context = $('#context');
+        var $el = getElement(target, $context);
+
+        expect($el instanceof $).toEqual(true);
+    });
+
 
 }); // Eof describe
 }); // Eof define
