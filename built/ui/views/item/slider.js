@@ -7,7 +7,9 @@ var dragEvents = require('built/core/events/drag');
 var getElement = require('built/ui/helpers/dom').getElement;
 
 var SliderView =  marionette.ItemView.extend({
+
     _container: null,
+    _driver: null,
 
     /**
      * Initialize slider view
@@ -60,10 +62,9 @@ var SliderView =  marionette.ItemView.extend({
 
         this._driver = driver;
         this._container = new SliderContainer({driver:driver});
-
     },
 
-    // Abstract method
+    // Abstract methods
 
     getDriver: function(options){
         throw new Error('getDriver not implemented');
@@ -87,7 +88,8 @@ var SliderView =  marionette.ItemView.extend({
         return getElement(options.handles, this.$el);
     },
 
-    // event dispatchers
+    // Event dispatchers
+
     _dragDidUpdate: function(sender, $handle, range, position, value) {
         this._driver._dispatchDragUpdate.apply(this, arguments);
     },

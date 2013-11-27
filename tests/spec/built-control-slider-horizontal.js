@@ -2,12 +2,10 @@ define(function(require, exports, module) {
 
 // Imports
 
-var _                = require('underscore');
-var HorizontalSlider = require('built/core/controls/sliders/horizontal').HorizontalSlider;
-var events           = require('built/core/events/event');
-var drag             = require('built/core/events/drag');
-var SpecHelpers      = require('lib/spec-helpers');
-var EventHelpers     = SpecHelpers.Events;
+var _ = require('underscore');
+var dragEvents = require('built/core/events/drag');
+var EventHelpers = require('lib/spec-helpers').Events;
+var HorizontalSliderControl = require('built/core/controls/sliders/horizontal').HorizontalSliderControl;
 
 describe('Horizontal Slider Control', function() {
 
@@ -25,8 +23,9 @@ describe('Horizontal Slider Control', function() {
         augments = augments || {};
 
         var testSuiteDefaults = {
-            $track            : $('.slider .track'),
-            $handles          : $('.slider .handle'),
+            container        : $('.slider-container'),
+            track            : $('.slider .track'),
+            handles          : $('.slider .handle'),
             steps             : 30,
             acceptsMouse      : true,
             acceptsTouch      : true,
@@ -38,7 +37,7 @@ describe('Horizontal Slider Control', function() {
     }
 
     function getControl(augments) {
-        return new HorizontalSlider(getOptions(augments));
+        return new HorizontalSliderControl(getOptions(augments));
     }
 
     function getPageElements() {
@@ -70,111 +69,7 @@ describe('Horizontal Slider Control', function() {
         EventHelpers.simulateTouchDragged($handle, 0, 0, dragx, 0);
     }
 
-    // Options Tests
-
-    it('applies options', function(){
-        var hsliderDefaults, augments, control, controlDefaults;
-
-        // copied from hslider, will need update should these change.
-        hsliderDefaults = {
-            $track: null,
-            $handles: null,
-            steps: 0,
-            snap: false,
-            acceptsMouse: true,
-            acceptsTouch: false,
-        };
-
-        augments          = _.clone(hsliderDefaults);
-        augments.$track   = getPageElements().$track;
-        augments.$handles = getPageElements().$handles;
-
-        control = getControl(augments);
-
-        // expect modified options to be modified
-        expect(control.options.$track).toEqual(augments.$track);
-        expect(control.options.$handles).toEqual(augments.$handles);
-
-        // expect unmodified options to equal defaults
-        expect(control.options.acceptsMouse).toEqual(hsliderDefaults.acceptsMouse);
-        expect(control.options.acceptsTouch).toEqual(hsliderDefaults.acceptsTouch);
-        expect(control.options.snap).toEqual(hsliderDefaults.snap);
-        expect(control.options.steps).toEqual(hsliderDefaults.steps);
-    });
-
-    // it('disables mouse when acceptsMouse is false', function(){
-    //     var control, elements;
-
-    //     els     = getPageElements();
-    //     control = getControl({acceptsMouse: false});
-
-    //     doBasicMouseDrag(els.$leftHandle, 100);
-
-    //     // if mouse is not available, leftHandle shouldn't move.
-    //     expect(control.getPosition()).toEqual(0);
-    // });
-
-    // it('enables mouse when acceptsMouse is true', function(){
-    //     var control, elements, pos, dragx;
-
-    //     els     = getPageElements();
-    //     control = getControl();
-    //     pos     = 0.5;
-    //     dragx   = getNormalizedTrackWidth(els.$track, els.$leftHandle) * pos;
-
-    //     doBasicMouseDrag(els.$leftHandle, dragx);
-
-    //     expect(control.getPosition()).toEqual(0.5);
-    //     expect(els.$leftHandle).toHaveCss({'left': dragx + 'px'});
-    // });
-
-    // it('disables touch when acceptsTouch is false', function(){
-    //     var control, elements;
-
-    //     els     = getPageElements();
-    //     control = getControl({acceptsTouch: false});
-
-    //     doBasicTouchDrag(els.$leftHandle, 100);
-
-    //     // if mouse is not available, leftHandle shouldn't move.
-    //     expect(control.getPosition()).toEqual(0);
-    // });
-
-    // it('enables touch when acceptsTouch is true', function(){
-    //     var control, elements, pos, dragx;
-
-    //     els     = getPageElements();
-    //     control = getControl();
-    //     pos     = 0.5;
-    //     dragx   = getNormalizedTrackWidth(els.$track, els.$leftHandle) * pos;
-
-    //     doBasicTouchDrag(els.$leftHandle, dragx);
-
-    //     expect(control.getPosition()).toEqual(0.5);
-    //     expect(els.$leftHandle).toHaveCss({'left': dragx + 'px'});
-    // });
-
     // Throws Tests
-
-    // it('throws when track is not provided', function(){
-    //     function throwable(){
-    //         var control;
-
-    //         control = getControl({$track: null});
-    //     }
-
-    //     expect(throwable).toThrow();
-    // });
-
-    // it('throws when no handles provided', function(){
-    //     function throwable() {
-    //         var control;
-
-    //         control = getControl({$handles: null});
-    //     }
-
-    //     expect(throwable).toThrow();
-    // });
 
     it('throws when incorrect index is passed', function(){
         function throwable() {
@@ -202,430 +97,254 @@ describe('Horizontal Slider Control', function() {
 
     // Public API Tests
 
-    // it('recalculates max position', function(){
-    //     var $els, $container, $track, $handles, control, positions;
+    it('recalculates max position', function(){
+        var elements, $container, control, positions;
 
-    //     $els       = getPageElements();
-    //     $container = $els.$container;
-    //     $track     = $els.$track;
-    //     $handles   = $els.$handles;
-    //     control    = getControl();
-    //     positions  = [0.25, 0.50, 0.75];
+        elements = getPageElements();
+        $container = elements.$container;
+        control = getControl();
+        positions = [0.25, 0.50, 0.75];
 
-    //     _.each(positions, function(pos, i, positions){
-    //         control.setPositionAt(pos, i);
-    //     });
+        _.each(positions, function(pos, i, positions){
+            control.setPositionAt(pos, i);
+        });
 
-    //     // shrink the container
-    //     $container.css('width', '150px');
+        // shrink the container
+        $container.css('width', '150px');
 
-    //     // recalculate positions
-    //     control.calculateMaxPosition();
+        // recalculate positions
+        control.calculateMaxPosition();
 
-    //     // verify positions and element lefts
-    //     _.each(positions, function(pos, i, positions){
-    //         var $handle, trackWidth, expectedWidth;
+        // even though the width changed, recaculating max position
+        // should result in values equal to the originals since
+        // positions are relative to the max position.
 
-    //         $handle      = $handles.eq(i);
-    //         trackWidth   = getNormalizedTrackWidth($track, $handle);
-    //         expectedLeft = trackWidth * pos;
+        _.each(positions, function(pos, i, positions){
+            expect(control.getPositionAt(i)).toEqual(positions[i]);
+        });
+    });
 
-    //         expect(control.getPositionAt(i)).toEqual(positions[i]);
-    //         expect($handle.css('left')).toEqual(expectedLeft + 'px');
-    //     });
-    // });
+    it('updates when setPositionAt is called', function(){
+        var elements, control, pos, left;
 
-    // it('updates when setPositionAt is called', function(){
-    //     var els, control, pos, left;
+        elements = getPageElements();
+        control = getControl();
+        pos = [0.25, 0.50, 0.75];
 
-    //     els        = getPageElements();
-    //     control    = getControl();
-    //     trackWidth = getNormalizedTrackWidth(els.$track, els.$leftHandle);
-    //     pos        = [0.25, 0.50, 0.75];
-    //     left      = [
-    //         trackWidth * pos[0],
-    //         trackWidth * pos[1],
-    //         trackWidth * pos[2]
-    //     ];
+        _.each(pos, function(p, i, list){
+            control.setPositionAt(p, i);
+        });
 
-    //     _.each(pos, function(p, i, list){
-    //         control.setPositionAt(p, i);
-    //         expect(els.$handles.eq(i)).toHaveCss({'left': left[i] + 'px'});
-    //     });
+        expect(control.getPositions()).toEqual(pos);
+    });
 
-    //     _.each(pos, function(p, i, list){
-    //         expect(control.getPositionAt(i)).toEqual(p);
-    //     });
+    it('updates when setPositionForHandle is called', function(){
+        var elements, $handles, control, pos, left;
 
-    //     expect(control.getPositions()).toEqual(pos);
-    // });
+        elements   = getPageElements();
+        $handles   = elements.$handles;
+        control    = getControl();
+        pos        = [0.25, 0.50, 0.75];
 
-    // it('updates when setPositionForHandle is called', function(){
-    //     var els, $handles, control, pos, left;
+        _.each(pos, function(p, i, list){
+            control.setPositionForHandle(p, $handles.eq(i));
+        });
 
-    //     els        = getPageElements();
-    //     $handles   = els.$handles;
-    //     control    = getControl();
-    //     trackWidth = getNormalizedTrackWidth(els.$track, els.$leftHandle);
-    //     pos        = [0.25, 0.50, 0.75];
-    //     left      = [
-    //         trackWidth * pos[0],
-    //         trackWidth * pos[1],
-    //         trackWidth * pos[2]
-    //     ];
+        expect(control.getPositions()).toEqual(pos);
+    });
 
-    //     _.each(pos, function(p, i, list){
-    //         control.setPositionForHandle(p, $handles.eq(i));
-    //         expect($handles.eq(i)).toHaveCss({'left': left[i] + 'px'});
-    //     });
+    it('updates when setStepAt is called', function(){
+        var elements, control, step, stepDistance, left;
 
-    //     _.each(pos, function(p, i, list){
-    //         expect(control.getPositionForHandle($handles.eq(i))).toEqual(p);
-    //     });
+        elements = getPageElements();
+        control = getControl();
+        trackWidth = getNormalizedTrackWidth(elements.$track, elements.$leftHandle);
+        step = [8, 15, 23];
+        stepDistance = trackWidth / control.options.steps;
 
-    //     expect(control.getPositions()).toEqual(pos);
-    // });
+        _.each(step, function(s, i, list){
+            control.setStepAt(s, i);
+        });
 
-    // it('updates when setStepAt is called', function(){
-    //     var els, control, step, stepDistance, left;
+        expect(control.getSteps()).toEqual(step);
+    });
 
-    //     els          = getPageElements();
-    //     control      = getControl();
-    //     trackWidth   = getNormalizedTrackWidth(els.$track, els.$leftHandle);
-    //     step         = [8, 15, 23];
-    //     stepDistance = trackWidth / control.options.steps;
-    //     left        = [
-    //         stepDistance * step[0],
-    //         stepDistance * step[1],
-    //         stepDistance * step[2]
-    //     ];
+    it('updates when setStepForHandle is called', function(){
+        var elements, $handles, control, step, stepDistance, left;
 
-    //     _.each(step, function(s, i, list){
-    //         control.setStepAt(s, i);
-    //         expect(els.$handles.eq(i)).toHaveCss({'left': left[i] + 'px'});
-    //     });
+        elements = getPageElements();
+        $handles = elements.$handles;
+        control = getControl();
+        trackWidth = getNormalizedTrackWidth(elements.$track, elements.$leftHandle);
+        step = [8, 15, 23];
+        stepDistance = trackWidth / control.options.steps;
 
-    //     _.each(step, function(s, i, list){
-    //         expect(control.getStepAt(i)).toEqual(s);
-    //     });
+        _.each(step, function(s, i, list){
+            control.setStepForHandle(s, $handles.eq(i));
+        });
 
-    //     expect(control.getSteps()).toEqual(step);
-    // });
-
-    // it('updates when setStepForHandle is called', function(){
-    //     var els, $handles, control, step, stepDistance, left;
-
-    //     els          = getPageElements();
-    //     $handles     = els.$handles;
-    //     control      = getControl();
-    //     trackWidth   = getNormalizedTrackWidth(els.$track, els.$leftHandle);
-    //     step         = [8, 15, 23];
-    //     stepDistance = trackWidth / control.options.steps;
-    //     left        = [
-    //         stepDistance * step[0],
-    //         stepDistance * step[1],
-    //         stepDistance * step[2]
-    //     ];
-
-    //     _.each(step, function(s, i, list){
-    //         control.setStepForHandle(s, $handles.eq(i));
-    //         expect($handles.eq(i)).toHaveCss({'left': left[i] + 'px'});
-    //     });
-
-    //     _.each(step, function(s, i, list){
-    //         expect(control.getStepForHandle($handles.eq(i))).toEqual(s);
-    //     });
-
-    //     expect(control.getSteps()).toEqual(step);
-    // });
+        expect(control.getSteps()).toEqual(step);
+    });
 
     // Public 'Convenience' API
 
-    // it('updates when setPosition is called', function(){
-    //     var els, control, pos, left;
+    it('updates when setPosition is called', function(){
+        var elements, control, pos, left;
 
-    //     els        = getPageElements();
-    //     control    = getControl();
-    //     trackWidth = getNormalizedTrackWidth(els.$track, els.$leftHandle);
-    //     pos        = 0.25;
-    //     left       = trackWidth * pos;
+        elements = getPageElements();
+        control = getControl();
+        pos = 0.25;
 
-    //     control.setPosition(pos);
+        control.setPosition(pos);
+        expect(control.getPosition()).toEqual(pos);
+    });
 
-    //     expect(control.getPosition()).toEqual(pos);
-    //     expect(els.$leftHandle).toHaveCss({'left': left + 'px'});
-    // });
+    it('updates when setStep is called', function(){
+        var elements, control, step, stepDistance, left;
 
-    // it('updates when setStep is called', function(){
-    //     var els, control, step, stepDistance, left;
+        elements = getPageElements();
+        control = getControl();
+        trackWidth = getNormalizedTrackWidth(elements.$track, elements.$leftHandle);
+        step = 8;
+        stepDistance = trackWidth / control.options.steps;
 
-    //     els          = getPageElements();
-    //     control      = getControl();
-    //     trackWidth   = getNormalizedTrackWidth(els.$track, els.$leftHandle);
-    //     step         = 8;
-    //     stepDistance = trackWidth / control.options.steps;
-    //     left         = stepDistance * step;
-
-    //     control.setStep(step);
-
-    //     expect(control.getStep()).toEqual(step);
-    //     expect(els.$leftHandle).toHaveCss({'left': left + 'px'});
-    // });
+        control.setStep(step);
+        expect(control.getStep()).toEqual(step);
+    });
 
     // Interaction Tests
 
     it('updates position / step from mouse', function(){
-        var els, trackWidth, control, pos, step;
+        var elements, trackWidth, control, pos, step;
 
-        els        = getPageElements();
-        trackWidth = getNormalizedTrackWidth(els.$track, els.$leftHandle);
-        control    = getControl();
-        pos        = [0.2, 0.50, 0.7];
-        step       = [6, 15, 21];
+        elements = getPageElements();
+        trackWidth = getNormalizedTrackWidth(elements.$track, elements.$leftHandle);
+        control = getControl();
+        pos = [0.2, 0.50, 0.7];
+        step = [6, 15, 21];
 
         _.each(pos, function(p, i, list){
-            doBasicMouseDrag(els.$handles.eq(i), trackWidth * p);
+            doBasicMouseDrag(elements.$handles.eq(i), trackWidth * p);
         });
 
         expect(control.getPositions()).toEqual(pos);
         expect(control.getSteps()).toEqual(step);
-    });
-
-    // it('updates from mouse when snap is enabled', function(){
-    //     var els, trackWidth, control, pos, step;
-
-    //     els        = getPageElements();
-    //     trackWidth = getNormalizedTrackWidth(els.$track, els.$leftHandle);
-    //     control    = getControl({snap: true});
-    //     pos        = [0.2, 0.5, 0.7];
-
-    //     // lefts calculated with same logic as steps
-    //     // snap shoudl adhear to step positions
-    //     left = [
-    //         Math.round(trackWidth * pos[0]),
-    //         Math.round(trackWidth * pos[1]),
-    //         Math.round(trackWidth * pos[2])
-    //     ];
-
-    //     // test that ui is snapping to correct coordinates despite
-    //     // weird positioning
-    //     _.each(pos, function(p, i, list){
-    //         doBasicMouseDrag(els.$handles.eq(i), trackWidth * p);
-    //         expect(els.$handles.eq(i)).toHaveCss({left: left[i] + 'px'});
-    //     });
-    // });
-
-    it('does not exceed max from mouse', function(){
-        var els, control;
-
-        els     = getPageElements();
-        control = getControl();
-
-        doBasicMouseDrag(els.$leftHandle, 5000);
-
-        expect(control.getPosition()).toEqual(1);
-    });
-
-    it('does not exceed min from mouse', function(){
-        var els, control;
-
-        els     = getPageElements();
-        control = getControl();
-
-        doBasicMouseDrag(els.$leftHandle, -5000);
-
-        expect(control.getPosition()).toEqual(0);
     });
 
     it('updates position / step from touch', function(){
-        var els, trackWidth, control, pos, step;
+        var elements, trackWidth, control, pos, step;
 
-        els        = getPageElements();
-        trackWidth = getNormalizedTrackWidth(els.$track, els.$leftHandle);
-        control    = getControl();
-        pos        = [0.2, 0.50, 0.7];
-        step       = [6, 15, 21];
+        elements = getPageElements();
+        trackWidth = getNormalizedTrackWidth(elements.$track, elements.$leftHandle);
+        control = getControl({snap: true});
+        pos = [0.2, 0.50, 0.7];
+        step = [6, 15, 21];
 
         _.each(pos, function(p, i, list){
-            doBasicTouchDrag(els.$handles.eq(i), trackWidth * p);
+            doBasicTouchDrag(elements.$handles.eq(i), trackWidth * p);
         });
 
         expect(control.getPositions()).toEqual(pos);
         expect(control.getSteps()).toEqual(step);
     });
 
-    // it('updates to step only from touch when snap is enabled', function(){
-    //     var els, trackWidth, control, pos, step;
+    it('does not exceed max from mouse or touch', function(){
+        var elements, control;
 
-    //     els        = getPageElements();
-    //     trackWidth = getNormalizedTrackWidth(els.$track, els.$leftHandle);
-    //     control    = getControl({snap: true});
-    //     pos        = [0.2, 0.5, 0.7];
-
-    //     // lefts calculated with same logic as steps
-    //     left = [
-    //         Math.round(trackWidth * pos[0]),
-    //         Math.round(trackWidth * pos[1]),
-    //         Math.round(trackWidth * pos[2])
-    //     ];
-
-    //     // test that ui is snapping to correct coordinates despite
-    //     // weird positioning
-    //     _.each(pos, function(p, i, list){
-    //         doBasicTouchDrag(els.$handles.eq(i), trackWidth * p);
-    //         expect(els.$handles.eq(i)).toHaveCss({left: left[i] + 'px'});
-    //     });
-    // });
-
-    it('does not exceed max from mouse', function(){
-        var els, control;
-
-        els     = getPageElements();
+        elements = getPageElements();
         control = getControl();
 
-        doBasicTouchDrag(els.$leftHandle, 5000);
+        doBasicMouseDrag(elements.$leftHandle, 5000);
+        expect(control.getPosition()).toEqual(1);
 
+        doBasicTouchDrag(elements.$leftHandle, 5000);
         expect(control.getPosition()).toEqual(1);
     });
 
-    it('does not exceed min from mouse', function(){
-        var els, control;
+    it('does not exceed min from mouse or touch', function(){
+        var elements, control;
 
-        els     = getPageElements();
+        elements = getPageElements();
         control = getControl();
 
-        doBasicTouchDrag(els.$leftHandle, -5000);
+        doBasicMouseDrag(elements.$leftHandle, -5000);
+        expect(control.getPosition()).toEqual(0);
 
+        doBasicTouchDrag(elements.$leftHandle, -5000);
         expect(control.getPosition()).toEqual(0);
     });
 
     // Events Tests
 
-    // it('dispatches change for setPositionAt', function(){
-    //     var change, els, control;
+    it('dispatches drag events for mouse and touch', function(){
+        var dragStartSpy, dragUpdateSpy, dragEndSpy, elements, control;
 
-    //     change    = jasmine.createSpy('change');
-    //     els       = getPageElements();
-    //     control   = getControl();
+        dragStartSpy = jasmine.createSpy('start');
+        dragUpdateSpy = jasmine.createSpy('update');
+        dragEndSpy = jasmine.createSpy('end');
+        elements = getPageElements();
+        control = getControl();
 
-        control.on(events.CHANGE, change);
+        control.on(dragEvents.DRAG_START, dragStartSpy);
+        control.on(dragEvents.DRAG_UPDATE, dragUpdateSpy);
+        control.on(dragEvents.DRAG_END, dragEndSpy);
 
-    //     control.setPositionAt(0.5, 0);
+        doBasicMouseDrag(elements.$leftHandle, 100);
+        doBasicTouchDrag(elements.$leftHandle, 50);
 
-    //     expect(change).toHaveBeenCalled();
-    // });
-
-    // it('dispatches change for mouse', function(){
-    //     var change, els, control;
-
-    //     change    = jasmine.createSpy('change');
-    //     els       = getPageElements();
-    //     control   = getControl();
-
-        control.on(events.CHANGE, change);
-
-    //     doBasicMouseDrag(els.$leftHandle, 100);
-
-    //     expect(change).toHaveBeenCalled();
-    // });
-
-    it('dispatches drag:start for mouse', function(){
-        var dragStart, els, control;
-
-        dragStart = jasmine.createSpy('dragStart');
-        els       = getPageElements();
-        control   = getControl();
-
-        control.on(drag.DRAG_START, dragStart);
-
-        doBasicMouseDrag(els.$leftHandle, 100);
-
-        expect(dragStart).toHaveBeenCalled();
+        expect(dragStartSpy.calls.length).toEqual(2);
+        expect(dragUpdateSpy.calls.length).toEqual(2);
+        expect(dragEndSpy.calls.length).toEqual(2);
     });
 
-    it('dispatches drag:stop for mouse', function(){
-        var dragStop, els, control;
+    it('disables mouse when acceptsMouse is false', function(){
+        var control, elements, spy;
 
-        dragStop  = jasmine.createSpy('dragStop');
-        els       = getPageElements();
-        control   = getControl();
+        spy = jasmine.createSpy('dragUpdate');
+        elements = getPageElements();
+        control = getControl({acceptsMouse: false});
 
-        control.on(drag.DRAG_END, dragStop);
+        control.on(dragEvents.DRAG_UPDATE, spy);
 
-        doBasicMouseDrag(els.$leftHandle, 100);
+        doBasicMouseDrag(elements.$leftHandle, 100);
 
-        expect(dragStop).toHaveBeenCalled();
+        expect(spy).not.toHaveBeenCalled();
     });
 
-    // it('dispatches change for touch', function(){
-    //     var change, els, control;
+    it('disables touch when acceptsTouch is false', function(){
+        var control, elements, spy;
 
-    //     change    = jasmine.createSpy('change');
-    //     els       = getPageElements();
-    //     control   = getControl();
+        spy = jasmine.createSpy('dragUpdate');
+        elements = getPageElements();
+        control = getControl({acceptsTouch: false});
 
-        control.on(events.CHANGE, change);
+        control.on(dragEvents.DRAG_UPDATE, spy);
 
-    //     doBasicTouchDrag(els.$leftHandle, 100);
+        doBasicTouchDrag(elements.$leftHandle, 100);
 
-    //     expect(change).toHaveBeenCalled();
-    // });
-
-    it('dispatches drag:start for touch', function(){
-        var dragStart, els, control;
-
-        dragStart = jasmine.createSpy('dragStart');
-        els       = getPageElements();
-        control   = getControl();
-
-        control.on(drag.DRAG_START, dragStart);
-
-        doBasicTouchDrag(els.$leftHandle, 100);
-
-        expect(dragStart).toHaveBeenCalled();
-    });
-
-    it('dispatches drag:stop for touch', function(){
-        var dragStop, els, control;
-
-        dragStop  = jasmine.createSpy('dragStop');
-        els       = getPageElements();
-        control   = getControl();
-
-        control.on(drag.DRAG_END, dragStop);
-
-        doBasicTouchDrag(els.$leftHandle, 100);
-
-        expect(dragStop).toHaveBeenCalled();
+        expect(spy).not.toHaveBeenCalled();
     });
 
     // Marionette
 
     it('closes all responders on close', function(){
-        var els, trackWidth, control, pos;
+        var elements, trackWidth, control, pos, spy;
 
-        els = getPageElements();
-        trackWidth = getNormalizedTrackWidth(els.$track, els.$leftHandle);
+        spy = jasmine.createSpy('drag');
+        elements = getPageElements();
+        trackWidth = getNormalizedTrackWidth(elements.$track, elements.$leftHandle);
         control = getControl();
-        pos = [0.25, 0.5, 0.75];
 
-        // drag the handles around a bit
-        doBasicMouseDrag(els.$leftHandle, trackWidth * pos[0]);
-        doBasicTouchDrag(els.$midHandle, trackWidth * pos[1]);
-        control.setPositionForHandle(pos[2], els.$rightHandle);
-
-        // expect things to have moved around
-        expect(control.getPositions()).toEqual(pos);
+        control.on(dragEvents.DRAG_UPDATE, spy);
 
         // call close
         control.close();
 
-        // drag the handles around a bit with responder input
-        doBasicMouseDrag(els.$leftHandle, trackWidth * pos[2]);
-        doBasicTouchDrag(els.$midHandle, trackWidth * pos[1]);
+        // drag the handles around a bit
+        doBasicMouseDrag(elements.$leftHandle, 100);
 
         // expect no movement
-        expect(control.getPositions()).toEqual(pos);
+        expect(spy).not.toHaveBeenCalled();
     });
 
 }); // eof describe

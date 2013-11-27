@@ -355,6 +355,8 @@ var HorizontalSliderControl = marionette.Controller.extend({
             responder.$el, range, range.getPosition(), range.getValue());
     },
 
+    // Event dispatchers
+
     _dispatchDragStart: function($handle, range, position, value) {
         this.trigger(dragEvents.DRAG_START, this, $handle, range, position, value);
     },
