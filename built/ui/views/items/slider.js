@@ -22,6 +22,9 @@ var SliderView =  marionette.ItemView.extend({
     initialize: function(options){
         options = options || {};
         options = _.defaults(options, this._getDefaults());
+
+        // Backbone 1.1+ compatibility
+        this.options = options;
     },
 
     _getDefaults: function() {
@@ -60,7 +63,7 @@ var SliderView =  marionette.ItemView.extend({
 
     },
 
-    // Abstract methods
+    // Abstract method
 
     getDriver: function(options){
         throw new Error('getDriver not implemented');
@@ -75,13 +78,13 @@ var SliderView =  marionette.ItemView.extend({
     getTrack: function(options){
         // simply return value set in options
         // override to change this return value
-        return getElement(options.track);
+        return getElement(options.track, this.$el);
     },
 
     getHandles: function(options){
         // simply return value set in options
         // override to change this return value
-        return getElement(options.handles);
+        return getElement(options.handles, this.$el);
     },
 
     // event dispatchers

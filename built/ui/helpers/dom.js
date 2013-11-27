@@ -2,11 +2,16 @@ define(function (require, exports, module) {
 
 var marionette = require('marionette');
 
-function getElement(value){
+function getElement(value, $context){
     var $el;
 
     if(_.isString(value)){
-        $el = $(value);
+
+        if($context)
+            $el = $(value, $context);
+        else
+            $el = $(value);
+
     } else {
         $el = value;
     }
