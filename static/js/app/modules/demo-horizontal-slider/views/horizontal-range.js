@@ -1,17 +1,14 @@
 define(function (require, exports, module) {
 
-var marionette = require('marionette');
-var drivers = {};
-
 var template = require('hbs!tpl/horizontal-range-slider');
-var slider = require('built/ui/views/items/horizontal-range-slider');
+var HorizontalRangeSliderView = require('built/ui/views/items/horizontal-range-slider').HorizontalRangeSliderView;
 
+var HorizontalRangeSlider = HorizontalRangeSliderView.extend({
 
-var HorizontalRangeSlider = slider.HorizontalRangeSlider.extend({
     template: template,
 
     onShow: function(){
-        this.initializeSliderControl();
+        this.initializeSliderContainer();
         this.setPositionAt(1, 1);
     },
 
@@ -25,4 +22,5 @@ var HorizontalRangeSlider = slider.HorizontalRangeSlider.extend({
 });
 
 exports.HorizontalRangeSlider = HorizontalRangeSlider;
+
 });

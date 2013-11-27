@@ -9,9 +9,9 @@ var DragAndDropDemoView          = require('app/modules/demo-dnd/views/dnd').Dra
 var DragAndDropDemoCompositeView = require('app/modules/demo-dnd/views/dnd').DragAndDropDemoCompositeView;
 var SelectDemoComposite          = require('app/modules/demo-select/views/select').SelectDemoComposite;
 var selectFromSelect             = require('built/ui/views/composite/select').selectFromSelect;
-var modelFromElements = require('built/ui/helpers/dom').modelFromElements;
-var HorizontalSlider    = require('app/modules/demo-horizontal-slider/views/horizontal').HorizontalSlider;
-var HorizontalRangeSlider    = require('app/modules/demo-horizontal-slider/views/horizontal-range').HorizontalRangeSlider;
+var modelFromElements            = require('built/ui/helpers/dom').modelFromElements;
+var HorizontalSlider             = require('app/modules/demo-horizontal-slider/views/horizontal').HorizontalSlider;
+var HorizontalRangeSlider        = require('app/modules/demo-horizontal-slider/views/horizontal-range').HorizontalRangeSlider;
 
 var AppController =  marionette.Controller.extend({
 
@@ -39,6 +39,7 @@ var AppController =  marionette.Controller.extend({
         app.horizontalRangeSliderSnapping.show(new HorizontalRangeSlider({snap: true, steps: 10}));
 
     },
+
     index:function () {
 
     }

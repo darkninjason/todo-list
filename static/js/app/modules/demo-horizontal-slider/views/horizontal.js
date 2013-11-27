@@ -1,17 +1,14 @@
 define(function (require, exports, module) {
 
-var marionette = require('marionette');
-var drivers = {};
-
 var template = require('hbs!tpl/horizontal-slider');
-var slider = require('built/ui/views/items/horizontal-slider');
+var HorizontalSliderView = require('built/ui/views/items/horizontal-slider').HorizontalSliderView;
 
+var HorizontalSlider = HorizontalSliderView.extend({
 
-var HorizontalSlider = slider.HorizontalSlider.extend({
     template: template,
 
     onShow: function(){
-        this.initializeSliderControl();
+        this.initializeSliderContainer();
     },
 
     getTrack: function(){

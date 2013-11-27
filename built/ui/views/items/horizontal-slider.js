@@ -1,29 +1,16 @@
 define(function (require, exports, module) {
 
-var marionette = require('marionette');
-var HorizontalSliderBase = require('./horizontal-slider-base').HorizontalSliderBase;
-var driver = require('built/core/controls/sliders/horizontal');
+var SliderView = require('built/ui/views/items/slider').SliderView;
+var HorizontalSliderControl = require('built/core/controls/sliders/horizontal').HorizontalSliderControl;
 
-var HorizontalSlider =  HorizontalSliderBase.extend({
+var HorizontalSliderView =  SliderView.extend({
 
     getDriver: function(options){
-
-        return new driver.HorizontalSlider({
-            $container: options.$container,
-            $track: options.$track,
-            $handles: options.$handles,
-            steps: options.steps,
-            snap: options.snap,
-            acceptsMouse: true,
-            acceptsTouch: true,
-            acceptsOrientation: true
-
-        });
+        return new HorizontalSliderControl(options);
     }
 });
 
-
-exports.HorizontalSlider = HorizontalSlider;
+exports.HorizontalSliderView = HorizontalSliderView;
 
 });
 

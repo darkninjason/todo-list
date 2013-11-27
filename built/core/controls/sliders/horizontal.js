@@ -10,7 +10,7 @@ var getElementBounds = require('built/ui/helpers/dom').getElementBounds;
 var registerElement = require('built/core/utils/helpers').registerElement;
 var composeAll = require('built/core/utils/helpers').composeAll;
 
-var HorizontalSlider = marionette.Controller.extend({
+var HorizontalSliderControl = marionette.Controller.extend({
 
     _rangeManagers : null,
     _mouseResponders : null,
@@ -18,39 +18,37 @@ var HorizontalSlider = marionette.Controller.extend({
     _handleOffsets : [],
 
     /**
-     * Initialize HorizontalSlider
+     * Initialize HorizontalSliderControl
      * @param  {object} options options literal
      * @return {undefined}
      *
      * @example
-     * horizontalSlider = new HorizontalSlider(
+     * horizontalSliderControl = new HorizontalSliderControl(
      *     {
-     *         $container        : $('.slider'),           // required
-     *         $track            : $('.slider .track'),    // required
-     *         $handles          : $('.slider .handle'),   // required
-     *         steps             : 10,                     // default 0
-     *         snap              : flase,                  // default false
-     *         acceptsMouse      : true                    // default true
-     *         acceptsTouch      : false                   // default false
-     *         acceptsOrientation: false                   // default false
+     *         container    : $('.slider'),           // required, string or jquery
+     *         track        : $('.slider .track'),    // required, string or jquery
+     *         handles      : $('.slider .handle'),   // required, string or jquery
+     *         steps        : 10,                     // default 0
+     *         snap         : flase,                  // default false
+     *         acceptsMouse : true                    // default true
+     *         acceptsTouch : false                   // default false
      *     }
      * );
      */
     initialize: function(options){
-        this.options = options;
-        _.defaults(options, this._getDefaults());
+        this.options = _.defaults(options, this._getDefaults());
 
-        this.options.$container = registerElement(this.options.$container, true);
-        this.options.$track = registerElement(this.options.$track, true);
-        this.options.$handles = registerElement(this.options.$handles, true);
+        this.$container = registerElement(this.options.container, true);
+        this.$track     = registerElement(this.options.track,     true);
+        this.$handles   = registerElement(this.options.handles,   true);
 
-        this._rangeManagers = this._initializeRanges(this.options);
+        this._rangeManagers = this._initializeRanges();
 
         if(this.options.acceptsMouse){
-            this._mouseResponders = this._initializeMouse(this.options);
+            this._mouseResponders = this._initializeMouse();
         }
         if(this.options.acceptsTouch){
-            this._touchResponders = this._initializeTouch(this.options);
+            this._touchResponders = this._initializeTouch();
         }
     },
 
@@ -71,9 +69,9 @@ var HorizontalSlider = marionette.Controller.extend({
     // Override / extend return value here to add additional options
     _getDefaults: function() {
         return {
-            $container: null,
-            $track: null,
-            $handles: null,
+            container: null,
+            track: null,
+            handles: null,
             steps: 0,
             snap: false,
             acceptsMouse: true,
@@ -81,7 +79,7 @@ var HorizontalSlider = marionette.Controller.extend({
         };
     },
 
-    _initializeRanges: function(options) {
+    _initializeRanges: function() {
         var $handles, $track;
 
         function iterator(handle, i, list) {
@@ -99,13 +97,13 @@ var HorizontalSlider = marionette.Controller.extend({
             return range;
         }
 
-        $handles = options.$handles;
-        $track = options.$track;
+        $handles = this.$handles;
+        $track = this.$track;
 
         return _.map($handles, iterator, this);
      },
 
-    _initializeMouse: function(options) {
+    _initializeMouse: function() {
         var ranges;
 
         function iterator(el, i, list) {
@@ -119,10 +117,10 @@ var HorizontalSlider = marionette.Controller.extend({
 
         ranges = this._rangeManagers;
 
-        return _.map(this.options.$handles, iterator, this);
+        return _.map(this.$handles, iterator, this);
     },
 
-    _initializeTouch: function(options) {
+    _initializeTouch: function() {
         var ranges;
 
         function iterator(el, i, list) {
@@ -136,7 +134,7 @@ var HorizontalSlider = marionette.Controller.extend({
 
         ranges = this._rangeManagers;
 
-        return _.map(this.options.$handles, iterator, this);
+        return _.map(this.$handles, iterator, this);
     },
 
     _calculateNormalizedMaxPosition: function($handle, $track) {
@@ -151,7 +149,7 @@ var HorizontalSlider = marionette.Controller.extend({
     _getHandleIndex: function($handle) {
         var $handles, index;
 
-        $handles = this.options.$handles;
+        $handles = this.$handles;
         index = $handles.index($handle);
 
         if(index < 0) {
@@ -214,10 +212,10 @@ var HorizontalSlider = marionette.Controller.extend({
             range.setMax(max);
         }
 
-        $handles = this.options.$handles;
-        $track = this.options.$track;
+        $handles = this.$handles;
+        $track = this.$track;
 
-        _.each(this.options.$handles, iterator, this);
+        _.each(this.$handles, iterator, this);
     },
 
     getPositionAt: function(index) {
@@ -369,8 +367,8 @@ var HorizontalSlider = marionette.Controller.extend({
         this.trigger(dragEvents.DRAG_END, this, $handle, range, position, value);
     }
 
-}); // eof HorizontalSlider
+}); // eof HorizontalSliderControl
 
-module.exports.HorizontalSlider = HorizontalSlider;
+module.exports.HorizontalSliderControl = HorizontalSliderControl;
 
 }); // eof define

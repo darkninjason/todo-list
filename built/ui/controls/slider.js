@@ -5,18 +5,27 @@ var marionette = require('marionette');
 var dragEvents = require('built/core/events/drag');
 var composeAll = require('built/core/utils/helpers').composeAll;
 
-var Slider = marionette.Controller.extend({
+var SliderContainer = marionette.Controller.extend({
 
     _driver: null,
     _uiUpdater: null,
 
+    /**
+     * Initialize slider container
+     * @param  {options} options options literal
+     * @return {undefined}
+     *
+     * @example
+     * var sliderContainer = new SliderContainer({
+     *     driver: new HorizontalSliderControl({
+     *         // slider options
+     *         // see built/core/controls/horizontal.js
+     *     })
+     * });
+     */
     initialize: function(options){
-        this.options = options;
-        _.defaults(options, this._getDefaults());
-
+        this.options = _.defaults(options, this._getDefaults());
         this._driver = this._initializeDriver(this.options);
-        this._driver.compose(this);
-
         this._uiUpdater = this._initializeUiUpdater(this._driver.options);
     },
 
@@ -25,7 +34,9 @@ var Slider = marionette.Controller.extend({
     },
 
     _getDefaults: function() {
-        return {};
+        return {
+            driver: null
+        };
     },
 
     _initializeDriver: function(options) {
@@ -34,18 +45,16 @@ var Slider = marionette.Controller.extend({
         if(_.isEmpty(driver)) throw 'Undefined driver.';
 
         this.listenTo(driver, dragEvents.DRAG_UPDATE, this._dragDidUpdate);
-        this.listenTo(driver, dragEvents.DRAG_START, this._dragDidStart);
-        this.listenTo(driver, dragEvents.DRAG_END, this._dragDidEnd);
 
-        driver.options.$container.css({
+        driver.$container.css({
             position: 'relative'
         });
 
-        driver.options.$track.css({
+        driver.$track.css({
             position: 'relative'
         });
 
-        driver.options.$handles.css({
+        driver.$handles.css({
             position: 'absolute',
             top: '0',
             left: '0'
@@ -79,19 +88,11 @@ var Slider = marionette.Controller.extend({
         this._uiUpdater($handle, range, position, value);
 
         this._driver._dispatchDragUpdate.apply(this, arguments);
-    },
-
-    _dragDidStart: function(sender, $handle, range, position, value) {
-        this._driver._dispatchDragStart.apply(this, arguments);
-    },
-
-    _dragDidEnd: function(sender, $handle, range, position, value) {
-        this._driver._dispatchDragEnd.apply(this, arguments);
     }
 
-}); // eof Slider
+}); // eof SliderContainer
 
 // Exports
-module.exports.Slider = Slider;
+module.exports.SliderContainer = SliderContainer;
 
 }); // eof define

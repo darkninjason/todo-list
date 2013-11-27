@@ -1,14 +1,13 @@
 define(function(require, exports, module) {
 
-var _ = require('underscore');
-var HorizontalSlider = require('built/core/controls/sliders/horizontal').HorizontalSlider;
+var HorizontalSliderControl = require('built/core/controls/sliders/horizontal').HorizontalSliderControl;
 var normalizeInt = require('built/core/utils/helpers').normalizeInt;
 var composeAll = require('built/core/utils/helpers').composeAll;
 
-var HorizontalRangeSlider =  HorizontalSlider.extend({
+var HorizontalRangeSliderControl =  HorizontalSliderControl.extend({
 
     /**
-     * Initialize HorizontalRangeSlider
+     * Initialize HorizontalRangeSliderControl
      *
      * @see built/core/controls/sliders/horizontal.js
      */
@@ -16,7 +15,7 @@ var HorizontalRangeSlider =  HorizontalSlider.extend({
         this.constructor.__super__.initialize.apply(this, arguments);
     },
 
-    // HorizontalSlider overrides
+    // HorizontalSliderControl overrides
 
     setPositionAt: function(value, index) {
         value = this._restrictRangePositions(value, index);
@@ -74,8 +73,8 @@ var HorizontalRangeSlider =  HorizontalSlider.extend({
         return results;
     }
 
-}); // eof HorizontalRangeSlider
+}); // eof HorizontalRangeSliderControl
 
-module.exports.HorizontalRangeSlider = HorizontalRangeSlider;
+module.exports.HorizontalRangeSliderControl = HorizontalRangeSliderControl;
 
 }); // eof define
