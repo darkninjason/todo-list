@@ -26,22 +26,26 @@
             <section class="built-breakdown">
                 <h6>BUILT Breakdown</h6>
                 <ul>
-                    <li class="view">SelectCompositeView
+                    <li class="view">SelectDemoComposite
                         <ul>
-                            <li class="control compose">SelectControl
+                            <li class="view extend">SelectCompositeView
                                 <ul>
-                                    <li class="responder compose">KeyResponder</li>
-                                    <li class="responder compose">MouseResponder</li>
-                                    <li class="manager compose">IndexManager
+                                    <li class="control compose">SelectControl
                                         <ul>
-                                            <li class="manager compose extend">RangeManager</li>
-                                        </ul>
-                                    </li>
-                                    <li class="manager compose">SingleFocusManager
-                                        <ul>
-                                            <li class="manager compose extend">FocusManager
+                                            <li class="responder compose">KeyResponder</li>
+                                            <li class="responder compose">MouseResponder</li>
+                                            <li class="manager compose">IndexManager
                                                 <ul>
-                                                    <li class="manager compose extend">ArrayManager</li>
+                                                    <li class="manager compose extend">RangeManager</li>
+                                                </ul>
+                                            </li>
+                                            <li class="manager compose">SingleFocusManager
+                                                <ul>
+                                                    <li class="manager compose extend">FocusManager
+                                                        <ul>
+                                                            <li class="manager compose extend">ArrayManager</li>
+                                                        </ul>
+                                                    </li>
                                                 </ul>
                                             </li>
                                         </ul>
@@ -94,15 +98,19 @@
                 <section class="built-breakdown">
                     <h6>BUILT Breakdown</h6>
                     <ul>
-                        <li class="view">HorizontalRangeSliderView
+                        <li class="view">DemoHorizontalRangeSlider
                             <ul>
-                                <li class="view extend">SliderContainer
+                                <li class="view extend">HorizontalRangeSliderView
                                     <ul>
-                                        <li class="view extend">HorizontalRangeSliderControl
+                                        <li class="view extend">SliderView
                                             <ul>
-                                                <li class="manager compose">RangeManager</li>
-                                                <li class="responder compose">MouseResponder</li>
-                                                <li class="responder compose">TouchResponder</li>
+                                                <li class="control compose">HorizontalSliderControl
+                                                    <ul>
+                                                        <li class="manager compose">RangeManager</li>
+                                                        <li class="responder compose">MouseResponder</li>
+                                                        <li class="responder compose">TouchResponder</li>
+                                                    </ul>
+                                                </li>
                                             </ul>
                                         </li>
                                     </ul>
@@ -125,9 +133,21 @@
             <section class="built-breakdown">
                 <h6>BUILT Breakdown</h6>
                 <ul>
-                    <li>DragResponder</li>
-                    <li>DropResponder</li>
-                    <li>ArrayManager</li>
+                    <li class="view">DemoDragAndDropDemoView
+                        <ul>
+                            <li class="view extend">DragAndDropCollectionView
+                                <ul>
+                                    <li class="control compose">DragDropList
+                                        <ul>
+                                            <li class="responder compose">DragResponder</li>
+                                            <li class="responder compose">DropResponder</li>
+                                            <li class="manager compose">ArrayManager</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </section>
             <hr/>
@@ -144,18 +164,30 @@
                 <section class="built-breakdown">
                     <h6>BUILT Breakdown</h6>
                     <ul>
-                        <li>KeyResponder</li>
-                        <li>MouseResponder</li>
-                        <li>IndexManager
+                        <li class="view">InputSelectView
                             <ul>
-                                <li>RangeManager</li>
-                            </ul>
-                        </li>
-                        <li>SingleFocusManager
-                            <ul>
-                                <li>FocusManager
+                                <li class="view extend">InputSelectComposite
                                     <ul>
-                                        <li>ArrayManager</li>
+                                        <li class="control compose">InputSelect
+                                            <ul>
+                                                <li class="responder compose">KeyResponder</li>
+                                                <li class="responder compose">MouseResponder</li>
+                                                <li class="manager compose">IndexManager
+                                                    <ul>
+                                                        <li class="manager compose">RangeManager</li>
+                                                    </ul>
+                                                </li>
+                                                <li class="manager compose">SingleFocusManager
+                                                    <ul>
+                                                        <li class="manager extend">FocusManager
+                                                            <ul>
+                                                                <li class="manager compose">ArrayManager</li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
@@ -170,10 +202,18 @@
                 <section class="built-breakdown">
                     <h6>BUILT Breakdown</h6>
                     <ul>
-                        <li>ScrollManager
+                        <li class="view">DemoScrollerView
                             <ul>
-                                <li>ScrollResponder</li>
-                                <li>RangeManager</li>
+                                <li class="control compose">Scroller
+                                    <ul>
+                                        <li class="manager extend">ScrollManager
+                                            <ul>
+                                                <li class="responder compose">ScrollResponder</li>
+                                                <li class="responder compose">RangeManager</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
                     </ul>

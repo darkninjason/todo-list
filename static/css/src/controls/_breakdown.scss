@@ -101,15 +101,16 @@ section.built-breakdown{
             rgba(40, 98, 122, 0.1) 0 0px 0px inset,
             rgba(0, 0, 0, 0.05) 0 0 0px 1px;
 
+
             .manager.compose, .responder.compose{
                 margin-left: 15px;
-                margin-bottom: 0px;
+                //margin-bottom: 1px;
             }
         }
 
         .manager.compose, .responder.compose{
             margin-left: 15px;
-            margin-bottom: 0px;
+            margin-bottom: 1px;
         }
 
         .view.extend{
@@ -122,12 +123,12 @@ section.built-breakdown{
             padding-left: 10px;
         }
 
-        .compose.extend{
+        .compose.extend, .manager.extend{
             margin-left: 5px;
             padding-bottom: 5px;
         }
 
-        .compose.extend:before{
+        .compose.extend:before, .manager.extend:before{
             content: '└ ';
             padding-left: 10px;
         }
