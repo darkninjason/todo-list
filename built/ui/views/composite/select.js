@@ -31,7 +31,7 @@ var SelectCompositeView = marionette.CompositeView.extend({
         this.listenTo(this.select, focus.FOCUS, this.onOptionFocus);
         this.listenTo(this.select, focus.BLUR, this.onOptionBlur);
         this.listenTo(this.select, event.SELECT , this.onOptionSelected);
-        this.listenTo(this.model, 'change', this._onModelChange)
+        this.listenTo(this.model, 'change', this._onModelChange);
     },
 
     onShow: function(){

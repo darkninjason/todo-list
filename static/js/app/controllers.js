@@ -23,14 +23,13 @@ var AppController =  marionette.Controller.extend({
         app.dndMid.show(new DragAndDropDemoView());
         app.dndBottom.show(new DragAndDropDemoCompositeView({dataType:'foo'}));
 
-        // doesn't bind them
-        var selectData = modelFromElements($('#select-data').find('option').toArray(), null, {content:'option'});
-        var selectCollection = new Backbone.Collection(selectData);
-        app.select.show(new SelectDemoComposite({collection:selectCollection}));
+        // // doesn't bind them
+        // var selectData = modelFromElements($('#select-data').find('option').toArray(), null, {content:'option'});
+        // var selectCollection = new Backbone.Collection(selectData);
+        // app.select.show(new SelectDemoComposite({collection:selectCollection}));
 
-        // bind them and hide select
-        var select = selectFromSelect(SelectDemoComposite, $('#select-data-fancy'), {});
-        app.selectFancy.show(select);
+        var select = selectFromSelect(SelectDemoComposite, $('#select-data'));
+        app.select.show(select);
 
         app.dndBottom.show(new DragAndDropDemoView({dataType:'foo'}));
         app.horizontalSliderFluid.show(new HorizontalSlider());
