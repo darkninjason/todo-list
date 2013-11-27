@@ -35,7 +35,7 @@ var SliderView =  marionette.ItemView.extend({
             steps: 0,
             snap: false,
             acceptsMouse: true,
-            acceptsTouch: false
+            acceptsTouch: true
         };
     },
 
