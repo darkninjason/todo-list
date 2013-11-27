@@ -1,7 +1,7 @@
 define(function (require, exports, module) {
 
 var template = require('hbs!tpl/horizontal-range-slider');
-var HorizontalRangeSliderView = require('built/ui/views/items/horizontal-range-slider').HorizontalRangeSliderView;
+var HorizontalRangeSliderView = require('built/ui/views/item/horizontal-range-slider').HorizontalRangeSliderView;
 
 var HorizontalRangeSlider = HorizontalRangeSliderView.extend({
 

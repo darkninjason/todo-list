@@ -1,6 +1,6 @@
 define(function (require, exports, module) {
 
-var SliderView = require('built/ui/views/items/slider').SliderView;
+var SliderView = require('built/ui/views/item/slider').SliderView;
 var HorizontalSliderControl = require('built/core/controls/sliders/horizontal').HorizontalSliderControl;
 
 var HorizontalSliderView =  SliderView.extend({
