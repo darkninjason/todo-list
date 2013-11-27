@@ -13,8 +13,7 @@ define(function(require, exports, module) {
         dndTop: '#dnd-top',
         dndMid: '#dnd-mid',
         dndBottom: '#dnd-bottom',
-        select: '#select',
-        selectFancy: '#select-fancy',
+        select: '#select'
     });
 
     return app;
