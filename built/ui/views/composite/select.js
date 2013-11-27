@@ -83,7 +83,8 @@ var SelectCompositeView = marionette.CompositeView.extend({
             view = null;
         }
         if(view){
-            this.select.setSelectedOption(view.$el[0]);
+            this.select.focusManager.focus(view.$el[0]);
+            // this.select.setSelectedOption(view.$el[0]);
         }
     },
 
