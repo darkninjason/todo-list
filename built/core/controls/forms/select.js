@@ -47,9 +47,9 @@ var Select = marionette.Controller.extend({
         this._searchText += char;
         clearTimeout(this.timeout);
         this.timeout = setTimeout(_.bind(function(){
-            this.searchForText(this._searchText);
             this._searchText = '';
         },this), this.searchTimeout);
+        this.searchForText(this._searchText);
         if(/(32)/.test(e.keyCode)) e.preventDefault();
     },
 
