@@ -71,6 +71,20 @@ describe('Horizontal Range Slider', function() {
 
     // Extended Functionality Tests
 
+    it('composes additional api', function(){
+        var scope, control, api;
+
+        api = ['getRanges'];
+        scope = {};
+        control = getControl();
+
+        control.compose(scope);
+
+        _.each(api, function(method, i, api){
+            expect(_.isFunction(scope[method])).toEqual(true);
+        });
+    });
+
     it('does not exceed min (0)', function(){
         var control, pos;
 

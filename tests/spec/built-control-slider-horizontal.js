@@ -97,6 +97,34 @@ describe('Horizontal Slider Control', function() {
 
     // Public API Tests
 
+    it('composes public api', function(){
+        var scope, control, api;
+
+        api = ['calculateMaxPosition',
+            'getPositionAt',
+            'getPositions',
+            'getPositionForHandle',
+            'setPositionAt',
+            'setPositionForHandle',
+            'getStepAt',
+            'getSteps',
+            'getStepForHandle',
+            'setStepAt',
+            'setStepForHandle',
+            'getPosition',
+            'setPosition',
+            'getStep',
+            'setStep'];
+        scope = {};
+        control = getControl();
+
+        control.compose(scope);
+
+        _.each(api, function(method, i, api){
+            expect(_.isFunction(scope[method])).toEqual(true);
+        });
+    });
+
     it('recalculates max position', function(){
         var elements, $container, control, positions;
 
@@ -210,6 +238,21 @@ describe('Horizontal Slider Control', function() {
 
         control.setStep(step);
         expect(control.getStep()).toEqual(step);
+    });
+
+    it('gets position / step for handle', function(){
+        var elements, control, position, step;
+
+        elements = getPageElements();
+        control = getControl();
+
+        control.setPositionForHandle(0.5, elements.$leftHandle);
+
+        position = control.getPositionForHandle(elements.$leftHandle);
+        step = control.getStepForHandle(elements.$leftHandle);
+
+        expect(position).toEqual(0.5);
+        expect(step).toEqual(15);
     });
 
     // Interaction Tests
