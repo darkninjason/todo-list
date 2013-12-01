@@ -21,16 +21,12 @@ var InputSelectComposite =  marionette.CompositeView.extend({
 
         this.listenTo(this.collection,'sync', this.onCollectionSync);
         this.listenTo(this.collection,'change', this.onCollectionSync);
-        this.listenTo(this.inputSelect, data.DATA, this.onInputChange);
+
         this.listenTo(this.inputSelect, events.CANCEL, this.onCancel);
     },
 
     onCancel: function(){
          this.collection.reset();
-    },
-
-    onInputChange: function(input, $input, value){
-        this.collection.updateForSearch(value);
     },
 
     onCollectionSync: function(){

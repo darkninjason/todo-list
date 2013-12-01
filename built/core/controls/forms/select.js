@@ -89,10 +89,8 @@ var Select = marionette.Controller.extend({
 
     onClose: function(){
         this.enableWindowListener(false);
+        this.closeManagers();
         this.keyResponder.close();
-        this.indexManager.close();
-        this.focusManager.close();
-        this.mouseResponder.close();
         this.$el.off('click', this.onOpenPress);
         this.enableWindowListener(false);
     },
@@ -100,6 +98,7 @@ var Select = marionette.Controller.extend({
     onOpenPress: function(e){
         this.showList();
         this.enableWindowListener(true);
+        e.stopPropagation();
     },
 
     enableWindowListener: function(bool){
@@ -173,9 +172,14 @@ var Select = marionette.Controller.extend({
         if(this.indexManager){
             this.indexManager.close();
         }
+        if(this.mouseResponder){
+            this.mouseResponder.close();
+        }
+
 
         this.focusManager = null;
         this.indexManager = null;
+        this.mouseResponder = null;
     },
 
     mouseDidEnter: function(responder, e){

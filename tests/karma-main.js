@@ -72,7 +72,7 @@ var tests = [
     'spec/built-utils-helpers-registerElement',
     'spec/built-utils-helpers',
     'spec/built-utils-ioc',
-
+    'spec/built-control-select'
 ];
 
 var path = '';
