@@ -10,6 +10,7 @@ var DragItemView = require('./drag-item').DragItemView;
 var DragAndDropDemoView = DragAndDropCollectionView.extend({
     tagName:'ul',
     className:'list-group',
+    attributes: {'data-droptype': 'com.built.data'},
     itemView: DragItemView,
     initialize: function(){
         // always call super when implementing!

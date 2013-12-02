@@ -11,7 +11,8 @@ var DropResponder = Marionette.Controller.extend({
 
     // Object vars
     el: null,
-    dataType: 'com.built.generic',
+    dataType: 'com.built.data',
+    _minIE: 11,
 
     // operation can be one of:
     // -    'none'
@@ -27,11 +28,20 @@ var DropResponder = Marionette.Controller.extend({
     // Initialization
     initialize: function(options){
         _.extend(this, options);
+
+
+        this.$el = helpers.registerElement(this.el);
+
+        if(helpers.isMSIE && helpers.MSIEVersion <= this._minIE){
+            this.showAllowDrop = this.shouldAllowDropMSIE;
+            this.$el.data('droptype', this.dataType);
+        }
+
         _.bindAll(this,
             '_dragOver', '_dragEnter', '_dragLeave', '_drop',
             'shouldAllowDrop');
 
-        this.$el = helpers.registerElement(this.el);
+
 
         this.$el.on('dragenter.built.responders.drop', {ctx: this}, this._dragEnter);
         this.$el.on('dragover.built.responders.drop', {ctx: this}, this._dragOver);
@@ -75,8 +85,35 @@ var DropResponder = Marionette.Controller.extend({
         var originalEvent = e.originalEvent;
         var dataTransfer = originalEvent.dataTransfer;
 
-        this._setData(dataTransfer.getData(this.dataType));
+        var dataType = this.dataType;
+
+        if(helpers.isMSIE && helpers.MSIEVersion <= this._minIE){
+            dataType = 'Text';
+        }
+
+        this._setData(dataTransfer.getData(dataType));
         this.performDragOperation(this, e);
+    },
+
+    shouldAllowDropMSIE: function(responder, e){
+        var originalEvent = e.originalEvent;
+        var dataTransfer = originalEvent.dataTransfer;
+
+        var result = false;
+
+        if (this.operation != 'all' &&
+            dataTransfer.effectAllowed != 'all' &&  // here for safari.
+            dataTransfer.effectAllowed != this.operation){
+            return result;
+        }
+
+        console.log(this.$el.data('droptype'), this.dataType);
+
+        if(this.$el.data('droptype') == this.dataType){
+            result = true;
+        }
+
+        return result;
     },
 
     shouldAllowDrop: function(responder, e){

@@ -6,6 +6,30 @@ var _ = require('underscore');
 var getElement = require('built/ui/helpers/dom').getElement;
 
 
+function _MSIEVersion()
+// http://msdn.microsoft.com/en-us/library/ms537509(v=vs.85).aspx#DetectFtr
+// Returns the version of Internet Explorer or a -1
+// (indicating the use of another browser).
+{
+    var rv = -1; // Return value assumes failure.
+
+    var ua = navigator.userAgent;
+
+    // IE 11: Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko
+    // IE 10: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)
+    // IE 9:  Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+    // IE 8:  Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0)
+    var re11 = new RegExp('rv: ?([0-9]{1,}[\.0-9]{0,})');
+    var re  = new RegExp('MSIE ([0-9]{1,}[\.0-9]{0,})');
+
+    if (re11.exec(ua) !== null)
+        rv = parseFloat( RegExp.$1 );
+    else if (re.exec(ua) !== null)
+        rv = parseFloat( RegExp.$1 );
+
+  return rv;
+}
+
 // Helper functions
 function registerElement(value, required){
     var idKey = 'auf-id';
@@ -103,12 +127,14 @@ function mixins(Source, Destination){
 
 // Exports
 
-exports.compose            = compose;
-exports.composeAll         = composeAll;
-exports.normalizeInt       = normalizeInt;
-exports.sortArrayAscending = sortArrayAscending;
-exports.sortArrayAscending = sortArrayAscending;
-exports.registerElement    = registerElement;
-exports.getElementId       = getElementId;
-exports.mixins              = mixins;
+exports.compose                    = compose;
+exports.composeAll                 = composeAll;
+exports.normalizeInt               = normalizeInt;
+exports.sortArrayAscending         = sortArrayAscending;
+exports.sortArrayAscending         = sortArrayAscending;
+exports.registerElement            = registerElement;
+exports.getElementId               = getElementId;
+exports.mixins                     = mixins;
+exports.MSIEVersion                = _MSIEVersion();
+exports.isMSIE                     = exports.MSIEVersion > -1 ? true : false;
 });

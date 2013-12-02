@@ -21,7 +21,7 @@ var AppController =  marionette.Controller.extend({
         app.inputSelectScrollable.show(new InputSelectScrollableView());
         app.dndTop.show(new DragAndDropDemoView());
         app.dndMid.show(new DragAndDropDemoView());
-        app.dndBottom.show(new DragAndDropDemoCompositeView({dataType:'foo'}));
+        app.dndBottom.show(new DragAndDropDemoCompositeView({dataType:'com.built.foo'}));
 
         // // doesn't bind them
         // var selectData = modelFromElements($('#select-data').find('option').toArray(), null, {content:'option'});
@@ -31,7 +31,6 @@ var AppController =  marionette.Controller.extend({
         var select = selectFromSelect(SelectDemoComposite, $('#select-data'));
         app.select.show(select);
 
-        app.dndBottom.show(new DragAndDropDemoView({dataType:'foo'}));
         app.horizontalSliderFluid.show(new HorizontalSlider());
         app.horizontalSliderSnapping.show(new HorizontalSlider({snap: true, steps: 10}));
         app.horizontalRangeSliderFluid.show(new HorizontalRangeSlider());

@@ -11,7 +11,7 @@ define(function(require, exports, module) {
 
     var DragDropList = marionette.Controller.extend({
         el: null,
-        dataType: 'com.built.generic',
+        dataType: 'com.built.data',
         operation: 'move',
         exitDelay: 150,
 

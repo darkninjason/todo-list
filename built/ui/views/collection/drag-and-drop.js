@@ -7,7 +7,7 @@ var DragDropList = require('built/core/controls/dragdrop/list').DragDropList;
 
 var DragAndDropCollectionView =  marionette.CollectionView.extend({
     initialize: function(options){
-        options = _.extend({dataType:'com.built.generic'}, options);
+        options = _.extend({dataType:'com.built.data'}, options);
 
         _.bindAll(this,
                 'getDragImage',

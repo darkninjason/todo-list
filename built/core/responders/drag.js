@@ -13,7 +13,8 @@ var DragResponder = Marionette.Controller.extend({
 
     // Object vars
     el: null,
-    dataType: 'com.built.generic',
+    dataType: 'com.built.data',
+    _minIE: 11,
 
     // operation can be one of:
     // -    'none'
@@ -104,19 +105,31 @@ var DragResponder = Marionette.Controller.extend({
         var originalEvent = e.originalEvent;
         var dataTransfer = originalEvent.dataTransfer;
 
+        var dataType;
+
+        if(helpers.isMSIE && helpers.MSIEVersion <= this._minIE){
+            dataType = 'Text';
+        } else {
+            dataType = this.dataType;
+        }
+
         dataTransfer.effectAllowed = this.operation;
         dataTransfer.setData(
-            this.dataType,
+            dataType,
             this.getData(this, $target)
         );
 
         var dragImage = this.getDragImage(this);
 
         if(dragImage){
-            dataTransfer.setDragImage(
-                dragImage.image,
-                dragImage.offsetX || 0,
-                dragImage.offsetY || 0);
+            try{
+                dataTransfer.setDragImage(
+                    dragImage.image,
+                    dragImage.offsetX || 0,
+                    dragImage.offsetY || 0);
+            } catch(error) {
+                // noop IE 8, 9, 10, 11
+            }
         }
     },
 
