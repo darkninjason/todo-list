@@ -86,8 +86,9 @@ describe('Key Equivalent Manager', function() {
             shiftKey: true
         });
 
-        manager.performKeyEquivalent(e);
+        var result = manager.performKeyEquivalent(e);
         expect(spy).toHaveBeenCalled();
+        expect(result).toEqual(true);
     });
 
     it('does not perform key equivalent', function(){
@@ -102,8 +103,26 @@ describe('Key Equivalent Manager', function() {
             shiftKey: false
         });
 
-        manager.performKeyEquivalent(e);
+        var result = manager.performKeyEquivalent(e);
         expect(spy).not.toHaveBeenCalled();
+        expect(result).toEqual(false);
+    });
+
+    it('does not perform key equivalent with undefined action', function(){
+        var spy = jasmine.createSpy('spy');
+        manager = getManager();
+        manager.registerWithString('command + shift + escape', undefined);
+
+        var e = createKeyDownEvent(KeyCodes.escape, {
+            altKey: false,
+            ctrlKey: false,
+            metaKey: true,
+            shiftKey: true
+        });
+
+        var result = manager.performKeyEquivalent(e);
+        expect(spy).not.toHaveBeenCalled();
+        expect(result).toEqual(false);
     });
 
     it('performs key equivalent with all modifiers', function(){
@@ -120,8 +139,9 @@ describe('Key Equivalent Manager', function() {
             shiftKey: true
         });
 
-        manager.performKeyEquivalent(e);
+        var result = manager.performKeyEquivalent(e);
         expect(spy).toHaveBeenCalled();
+        expect(result).toEqual(true);
     });
 
     it('throws error with single character', function(){
