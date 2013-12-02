@@ -4,7 +4,7 @@ define(function(require, exports, module){
 var $ = require('jquery');
 var _ = require('underscore');
 
-var KeyFlag = {
+var KeyModifier = {
     'META':  1 << 0, // jquery normalization name
     'SHIFT': 1 << 1,
     'CTRL':  1 << 2,
@@ -25,7 +25,7 @@ var KeyMap = {
      'ctrl':  17,
       'alt':  18,
  'capslock':  20,
-      'esc':  27,
+   'escape':  27,
     'space':  32,
    'pageup':  33,
  'pagedown':  34,
@@ -43,7 +43,7 @@ var KeyMap = {
 } ;
 
 // Module
-var KeyEquivalentManager = function(keyMap){
+var KeyEquivalentManager = function(){
 
     this.responder = null;
     this.map = {};
@@ -69,9 +69,11 @@ KeyEquivalentManager.prototype.registerWithString = function(string, action){
 
     // the user sent in a single letter. We do nothing.
     // If they wish to use a single letter they should be using the
-    // KeyResponder.
-    if (length == 1 && parts[0].length == 1){
-        return;
+    // KeyResponder as is.
+    if (length == 1){
+        throw new Error(
+            'Key Equivalent syntax error. Must be in the ' +
+            'format of: KeyModifier [ + KeyModifier...] + key name');
     }
 
     var mask = 0;
@@ -80,15 +82,26 @@ KeyEquivalentManager.prototype.registerWithString = function(string, action){
         mask = mask | this.modifierStringToCode(parts[i]);
     }
 
+    if (mask === 0){
+        throw new Error(
+            'Key Equivalent syntax error. Invalid modifiers. ' +
+            'May only be one of: command, option, alt, ctrl, meta, shift');
+    }
+
     if(lastChar.length > 1){
         charCode = KeyMap[lastChar];
     } else {
 
-        if(mask & KeyFlag.SHIFT){
+        if(mask & KeyModifier.SHIFT){
             lastChar = lastChar.toUpperCase();
         }
 
         charCode = lastChar.charCodeAt();
+    }
+
+    if(charCode === undefined){
+        throw new Error(
+            'Key Equivalent syntax error. Invalid key');
     }
 
     this.register(mask, charCode, action);
@@ -104,15 +117,15 @@ KeyEquivalentManager.prototype.modifierStringToCode = function(value){
         code = value.toUpperCase();
     }
 
-    var result = KeyFlag[code];
+    var result = KeyModifier[code];
     return result === undefined ? 0 : result;
 };
 
 KeyEquivalentManager.prototype.hashEvent = function(e){
-    var alt = e.altKey     ? KeyFlag.ALT   : 0;
-    var ctrl = e.ctrlKey   ? KeyFlag.CTRL  : 0;
-    var meta = e.metaKey   ? KeyFlag.META  : 0;
-    var shift = e.shiftKey ? KeyFlag.SHIFT : 0;
+    var alt = e.altKey     ? KeyModifier.ALT   : 0;
+    var ctrl = e.ctrlKey   ? KeyModifier.CTRL  : 0;
+    var meta = e.metaKey   ? KeyModifier.META  : 0;
+    var shift = e.shiftKey ? KeyModifier.SHIFT : 0;
 
     return alt | ctrl | meta | shift ;
 };
@@ -137,6 +150,6 @@ KeyEquivalentManager.prototype.performKeyEquivalent = function(e){
 // Exports
 
 exports.KeyEquivalentManager = KeyEquivalentManager;
-exports.KeyFlag = KeyFlag;
+exports.KeyModifier = KeyModifier;
 
 }); // eof define

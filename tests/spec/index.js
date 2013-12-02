@@ -15,6 +15,7 @@ define(function() {
      'spec/built-managers-focus-single',
      'spec/built-managers-focus',
      'spec/built-managers-index',
+     'spec/built-managers-key-equivalent',
      'spec/built-managers-range',
      'spec/built-managers-scroll',
      'spec/built-responders-keys',
