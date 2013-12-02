@@ -18,7 +18,7 @@ release:
 	# git checkout master
 	# git merge --squash --no-commit release
 	# git ca "release"
-	
+
 	git subtree split --prefix built -b release
 	git checkout master
 	git merge -s subtree --no-commit --squash release
@@ -26,3 +26,6 @@ release:
 
 css:
 	compass watch ./static/css --poll -c ./static/css/config.rb
+
+serve:
+	python -m SimpleHTTPServer
