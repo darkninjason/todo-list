@@ -5,7 +5,7 @@ define(function(require, exports, module){
 var Marionette = require('marionette');
 var _          = require('underscore');
 var helpers    = require('built/core/utils/helpers');
-var dndutils    = require('built/core/utils/dndutils');
+var dndutils   = require('built/core/utils/dndutils');
 
 // Module
 
@@ -109,6 +109,10 @@ var DragResponder = Marionette.Controller.extend({
 
         if(helpers.isMSIE && helpers.MSIEVersion <= this._minIE){
             dataType = 'Text';
+            // see the note in dnd utils for this hack
+            // and why you are limited to 1 Drag Operation
+            // at a time under this hack.
+            dndutils.IEOnlyDataTransferDataType = this.dataType;
         } else {
             dataType = this.dataType;
         }

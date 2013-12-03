@@ -5,6 +5,7 @@ define(function(require, exports, module){
 var Marionette = require('marionette');
 var _          = require('underscore');
 var helpers    = require('built/core/utils/helpers');
+var dndutils    = require('built/core/utils/dndutils');
 
 // Module
 var DropResponder = Marionette.Controller.extend({
@@ -33,15 +34,13 @@ var DropResponder = Marionette.Controller.extend({
         this.$el = helpers.registerElement(this.el);
 
         if(helpers.isMSIE && helpers.MSIEVersion <= this._minIE){
-            this.showAllowDrop = this.shouldAllowDropMSIE;
+            this.shouldAllowDrop = this.shouldAllowDropMSIE;
             this.$el.data('droptype', this.dataType);
         }
 
         _.bindAll(this,
             '_dragOver', '_dragEnter', '_dragLeave', '_drop',
             'shouldAllowDrop');
-
-
 
         this.$el.on('dragenter.built.responders.drop', {ctx: this}, this._dragEnter);
         this.$el.on('dragover.built.responders.drop', {ctx: this}, this._dragOver);
@@ -100,6 +99,7 @@ var DropResponder = Marionette.Controller.extend({
         var dataTransfer = originalEvent.dataTransfer;
 
         var result = false;
+        var $target = $(e.target);
 
         if (this.operation != 'all' &&
             dataTransfer.effectAllowed != 'all' &&  // here for safari.
@@ -107,10 +107,12 @@ var DropResponder = Marionette.Controller.extend({
             return result;
         }
 
-        console.log(this.$el.data('droptype'), this.dataType);
 
-        if(this.$el.data('droptype') == this.dataType){
-            result = true;
+        // see the note in dnd utils for this hack
+        // and why you are limited to 1 Drag Operation
+        // at a time under this hack.
+        if(dndutils.IEOnlyDataTransferDataType == this.dataType){
+            return true;
         }
 
         return result;
