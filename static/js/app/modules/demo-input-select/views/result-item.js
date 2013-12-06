@@ -10,20 +10,19 @@ var ResultItem = marionette.ItemView.extend({
     tagName: 'a',
     className: 'list-group-item',
     template : template,
+
     initialize: function(){
         this.listenTo(this, focus.FOCUS, this.onFocus);
         this.listenTo(this, focus.BLUR, this.onBlur);
-        this.listenTo(this, event.SELECT, this.onSelect);
     },
+
     onFocus: function(){
         this.$el.addClass('active');
     },
+
     onBlur: function(){
         this.$el.removeClass('active');
-    },
-    onSelect: function(){
-        console.log('onSelect');
-    },
+    }
 });
 
 exports.ResultItem = ResultItem;

@@ -51,6 +51,11 @@ var InputSelectScrollableComposite =  InputSelectComposite.extend({
     onCollectionSync: function(){
         InputSelectComposite.prototype.onCollectionSync.apply(this, arguments);
         this.scroller.calculateMaxScroll();
+    },
+
+    cleanup: function(){
+        $(window).off('mousemove', this._onMouseMove);
+        InputSelectComposite.prototype.cleanup.call(this);
     }
 });
 

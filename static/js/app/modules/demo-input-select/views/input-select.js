@@ -14,19 +14,62 @@ var InputSelectView = InputSelectComposite.extend({
     itemView: ResultItem,
     itemViewContainer: '.list-group',
     template : template,
-    collection : new InputResults(),
+
     ui : {
         input:'input'
     },
 
-    onShow: function(){
-        InputSelectComposite.prototype.onShow.apply(this,arguments);
-        this.listenTo(this.inputSelect, data.DATA, this.onInputChange);
+    initialize: function(){
+        this.collection = new InputResults();
     },
 
-    onInputChange: function(input, $input, value){
-        this.collection.updateForSearch(value);
-    }
+    inputDidReceiveData: function(data){
+        this.collection.updateForSearch(data);
+    },
+
+    presentCollectionView: function(){
+        // there is no style information that needs
+        // to be changed to present the results.
+        // if there were, this is where you would do it.
+        //
+        // Unlike dismissCollectionView, this is called
+        // automatically for you.
+    },
+
+    dismissCollectionView: function(){
+        // there is no style information that needs
+        // to be changed to dismiss the results.
+        // if there were, this is where you would do it.
+        //
+        // This is not called automatically for you.
+        // You will typically call this yourself in
+        // collectionViewDidCancel and collectionViewDidSelect.
+    },
+
+    collectionViewDidCancel: function(){
+
+        // YOU MUST CALL CLEANUP WHEN YOU ARE DONE
+        // You may be animating the dismissal, or who knows
+        // what, so we don't know when to call it, only you do.
+        this.dismissCollectionView();
+        this.cleanup();
+    },
+
+    collectionViewDidSelect: function(view){
+        this.ui.input.val(view.model.get('path'));
+
+        // YOU MUST CALL CLEANUP WHEN YOU ARE DONE
+        // You may be animating the dismissal, or who knows
+        // what, so we don't know when to call it, only you do.
+        this.dismissCollectionView();
+        this.cleanup();
+
+        // At this point you should probably save a reference to
+        // view.model somewhere, since this is what the user selected.
+        // something like this.selectedModel = view.model
+        // so you can do something with it later.
+    },
+
 });
 
 
@@ -34,19 +77,61 @@ var InputSelectScrollableView = InputSelectScrollableComposite.extend({
     itemView: ResultItem,
     itemViewContainer: '.list-group',
     template : template,
-    collection : new InputResults(),
+
     ui : {
         input:'input'
     },
 
-    onShow: function(){
-        InputSelectScrollableComposite.prototype.onShow.apply(this,arguments);
-        this.listenTo(this.inputSelect, data.DATA, this.onInputChange);
+    initialize: function(){
+        this.collection = new InputResults();
     },
 
-    onInputChange: function(input, $input, value){
-        this.collection.updateForSearch(value);
-    }
+    inputDidReceiveData: function(data){
+        this.collection.updateForSearch(data);
+    },
+
+    presentCollectionView: function(){
+        // there is no style information that needs
+        // to be changed to present the results.
+        // if there were, this is where you would do it.
+        //
+        // Unlike dismissCollectionView, this is called
+        // automatically for you.
+    },
+
+    dismissCollectionView: function(){
+        // there is no style information that needs
+        // to be changed to dismiss the results.
+        // if there were, this is where you would do it.
+        //
+        // This is not called automatically for you.
+        // You will typically call this yourself in
+        // collectionViewDidCancel and collectionViewDidSelect.
+    },
+
+    collectionViewDidCancel: function(){
+
+        // YOU MUST CALL CLEANUP WHEN YOU ARE DONE
+        // You may be animating the dismissal, or who knows
+        // what, so we don't know when to call it, only you do.
+        this.dismissCollectionView();
+        this.cleanup();
+    },
+
+    collectionViewDidSelect: function(view){
+        this.ui.input.val(view.model.get('path'));
+
+        // YOU MUST CALL CLEANUP WHEN YOU ARE DONE
+        // You may be animating the dismissal, or who knows
+        // what, so we don't know when to call it, only you do.
+        this.dismissCollectionView();
+        this.cleanup();
+
+        // At this point you should probably save a reference to
+        // view.model somewhere, since this is what the user selected.
+        // something like this.selectedModel = view.model
+        // so you can do something with it later.
+    },
 });
 
 exports.InputSelectView = InputSelectView;

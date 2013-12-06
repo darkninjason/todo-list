@@ -21,17 +21,51 @@ var InputSelectComposite =  marionette.CompositeView.extend({
 
         this.listenTo(this.collection,'sync', this.onCollectionSync);
         this.listenTo(this.collection,'change', this.onCollectionSync);
-
+        this.listenTo(this.inputSelect, data.DATA, this.onData);
         this.listenTo(this.inputSelect, events.CANCEL, this.onCancel);
+        this.listenTo(this.inputSelect, events.SELECT, this.onSelect);
+    },
+
+    onSelect: function(sender, $el){
+        var view = this.children.find(function(child){
+            return child.$el[0] == $el[0];
+        });
+
+        this.collectionViewDidSelect(view);
     },
 
     onCancel: function(){
-         this.collection.reset();
+         this.collectionViewDidCancel();
+    },
+
+    onData: function(sender, input, data){
+        this.inputDidReceiveData(data);
     },
 
     onCollectionSync: function(){
         this.inputSelect.setViews(this.children);
         this.inputSelect.beginNavigationPhase();
+        this.presentCollectionView();
+    },
+
+    inputDidReceiveData: function(data){
+    },
+
+    presentCollectionView: function(){
+    },
+
+    dismissCollectionView: function(){
+    },
+
+    collectionViewDidCancel: function(){
+    },
+
+    collectionViewDidSelect: function(view){
+    },
+
+    cleanup: function(){
+        this.inputSelect.endNavigationPhase();
+        this.collection.reset();
     }
 });
 
