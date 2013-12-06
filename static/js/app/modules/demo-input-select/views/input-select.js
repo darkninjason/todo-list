@@ -41,9 +41,16 @@ var InputSelectView = InputSelectComposite.extend({
         // to be changed to dismiss the results.
         // if there were, this is where you would do it.
         //
-        // This is not called automatically for you.
+        // This IS NOT called automatically for you.
         // You will typically call this yourself in
         // collectionViewDidCancel and collectionViewDidSelect.
+        //
+        // If we care enough, we could make this be required to
+        // return a promise that the user must resolve when they
+        // are done dismissing (aka animation). Then we could
+        // automatically call this for the user because we would
+        // have a way to know they are done doing stuff. Seems
+        // like overkill though, the API here is pretty simple.
     },
 
     collectionViewDidCancel: function(){
@@ -91,7 +98,7 @@ var InputSelectScrollableView = InputSelectScrollableComposite.extend({
     },
 
     presentCollectionView: function(){
-        // there is no style information that needs
+        // There is no style information that needs
         // to be changed to present the results.
         // if there were, this is where you would do it.
         //
@@ -100,13 +107,20 @@ var InputSelectScrollableView = InputSelectScrollableComposite.extend({
     },
 
     dismissCollectionView: function(){
-        // there is no style information that needs
+        // There is no style information that needs
         // to be changed to dismiss the results.
         // if there were, this is where you would do it.
         //
-        // This is not called automatically for you.
+        // This IS NOT called automatically for you.
         // You will typically call this yourself in
         // collectionViewDidCancel and collectionViewDidSelect.
+        //
+        // If we care enough, we could make this be required to
+        // return a promise that the user must resolve when they
+        // are done dismissing (aka animation). Then we could
+        // automatically call this for the user because we would
+        // have a way to know they are done doing stuff. Seems
+        // like overkill though, the API here is pretty simple.
     },
 
     collectionViewDidCancel: function(){
