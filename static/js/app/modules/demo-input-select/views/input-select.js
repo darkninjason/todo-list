@@ -38,8 +38,8 @@ var InputSelectView = InputSelectComposite.extend({
 
     dismissCollectionView: function(){
         // there is no style information that needs
-        // to be changed to dismiss the results.
-        // if there were, this is where you would do it.
+        // to be changed to dismiss the results in the demo.
+        // If there were, this is where you would do it.
         //
         // This IS NOT called automatically for you.
         // You will typically call this yourself in
@@ -119,8 +119,8 @@ var InputSelectScrollableView = InputSelectScrollableComposite.extend({
 
     dismissCollectionView: function(){
         // There is no style information that needs
-        // to be changed to dismiss the results.
-        // if there were, this is where you would do it.
+        // to be changed to dismiss the results in the demo.
+        // If there were, this is where you would do it.
         //
         // This IS NOT called automatically for you.
         // You will typically call this yourself in
