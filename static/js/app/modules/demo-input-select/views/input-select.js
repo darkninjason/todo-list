@@ -51,6 +51,17 @@ var InputSelectView = InputSelectComposite.extend({
         // automatically call this for the user because we would
         // have a way to know they are done doing stuff. Seems
         // like overkill though, the API here is pretty simple.
+        //
+        // Or we make it an option:
+        // cleanupOnSelectCancel: true
+        // then we assume this returns a promise.
+        //
+        // We would automatically call cleanup() which would call
+        // dismissCollectonView, which will return a promise. When
+        // it's resolved, we complete the cleanup. Again, I think
+        // the current API is pretty simple, even though it adds
+        // a touch of redundancy. The promise is most likely added
+        // complexity for no real benefit.
     },
 
     collectionViewDidCancel: function(){
@@ -121,6 +132,17 @@ var InputSelectScrollableView = InputSelectScrollableComposite.extend({
         // automatically call this for the user because we would
         // have a way to know they are done doing stuff. Seems
         // like overkill though, the API here is pretty simple.
+        //
+        // Or we make it an option:
+        // cleanupOnSelectCancel: true
+        // then we assume this returns a promise.
+        //
+        // We would automatically call cleanup() which would call
+        // dismissCollectonView, which will return a promise. When
+        // it's resolved, we complete the cleanup. Again, I think
+        // the current API is pretty simple, even though it adds
+        // a touch of redundancy. The promise is most likely added
+        // complexity for no real benefit.
     },
 
     collectionViewDidCancel: function(){
