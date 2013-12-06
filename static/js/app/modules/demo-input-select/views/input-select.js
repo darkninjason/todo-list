@@ -41,7 +41,7 @@ var InputSelectView = InputSelectComposite.extend({
         // to be changed to dismiss the results in the demo.
         // If there were, this is where you would do it.
         //
-        // This IS NOT called automatically for you.
+        // This *IS NOT* called automatically for you.
         // You will typically call this yourself in
         // collectionViewDidCancel and collectionViewDidSelect.
         //
@@ -122,7 +122,7 @@ var InputSelectScrollableView = InputSelectScrollableComposite.extend({
         // to be changed to dismiss the results in the demo.
         // If there were, this is where you would do it.
         //
-        // This IS NOT called automatically for you.
+        // This *IS NOT* called automatically for you.
         // You will typically call this yourself in
         // collectionViewDidCancel and collectionViewDidSelect.
         //
