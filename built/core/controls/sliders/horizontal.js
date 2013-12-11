@@ -320,7 +320,7 @@ var HorizontalSliderControl = marionette.Controller.extend({
     },
 
     stepForPosition: function(value){
-        return Math.floor((this.options.steps - 1)  * value);
+        return Math.round((this.options.steps - 1)  * value);
     },
 
     positionForStep: function(value){
