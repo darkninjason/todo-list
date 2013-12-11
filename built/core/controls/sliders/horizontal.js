@@ -6,6 +6,7 @@ var RangeManager = require('built/core/managers/range').RangeManager;
 var MouseResponder = require('built/core/responders/mouse').MouseResponder;
 var TouchResponder = require('built/core/responders/touches').TouchResponder;
 var dragEvents = require('built/core/events/drag');
+var events = require('built/core/events/event');
 var getElementBounds = require('built/ui/helpers/dom').getElementBounds;
 var registerElement = require('built/core/utils/helpers').registerElement;
 var composeAll = require('built/core/utils/helpers').composeAll;
@@ -83,16 +84,44 @@ var HorizontalSliderControl = marionette.Controller.extend({
         var $handles, $track;
 
         function iterator(handle, i, list) {
-            var $handle, listener, range;
+            var $handle, listener, dragListener, range;
 
             $handle = $(handle);
+
+            // this listener will be triggered when the value actually changes.
             listener = _.bind(this._rangeDidChange, this, $handle);
+            listenerMarkers = _.bind(this._rangeMarkerDidChange, this, $handle);
+            // this listener will be triggered when dragging changes.
+            // This listener and the listener above will trigger in tandem
+            // if no steps are provided.
+            dragListener = _.bind(this._dragDidChange, this, $handle);
+
             range = new RangeManager({
                 min: 0,
                 max: this._calculateNormalizedMaxPosition($handle, $track)
             });
 
-            this.listenTo(range, 'change', listener);
+            if(this.options.steps){
+                var steps = this.options.steps;
+
+                // ensure we have steps from with bookends
+                // of 0 and 1
+                var stepDelta = 1 / (steps - 1);
+
+                var markers = _.map(_.range(steps), function(i){
+                    return i  * stepDelta;
+                });
+
+                RangeManager.prototype.addMarkerPositions.apply(range, markers);
+                this.listenTo(range, events.MARKER, listenerMarkers);
+            } else {
+                this.listenTo(range, events.CHANGE, listener);
+            }
+
+            // This tells us that dragging changed, weaither we
+            // are snapping or not. If no steps were provided
+            // this will line up with the rangeDidChange handler.
+            this.listenTo(range, events.CHANGE, dragListener);
 
             return range;
         }
@@ -239,7 +268,9 @@ var HorizontalSliderControl = marionette.Controller.extend({
 
     setPositionAt: function(value, index) {
         index = index || 0; // default to 0
-        this._getRangeManager(index).setPosition(value);
+        var range = this._getRangeManager(index);
+
+        range.setPosition(value);
     },
 
     setPositionForHandle: function(value, $handle) {
@@ -251,13 +282,21 @@ var HorizontalSliderControl = marionette.Controller.extend({
 
     getStepAt: function(index) {
         var position;
-
-        position = this.getPositionAt(index);
+        var range = this._getRangeManager(index);
+        var result;
 
         // round will round-up if decimal is greater than .5.
         // round will round-down if decimal is less than .5.
         // this should give good reporting of steps based on position.
-        return Math.round(this.options.steps * position);
+        //
+        // When we are in step mode, the setDelta is calculated by
+        // subtracting 1 from the total steps: 1 / (steps - 1)
+        // we keep it nice and tidy by doing the same here.
+        // See: _initializeRanges
+
+        position = range.getPosition();
+        result = (this.options.steps - 1) * position;
+        return Math.round(result);
     },
 
     getSteps: function() {
@@ -276,15 +315,26 @@ var HorizontalSliderControl = marionette.Controller.extend({
     },
 
     setStepAt: function(value, index) {
-        var posiiton, steps;
+        var position = this.positionForStep(value);
+        this.setPositionAt(position, index);
+    },
 
-        steps = this.options.steps;
+    stepForPosition: function(value){
+        return Math.floor((this.options.steps - 1)  * value);
+    },
+
+    positionForStep: function(value){
+        var steps;
+        var positions;
+        // When we are in step mode, the setDelta is calculated by
+        // subtracting 1 from the total steps: 1 / (steps - 1)
+        // we keep it nice and tidy by doing the same here.
+        steps = (this.options.steps - 1);
 
         // isNaN check handles 0/0 case
         position = value/steps;
         position = isNaN(position) ? 0 : position;
-
-        this.setPositionAt(position, index);
+        return position;
     },
 
     setStepForHandle: function(value, $handle) {
@@ -313,8 +363,16 @@ var HorizontalSliderControl = marionette.Controller.extend({
     // Event delegates
 
     // TODO: Revisit - Method calling a method here.
-    _rangeDidChange: function($handle, range, position, value) {
+    _dragDidChange: function($handle, range, position, value) {
         this._dispatchDragUpdate($handle, range, position, value);
+    },
+
+    _rangeMarkerDidChange: function($handle, range, markers, direction){
+        this._dispatchChange($handle, range, markers, direction);
+    },
+
+    _rangeDidChange: function($handle, range, position, value) {
+        this._dispatchChange($handle, range, position, value);
     },
 
     _handleDidReceiveDrag: function(range, responder, e) {
@@ -332,7 +390,8 @@ var HorizontalSliderControl = marionette.Controller.extend({
         delta = responder.deltaX()[0] || responder.deltaX();
         value = delta + this._handleOffsets[index];
 
-        this.setPositionForHandle(range.calculatePositionForValue(value), $handle);
+        var position = range.calculatePositionForValue(value);
+        this.setPositionForHandle(position, $handle);
     },
 
     _handleDidReceiveDragStart: function(range, responder, e) {
@@ -363,6 +422,10 @@ var HorizontalSliderControl = marionette.Controller.extend({
 
     _dispatchDragUpdate: function($handle, range, position, value) {
         this.trigger(dragEvents.DRAG_UPDATE, this, $handle, range, position, value);
+    },
+
+    _dispatchChange: function($handle, range, position, value) {
+        this.trigger(events.CHANGE, this, $handle, range, position, value);
     },
 
     _dispatchDragEnd: function($handle, range, position, value) {

@@ -4,6 +4,7 @@ define(function(require, exports, module) {
 
 var _ = require('underscore');
 var dragEvents = require('built/core/events/drag');
+var events = require('built/core/events/event');
 var EventHelpers = require('lib/spec-helpers').Events;
 var HorizontalSliderControl = require('built/core/controls/sliders/horizontal').HorizontalSliderControl;
 
@@ -264,7 +265,7 @@ describe('Horizontal Slider Control', function() {
         trackWidth = getNormalizedTrackWidth(elements.$track, elements.$leftHandle);
         control = getControl();
         pos = [0.2, 0.50, 0.7];
-        step = [6, 15, 21];
+        step = [6, 15, 20];
 
         _.each(pos, function(p, i, list){
             doBasicMouseDrag(elements.$handles.eq(i), trackWidth * p);
@@ -281,7 +282,7 @@ describe('Horizontal Slider Control', function() {
         trackWidth = getNormalizedTrackWidth(elements.$track, elements.$leftHandle);
         control = getControl({snap: true});
         pos = [0.2, 0.50, 0.7];
-        step = [6, 15, 21];
+        step = [6, 15, 20];
 
         _.each(pos, function(p, i, list){
             doBasicTouchDrag(elements.$handles.eq(i), trackWidth * p);
@@ -330,13 +331,14 @@ describe('Horizontal Slider Control', function() {
 
         control.on(dragEvents.DRAG_START, dragStartSpy);
         control.on(dragEvents.DRAG_UPDATE, dragUpdateSpy);
+        control.on(events.CHANGE, dragUpdateSpy);
         control.on(dragEvents.DRAG_END, dragEndSpy);
 
         doBasicMouseDrag(elements.$leftHandle, 100);
         doBasicTouchDrag(elements.$leftHandle, 50);
 
         expect(dragStartSpy.calls.length).toEqual(2);
-        expect(dragUpdateSpy.calls.length).toEqual(2);
+        expect(dragUpdateSpy.calls.length).toEqual(4);
         expect(dragEndSpy.calls.length).toEqual(2);
     });
 
@@ -348,6 +350,7 @@ describe('Horizontal Slider Control', function() {
         control = getControl({acceptsMouse: false});
 
         control.on(dragEvents.DRAG_UPDATE, spy);
+        control.on(events.CHANGE, spy);
 
         doBasicMouseDrag(elements.$leftHandle, 100);
 
@@ -362,6 +365,7 @@ describe('Horizontal Slider Control', function() {
         control = getControl({acceptsTouch: false});
 
         control.on(dragEvents.DRAG_UPDATE, spy);
+        control.on(events.CHANGE, spy);
 
         doBasicTouchDrag(elements.$leftHandle, 100);
 
@@ -379,6 +383,7 @@ describe('Horizontal Slider Control', function() {
         control = getControl();
 
         control.on(dragEvents.DRAG_UPDATE, spy);
+        control.on(events.CHANGE, spy);
 
         // call close
         control.close();

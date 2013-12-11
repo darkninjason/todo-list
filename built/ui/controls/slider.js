@@ -3,6 +3,7 @@ define(function(require, exports, module){
 var _ = require('underscore');
 var marionette = require('marionette');
 var dragEvents = require('built/core/events/drag');
+var events = require('built/core/events/event');
 var composeAll = require('built/core/utils/helpers').composeAll;
 
 var SliderContainer = marionette.Controller.extend({
@@ -45,6 +46,7 @@ var SliderContainer = marionette.Controller.extend({
         if(_.isEmpty(driver)) throw 'Undefined driver.';
 
         this.listenTo(driver, dragEvents.DRAG_UPDATE, this._dragDidUpdate);
+        this.listenTo(driver, events.CHANGE, this._rangeDidChange);
 
         driver.$container.css({
             position: 'relative'
@@ -75,19 +77,27 @@ var SliderContainer = marionette.Controller.extend({
         var step, stepDelta;
 
         step = this._driver.getStepForHandle($handle);
-        stepDelta = range.getMax() / this._driver.options.steps;
+
+        // When we are in step mode, the stepDelta is calculated by
+        // subtracting 1 from the total steps: 1 / (steps - 1)
+        // we keep it nice and tidy by doing the same here.
+        // See: built/core/controls/sliders/horizontal._initializeRanges
+        stepDelta = 1 / (this._driver.options.steps - 1);
 
         // augment position and value
-        value = stepDelta * step;
+        value = range.getMax() * (stepDelta * step);
 
         // pass in augmented values to original update function
         this._updateUi($handle, range, position, value);
     },
 
     _dragDidUpdate: function(sender, $handle, range, position, value) {
-        this._uiUpdater($handle, range, position, value);
-
         this._driver._dispatchDragUpdate.apply(this, arguments);
+    },
+
+    _rangeDidChange: function(sender, $handle, range, position, value) {
+        this._uiUpdater($handle, range, position, value);
+        this._driver._dispatchChange.apply(this, arguments);
     }
 
 }); // eof SliderContainer

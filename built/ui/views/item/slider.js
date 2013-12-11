@@ -4,6 +4,7 @@ var _ = require('underscore');
 var marionette = require('marionette');
 var SliderContainer = require('built/ui/controls/slider').SliderContainer;
 var dragEvents = require('built/core/events/drag');
+var events = require('built/core/events/event');
 var getElement = require('built/ui/helpers/dom').getElement;
 
 var SliderView =  marionette.ItemView.extend({
@@ -52,6 +53,7 @@ var SliderView =  marionette.ItemView.extend({
         driver = this.getDriver(options);
 
         // events
+        this.listenTo(driver, events.CHANGE, this._rangeDidChange);
         this.listenTo(driver, dragEvents.DRAG_UPDATE, this._dragDidUpdate);
         this.listenTo(driver, dragEvents.DRAG_START, this._dragDidStart);
         this.listenTo(driver, dragEvents.DRAG_END, this._dragDidEnd);
@@ -89,6 +91,9 @@ var SliderView =  marionette.ItemView.extend({
     },
 
     // Event dispatchers
+    _rangeDidChange: function(sender, $handle, range, position, value) {
+        this._driver._dispatchChange.apply(this, arguments);
+    },
 
     _dragDidUpdate: function(sender, $handle, range, position, value) {
         this._driver._dispatchDragUpdate.apply(this, arguments);

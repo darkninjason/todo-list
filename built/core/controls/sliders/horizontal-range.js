@@ -37,9 +37,23 @@ var HorizontalRangeSliderControl =  HorizontalSliderControl.extend({
     _restrictRangePositions: function(value, index) {
         var positions, min, max, result;
 
+        if(this.options.snap && this.options.steps){
+
+            positions = this.getSteps();
+
+            min = positions[index - 1] || 0;
+            max = positions[index + 1] || (this.options.steps - 1);
+
+            var step = this.stepForPosition(value);
+
+            result = normalizeInt(step, min, max);
+            return this.positionForStep(result);
+        }
+
         positions = this.getPositions();
         min = positions[index - 1] || 0;
         max = positions[index + 1] || 1;
+
         result = normalizeInt(value, min, max);
 
         return result;

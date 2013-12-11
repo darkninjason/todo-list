@@ -196,7 +196,7 @@ describe('Horizontal Range Slider', function() {
 
         control = getControl();
         pos = [0.25, 0.5, 0.75];
-        step = [8, 15, 23];
+        step = [7, 15, 22];
 
         _.each(pos, function(p, i, list){
             control.setPositionAt(p, i);
@@ -212,7 +212,7 @@ describe('Horizontal Range Slider', function() {
 
         control = getControl();
         pos = [0.25, 0.5, 0.75];
-        step    = [8, 15, 23];
+        step    = [7, 15, 22];
 
         _.each(pos, function(p, i, list){
             control.setPositionAt(p, i);
