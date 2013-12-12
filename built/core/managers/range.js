@@ -61,21 +61,17 @@ var RangeManager = marionette.Controller.extend({
     // Internal methods
 
     _getNormalizedPosition: function(val){
-        return helpers.normalizeInt(val, 0, 1);
+        return this.roundPosition(helpers.normalizeInt(val, 0, 1));
+    },
+
+    roundPosition: function(position){
+        return Math.round(position * 10000) / 10000;
     },
 
     _checkMarkers: function(prevPosition, position) {
         var reached, iterator, direction, inBetween;
 
-        function round(value){
-            return Math.round(value * 10000) / 10000;
-        }
-
-        position = round(position);
-        prevPosition = round(prevPosition);
-
         function incremental(marker, i, markers) {
-            marker = round(marker);
             inBetween = marker > prevPosition && marker <= position;
             if(inBetween) {
                 reached.push(marker);
@@ -83,7 +79,6 @@ var RangeManager = marionette.Controller.extend({
         }
 
         function decremental(marker, i, markers) {
-            marker = round(marker);
             inBetween = marker < prevPosition && marker >= position;
             if(inBetween) {
                 reached.push(marker);
@@ -130,7 +125,7 @@ var RangeManager = marionette.Controller.extend({
      */
     calculateValueForPosition: function(val){
         position = this._getNormalizedPosition(val);
-        return this.getRange() * position;
+        return Math.round(this.getRange() * position);
     },
 
     getPreviousPosition: function(){
