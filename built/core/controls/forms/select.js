@@ -6,6 +6,7 @@ var KeyResponder       = require('built/core/responders/keys').KeyResponder;
 var IndexManager       = require('built/core/managers/index').IndexManager;
 var MouseResponder     = require('built/core/responders/mouse').MouseResponder;
 var SingleFocusManager = require('built/core/managers/focus-single').SingleFocusManager;
+var ClickTestResponder = require('built/core/responders/clicks').ClickTestResponder;
 var helpers            = require('built/core/utils/helpers');
 var focus              = require('built/core/events/focus');
 var event              = require('built/core/events/event');
@@ -13,11 +14,11 @@ var data               = require('built/core/events/data');
 
 var Select = marionette.Controller.extend({
     _searchText:'',
-    searchTimeout: 300,
+    searchTimeout: 400,
+
     initialize: function(options){
         _.extend(this, options);
         _.bindAll(this,
-            'onWindowPress',
             'insertText',
             'insertNewline',
             'cancelOperation',
@@ -25,37 +26,49 @@ var Select = marionette.Controller.extend({
             'moveDown',
             'wantsFocus',
             'wantsBlur',
-            'onOpenPress',
             'onOptionClicked',
             'mouseDidEnter',
             'mouseDidExit',
             'mouseDidClick'
             );
+
+        this.$el = helpers.registerElement(this.el);
+        this.el = this.$el[0];
+
+        var markup = '<input id="" style="width: 1px; position: fixed; left: -9999em" id="">';
+        this.$input = $(markup);
+        this.$el.prepend(this.$input);
+
         this.keyResponder = new KeyResponder({
-            el: this.$el,
-            insertText:this.insertText,
-            insertNewline:this.insertNewline,
-            cancelOperation:this.cancelOperation,
-            moveUp:this.moveUp,
-            moveDown:this.moveDown
+            el: this.$input,
+            insertText: this.insertText,
+            insertNewline: this.insertNewline,
+            cancelOperation: this.cancelOperation,
+            moveUp: this.moveUp,
+            moveDown: this.moveDown
         });
-        this.$el.on('click', this.onOpenPress);
     },
 
     insertText: function(responder, e){
         var char = String.fromCharCode(e.keyCode);
+
+        if (!e.shiftKey){
+            char = char.toLowerCase();
+        }
+
         this._searchText += char;
         clearTimeout(this.timeout);
+
         this.timeout = setTimeout(_.bind(function(){
             this._searchText = '';
         },this), this.searchTimeout);
-        this.searchForText(this._searchText);
+
         if(/(32)/.test(e.keyCode)) e.preventDefault();
+
+        this.trigger(data.DATA, this, this.$input, this._searchText);
     },
 
     insertNewline: function(responder, e){
-        this.hideList();
-        this.enableWindowListener(false);
         this._triggerSelected();
     },
 
@@ -66,8 +79,7 @@ var Select = marionette.Controller.extend({
     },
 
     cancelOperation: function(responder, e){
-        this.hideList();
-        this.enableWindowListener(false);
+        this.trigger(event.CANCEL, this);
     },
 
     moveUp: function(responder, e){
@@ -88,43 +100,12 @@ var Select = marionette.Controller.extend({
     },
 
     onClose: function(){
-        this.enableWindowListener(false);
         this.closeManagers();
         this.keyResponder.close();
-        this.$el.off('click', this.onOpenPress);
-        this.enableWindowListener(false);
-    },
-
-    onOpenPress: function(e){
-        this.showList();
-        this.enableWindowListener(true);
-        e.stopPropagation();
-    },
-
-    enableWindowListener: function(bool){
-        bool = _.isUndefined(bool) ? true : bool;
-        if(bool){
-            $(window).on('click', this.onWindowPress);
-        }else{
-            $(window).off('click', this.onWindowPress);
-        }
-    },
-
-    elIsChild: function($el){
-        return this.$el.has($el).length > 0;
-    },
-
-    onWindowPress: function(evt){
-        if(!this.elIsChild($(evt.target))){
-            this.hideList();
-            this.enableWindowListener(false);
-        }
     },
 
     onOptionClicked: function(e){
         this.setSelectedOption(e.currentTarget);
-        this.hideList();
-        this.enableWindowListener(false);
     },
 
     setSelectedOption: function(obj){
@@ -137,20 +118,23 @@ var Select = marionette.Controller.extend({
     setElements: function($elements){
         this._$elements = $elements;
         this.closeManagers();
+
         helpers.registerElement($elements);
-        // $elements.on('click', this.onOptionClicked);
+
         this.focusManager = new SingleFocusManager({
             list:$elements.toArray()
         });
+
         this.listenTo(
                 this.focusManager,
                 focus.FOCUS,
                 this.wantsFocus);
 
-            this.listenTo(
-                this.focusManager,
-                focus.BLUR,
-                this.wantsBlur);
+        this.listenTo(
+            this.focusManager,
+            focus.BLUR,
+            this.wantsBlur);
+
         this.indexManager = new IndexManager();
         this.indexManager.setLength($elements.length);
         this.mouseResponder = new MouseResponder({
@@ -203,19 +187,7 @@ var Select = marionette.Controller.extend({
 
     wantsBlur: function(sender, obj){
         this.trigger(focus.BLUR, this, obj);
-    },
-
-    hideList: function(){
-        // need to implement
-    },
-
-    showList: function(){
-        // need to implement
-    },
-
-    searchForText: function(text){
-        // need to implement based on your search setup
-    },
+    }
 
 });
 
