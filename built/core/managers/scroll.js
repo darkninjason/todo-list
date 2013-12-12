@@ -44,12 +44,13 @@ var ScrollManager = marionette.Controller.extend({
         this.$viewport        = this._initializeViewport(this.$el);
         this.$scrollable      = this._initializeScrollable(this.$el);
         this._scrollResponder = this._initializeScrollResponder(this.options);
-        this._rangeManager    = this._initializeRangeManager(this.options);
+        this.rangeManager     = this._initializeRangeManager(this.options);
+        this._elementMarkers  = {};
 
         // compose range manager methods
         helpers.composeAll(
             this,
-            this._rangeManager,
+            this.rangeManager,
             'getMarkers',
             'addMarkerPositions',
             'removeMarkerPositions',
@@ -62,7 +63,7 @@ var ScrollManager = marionette.Controller.extend({
 
     onClose: function() {
         this._scrollResponder.close();
-        this._rangeManager.close();
+        this.rangeManager.close();
     },
 
     // Initialization
@@ -124,7 +125,7 @@ var ScrollManager = marionette.Controller.extend({
 
         scrollable = this.$scrollable[0];
 
-        this._rangeManager.setValue(scrollable.scrollTop);
+        this.rangeManager.setValue(scrollable.scrollTop);
     },
 
     _initializeRangeManager: function(options) {
@@ -167,7 +168,7 @@ var ScrollManager = marionette.Controller.extend({
         // see: http://mzl.la/19VEUIo
         max = scrollable.scrollHeight - viewport.clientHeight;
 
-        // this._rangeManager.setMax(max);
+        // this.rangeManager.setMax(max);
         return max;
     },
 
@@ -177,30 +178,30 @@ var ScrollManager = marionette.Controller.extend({
     // for the end user as it also updates the max of the internal range
     calculateMaxScroll: function() {
         var max;
-        this._rangeManager.setMax(this._calculateMaxScroll());
+        this.rangeManager.setMax(this._calculateMaxScroll());
     },
 
     getMaxScrollValue: function() {
-        return this._rangeManager.getMax();
+        return this.rangeManager.getMax();
     },
 
     getMinScrollValue: function() {
-        return this._rangeManager.getMin();
+        return this.rangeManager.getMin();
     },
 
     getScrollPosition: function() {
-        return this._rangeManager.getPosition();
+        return this.rangeManager.getPosition();
     },
 
     setScrollPosition: function(position) {
         var value;
 
-        value = this._rangeManager.calculateValueForPosition(position);
+        value = this.rangeManager.calculateValueForPosition(position);
         this.setScrollValue(value);
     },
 
     getScrollValue: function() {
-        return Math.floor(this._rangeManager.getValue());
+        return Math.floor(this.rangeManager.getValue());
     },
 
     setScrollValue: function(value) {
@@ -219,21 +220,25 @@ var ScrollManager = marionette.Controller.extend({
      */
     addMarkersUsingElements: function($elements) {
         var $el, $position, dict, top, position, positions;
+        var range = this.rangeManager;
 
         function iterator(el, i, list) {
             $el       = $(el);
             $position = $el.position();
             top       = $position.top;
 
+            helpers.registerElement($el);
+
             // Only add a marker that is less than range max.
             // This seems redundant, but this avoids a bunch of
             // mysterious markers at position 1 (range will squash any value
             // that results in a position > 1). I would rather avoid
             // adding these all together, than filtering them out later.
-            shouldAddMarker = top < this._rangeManager.getMax();
+            shouldAddMarker = top < this.rangeManager.getMax();
+
 
             if(shouldAddMarker) {
-                position            = this._rangeManager.calculatePositionForValue(top);
+                position            = range.calculatePositionForValue(top);
                 dict[position + ''] = $el;
 
                 positions.push(position);
@@ -251,7 +256,26 @@ var ScrollManager = marionette.Controller.extend({
         // This is a convenience return value that maps {markerPosition: $element}
         // I thought it would be useful information for the user.
         // example: {'0.1': $elementRef}
+        this._mergeElementMarkers(dict);
         return dict;
+    },
+
+    _mergeElementMarkers: function(dict){
+        var markers = this._elementMarkers;
+
+        _.each(dict, function($el, key){
+            var data = markers[key] = markers[key] || {};
+            var id = helpers.getElementId($el);
+            data[id] = $el[0];
+        });
+    },
+
+    _removeElementMarkers: function(positions){
+        var markers = this._elementMarkers = this._elementMarkers || {};
+
+        _.each(positions, function(position){
+            delete markers[position];
+        });
     },
 
     removeMarkersUsingElements: function($elements) {
@@ -262,12 +286,13 @@ var ScrollManager = marionette.Controller.extend({
             $position = $el.position();
             top       = $position.top;
 
-            return this._rangeManager.calculatePositionForValue(top);
+            return this.rangeManager.calculatePositionForValue(top);
         }
 
         positions = _.map($elements, iterator, this);
 
         this.removeMarkerPositions.apply(this, positions);
+        this._removeElementMarkers(positions);
     },
 
     // Event dispatchers
@@ -278,6 +303,17 @@ var ScrollManager = marionette.Controller.extend({
 
     _dispatchMarker: function(sender, markers, direction) {
         this.trigger(events.MARKER, this, markers, direction);
+
+        _.each(markers, function(position){
+            var matches = this._elementMarkers[position];
+
+            var elements = _.map(matches, function(el){
+                return $(el);
+            });
+
+            this.trigger(events.MARKER_ELEMENT, this, elements, direction);
+
+        }, this);
     }
 
 }); // eof ScrollManager
