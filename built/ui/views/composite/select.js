@@ -16,7 +16,7 @@ var SelectCompositeView = marionette.CompositeView.extend({
 
     // Begin Public API
     inputDidReceiveData: function(data){
-        this.focusViewContainingTextForModelKey(data, 'value' || this.options.searchAttr);
+        this.focusViewContainingTextForModelKey(data, this.options.searchAttr || 'value');
     },
 
     presentCollectionView: function(){
