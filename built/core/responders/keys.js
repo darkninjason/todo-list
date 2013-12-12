@@ -93,7 +93,6 @@ var KeyResponder = Marionette.Controller.extend({
     },
 
     insertText: function(responder, e){
-        console.log('called')
         // noop
     },
 

@@ -4,6 +4,7 @@ var SelectCompositeView = require('built/ui/views/composite/select').SelectCompo
 
 var SelectItem = require('./select-item').SelectItem;
 var template = require('hbs!tpl/select/composite');
+require('stickit');
 
 
 var SelectDemoComposite = SelectCompositeView.extend({

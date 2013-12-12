@@ -16,7 +16,7 @@ var SelectCompositeView = marionette.CompositeView.extend({
 
     // Begin Public API
     inputDidReceiveData: function(data){
-        this.focusViewContainingTextForModelKey(data, 'label');
+        this.focusViewContainingTextForModelKey(data, 'value');
     },
 
     presentCollectionView: function(){
@@ -41,7 +41,8 @@ var SelectCompositeView = marionette.CompositeView.extend({
         _.bindAll(this,
             'onWantsOpen',
             'dismissCollectionView',
-            'presentCollectionView');
+            'presentCollectionView',
+            'onCancel');
 
         this.model = new Backbone.Model();
     },
@@ -143,6 +144,7 @@ var SelectCompositeView = marionette.CompositeView.extend({
 
 
     focusViewContainingTextForModelKey: function(text, key){
+
         text = text.toLowerCase();
 
         var coll = this.children.toArray();
