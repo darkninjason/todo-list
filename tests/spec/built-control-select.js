@@ -8,6 +8,7 @@ var eventHelpers = SpecHelpers.Events;
 var KeyCodes = SpecHelpers.KeyCodes;
 var focus = require('built/core/events/focus');
 var event = require('built/core/events/event');
+var data               = require('built/core/events/data');
 
 describe('Select control', function() {
 
@@ -25,20 +26,9 @@ describe('Select control', function() {
         $button = $('.btn-primary');
 
         select = new Select({
-            $el:$selectContainer,
-            searchTimeout: 0,
-            hideList:function(){
-                $selectList.hide();
-            },
-            showList:function(){
-                $selectList.show();
-            },
-            searchForText:function(text){
-
-            },
-
+            el:$selectContainer
         });
-        select.hideList();
+
     });
 
     afterEach(function() {
@@ -69,86 +59,65 @@ describe('Select control', function() {
         select.close();
     });
 
-    it('calls showList when clicking open', function(){
-        select.setElements($selectItems);
-        spyOn(select, 'showList');
-        select.$el.trigger('click');
-        expect(select.showList).toHaveBeenCalled();
-        select.close();
-    });
 
-    it('calls hideList by clicking outside if its open', function(){
-        select.setElements($selectItems);
-        select.$el.trigger('click');
-        spyOn(select,'hideList');
-        $(window).trigger('click');
-        expect(select.hideList).toHaveBeenCalled();
-        select.close();
-    });
 
-    it('calls searchForText if select is open and you type', function(){
+    it('calls insertText if selected and you type', function(){
         select.setElements($selectItems);
-        select.$el.trigger('click');
-        spyOn(select, 'searchForText');
-        eventHelpers.insertChar(select.$el, 'l');
-        expect(select.searchForText).toHaveBeenCalled();
+        select.$input.focus();
+        var inputSpy = jasmine.createSpy('inputSpy');
+        select.on(data.DATA, inputSpy);
+        eventHelpers.insertChar(select.$input, 'l');
+        expect(inputSpy).toHaveBeenCalled();
         select.close();
     });
 
     it('selects first element if open and you click down key', function(){
         select.setElements($selectItems);
-        select.$el.trigger('click');
+        select.$input.focus();
         var focusSpy = jasmine.createSpy('focusSpy');
         select.on(focus.FOCUS, focusSpy);
-        eventHelpers.simulateKeyDown(select.$el, KeyCodes.downArrow);
+        eventHelpers.simulateKeyDown(select.$input, KeyCodes.downArrow);
         expect(focusSpy).toHaveBeenCalled();
         select.close();
     });
 
     it('selects the 2nd option when hitting down twice', function(){
         select.setElements($selectItems);
-        select.$el.trigger('click');
-        eventHelpers.simulateKeyDown(select.$el, KeyCodes.downArrow);
+        select.$input.focus();
+        eventHelpers.simulateKeyDown(select.$input, KeyCodes.downArrow);
         select.on(focus.FOCUS, function(resp, obj){
             expect($selectItems.eq(1)[0]).toEqual(obj);
         });
-        eventHelpers.simulateKeyDown(select.$el, KeyCodes.downArrow);
+        eventHelpers.simulateKeyDown(select.$input, KeyCodes.downArrow);
         select.close();
     });
 
     it('selects first element if enter key is pressed when in focus', function(){
         select.setElements($selectItems);
-        select.$el.trigger('click');
+        select.$input.focus();
         var selectSpy = jasmine.createSpy('selectSpy');
-        eventHelpers.simulateKeyDown(select.$el, KeyCodes.downArrow);
+        eventHelpers.simulateKeyDown(select.$input, KeyCodes.downArrow);
         select.on(event.SELECT , selectSpy);
-        eventHelpers.simulateKeyDown(select.$el, KeyCodes.return);
+        eventHelpers.simulateKeyDown(select.$input, KeyCodes.return);
         expect(selectSpy).toHaveBeenCalled();
         select.close();
     });
 
-    it('closes if open and escape is pressed', function(){
-        select.setElements($selectItems);
-        select.$el.trigger('click');
-        spyOn(select,'hideList');
-        eventHelpers.simulateKeyDown(select.$el, KeyCodes.escape);
-        expect(select.hideList).toHaveBeenCalled();
-    });
 
     it('sets focus on last item if up arrow key is pressed first', function(){
         select.setElements($selectItems);
-        select.$el.trigger('click');
+        select.$input.focus();
         select.on(focus.FOCUS, function(select, obj){
             expect($selectItems.last()[0]).toEqual(obj);
         });
-        eventHelpers.simulateKeyDown(select.$el, KeyCodes.upArrow);
+        eventHelpers.simulateKeyDown(select.$input, KeyCodes.upArrow);
         select.close();
     });
 
-    xit('selects an option if it is clicked', function(){
+    it('selects an option if it is clicked', function(){
         var $last = $selectItems.last();
         select.setElements($selectItems);
-        select.$el.trigger('click');
+        select.$input.focus();
         var clickSpy = jasmine.createSpy('clickSpy');
         select.on(event.SELECT, clickSpy);
         spyOn(select,'mouseDidClick').andCallThrough();
@@ -161,7 +130,7 @@ describe('Select control', function() {
     it('fires setSelectedOption when you click an option', function(){
         var $last = $selectItems.last();
         select.setElements($selectItems);
-        select.$el.trigger('click');
+        select.$input.focus();
         spyOn(select,'setSelectedOption');
         eventHelpers.simulateMouseDown($last);
         eventHelpers.simulateMouseUp($last);
@@ -171,7 +140,7 @@ describe('Select control', function() {
 
     it('handles mouse entering an option', function(){
         select.setElements($selectItems);
-        select.$el.trigger('click');
+        select.$input.focus();
         select.on(focus.BLUR, function(select, obj){
             expect($selectItems.eq(0)[0]).toEqual(obj);
         });
@@ -181,7 +150,7 @@ describe('Select control', function() {
 
     it('handles mouse exiting an option', function(){
         select.setElements($selectItems);
-        select.$el.trigger('click');
+        select.$input.focus();
         select.on(focus.FOCUS, function(select, obj){
             expect($selectItems.eq(0)[0]).toEqual(obj);
         });
@@ -191,7 +160,7 @@ describe('Select control', function() {
 
     it('sets selected option', function(){
         select.setElements($selectItems);
-        select.$el.trigger('click');
+        select.$input.focus();
         select.on(focus.FOCUS, function(select, obj){
             expect($selectItems.eq(0)[0]).toEqual(obj);
         });
