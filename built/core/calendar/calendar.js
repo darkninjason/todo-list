@@ -47,8 +47,16 @@ define(function(require, exports, module){
             date = new Date(date.getFullYear(), date.getMonth(), 1);
         }
 
+        var startTZ = date.getTimezoneOffset();
+        var endTZ;
+
         var days = daysInJavaScriptMonth(date.getFullYear(), date.getMonth());
-        return new Date(date.getTime() + ((86400 * (days)) * 1000));
+        result  = new Date(date.getTime() + ((86400 * (days)) * 1000));
+
+        endTZ = result.getTimezoneOffset();
+        var tzShift = (endTZ - startTZ) * 60 * 1000;
+
+        return new Date(result.getTime() + tzShift);
     }
 
     function daysInJavaScriptMonth(year, month){
