@@ -46,6 +46,7 @@ var SliderContainer = marionette.Controller.extend({
         if(_.isEmpty(driver)) throw 'Undefined driver.';
 
         this.listenTo(driver, dragEvents.DRAG_UPDATE, this._dragDidUpdate);
+        this.listenTo(driver, dragEvents.DRAG_START, this._dragDidStart);
         this.listenTo(driver, events.CHANGE, this._rangeDidChange);
 
         driver.$container.css({
@@ -89,6 +90,15 @@ var SliderContainer = marionette.Controller.extend({
 
         // pass in augmented values to original update function
         this._updateUi($handle, range, position, value);
+    },
+
+    _dragDidStart: function(manager, $handle){
+        _.each(manager.$handles, function(el){
+            var $el = $(el);
+            $el.css({'z-index': 0});
+        });
+
+        $handle.eq(0).css({'z-index': 1});
     },
 
     _dragDidUpdate: function(sender, $handle, range, position, value) {
