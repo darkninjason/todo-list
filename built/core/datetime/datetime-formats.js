@@ -145,5 +145,9 @@ define(function(require, exports, module){
     // Wed 29 Aug 12:58 PM
     exports.shortDayMonthTimeStringForDate = shortDayMonthTimeStringForDate;
     exports.shortDayMonthTimeStringForUTCString = shortDayMonthTimeStringForUTCString;
+    exports.months = months;
+    exports.monthsShort = monthsShort;
+    exports.days = days;
+    exports.daysShort = daysShort;
 
 });
