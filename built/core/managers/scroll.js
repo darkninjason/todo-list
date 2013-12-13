@@ -122,9 +122,7 @@ var ScrollManager = marionette.Controller.extend({
 
     _didReceiveScroll: function(responder, e) {
         var scrollable;
-
         scrollable = this.$scrollable[0];
-
         this.rangeManager.setValue(scrollable.scrollTop);
     },
 

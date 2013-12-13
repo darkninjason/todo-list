@@ -69,6 +69,26 @@ describe('Scroll Manager', function() {
         expect(throwable).toThrow();
     });
 
+    it('sets returns get when set (position)', function(){
+        var elements, viewport, scrollable;
+
+        elements   = getPageElements();
+        manager    = getManager();
+        manager.setScrollPosition(1);
+        var position = manager.getScrollPosition();
+        expect(position).toEqual(1);
+    });
+
+    it('sets returns get when set (value)', function(){
+        var elements, viewport, scrollable;
+
+        elements   = getPageElements();
+        manager    = getManager();
+        manager.setScrollValue(1);
+        var position = manager.getScrollValue();
+        expect(position).toEqual(1);
+    });
+
     it('gets max scroll for window', function(){
         var elements, viewport, scrollable;
 
