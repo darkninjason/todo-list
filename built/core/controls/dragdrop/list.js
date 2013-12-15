@@ -14,6 +14,7 @@ define(function(require, exports, module) {
         dataType: 'com.built.data',
         operation: 'move',
         exitDelay: 150,
+        supressChildPointerEvents: false,
 
         initialize: function(options){
             _.extend(this, options);
@@ -113,7 +114,7 @@ define(function(require, exports, module) {
             this.dragResponder = new DragResponder({
                 dataType: this.dataType,
                 operation: this.operation,
-                supressChildPointerEvents: true,
+                supressChildPointerEvents: this.supressChildPointerEvents,
                 getData: this.dragResponderGetData,
                 getDragImage: this.dragResponderGetDragImage,
                 draggingStarted: this.dragResponderDraggingStarted,

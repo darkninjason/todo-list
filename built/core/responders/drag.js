@@ -27,7 +27,7 @@ var DragResponder = Marionette.Controller.extend({
     // -    'all'
     // Note that the drop target will check to confirm if it allows this.
     operation: 'all',
-    supressChildPointerEvents: true,
+    supressChildPointerEvents: false,
 
     // Initialization
     initialize: function(options){
