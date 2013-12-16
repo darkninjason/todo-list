@@ -69,28 +69,8 @@ describe('Scroll Manager', function() {
         expect(throwable).toThrow();
     });
 
-    it('sets returns get when set (position)', function(){
-        var elements, viewport, scrollable;
-
-        elements   = getPageElements();
-        manager    = getManager();
-        manager.setScrollPosition(1);
-        var position = manager.getScrollPosition();
-        expect(position).toEqual(1);
-    });
-
-    it('sets returns get when set (value)', function(){
-        var elements, viewport, scrollable;
-
-        elements   = getPageElements();
-        manager    = getManager();
-        manager.setScrollValue(1);
-        var position = manager.getScrollValue();
-        expect(position).toEqual(1);
-    });
-
     it('gets max scroll for window', function(){
-        var elements, viewport, scrollable;
+        var elements, viewport, scrollable, manager;
 
         elements   = getPageElements();
         manager    = getManager();
@@ -112,6 +92,51 @@ describe('Scroll Manager', function() {
         });
 
         expect(manager.getMaxScrollValue()).toEqual(max);
+    });
+
+    it('properly recaculates max scroll', function(){
+        var elements, viewport, scrollable, origMax, origValue, newMax, newValue;
+
+        elements = getPageElements();
+        content = elements.$content;
+        manager = getManager({
+            el: elements.$container
+        });
+
+        flag = false;
+        asyncTimeout = 50;
+
+        function doesAsync() {
+            origMax = manager.getMaxScrollValue();
+            manager.setScrollPosition(0.5);
+
+            setTimeout(function() {
+                origValue = manager.getScrollValue();
+
+                content.append(content.find('p').clone());
+                manager.calculateMaxScroll();
+
+                newMax = manager.getMaxScrollValue();
+                newValue = manager.getScrollValue();
+
+                flag = true;
+            }, asyncTimeout);
+        }
+        function waits(){
+            return flag;
+        }
+        function expectsAsync() {
+            // The content should be taller
+            expect(origMax).toBeLessThan(newMax);
+
+            // But the scroll position / value should not have changed
+            expect(origValue).toEqual(newValue);
+        }
+
+        runs(doesAsync);
+        waitsFor(waits,'', asyncTimeout + 50);
+        runs(expectsAsync);
+
     });
 
     it('gets min scroll value for window', function(){

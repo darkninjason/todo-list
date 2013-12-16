@@ -132,7 +132,7 @@ var ScrollManager = marionette.Controller.extend({
         // enable snap so range only ever sends scroll to whole numbers
         // numbers of steps = number of pixels returned from max scroll
         // this should result in an incremental distance of 1
-        max = this._calculateMaxScroll();
+        max = this._computeMaxScroll();
         manager = new RangeManager({
             max  : max
         });
@@ -156,7 +156,7 @@ var ScrollManager = marionette.Controller.extend({
         $el[0].scrollTop = value;
     },
 
-    _calculateMaxScroll: function() {
+    _computeMaxScroll: function() {
         var viewport, scrollable, max;
 
         // when el is NOT window, viewport and scrollable are the same element.
@@ -165,18 +165,25 @@ var ScrollManager = marionette.Controller.extend({
 
         // see: http://mzl.la/19VEUIo
         max = scrollable.scrollHeight - viewport.clientHeight;
-
-        // this.rangeManager.setMax(max);
         return max;
     },
 
     // Public API
 
-    // a special version of the internal _calculateMaxScroll that is more useful
+    // a special version of the internal _computeMaxScroll that is more useful
     // for the end user as it also updates the max of the internal range
     calculateMaxScroll: function() {
-        var max;
-        this.rangeManager.setMax(this._calculateMaxScroll());
+        var oldScrollValue, max;
+
+        oldScrollValue = this.getScrollValue();
+        max = this._computeMaxScroll();
+
+        this.rangeManager.setMax(max);
+
+        // reset the range's value to the old/current scroll value
+        this.rangeManager.setValue(oldScrollValue);
+
+        return this.rangeManager.getMax();
     },
 
     getMaxScrollValue: function() {
