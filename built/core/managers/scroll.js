@@ -100,10 +100,20 @@ var ScrollManager = marionette.Controller.extend({
         // see: http://mzl.la/19SZOty
         function iterator(el, i, scrollables) {
             old = el.scrollTop;
+
+            // test when page hasn't been scrolled
             el.scrollTop = el.scrollTop + 1;
 
             if(el.scrollTop > old) {
-                scrollable   = el;
+                scrollable = el;
+                el.scrollTop = old;
+            }
+
+            // test when page has been scrolled to bottom
+            el.scrollTop = el.scrollTop - 1;
+
+            if(el.scrollTop < old) {
+                scrollable = el;
                 el.scrollTop = old;
             }
         }
