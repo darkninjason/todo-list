@@ -55,27 +55,7 @@ describe('Scroller', function() {
 
     // Test Suite
 
-    it('fires events after dom modified', function() {
-        var elements, control, asyncTimeout, spy;
-
-        spy      = jasmine.createSpy('spy');
-        elements  = getPageElements();
-        control   = getControl({el: elements.$container});
-
-        control.addMarkerPositions(0.9);
-
-        control.$el.scrollTop(800);
-        control.$el.trigger('scroll');
-        control.$el.append(control.$el.find('p').clone());
-        control.calculateMaxScroll();
-        control.on(events.MARKER, spy);
-        control.$el.scrollTop(800);
-        control.$el.trigger('scroll');
-        expect(spy).not.toHaveBeenCalled();
-
-    });
-
-    xit('animates scroll when setting scroll value for window', function() {
+    it('animates scroll when setting scroll value for window', function() {
         var elements, asyncTimeout, positions, flag;
 
         elements  = getPageElements();
@@ -116,7 +96,7 @@ describe('Scroller', function() {
 
     });
 
-    xit('animates scroll when setting scroll value for container', function() {
+    it('animates scroll when setting scroll value for container', function() {
         var elements, control, asyncTimeout, positions;
 
         elements  = getPageElements();
@@ -157,7 +137,7 @@ describe('Scroller', function() {
     });
 
 
-    xit('animates scroll when setting scroll value for container', function() {
+    it('animates scroll when setting scroll value for container', function() {
         var elements, control, asyncTimeout, positions;
 
         elements  = getPageElements();

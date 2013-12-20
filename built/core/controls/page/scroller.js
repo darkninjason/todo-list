@@ -93,7 +93,7 @@ var Scroller = ScrollManager.extend({
     scrollToElement: function($el){
         var toPos = $el.offset().top - this.$el.offset().top + this.$el.scrollTop();
         return this.setScrollValue(toPos);
-    },
+    }
 
 }); // eof Scroller
 
