@@ -2,8 +2,8 @@ define(function(require, exports, module){
 
 // Imports
 
-var Marionette           = require('marionette');
 var _                    = require('underscore');
+var Marionette           = require('marionette');
 var KeyInputManager      = require('built/core/managers/key-input').KeyInputManager;
 var KeyEquivalentManager = require('built/core/managers/key-equivalent').KeyEquivalentManager;
 var helpers              = require('built/core/utils/helpers');
@@ -14,42 +14,40 @@ var KeyResponder = Marionette.Controller.extend({
     el: null,
     inputManager: null,
     equivalentManager: null,
-    acceptKeyEquivalent: false,
 
     initialize: function(options){
         _.extend(this, options);
         _.bindAll(this, '_keyDown', '_keyUp');
 
-        this.$el = helpers.registerElement(this.el);
+        if(this.el){
+            this.$el = helpers.registerElement(this.el);
+            this.$el.on('keydown.built.responders.keys', {ctx: this}, this._keyDown);
+            this.$el.on('keyup.built.responders.keys', {ctx: this}, this._keyUp);
+        }
 
         if (!this.inputManager){
             this.inputManager = new KeyInputManager();
         }
 
-        if (this.acceptKeyEquivalent && !this.equivalentManager){
+        if (!this.equivalentManager){
             this.equivalentManager = new KeyEquivalentManager();
             this.equivalentManager.responder = this;
         }
 
         this.inputManager.responder = this;
-
-
-        this.$el.on('keydown.built.responders.keys', {ctx: this}, this._keyDown);
-        this.$el.on('keyup.built.responders.keys', {ctx: this}, this._keyUp);
     },
 
+
     _keyDown: function(e){
-
-        if(this.equivalentManager &&
-           this.equivalentManager.performKeyEquivalent(e) === true){
-            return;
-        }
-
         this.keyDown(this, e);
     },
 
     _keyUp: function(e){
         this.keyUp(this, e);
+    },
+
+    performKeyEquivalent: function(e){
+        return this.equivalentManager.performKeyEquivalent(this, e);
     },
 
     keyUp: function(responder, e){
@@ -58,6 +56,7 @@ var KeyResponder = Marionette.Controller.extend({
 
     keyDown: function(responder, e){
         this.interpretKeyEvents([e]);
+        return true;
     },
 
     insertNewline: function(responder, e){
@@ -118,7 +117,8 @@ var KeyResponder = Marionette.Controller.extend({
     },
 
     interpretKeyEvents: function (events){
-        this.inputManager.interpretKeyEvents(events);
+        if(!_.isArray(events)) events = [events];
+        this.inputManager.interpretKeyEvents(this, events);
     },
 
     executeCommandByName: function(name, e){
@@ -132,8 +132,11 @@ var KeyResponder = Marionette.Controller.extend({
     onClose: function(){
         this.inputManager = null;
         this.equivalentManager = null;
-        this.$el.off('keydown.built.responders.keys', this._keyDown);
-        this.$el.off('keyup.built.responders.keys', this._keyUp);
+
+        if(this.$el){
+            this.$el.off('keydown.built.responders.keys', this._keyDown);
+            this.$el.off('keyup.built.responders.keys', this._keyUp);
+        }
     }
 
 });

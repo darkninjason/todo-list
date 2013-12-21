@@ -57,7 +57,7 @@ describe('Key Equivalent Manager', function() {
         });
 
         manager = getManager();
-        manager.performKeyEquivalent(e);
+        manager.performKeyEquivalent(null, e);
 
     });
 
@@ -86,7 +86,7 @@ describe('Key Equivalent Manager', function() {
             shiftKey: true
         });
 
-        var result = manager.performKeyEquivalent(e);
+        var result = manager.performKeyEquivalent(null, e);
         expect(spy).toHaveBeenCalled();
         expect(result).toEqual(true);
     });
@@ -103,7 +103,7 @@ describe('Key Equivalent Manager', function() {
             shiftKey: false
         });
 
-        var result = manager.performKeyEquivalent(e);
+        var result = manager.performKeyEquivalent(null, e);
         expect(spy).not.toHaveBeenCalled();
         expect(result).toEqual(false);
     });
@@ -120,7 +120,7 @@ describe('Key Equivalent Manager', function() {
             shiftKey: true
         });
 
-        var result = manager.performKeyEquivalent(e);
+        var result = manager.performKeyEquivalent(null, e);
         expect(spy).not.toHaveBeenCalled();
         expect(result).toEqual(false);
     });
@@ -139,7 +139,7 @@ describe('Key Equivalent Manager', function() {
             shiftKey: true
         });
 
-        var result = manager.performKeyEquivalent(e);
+        var result = manager.performKeyEquivalent(null, e);
         expect(spy).toHaveBeenCalled();
         expect(result).toEqual(true);
     });

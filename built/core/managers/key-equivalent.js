@@ -130,7 +130,7 @@ KeyEquivalentManager.prototype.hashEvent = function(e){
     return alt | ctrl | meta | shift ;
 };
 
-KeyEquivalentManager.prototype.performKeyEquivalent = function(e){
+KeyEquivalentManager.prototype.performKeyEquivalent = function(responder, e){
 
     var key = this.hashEvent(e);
     var region = this.map[key];
@@ -140,7 +140,7 @@ KeyEquivalentManager.prototype.performKeyEquivalent = function(e){
     var action = region[e.which];
 
     if (action){
-        action(this.responder, e);
+        action(responder, e);
         return true;
     }
 

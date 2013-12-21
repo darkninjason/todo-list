@@ -26,14 +26,14 @@ var KeyInputManager = function(keyMap){
 
 };
 
-KeyInputManager.prototype.interpretKeyEvents = function(events){
+KeyInputManager.prototype.interpretKeyEvents = function(responder, events){
     _.each(events, _.bind(function(e){
         var action = this.keyMap[e.keyCode] || false;
 
         if(action){
-            this.responder.executeCommandByName(action, e);
+            responder.executeCommandByName(action, e);
         } else {
-            this.responder.insertText(this.responder, e);
+            responder.insertText(this.responder, e);
         }
 
     }, this));
