@@ -25,12 +25,20 @@ function getKeyFromEvent(e){
 }
 
 
+function removeFromResponderChain(view){
+    var array = _responderChain.getArray();
+    var index = array.indexOf(view);
+    if(index == -1) return;
+
+     _responderChain.removeObjectAt(index);
+}
+
 function registerInResponderChain(view){
-    view.once('close', function(){
-        var array = _responderChain.getArray();
-        var index = array.indexOf(view);
-        _responderChain.removeObjectAt(index);
-    });
+    if (view.once){
+        view.once('close', function(){
+            removeFromResponderChain(view);
+        });
+    }
 
     _responderChain.insertObject(view);
 }
