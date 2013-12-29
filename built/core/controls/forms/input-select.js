@@ -180,6 +180,7 @@ define(function(require, exports, module){
         initialize: function(options){
             _.defaults(options, this._defaults);
 
+            this.options = options;
             this.el = options.el || null;
             this.$el = helpers.registerElement(this.el);
 
