@@ -79,9 +79,9 @@ describe('Drop Responder', function() {
 
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.calls.length).toEqual(1);
-        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
-        expect(actionSpy.mostRecentCall.args[1].currentTarget).toEqual($dropZone[0]);
+        expect(actionSpy.calls.count()).toEqual(1);
+        expect(actionSpy.calls.mostRecent().args[0]).toEqual(manager);
+        expect(actionSpy.calls.mostRecent().args[1].currentTarget).toEqual($dropZone[0]);
     });
 
     it('expects \'draggingEntered\' to be called on dragenter with array of dataTypes', function(){
@@ -103,9 +103,9 @@ describe('Drop Responder', function() {
 
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.calls.length).toEqual(1);
-        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
-        expect(actionSpy.mostRecentCall.args[1].currentTarget).toEqual($dropZone[0]);
+        expect(actionSpy.calls.count()).toEqual(1);
+        expect(actionSpy.calls.mostRecent().args[0]).toEqual(manager);
+        expect(actionSpy.calls.mostRecent().args[1].currentTarget).toEqual($dropZone[0]);
 
     });
 
@@ -213,9 +213,9 @@ describe('Drop Responder', function() {
 
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.calls.length).toEqual(1);
-        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
-        expect(actionSpy.mostRecentCall.args[1].currentTarget).toEqual($dropZone[0]);
+        expect(actionSpy.calls.count()).toEqual(1);
+        expect(actionSpy.calls.mostRecent().args[0]).toEqual(manager);
+        expect(actionSpy.calls.mostRecent().args[1].currentTarget).toEqual($dropZone[0]);
 
     });
 
@@ -250,14 +250,14 @@ describe('Drop Responder', function() {
             $dropZone, dataTransfer, 10, 20);
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.calls.length).toEqual(1);
+        expect(actionSpy.calls.count()).toEqual(1);
 
         var mouse = manager.getMousePosition();
         expect(mouse.x).toEqual(10);
         expect(mouse.y).toEqual(20);
 
-        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
-        expect(actionSpy.mostRecentCall.args[1].currentTarget).toEqual($dropZone[0]);
+        expect(actionSpy.calls.mostRecent().args[0]).toEqual(manager);
+        expect(actionSpy.calls.mostRecent().args[1].currentTarget).toEqual($dropZone[0]);
 
     });
 
@@ -276,14 +276,14 @@ describe('Drop Responder', function() {
             $dropZone, dataTransfer, 10, 20);
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.calls.length).toEqual(1);
+        expect(actionSpy.calls.count()).toEqual(1);
 
         var mouse = manager.getMousePosition();
         expect(mouse.x).toEqual(10);
         expect(mouse.y).toEqual(20);
 
-        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
-        expect(actionSpy.mostRecentCall.args[1].currentTarget).toEqual($dropZone[0]);
+        expect(actionSpy.calls.mostRecent().args[0]).toEqual(manager);
+        expect(actionSpy.calls.mostRecent().args[1].currentTarget).toEqual($dropZone[0]);
 
     });
 
@@ -302,11 +302,11 @@ describe('Drop Responder', function() {
             $dropZone, dataTransfer);
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.calls.length).toEqual(1);
+        expect(actionSpy.calls.count()).toEqual(1);
 
         expect(manager.getData()).toEqual('lucy');
-        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
-        expect(actionSpy.mostRecentCall.args[1].currentTarget).toEqual($dropZone[0]);
+        expect(actionSpy.calls.mostRecent().args[0]).toEqual(manager);
+        expect(actionSpy.calls.mostRecent().args[1].currentTarget).toEqual($dropZone[0]);
 
     });
 
@@ -343,7 +343,7 @@ describe('Drop Responder', function() {
             $dropZone, dataTransfer);
 
         expect(actionSpy).not.toHaveBeenCalled();
-        expect(actionSpy.calls.length).toEqual(0);
+        expect(actionSpy.calls.count()).toEqual(0);
 
     });
 

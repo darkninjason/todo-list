@@ -278,7 +278,7 @@ describe('Range Manager', function() {
         manager.setPosition(0.5);
         manager.setValue(75);
 
-        expect(spy.calls.length).toEqual(2);
+        expect(spy.calls.count()).toEqual(2);
     });
 
     // TODO: Additional Coverage
@@ -408,7 +408,7 @@ describe('Range Manager', function() {
         });
 
         // the marker at zero will not be called
-        expect(markerSpy.calls.length).toEqual(4);
+        expect(markerSpy.calls.count()).toEqual(4);
 
         // run manager through 1 - 0
         _.each(_.range(99, -1, -1), function(pos, i, positions){
@@ -420,7 +420,7 @@ describe('Range Manager', function() {
         });
 
         // the 1 position will not be called
-        expect(markerSpy.calls.length).toEqual(8);
+        expect(markerSpy.calls.count()).toEqual(8);
     });
 
 }); // Eof describe

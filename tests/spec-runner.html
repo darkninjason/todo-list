@@ -45,15 +45,24 @@ require.config({
 
     'jasmine/jasmine': {
         'deps': [],
+        // 'exports': 'jasmine'
+    },
+
+    'jasmine/boot': {
+        'deps': ['jasmine/jasmine',
+                 'jasmine/jasmine-html'],
         'exports': 'jasmine'
     },
+
     'jasmine/jasmine-html': {
         'deps': ['jasmine/jasmine']
     },
+
     'jasmine/jasmine-jquery': {
-        'deps': ['jasmine/jasmine']
+        'deps': ['jasmine/jasmine', 'jasmine/boot']
     },
-    'jasmine/console-runner': {
+
+    'jasmine/console': {
         'deps': ['jasmine/jasmine']
     },
 

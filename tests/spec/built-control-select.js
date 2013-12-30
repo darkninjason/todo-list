@@ -120,7 +120,7 @@ describe('Select control', function() {
         select.$input.focus();
         var clickSpy = jasmine.createSpy('clickSpy');
         select.on(event.SELECT, clickSpy);
-        spyOn(select,'mouseDidClick').andCallThrough();
+        spyOn(select,'mouseDidClick').and.callThrough();
         eventHelpers.simulateMouseDown($last);
         eventHelpers.simulateMouseUp($last);
         expect(clickSpy).toHaveBeenCalled();

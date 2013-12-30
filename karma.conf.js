@@ -18,7 +18,10 @@ module.exports = function(config) {
         // using jasmine-jquery, we would like to serve our fixtures:
         {pattern: 'tests/fixtures/*.html', included: false, served: true},
         {pattern: 'tests/spec/built*.js', included: false},
-        {pattern: 'tests/lib/**/*.js', included: false, served: true},
+        //{pattern: 'tests/lib/**/*.js', included: false, served: true},
+        {pattern: 'tests/lib/spec-helpers.js', included: false, served: true},
+        {pattern: 'tests/lib/jasmine/*.js', included: false, served: true},
+        {pattern: 'tests/lib/vendor/*.js', included: false, served: true},
         {pattern: 'built/**/*.js', included: false, served: true},
 
         'tests/karma-main.js'

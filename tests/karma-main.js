@@ -111,8 +111,30 @@ requirejs.config({
 
     shim: {
 
+        // Jasmine shims
+
+        'jasmine/jasmine': {
+            'deps': [],
+        },
+
+        'jasmine/boot': {
+            'deps': ['jasmine/jasmine',
+                     'jasmine/jasmine-html'],
+            'exports': 'jasmine'
+        },
+
+        'jasmine/jasmine-html': {
+            'deps': ['jasmine/jasmine']
+        },
+
         'jasmine/jasmine-jquery': {
-            //'deps': ['jasmine/jasmine']
+            'deps': [
+            'jasmine/jasmine',
+            'jasmine/boot']
+        },
+
+        'jasmine/console': {
+            'deps': ['jasmine/jasmine']
         },
 
         // Vendor shims
@@ -139,6 +161,14 @@ requirejs.config({
     // start test run, once Require.js is done
     callback: function(){
         require(['jasmine/karma'], function(){
+            // jasmine/boot sets the onload handler
+            // we call it since we know we are ready.
+            //
+            // effectively calls this:
+            // htmlReporter.initialize();
+            // env.execute();
+            //window.onload();
+
             window.__karma__.start();
         });
     }

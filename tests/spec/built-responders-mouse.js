@@ -113,7 +113,7 @@ describe('Mouse Responder', function() {
             el: $input
         });
 
-        spyOn(scopedResponder, 'onClose').andCallThrough();
+        spyOn(scopedResponder, 'onClose').and.callThrough();
 
         scopedResponder.close();
         expect(scopedResponder.onClose).toHaveBeenCalled();
@@ -137,8 +137,8 @@ describe('Mouse Responder', function() {
         expect(mouseUp).toHaveBeenCalled();
 
         // This is probably a redundant check:
-        expect(mouseDown.calls.length).toEqual(1);
-        expect(mouseUp.calls.length).toEqual(1);
+        expect(mouseDown.calls.count()).toEqual(1);
+        expect(mouseUp.calls.count()).toEqual(1);
     });
 
     it('expects mouse up and mouse down not to be called', function() {
@@ -160,8 +160,8 @@ describe('Mouse Responder', function() {
         expect(mouseUp).not.toHaveBeenCalled();
 
         // This is probably a redundant check:
-        expect(mouseDown.calls.length).toEqual(0);
-        expect(mouseUp.calls.length).toEqual(0);
+        expect(mouseDown.calls.count()).toEqual(0);
+        expect(mouseUp.calls.count()).toEqual(0);
     });
 
     it('expects mouse up and mouse down to be removed', function() {
@@ -187,8 +187,8 @@ describe('Mouse Responder', function() {
         expect(mouseUp).not.toHaveBeenCalled();
 
         // This is probably a redundant check:
-        expect(mouseDown.calls.length).toEqual(0);
-        expect(mouseUp.calls.length).toEqual(0);
+        expect(mouseDown.calls.count()).toEqual(0);
+        expect(mouseUp.calls.count()).toEqual(0);
     });
 
     it('expects mouse enter and exit to be called', function() {
@@ -209,8 +209,8 @@ describe('Mouse Responder', function() {
         expect(mouseExited).toHaveBeenCalled();
 
         // This is probably a redundant check:
-        expect(mouseEntered.calls.length).toEqual(1);
-        expect(mouseExited.calls.length).toEqual(1);
+        expect(mouseEntered.calls.count()).toEqual(1);
+        expect(mouseExited.calls.count()).toEqual(1);
     });
 
     it('expects mouse enter and exit not to be called', function() {
@@ -231,8 +231,8 @@ describe('Mouse Responder', function() {
         expect(mouseExited).not.toHaveBeenCalled();
 
         // This is probably a redundant check:
-        expect(mouseEntered.calls.length).toEqual(0);
-        expect(mouseExited.calls.length).toEqual(0);
+        expect(mouseEntered.calls.count()).toEqual(0);
+        expect(mouseExited.calls.count()).toEqual(0);
     });
 
     it('expects mouse enter and mouse exit to be removed', function() {
@@ -259,8 +259,8 @@ describe('Mouse Responder', function() {
         expect(mouseExited).not.toHaveBeenCalled();
 
         // This is probably a redundant check:
-        expect(mouseEntered.calls.length).toEqual(0);
-        expect(mouseExited.calls.length).toEqual(0);
+        expect(mouseEntered.calls.count()).toEqual(0);
+        expect(mouseExited.calls.count()).toEqual(0);
     });
 
     it('expects traditional mouse move to be called', function() {
@@ -277,7 +277,7 @@ describe('Mouse Responder', function() {
         expect(mouseMoved).toHaveBeenCalled();
 
         // This is probably a redundant check:
-        expect(mouseMoved.calls.length).toEqual(1);
+        expect(mouseMoved.calls.count()).toEqual(1);
     });
 
     it('expects mouse move not to be called', function() {
@@ -294,7 +294,7 @@ describe('Mouse Responder', function() {
         expect(mouseMoved).not.toHaveBeenCalled();
 
         // This is probably a redundant check:
-        expect(mouseMoved.calls.length).toEqual(0);
+        expect(mouseMoved.calls.count()).toEqual(0);
     });
 
     it('expects mouse move to be removed', function() {
@@ -317,7 +317,7 @@ describe('Mouse Responder', function() {
         expect(mouseMoved).not.toHaveBeenCalled();
 
         // This is probably a redundant check:
-        expect(mouseMoved.calls.length).toEqual(0);
+        expect(mouseMoved.calls.count()).toEqual(0);
     });
 
     it('expectes mouse dragged to be called', function(){
@@ -370,7 +370,7 @@ describe('Mouse Responder', function() {
         expect(responder.clickCount()).toEqual(2);
     });
 
-    it('should reset clicks to 0 after delay', function(){
+    it('should reset clicks to 0 after delay', function(done){
         var flag = false;
 
         responder = new MouseResponder({
@@ -378,21 +378,21 @@ describe('Mouse Responder', function() {
             acceptsUpDown: true
         });
 
-        runs(function() {
-            EventHelpers.simulateMouseDown($input, 0, 0);
+        EventHelpers.simulateMouseDown($input, 0, 0);
 
+        var action = function(){
+            var deferred = $.Deferred();
             setTimeout(function() {
-                flag = true;
+                deferred.resolve();
             }, responder.clickCountTimeout + 1);
-        });
 
-        waitsFor(function() {
-            return flag;
-        }, 'No input received', responder.clickCountTimeout * 2);
+            return deferred.promise();
+        };
 
-        runs(function() {
+        action().then(function(){
             EventHelpers.simulateMouseUp($input, 0, 0);
             expect(responder.clickCount()).toEqual(0);
+            done();
         });
     });
 
@@ -423,8 +423,8 @@ describe('Mouse Responder', function() {
         expect(mouseEntered).toHaveBeenCalled();
         expect(mouseExited).toHaveBeenCalled();
 
-        expect(mouseEntered.calls.length).toEqual(2);
-        expect(mouseExited.calls.length).toEqual(2);
+        expect(mouseEntered.calls.count()).toEqual(2);
+        expect(mouseExited.calls.count()).toEqual(2);
     });
 
     it('expects mouse up and down to be toggled', function() {
@@ -454,8 +454,8 @@ describe('Mouse Responder', function() {
         expect(mouseUp).toHaveBeenCalled();
         expect(mouseDown).toHaveBeenCalled();
 
-        expect(mouseUp.calls.length).toEqual(2);
-        expect(mouseDown.calls.length).toEqual(2);
+        expect(mouseUp.calls.count()).toEqual(2);
+        expect(mouseDown.calls.count()).toEqual(2);
     });
 
     it('expects mouse move to be toggled', function() {
@@ -478,7 +478,7 @@ describe('Mouse Responder', function() {
         EventHelpers.simulateMouseMove($input, 0, 0);
 
         expect(mouseMoved).toHaveBeenCalled();
-        expect(mouseMoved.calls.length).toEqual(2);
+        expect(mouseMoved.calls.count()).toEqual(2);
     });
 
 }); // eof describe

@@ -89,7 +89,7 @@ describe('Responder: Touch', function() {
             el: $input
         });
 
-        spyOn(scopedResponder, 'onClose').andCallThrough();
+        spyOn(scopedResponder, 'onClose').and.callThrough();
 
         scopedResponder.close();
         expect(scopedResponder.onClose).toHaveBeenCalled();
@@ -110,6 +110,9 @@ describe('Responder: Touch', function() {
 
         scopedResponder.close();
 
+        setTimeout(function(){
+
+        }, 500);
         EventHelpers.simulateTouchStart($input, 10, 10);
         EventHelpers.simulateTouchEnd($input);
 
@@ -117,8 +120,8 @@ describe('Responder: Touch', function() {
         expect(touchEnd).not.toHaveBeenCalled();
 
         // This is probably a redundant check:
-        expect(touchStart.calls.length).toEqual(0);
-        expect(touchEnd.calls.length).toEqual(0);
+        expect(touchStart.calls.count()).toEqual(0);
+        expect(touchEnd.calls.count()).toEqual(0);
     });
 
     it('calls touchStart', function() {
@@ -233,29 +236,32 @@ describe('Responder: Touch', function() {
         expect(responder.clickCount()).toEqual(2);
     });
 
-    it('should reset clicks to 0 after delay', function(){
+
+    it('should reset clicks to 0 after delay', function(done){
         var flag = false;
 
         responder = new TouchResponder({
             el: $input
         });
 
-        runs(function() {
-            EventHelpers.simulateTouchStart($input, 0, 0);
+        EventHelpers.simulateTouchStart($input, 0, 0);
+
+        var action = function(){
+            var deferred = $.Deferred();
 
             setTimeout(function() {
-                flag = true;
+                EventHelpers.simulateTouchEnd($input, 0, 0);
+                deferred.resolve();
             }, responder.clickCountTimeout + 1);
-        });
 
-        waitsFor(function() {
-            return flag;
-        }, 'No input received', responder.clickCountTimeout * 2);
+            return deferred.promise();
+        };
 
-        runs(function() {
-            EventHelpers.simulateTouchEnd($input, 0, 0);
+        action().then(function(){
             expect(responder.clickCount()).toEqual(0);
+            done();
         });
+
     });
 
 }); // eof describe

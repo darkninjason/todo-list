@@ -55,30 +55,32 @@ describe('Scroller', function() {
 
     // Test Suite
 
-    it('animates scroll when setting scroll value for window', function() {
-        var elements, asyncTimeout, positions, flag;
+    it('animates scroll when setting scroll value for window', function(done) {
+        var elements  = getPageElements();
+        var control   = getControl();
+        var positions = 0;
 
-        elements  = getPageElements();
-        control   = getControl();
-        positions = 0;
-
-        asyncTimeout = 150;
-        flag         = false;
+        var asyncTimeout = 150;
 
         function scroll(sender, position, value) {
             positions += position;
         }
-        function doesAsync() {
+
+        var action = function(){
+            var deferred = $.Deferred();
+
             control.setScrollPosition(1);
 
             setTimeout(function(){
-                flag = true;
+                deferred.resolve();
             }, asyncTimeout);
-        }
-        function waits() {
-            return flag;
-        }
-        function doesExpects() {
+
+            return deferred.promise();
+        };
+
+        control.on('scroll', scroll);
+
+        action().then(function(){
             expect(control.getScrollPosition()).toEqual(1);
 
             // positions is used to track that we went incrementally
@@ -86,40 +88,35 @@ describe('Scroller', function() {
             // than 1, it probably only fired once which implies
             // animation did not take place.
             expect(positions).toBeGreaterThan(1);
-        }
-
-        control.on('scroll', scroll);
-
-        runs(doesAsync);
-        waitsFor(waits,'Scroll position/value should change', asyncTimeout + 50);
-        runs(doesExpects);
-
+            done();
+        });
     });
 
-    it('animates scroll when setting scroll value for container', function() {
-        var elements, control, asyncTimeout, positions;
+    it('animates scroll when setting scroll value for container 1', function(done) {
+        var elements  = getPageElements();
+        var control   = getControl({el: elements.$container});
+        var positions = 0;
 
-        elements  = getPageElements();
-        control   = getControl({el: elements.$container});
-        positions = 0;
-
-        asyncTimeout = 200;
-        flag         = false;
+        var asyncTimeout = 200;
 
         function scroll(sender, position, value) {
             positions += position;
         }
-        function doesAsync() {
+
+        function action(){
+            var deferred = $.Deferred();
             control.setScrollPosition(1);
 
             setTimeout(function(){
-                flag = true;
+                deferred.resolve();
             }, asyncTimeout);
+
+            return deferred.promise();
         }
-        function waits() {
-            return flag;
-        }
-        function doesExpects() {
+
+        control.on('scroll', scroll);
+
+        action().then(function(){
             expect(control.getScrollPosition()).toEqual(1);
 
             // positions is used to track that we went incrementally
@@ -127,40 +124,37 @@ describe('Scroller', function() {
             // than 1, it probably only fired once which implies
             // animation did not take place.
             expect(positions).toBeGreaterThan(1);
-        }
-
-        control.on('scroll', scroll);
-
-        runs(doesAsync);
-        waitsFor(waits,'Scroll position/value should change', asyncTimeout + 50);
-        runs(doesExpects);
+            done();
+        });
     });
 
 
-    it('animates scroll when setting scroll value for container', function() {
-        var elements, control, asyncTimeout, positions;
+    it('animates scroll when setting scroll value for container 2', function(done) {
+        var elements  = getPageElements();
+        var control   = getControl({el: elements.$container});
+        var positions = 0;
 
-        elements  = getPageElements();
-        control   = getControl({el: elements.$container});
-        positions = 0;
-
-        asyncTimeout = 200;
-        flag         = false;
+        var asyncTimeout = 200;
 
         function scroll(sender, position, value) {
             positions += position;
         }
-        function doesAsync() {
+
+        function action(){
+            var deferred = $.Deferred();
+
             control.setScrollPosition(1);
 
             setTimeout(function(){
-                flag = true;
+                deferred.resolve();
             }, asyncTimeout);
+
+            return deferred.promise();
         }
-        function waits() {
-            return flag;
-        }
-        function doesExpects() {
+
+        control.on('scroll', scroll);
+
+        action().then(function(){
             expect(control.getScrollPosition()).toEqual(1);
 
             // positions is used to track that we went incrementally
@@ -168,13 +162,8 @@ describe('Scroller', function() {
             // than 1, it probably only fired once which implies
             // animation did not take place.
             expect(positions).toBeGreaterThan(1);
-        }
-
-        control.on('scroll', scroll);
-
-        runs(doesAsync);
-        waitsFor(waits,'Scroll position/value should change', asyncTimeout + 50);
-        runs(doesExpects);
+            done();
+        });
     });
 
 

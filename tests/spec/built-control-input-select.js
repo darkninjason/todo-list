@@ -115,6 +115,42 @@ describe('Input Select Control', function() {
         return obj;
     }
 
+    function insertText(string, $el){
+        $el = $el || $input;
+
+        _.each(string, function(char){
+            eventHelpers.insertChar($el, char);
+        });
+    }
+
+    function actionDebounceDelay(text){
+        var deferred = $.Deferred();
+
+        insertText(text);
+
+        setTimeout(function() {
+            deferred.resolve();
+        }, DEBOUNCE_DELAY);
+
+        return deferred.promise();
+    }
+
+    function actionRendered(text, obj){
+        var deferred = $.Deferred();
+
+        insertText(text);
+
+        var id = setInterval(function(){
+
+            if(obj.hasRendered){
+                clearInterval(id);
+                deferred.resolve();
+            }
+        }, 30);
+
+        return deferred.promise();
+    }
+
 
     // Test Suite
     it('throws error when no input provided', function(){
@@ -132,30 +168,16 @@ describe('Input Select Control', function() {
         expect(helpers.getElementId($input)).not.toEqual(undefined);
     });
 
-    it('registers BUILT IDs for list elements', function(){
+    it('registers BUILT IDs for list elements', function(done){
         var obj = getEventHandler();
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
-
+        actionRendered('lucy', obj).then(function(){
             var $items = $collection.find('li');
             expect($items.length).toEqual(3);
             expect(helpers.getElementId($items.eq(0))).not.toEqual(undefined);
             expect(helpers.getElementId($items.eq(1))).not.toEqual(undefined);
             expect(helpers.getElementId($items.eq(2))).not.toEqual(undefined);
+            done();
         });
     });
 
@@ -187,7 +209,7 @@ describe('Input Select Control', function() {
     });
 
     // Input Event
-    it('dispatches \'input\' event', function(){
+    it('dispatches \'input\' event', function(done){
         var flag = false;
         var obj = _.extend({
           receivedInput: jasmine.createSpy('receivedInput')
@@ -195,983 +217,639 @@ describe('Input Select Control', function() {
 
         obj.listenTo(control, data.DATA, obj.receivedInput);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-
-            setTimeout(function() {
-                flag = true;
-            }, DEBOUNCE_DELAY);
-        });
-
-        waitsFor(function() {
-            return flag;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionDebounceDelay('lucy').then(function(){
             expect(obj.receivedInput).toHaveBeenCalled();
             expect(obj.receivedInput).toHaveBeenCalledWith(
                 control, $input, 'lucy');
+            done();
         });
     });
 
     // Key Events
-    it('disptches \'focus.FOCUS\' event for first item with down arrow key', function() {
+    it('disptches \'focus.FOCUS\' event for first item with down arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(0));
+            expect(focusSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(focusSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(0)[0]);
+            done();
         });
     });
 
-    it('disptches \'focus.FOCUS_KEY\' event for first item with down arrow key', function() {
+    it('disptches \'focus.FOCUS_KEY\' event for first item with down arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS_KEY, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(0));
+            expect(focusSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(focusSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(0)[0]);
+            done();
         });
     });
 
-    it('disptches \'focus.FOCUS\' event for first item set with jquery elements with down arrow key', function() {
-
-        var obj = getEventHandlerJqueryElements();
-        var focusSpy = jasmine.createSpy('focusSpy');
-
-        obj.listenTo(control, focus.FOCUS, focusSpy);
-
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
-            expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(0));
-        });
-    });
-
-    it('disptches \'focus.FOCUS\' event for last item with up arrow key', function() {
+    it('disptches \'focus.FOCUS\' event for last item with up arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(2));
+            expect(focusSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(focusSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(2)[0]);
+            done();
         });
     });
 
-    it('disptches \'focus.FOCUS_KEY\' event for last item with up arrow key', function() {
+    it('disptches \'focus.FOCUS_KEY\' event for last item with up arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS_KEY, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(2));
+            expect(focusSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(focusSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(2)[0]);
+            done();
         });
     });
 
-    it('disptches \'focus.FOCUS\' event for middle item with down arrow key', function() {
+    it('disptches \'focus.FOCUS\' event for middle item with down arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(1));
+            expect(focusSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(focusSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(1)[0]);
+            done();
         });
     });
 
-    it('disptches \'focus.FOCUS\' event for middle item with up arrow key', function() {
+    it('disptches \'focus.FOCUS\' event for middle item with up arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(1));
+            expect(focusSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(focusSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(1)[0]);
+            done();
         });
     });
 
-    it('cycles \'focus.FOCUS\' events with down arrow key', function() {
+    it('cycles \'focus.FOCUS\' events with down arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy.calls.length).toEqual(4);
-            expect(focusSpy.mostRecentCall.args[1]).toEqual($items.eq(0));
+            expect(focusSpy.calls.count()).toEqual(4);
+            expect(focusSpy.calls.mostRecent().args[1]).toEqual($items.eq(0)[0]);
+            done();
         });
     });
 
-    it('cycles \'focus.FOCUS\' events with up arrow key', function() {
+    it('cycles \'focus.FOCUS\' events with up arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy.calls.length).toEqual(4);
-            expect(focusSpy.mostRecentCall.args[1]).toEqual($items.eq(2));
+            expect(focusSpy.calls.count()).toEqual(4);
+            expect(focusSpy.calls.mostRecent().args[1]).toEqual($items.eq(2)[0]);
+            done();
         });
     });
 
-    it('disptches \'focus.BLUR\' event for first item with down arrow key', function() {
+    it('disptches \'focus.BLUR\' event for first item with down arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.BLUR, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(0));
+            expect(focusSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(focusSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(0)[0]);
+            done();
         });
     });
 
-    it('disptches \'focus.BLUR\' event for last item with up arrow key', function() {
+    it('disptches \'focus.BLUR\' event for last item with up arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.BLUR, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(2));
+            expect(focusSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(focusSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(2)[0]);
+            done();
         });
     });
 
-    it('disptches \'focus.BLUR\' event for middle item with down arrow key', function() {
+    it('disptches \'focus.BLUR\' event for middle item with down arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.BLUR, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(1));
+            expect(focusSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(focusSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(1)[0]);
+            done();
         });
     });
 
-    it('disptches \'focus.BLUR\' event for middle item with up arrow key', function() {
+    it('disptches \'focus.BLUR\' event for middle item with up arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.BLUR, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy).toHaveBeenCalledWith(control, $items.eq(1));
+            expect(focusSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(focusSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(1)[0]);
+            done();
         });
     });
 
-    it('cycles \'focus.BLUR\' events with down arrow key', function() {
+    it('cycles \'focus.BLUR\' events with down arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.BLUR, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy.calls.length).toEqual(4);
-            expect(focusSpy.mostRecentCall.args[1]).toEqual($items.eq(0));
+            expect(focusSpy.calls.count()).toEqual(4);
+            expect(focusSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(0)[0]);
+            done();
         });
     });
 
-    it('cycles \'focus.BLUR\' events with up arrow key', function() {
+    it('cycles \'focus.BLUR\' events with up arrow key', function(done) {
         var obj = getEventHandler();
         var focusSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.BLUR, focusSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+        })
+        .then(function(){
             expect(focusSpy).toHaveBeenCalled();
-            expect(focusSpy.calls.length).toEqual(4);
-            expect(focusSpy.mostRecentCall.args[1]).toEqual($items.eq(2));
+            expect(focusSpy.calls.count()).toEqual(4);
+            expect(focusSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(2)[0]);
+            done();
         });
     });
 
-    it('dispatches \'event.SELECT\' event for first item with return key', function() {
+    it('dispatches \'event.SELECT\' event for first item with return key', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('actionSpy');
 
         obj.listenTo(control, events.SELECT, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.return);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.return);
+        })
+        .then(function(){
             expect(actionSpy).toHaveBeenCalled();
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
+            expect(actionSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(actionSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(0)[0]);
+            done();
         });
     });
 
-    it('dispatches \'event.SELECT\' event for last item with return key', function() {
+    it('dispatches \'event.SELECT\' event for last item with return key', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('actionSpy');
 
         obj.listenTo(control, events.SELECT, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.return);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.return);
+        })
+        .then(function(){
             expect(actionSpy).toHaveBeenCalled();
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(2));
+            expect(actionSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(actionSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(2)[0]);
+            done();
         });
     });
 
-    it('dispatches \'event.SELECT\' event for middle item with return key', function() {
+    it('dispatches \'event.SELECT\' event for middle item with return key', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('actionSpy');
 
         obj.listenTo(control, events.SELECT, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.return);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.return);
+        })
+        .then(function(){
             expect(actionSpy).toHaveBeenCalled();
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(1));
+            expect(actionSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(actionSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(1)[0]);
+            done();
         });
     });
 
-    it('dispatches \'event.CANCEL\' event with escape key', function() {
+    it('dispatches \'event.CANCEL\' event with escape key', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('actionSpy');
 
         obj.listenTo(control, events.CANCEL, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.escape);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.escape);
+        })
+        .then(function(){
             expect(actionSpy).toHaveBeenCalled();
-            expect(actionSpy).toHaveBeenCalledWith(control);
+            expect(actionSpy.calls.mostRecent().args[0]).toEqual(control);
+            done();
         });
     });
 
-    it('does not dispatch \'focus.FOCUS\' event with key down or up', function() {
+    it('does not dispatch \'focus.FOCUS\' event with key down or up', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                control.endNavigationPhase();
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            control.endNavigationPhase();
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+        })
+        .then(function(){
             expect(actionSpy).not.toHaveBeenCalled();
+            done();
         });
     });
 
-    it('does not dispatch \'focus.BLUR\' event with key down or up', function() {
+    it('does not dispatch \'focus.BLUR\' event with key down or up', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.BLUR, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                control.endNavigationPhase();
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            control.endNavigationPhase();
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.upArrow);
+        })
+        .then(function(){
             expect(actionSpy).not.toHaveBeenCalled();
+            done();
         });
     });
 
-    it('does not dispatch \'event.SELECT\' event with key', function() {
+    it('does not dispatch \'event.SELECT\' event with key', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, events.SELECT, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                control.endNavigationPhase();
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.return);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            control.endNavigationPhase();
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.return);
+        })
+        .then(function(){
             expect(actionSpy).not.toHaveBeenCalled();
+            done();
         });
     });
 
-    it('does not dispatch \'event.CANCEL\' event with key', function() {
+    it('does not dispatch \'event.CANCEL\' event with key', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, events.CANCEL, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                control.endNavigationPhase();
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                eventHelpers.simulateKeyDown($input, KeyCodes.escape);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            control.endNavigationPhase();
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+            eventHelpers.simulateKeyDown($input, KeyCodes.escape);
+        })
+        .then(function(){
             expect(actionSpy).not.toHaveBeenCalled();
+            done();
         });
     });
 
     // Mouse Events
 
-    it('dispatches \'focus.FOCUS\' event with mouse', function() {
+    it('dispatches \'focus.FOCUS\' event with mouse', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateMouseEnter($items.eq(0));
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateMouseEnter($items.eq(0));
+        })
+        .then(function(){
             expect(actionSpy).toHaveBeenCalled();
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
+            expect(actionSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(actionSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(0)[0]);
+            done();
         });
     });
 
-    it('dispatches \'focus.FOCUS_MOUSE\' event with mouse', function() {
+    it('dispatches \'focus.FOCUS_MOUSE\' event with mouse', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS_MOUSE, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateMouseEnter($items.eq(0));
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateMouseEnter($items.eq(0));
+        })
+        .then(function(){
             expect(actionSpy).toHaveBeenCalled();
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
+            expect(actionSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(actionSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(0)[0]);
+            done();
         });
     });
 
-    it('dispatches \'focus.BLUR\' event with mouse', function() {
+    it('dispatches \'focus.BLUR\' event with mouse', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.BLUR, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateMouseEnter($items.eq(0));
-                eventHelpers.simulateMouseExit($items.eq(0));
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateMouseEnter($items.eq(0));
+            eventHelpers.simulateMouseExit($items.eq(0));
+        })
+        .then(function(){
             expect(actionSpy).toHaveBeenCalled();
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
+            expect(actionSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(actionSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(0)[0]);
+            done();
         });
     });
 
-    it('dispatches \'event.SELECT\' event with mouse', function() {
+    it('dispatches \'event.SELECT\' event with mouse', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, events.SELECT, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateMouseDown($items.eq(1));
-                eventHelpers.simulateMouseUp($items.eq(1));
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateMouseDown($items.eq(1));
+            eventHelpers.simulateMouseUp($items.eq(1));
+        })
+        .then(function(){
             expect(actionSpy).toHaveBeenCalled();
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(1));
+            expect(actionSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(actionSpy.calls.mostRecent().args[1][0]).toEqual($items.eq(1)[0]);
+            done();
         });
     });
 
-    it('dispatches \'focus.FOCUS\' events for all items with mouse', function() {
+    it('dispatches \'focus.FOCUS\' events for all items with mouse', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateMouseEnter($items.eq(0));
-                eventHelpers.simulateMouseEnter($items.eq(1));
-                eventHelpers.simulateMouseEnter($items.eq(2));
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
-            expect(actionSpy.calls.length).toEqual(3);
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(1));
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(2));
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateMouseEnter($items.eq(0));
+            eventHelpers.simulateMouseEnter($items.eq(1));
+            eventHelpers.simulateMouseEnter($items.eq(2));
+        })
+        .then(function(){
+            expect(actionSpy).toHaveBeenCalled();
+            expect(actionSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(actionSpy.calls.argsFor(0)[1][0]).toEqual($items.eq(0)[0]);
+            expect(actionSpy.calls.argsFor(1)[1][0]).toEqual($items.eq(1)[0]);
+            expect(actionSpy.calls.argsFor(2)[1][0]).toEqual($items.eq(2)[0]);
+            done();
         });
     });
 
-    it('dispatches \'focus.BLUR\' events for all items with mouse', function() {
+    it('dispatches \'focus.BLUR\' events for all items with mouse', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.BLUR, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateMouseEnter($items.eq(0));
+            eventHelpers.simulateMouseExit($items.eq(0));
 
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateMouseEnter($items.eq(0));
-                eventHelpers.simulateMouseExit($items.eq(0));
+            eventHelpers.simulateMouseEnter($items.eq(1));
+            eventHelpers.simulateMouseExit($items.eq(1));
 
-                eventHelpers.simulateMouseEnter($items.eq(1));
-                eventHelpers.simulateMouseExit($items.eq(1));
-
-                eventHelpers.simulateMouseEnter($items.eq(2));
-                eventHelpers.simulateMouseExit($items.eq(2));
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
-            expect(actionSpy.calls.length).toEqual(3);
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(0));
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(1));
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(2));
+            eventHelpers.simulateMouseEnter($items.eq(2));
+            eventHelpers.simulateMouseExit($items.eq(2));
+        })
+        .then(function(){
+            expect(actionSpy).toHaveBeenCalled();
+            expect(actionSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(actionSpy.calls.argsFor(0)[1][0]).toEqual($items.eq(0)[0]);
+            expect(actionSpy.calls.argsFor(1)[1][0]).toEqual($items.eq(1)[0]);
+            expect(actionSpy.calls.argsFor(2)[1][0]).toEqual($items.eq(2)[0]);
+            done();
         });
     });
 
-    it('does not dispatch \'focus.FOCUS\' event with mouse', function() {
+    it('does not dispatch \'focus.FOCUS\' event with mouse', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                control.endNavigationPhase();
-                eventHelpers.simulateMouseEnter($items.eq(0));
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            control.endNavigationPhase();
+            eventHelpers.simulateMouseEnter($items.eq(0));
+        })
+        .then(function(){
             expect(actionSpy).not.toHaveBeenCalled();
+            done();
         });
     });
 
-    it('does not dispatch \'focus.BLUR\' event with mouse', function() {
+    it('does not dispatch \'focus.BLUR\' event with mouse', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.BLUR, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                control.endNavigationPhase();
-                eventHelpers.simulateMouseEnter($items.eq(0));
-                eventHelpers.simulateMouseExit($items.eq(0));
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            control.endNavigationPhase();
+            eventHelpers.simulateMouseEnter($items.eq(0));
+            eventHelpers.simulateMouseExit($items.eq(0));
+        })
+        .then(function(){
             expect(actionSpy).not.toHaveBeenCalled();
+            done();
         });
     });
 
-    it('does not dispatch \'event.SELECT\' event with mouse', function() {
+    it('does not dispatch \'event.SELECT\' event with mouse', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, events.SELECT, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                control.endNavigationPhase();
-                eventHelpers.simulateMouseDown($items.eq(0));
-                eventHelpers.simulateMouseUp($items.eq(0));
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            control.endNavigationPhase();
+            eventHelpers.simulateMouseDown($items.eq(0));
+            eventHelpers.simulateMouseUp($items.eq(0));
+        })
+        .then(function(){
             expect(actionSpy).not.toHaveBeenCalled();
+            done();
         });
     });
 
     // Mouse & Key Events
 
-    it('dispatches \'focus.FOCUS\' event with mouse then down arrow key', function() {
+    it('dispatches \'focus.FOCUS\' event with mouse then down arrow key', function(done) {
         var obj = getEventHandler();
         var actionSpy = jasmine.createSpy('focusSpy');
 
         obj.listenTo(control, focus.FOCUS, actionSpy);
 
-        runs(function() {
-            eventHelpers.insertChar($input, 'l');
-            eventHelpers.insertChar($input, 'u');
-            eventHelpers.insertChar($input, 'c');
-            eventHelpers.insertChar($input, 'y');
-        });
-
-        waitsFor(function() {
-            if(obj.hasRendered){
-                eventHelpers.simulateMouseEnter($items.eq(1));
-                eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
-                return true;
-            }
-            return false;
-        }, 'No input received', 500);
-
-        runs(function() {
+        actionRendered('lucy', obj)
+        .then(function(){
+            eventHelpers.simulateMouseEnter($items.eq(1));
+            eventHelpers.simulateKeyDown($input, KeyCodes.downArrow);
+        })
+        .then(function(){
             expect(actionSpy).toHaveBeenCalled();
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(1));
-            expect(actionSpy).toHaveBeenCalledWith(control, $items.eq(2));
+            expect(actionSpy.calls.mostRecent().args[0]).toEqual(control);
+            expect(actionSpy.calls.argsFor(0)[1][0]).toEqual($items.eq(1)[0]);
+            expect(actionSpy.calls.argsFor(1)[1][0]).toEqual($items.eq(2)[0]);
+            done();
         });
     });
-
-
 
 }); // eof describe
 }); // eof define

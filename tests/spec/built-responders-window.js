@@ -47,7 +47,7 @@ describe('Window Responder', function() {
         EventHelpers.simulateOrientationLandscapeLeft($(window));
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.calls.length).toEqual(1);
+        expect(actionSpy.calls.count()).toEqual(1);
     });
 
     it('expects orientation landscape 90', function(){
@@ -62,7 +62,7 @@ describe('Window Responder', function() {
         EventHelpers.simulateOrientationLandscapeRight($(window));
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.calls.length).toEqual(1);
+        expect(actionSpy.calls.count()).toEqual(1);
     });
 
     it('expects orientation portrait 0', function(){
@@ -77,7 +77,7 @@ describe('Window Responder', function() {
         EventHelpers.simulateOrientationLandscapeRight($(window));
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.calls.length).toEqual(1);
+        expect(actionSpy.calls.count()).toEqual(1);
     });
 
     it('expects window resize', function(){
@@ -93,42 +93,40 @@ describe('Window Responder', function() {
         expect(actionSpy).toHaveBeenCalled();
     });
 
-    it('debounces resize', function(){
-        var flag, count, actionSpy, responder;
+    it('debounces resize', function(done){
 
-        flag = false;
-        count = 0;
-        actionSpy = jasmine.createSpy('actionSpy');
-        responder = getResponder({
+        var actionSpy = jasmine.createSpy('actionSpy');
+        var responder = getResponder({
             resize: actionSpy,
             resizeDebounce: 200
         });
 
-        runs(function() {
+        var action = function(){
+            var deferred = $.Deferred();
+            var count = 0;
+            var id;
+
             id = setInterval(function() {
                 EventHelpers.simulateWindowResize($(window));
                 count++;
 
-            if(count > 4) {
-                clearInterval(id);
+                if(count > 4) {
+                    clearInterval(id);
 
-                // allow time for debounce to execute
-                setTimeout(function() {
-                    flag = true;
-                }, 225);
-            }
-
+                    // allow time for debounce to execute
+                    setTimeout(function() {
+                        deferred.resolve();
+                    }, 225);
+                }
             }, 100);
+
+            return deferred.promise();
+        };
+
+        action().then(function(){
+            expect(actionSpy.calls.count()).toEqual(1);
+            done();
         });
-
-        waitsFor(function() {
-            return flag;
-        }, 'Timeout expired', 1000);
-
-        runs(function() {
-            expect(actionSpy.calls.length).toEqual(1);
-        });
-
     });
 
 

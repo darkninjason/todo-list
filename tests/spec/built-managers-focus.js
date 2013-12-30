@@ -53,7 +53,7 @@ describe('Focus Manager', function() {
         manager.focusIndex(0);
 
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls.length).toEqual(1);
+        expect(spy.calls.count()).toEqual(1);
     });
 
     it('should trigger blur', function() {
@@ -69,7 +69,7 @@ describe('Focus Manager', function() {
         manager.focusIndex(0);
 
         expect(blur).toHaveBeenCalled();
-        expect(blur.calls.length).toEqual(1);
+        expect(blur.calls.count()).toEqual(1);
     });
 
     it('should focus index 0', function() {
@@ -77,7 +77,7 @@ describe('Focus Manager', function() {
             list: $items.toArray()
         });
 
-        spyOn(manager, 'focus').andCallThrough();
+        spyOn(manager, 'focus').and.callThrough();
 
         var $target = $items.eq(0);
         manager.focusIndex(0);

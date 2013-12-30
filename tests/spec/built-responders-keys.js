@@ -59,7 +59,7 @@ describe('Key Responder', function() {
             el: $input
         });
 
-        spyOn(scopedResponder, 'onClose').andCallThrough();
+        spyOn(scopedResponder, 'onClose').and.callThrough();
 
         scopedResponder.close();
         expect(scopedResponder.onClose).toHaveBeenCalled();
@@ -121,8 +121,8 @@ describe('Key Responder', function() {
         expect(keyUp).not.toHaveBeenCalled();
 
         // this is probably a redundant check:
-        expect(keyDown.calls.length).toEqual(0);
-        expect(keyUp.calls.length).toEqual(0);
+        expect(keyDown.calls.count()).toEqual(0);
+        expect(keyUp.calls.count()).toEqual(0);
     });
 
     it('expects keyDown to be called', function() {
@@ -336,7 +336,7 @@ describe('Key Responder', function() {
         expect(action).toHaveBeenCalledWith(responder, uEvent);
         expect(action).toHaveBeenCalledWith(responder, cEvent);
         expect(action).toHaveBeenCalledWith(responder, yEvent);
-        expect(action.calls.length).toEqual(4);
+        expect(action.calls.count()).toEqual(4);
     });
 
 }); // eof describe

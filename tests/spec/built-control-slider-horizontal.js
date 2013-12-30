@@ -337,9 +337,9 @@ describe('Horizontal Slider Control', function() {
         doBasicMouseDrag(elements.$leftHandle, 100);
         doBasicTouchDrag(elements.$leftHandle, 50);
 
-        expect(dragStartSpy.calls.length).toEqual(2);
-        expect(dragUpdateSpy.calls.length).toEqual(4);
-        expect(dragEndSpy.calls.length).toEqual(2);
+        expect(dragStartSpy.calls.count()).toEqual(2);
+        expect(dragUpdateSpy.calls.count()).toEqual(4);
+        expect(dragEndSpy.calls.count()).toEqual(2);
     });
 
     it('disables mouse when acceptsMouse is false', function(){

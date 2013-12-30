@@ -109,7 +109,7 @@ describe('Array Manager', function() {
         expect(target.length).toEqual(4);
 
         expect(eventSpy).toHaveBeenCalled();
-        expect(eventSpy.calls.length).toEqual(2);
+        expect(eventSpy.calls.count()).toEqual(2);
 
         expect(target[0]).toEqual(1);
         expect(target[1]).toEqual(2);

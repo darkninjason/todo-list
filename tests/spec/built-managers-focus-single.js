@@ -42,8 +42,8 @@ describe('Single Focus Manager', function() {
 
         expect(focus).toHaveBeenCalled();
         expect(blur).not.toHaveBeenCalled();
-        expect(focus.calls.length).toEqual(1);
-        expect(blur.calls.length).toEqual(0);
+        expect(focus.calls.count()).toEqual(1);
+        expect(blur.calls.count()).toEqual(0);
     });
 
     it('should trigger blur', function() {
@@ -60,7 +60,7 @@ describe('Single Focus Manager', function() {
         manager.focusIndex(0);
 
         expect(blur).toHaveBeenCalled();
-        expect(blur.calls.length).toEqual(1);
+        expect(blur.calls.count()).toEqual(1);
     });
 
     it('should select one option', function() {

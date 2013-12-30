@@ -94,41 +94,44 @@ describe('Scroll Responder', function() {
         expect(scroll).not.toHaveBeenCalled();
     });
 
-    it('debounces scroll calls', function() {
-        var responder, scrollSpy, id, count, flag;
+    it('debounces scroll calls', function(done) {
+        var count     = 0;
+        var scrollSpy = jasmine.createSpy('scrollSpy');
 
-        flag      = false;
-        count     = 0;
-        scrollSpy = jasmine.createSpy('scrollSpy');
-        responder = getResponder({
+        var responder = getResponder({
             scrollDebounce: 150,
             scroll: scrollSpy
         });
 
-        runs(function() {
-            id = setInterval(function() {
+        function action(){
+            var deferred = $.Deferred();
+
+            EventHelpers.simulateScrollEvent($(window));
+            expect(scrollSpy.calls.count()).toEqual(0);
+
+            var id = setInterval(function() {
                 EventHelpers.simulateScrollEvent($(window));
                 count++;
 
-            if(count > 4) {
-                clearInterval(id);
+                if(count > 4) {
+                    clearInterval(id);
 
-                // allow time for debounce to execute
-                setTimeout(function() {
-                    flag = true;
-                }, 200);
-            }
+                    // allow time for debounce to execute
+                    setTimeout(function() {
+                        deferred.resolve();
+                    }, 200);
+                }
 
             }, 100);
+
+            return deferred.promise();
+        }
+
+        action().then(function(){
+            expect(scrollSpy.calls.count()).toEqual(1);
+            done();
         });
 
-        waitsFor(function() {
-            return flag;
-        }, 'Timeout expired', 1000);
-
-        runs(function() {
-            expect(scrollSpy.calls.length).toEqual(1);
-        });
     });
 
 }); // eof describe

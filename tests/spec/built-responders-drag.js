@@ -71,9 +71,10 @@ describe('Drag Responder', function() {
         var payload = EventHelpers.simulateDragStart(
             $actionTargets.eq(0));
 
+
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
-        expect(actionSpy.calls.length).toEqual(1);
+        expect(actionSpy.calls.mostRecent().args[0]).toEqual(manager);
+        expect(actionSpy.calls.count()).toEqual(1);
     });
 
     it('expects \'getData\' to be called on dragstart', function(){
@@ -89,8 +90,8 @@ describe('Drag Responder', function() {
             $actionTargets.eq(0));
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
-        expect(actionSpy.calls.length).toEqual(1);
+        expect(actionSpy.calls.mostRecent().args[0]).toEqual(manager);
+        expect(actionSpy.calls.count()).toEqual(1);
     });
 
     it('expects \'getDragImage\' to be called on dragstart', function(){
@@ -106,11 +107,11 @@ describe('Drag Responder', function() {
             $actionTargets.eq(0));
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
-        expect(actionSpy.calls.length).toEqual(1);
+        expect(actionSpy.calls.mostRecent().args[0]).toEqual(manager);
+        expect(actionSpy.calls.count()).toEqual(1);
     });
 
-    it('expects \'draggingStarted\' to be called on dragstart', function(){
+    it('expects \'draggingStarted\' to be called on dragstart', function(done){
 
         var actionSpy = jasmine.createSpy('eventSpy');
         var manager = getManager();
@@ -121,25 +122,25 @@ describe('Drag Responder', function() {
         // this call is defered, so we need an async test
         manager.draggingStarted = actionSpy;
 
-        runs(function() {
+        function action(){
+            var deferred = $.Deferred();
+
             var payload = EventHelpers.simulateDragStart(
                 $actionTargets.eq(0));
 
             setTimeout(function() {
-                flag = true;
+                deferred.resolve();
             }, 100);
-        });
 
-        waitsFor(function(){
-            return flag;
-        }, 200);
+            return deferred.promise();
+        }
 
-        runs(function(){
+        action().then(function(){
             expect(actionSpy).toHaveBeenCalled();
-            expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
-            expect(actionSpy.calls.length).toEqual(1);
+            expect(actionSpy.calls.mostRecent().args[0]).toEqual(manager);
+            expect(actionSpy.calls.count()).toEqual(1);
+            done();
         });
-
     });
 
     it('expects \'draggingEnded\' to be called on dragend', function(){
@@ -155,13 +156,13 @@ describe('Drag Responder', function() {
             $actionTargets.eq(0));
 
         expect(actionSpy).toHaveBeenCalled();
-        expect(actionSpy.calls.length).toEqual(1);
-        expect(actionSpy.mostRecentCall.args[0]).toEqual(manager);
-        expect(actionSpy.mostRecentCall.args[1][0]).toEqual($actionTargets.eq(0)[0]);
-        expect(actionSpy.mostRecentCall.args[2]).toEqual('none');
+        expect(actionSpy.calls.count()).toEqual(1);
+        expect(actionSpy.calls.mostRecent().args[0]).toEqual(manager);
+        expect(actionSpy.calls.mostRecent().args[1][0]).toEqual($actionTargets.eq(0)[0]);
+        expect(actionSpy.calls.mostRecent().args[2]).toEqual('none');
     });
 
-    it('disables dragging events on removed objects', function(){
+    it('disables dragging events on removed objects', function(done){
 
         var actionSpy = jasmine.createSpy('eventSpy');
         var manager = getManager();
@@ -176,8 +177,9 @@ describe('Drag Responder', function() {
         manager.draggingStarted = actionSpy;
         manager.draggingEnded = actionSpy;
 
-        runs(function(){
-            var e;
+        function action(){
+            var deferred = $.Deferred();
+
             EventHelpers.simulateDragStart(
                 $candidate);
 
@@ -185,22 +187,20 @@ describe('Drag Responder', function() {
                 $candidate);
 
             setTimeout(function() {
-                flag = true;
+                deferred.resolve();
             }, 100);
-        });
 
-        waitsFor(function(){
-            return flag;
-        }, 200);
+            return deferred.promise();
+        }
 
-        runs(function(){
+        action().then(function(){
             expect(actionSpy).not.toHaveBeenCalled();
-            expect(actionSpy.calls.length).toEqual(0);
+            expect(actionSpy.calls.count()).toEqual(0);
+            done();
         });
-
     });
 
-    it('disables all dragging events on close', function(){
+    it('disables all dragging events on close', function(done){
 
         var actionSpy = jasmine.createSpy('eventSpy');
         var manager = getManager();
@@ -214,7 +214,9 @@ describe('Drag Responder', function() {
         manager.draggingStarted = actionSpy;
         manager.draggingEnded = actionSpy;
 
-        runs(function(){
+        function action(){
+            var deferred = $.Deferred();
+
             _.each($actionTargets, function(each){
                 var $el = $(each);
                 EventHelpers.simulateDragStart($el);
@@ -222,19 +224,17 @@ describe('Drag Responder', function() {
             });
 
             setTimeout(function() {
-                flag = true;
+                deferred.resolve();
             }, 100);
-        });
 
-        waitsFor(function(){
-            return flag;
-        }, 200);
+            return deferred.promise();
+        }
 
-        runs(function(){
+        action().then(function(){
             expect(actionSpy).not.toHaveBeenCalled();
-            expect(actionSpy.calls.length).toEqual(0);
+            expect(actionSpy.calls.count()).toEqual(0);
+            done();
         });
-
     });
 
     it('throws error when removing non-AUF element', function(){

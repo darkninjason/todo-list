@@ -2,38 +2,40 @@ require(
 
 [
     'jquery',
-    'jasmine/jasmine',
+    'jasmine/boot', // requires jasmine/jasmine, exposes 'jasmine'
     'spec/index',
 
-    // jasmine augmenters, they return nothing useful.
+    // jasmine augmentation, they return nothing useful.
     'jasmine/jasmine-html',
     'jasmine/jasmine-jquery',
-    'jasmine/console-runner'
+    'jasmine/console',
 ],
 
-function($, Jasmine, index) {
+function($, jasmine, index) {
 
-    var jasmineEnv = Jasmine.getEnv();
+
+    var jasmineEnv = jasmine.getEnv();
 
     // jquery-jasmine
-    Jasmine.getFixtures().fixturesPath = 'fixtures';
+    jasmine.getFixtures().fixturesPath = 'fixtures';
+    //jasmineEnv.updateInterval = 1000;
 
-    // phantom-jasmine
-    // jasmineEnv.addReporter(new Jasmine.TrivialReporter());
-    // jasmineEnv.addReporter(new Jasmine.ConsoleReporter());
+    // var htmlReporter = new jasmine.HtmlReporter({env: jasmineEnv});
+    // jasmineEnv.addReporter(htmlReporter);
 
-    jasmineEnv.updateInterval = 1000;
-
-    var htmlReporter = new Jasmine.HtmlReporter();
-    jasmineEnv.addReporter(htmlReporter);
-
-    jasmineEnv.specFilter = function(spec) {
-        return htmlReporter.specFilter(spec);
-    };
+    // jasmineEnv.specFilter = function(spec) {
+    //     return htmlReporter.specFilter(spec);
+    // };
 
     $(function() {
         require(index.specs, function() {
-            jasmineEnv.execute();
+            // jasmine/boot sets the onload handler
+            // we call it since we know we are ready.
+            //
+            // effectively calls this:
+            // htmlReporter.initialize();
+            // env.execute();
+            window.onload();
         });
     });
 
