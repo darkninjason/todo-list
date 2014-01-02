@@ -30,6 +30,7 @@ var ClickTestResponder = marionette.Controller.extend({
 
         if(isChild){
             this.clickInside(this, e);
+            return;
         }
 
         this.clickOutside(this, e);
