@@ -16,10 +16,11 @@ var PopView = marionette.View.extend({
     show: function(view, options){
         options = options || {};
 
-        var rect; // {x, y, width, height}
+        var rect;
         var anchorElement = null;
 
-        if (!options.rect) throw new Error('Must provide at least a \'rect\' option');
+        // rect can be an $el or a {x, y, width, height}
+        if (!options.rect) throw new Error('Must provide a \'rect\' option');
 
         if(this.currentView){ this.close(); }
 
