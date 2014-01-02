@@ -44,9 +44,10 @@ function getElementPosition ($el) {
 }
 
 function getElementBounds($el) {
-    // el is raw dom element
+    // https://developer.mozilla.org/en-US/docs/XPCOM_Interface_Reference/nsIDOMClientRect
     // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
 
+    // $el is raw dom element
     if($el.nodeName){
         return $el.getBoundingClientRect();
     }
