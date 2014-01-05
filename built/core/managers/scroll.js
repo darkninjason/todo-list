@@ -14,7 +14,6 @@ var events          = require('built/core/events/event');
 var ScrollManager = marionette.Controller.extend({
 
     $scrollable: null,
-    $viewport  : null,
 
     _defaults       : null,
     _scrollResponder: null,
@@ -41,7 +40,6 @@ var ScrollManager = marionette.Controller.extend({
         _.defaults(this.options, this._getDefaults());
 
         this.$el              = helpers.registerElement(this.options.el);
-        this.$viewport        = this._initializeViewport(this.$el);
         this.$scrollable      = this._initializeScrollable(this.$el);
         this._scrollResponder = this._initializeScrollResponder(this.options);
         this.rangeManager     = this._initializeRangeManager(this.options);
@@ -68,14 +66,6 @@ var ScrollManager = marionette.Controller.extend({
 
     // Initialization
 
-    _initializeViewport: function($el) {
-        var isWindow;
-
-        isWindow = window === _.identity($el[0]);
-        $el = (isWindow) ? $(document.documentElement) : $el;
-        return $el;
-    },
-
     _initializeScrollable: function($el) {
         var isWindow;
 
@@ -85,41 +75,15 @@ var ScrollManager = marionette.Controller.extend({
     },
 
     _getWindowScrollable: function() {
-        var docElement, body, scrollables, scrollable, old;
 
-        docElement  = document.documentElement;
-        body        = document.body;
-        scrollables = [docElement, body];
-
-        // iterate over scrollable elements
-        // setting scrollTop on an unsupported element should not update it's value
-        // so do a check to see if the assignment actually changed the value
-        // if it is, set scrollable to that element
-        // reset value added by test
-        //
-        // see: http://mzl.la/19SZOty
-        function iterator(el, i, scrollables) {
-            old = el.scrollTop;
-
-            // test when page hasn't been scrolled
-            el.scrollTop = el.scrollTop + 1;
-
-            if(el.scrollTop > old) {
-                scrollable = el;
-                el.scrollTop = old;
-            }
-
-            // test when page has been scrolled to bottom
-            el.scrollTop = el.scrollTop - 1;
-
-            if(el.scrollTop < old) {
-                scrollable = el;
-                el.scrollTop = old;
-            }
-        }
-
-        _.each(scrollables, iterator, this);
-        return $(scrollable);
+        // seems to work everywhere
+        // personally tested in:
+        // safari 6.0.1 (lion, mtn-lion, mav)
+        // chrome 31
+        // firefox 24
+        // ie(8-10, win7)
+        // see: http://stackoverflow.com/a/9820017
+        return $(document);
     },
 
     _initializeScrollResponder: function(options) {
@@ -131,17 +95,14 @@ var ScrollManager = marionette.Controller.extend({
     },
 
     _didReceiveScroll: function(responder, e) {
-        var scrollable;
-        scrollable = this.$scrollable[0];
-        this.rangeManager.setValue(scrollable.scrollTop);
+        // var scrollable;
+        // scrollable = this.$scrollable[0];
+        this.rangeManager.setValue(this.$scrollable.scrollTop());
     },
 
     _initializeRangeManager: function(options) {
         var manager, max, listener, scrollable, start;
 
-        // enable snap so range only ever sends scroll to whole numbers
-        // numbers of steps = number of pixels returned from max scroll
-        // this should result in an incremental distance of 1
         max = this._computeMaxScroll();
         manager = new RangeManager({
             max  : max
@@ -163,18 +124,105 @@ var ScrollManager = marionette.Controller.extend({
     },
 
     _scrollElement: function($el, value) {
-        $el[0].scrollTop = value;
+        // $el[0].scrollTop = value;
+        $el.scrollTop(value);
+    },
+
+    _getViewportSize: function($el) {
+        var isWindow;
+
+        isWindow = window === _.identity($el[0]);
+
+        if(isWindow) {
+            return this._getWindowViewportSize($el);
+        }
+        else {
+            return this._getElementViewportSize($el);
+        }
+
+        throw new Error('coult not determine viewport size!');
+    },
+
+    _getWindowViewportSize: function($el) {
+        var height, width, win, doc, docEl, body;
+
+        // local refs
+        win = $el[0];
+        doc = $el[0].document;
+
+        docEl = doc.documentElement;
+        body = doc.getElementsByTagName('body')[0];
+        width = win.innerWidth || docEl.clientWidth || body.clientWidth;
+        height = win.innerHeight || docEl.clientHeight || body.clientHeight;
+
+        return {width: width, height: height};
+    },
+
+    _getElementViewportSize: function($el) {
+        var el, width, height;
+
+        el = $el[0];
+        width = el.clientWidth;
+        height = el.clientHeight;
+
+        return {width: width, height: height};
+    },
+
+    _getScrollSize: function($el) {
+        var isWindow;
+
+        isWindow = window === _.identity($el[0]);
+
+        if(isWindow) {
+            return this._getWindowScrollSize($el);
+        }
+        else {
+            return this._getElementScrollSize($el);
+        }
+
+        throw new Error('coult not determine viewport size!');
+    },
+
+    // see: http://bit.ly/1dXjsmd
+    _getWindowScrollSize: function($el) {
+        var doc, docEl, width, height;
+
+        doc = document;
+        docEl = doc.documentElement;
+        body = doc.body;
+
+        width = Math.max(
+            body.scrollWidth, docEl.scrollWidth,
+            body.offsetWidth, docEl.offsetWidth,
+            body.clientWidth, docEl.clientWidth
+        );
+        height = Math.max(
+            body.scrollHeight, docEl.scrollHeight,
+            body.offsetHeight, docEl.offsetHeight,
+            body.clientHeight, docEl.clientHeight
+        );
+
+        return {width: width, height: height};
+    },
+
+    _getElementScrollSize: function($el) {
+        var el, width, height;
+
+        el = $el[0];
+        width = el.scrollWidth;
+        height = el.scrollHeight;
+
+        return {width: width, height: height};
     },
 
     _computeMaxScroll: function() {
-        var viewport, scrollable, max;
+        var viewportSize, scrollSize;
 
-        // when el is NOT window, viewport and scrollable are the same element.
-        viewport   = this.$viewport[0];
-        scrollable = this.$scrollable[0];
+        viewportSize = this._getViewportSize(this.$el);
+        scrollSize = this._getScrollSize(this.$el);
 
-        // see: http://mzl.la/19VEUIo
-        max = scrollable.scrollHeight - viewport.clientHeight;
+        max = scrollSize.height - viewportSize.height;
+
         return max;
     },
 
@@ -251,7 +299,6 @@ var ScrollManager = marionette.Controller.extend({
             // adding these all together, than filtering them out later.
             shouldAddMarker = top < this.rangeManager.getMax();
 
-
             if(shouldAddMarker) {
                 position            = range.calculatePositionForValue(top);
                 dict[position + ''] = $el;
@@ -326,7 +373,7 @@ var ScrollManager = marionette.Controller.extend({
                 return $(el);
             });
 
-            this.trigger(events.MARKER_ELEMENT, this, elements, direction);
+            this.trigger(events.MARKER_ELEMENT, this, markers, elements, direction);
 
         }, this);
     }
