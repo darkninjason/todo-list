@@ -9,15 +9,24 @@ var data         = require('built/core/events/data');
 var events       = require('built/core/events/event');
 
 var InputSelectComposite =  marionette.CompositeView.extend({
-    initialize : function(){
-
+    minLength: 2,
+    debounceDelay: 300,
+    acceptsMouseEnterExit:true,
+    
+    initialize : function(options){
+         this.options = options;
     },
 
     onShow : function(){
 
-        this.inputSelect = new InputSelect({
-            el: this.ui.input
-        });
+        var options = {
+            el: this.ui.input,
+            debounceDelay: this.debounceDelay,
+            minLength: this.minLength,
+            acceptsMouseEnterExit: this.acceptsMouseEnterExit
+        };
+
+        this.inputSelect = new InputSelect(options);
 
         this.listenTo(this.collection,'sync', this.onCollectionSync);
         this.listenTo(this.collection,'change', this.onCollectionSync);
