@@ -10,25 +10,28 @@ var PopView = marionette.View.extend({
     view: null,
     defaultEdge: 'bottom',
 
-    initialize: function(options){
-    },
-
     show: function(view, options){
         options = options || {};
 
-        var rect;
-        var anchorElement = null;
+        if(this.deferred){
+            this.deferred.reject();
+        }
 
-        // rect can be an $el or a {x, y, width, height}
-        if (!options.rect) throw new Error('Must provide a \'rect\' option');
+        this.deferred = $.Deferred();
 
-        if(this.currentView){ this.close(); }
+        var rect; // {x, y, width, height} or jquery Element
+
+        if (!options.rect) throw new Error('Must provide at least a \'rect\' option');
+
+        if(this.currentView) this.close();
 
         rect = options.rect;
 
         if(rect instanceof jQuery){
-            this._anchorElement = anchorElement = rect;
+            this._anchorElement = rect;
             rect = this.rectForAnchorElement(anchorElement);
+        } else {
+            this._anchorElement = options.anchorElement || null;
         }
 
         view.render();
@@ -49,6 +52,8 @@ var PopView = marionette.View.extend({
         this.showRelativeToRect(rect, options.anchor);
 
         marionette.triggerMethod.call(this, 'show', view);
+
+        return this.deferred.promise();
     },
 
     rectForAnchorElement: function($el){
@@ -72,14 +77,16 @@ var PopView = marionette.View.extend({
         // don't show anything until after layout has happened
         this.$el.css({
             position: 'absolute',
-            visibility: 'hidden'
+            visibility: 'hidden',
+            zIndex: 1
         });
+
 
         // we need this in the DOM first so we can
         // get some measurements. This is primiarily
         // for an anchor edge of 'top'
         if(this._anchorElement){
-            this._anchorElement.append(this.el);
+            this._anchorElement.append(this.$el);
 
             if(this._anchorElement.prop('style').position != 'relative'){
                 this._anchorElement.css({position: 'relative'});
@@ -208,6 +215,8 @@ var PopView = marionette.View.extend({
             el: view.$el,
             clickOutside: _.bind(this.wantsDismissFromClick, this)
         });
+
+        view.once('complete', _.bind(this.close, this));
     },
 
     close: function(){
@@ -215,9 +224,15 @@ var PopView = marionette.View.extend({
         keys.removeFromResponderChain(this);
         this._clicks.close();
 
+        this.$el.remove();
+
+        // save the view as Region.close will
+        // delete this.currentView
+        var view = this.currentView;
         marionette.Region.prototype.close.call(this);
 
-        this.$el.remove();
+        this.deferred.resolve(view);
+        this.deferred = null;
     },
 });
 
