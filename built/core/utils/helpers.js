@@ -125,6 +125,19 @@ function mixins(Source, Destination){
     });
 }
 
+// Taken directly from Marionette.
+// For slicing `arguments` in functions
+var protoSlice = Array.prototype.slice;
+function slice(args) {
+  return protoSlice.call(args);
+}
+
+function throwError(message, name) {
+  var error = new Error(message);
+  error.name = name || 'Error';
+  throw error;
+}
+
 // Exports
 
 exports.compose                    = compose;
@@ -137,4 +150,7 @@ exports.getElementId               = getElementId;
 exports.mixins                     = mixins;
 exports.MSIEVersion                = _MSIEVersion();
 exports.isMSIE                     = exports.MSIEVersion > -1 ? true : false;
+exports.slice                      = slice;
+exports.throwError                 = throwError;
+
 });

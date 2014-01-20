@@ -57,6 +57,44 @@ describe('Scroll Manager', function() {
         return window === _.identity($el[0]);
     }
 
+    function getWindowViewportSize($el) {
+        // copied from scroll manager internals
+        var height, width, win, doc, docEl, body;
+
+        // local refs
+        win = $el[0];
+        doc = $el[0].document;
+
+        docEl = doc.documentElement;
+        body = doc.getElementsByTagName('body')[0];
+        width = win.innerWidth || docEl.clientWidth || body.clientWidth;
+        height = win.innerHeight || docEl.clientHeight || body.clientHeight;
+
+        return {width: width, height: height};
+    }
+
+    function getWindowScrollSize($el) {
+        // copied from sroll manager internals
+        var doc, docEl, width, height;
+
+        doc = document;
+        docEl = doc.documentElement;
+        body = doc.body;
+
+        width = Math.max(
+            body.scrollWidth, docEl.scrollWidth,
+            body.offsetWidth, docEl.offsetWidth,
+            body.clientWidth, docEl.clientWidth
+        );
+        height = Math.max(
+            body.scrollHeight, docEl.scrollHeight,
+            body.offsetHeight, docEl.offsetHeight,
+            body.clientHeight, docEl.clientHeight
+        );
+
+        return {width: width, height: height};
+    }
+
     // Test Suite
 
     it('throws when no el is provided', function(){
@@ -70,13 +108,13 @@ describe('Scroll Manager', function() {
     });
 
     it('gets max scroll for window', function(){
-        var elements, viewport, scrollable, manager;
+        var elements, manager, viewportSize, scrollSize, max;
 
-        elements   = getPageElements();
-        manager    = getManager();
-        viewport   = document.documentElement;
-        scrollable = manager._getWindowScrollable()[0];
-        max        = scrollable.scrollHeight - viewport.clientHeight;
+        elements = getPageElements();
+        manager  = getManager();
+        viewportSize = getWindowViewportSize($(window));
+        scrollSize = getWindowScrollSize($(window));
+        max = scrollSize.height - viewportSize.height;
 
         expect(manager.getMaxScrollValue()).toEqual(max);
     });
@@ -140,13 +178,13 @@ describe('Scroll Manager', function() {
     });
 
     it('gets sets current scroll position for window', function(done){
-        manager          = getManager();
-        var elements     = getPageElements();
-        var scrollable   = manager._getWindowScrollable()[0];
-        var viewport     = document.documentElement;
-        var max          = scrollable.scrollHeight - viewport.clientHeight;
+        var manager = getManager();
+        var elements = getPageElements();
+        var scrollable = manager._getWindowScrollable()[0];
+        var viewportSize = getWindowViewportSize($(window));
+        var scrollSize = getWindowScrollSize($(window));
+        var max = scrollSize.height - viewportSize.height;
         var asyncTimeout = 50;
-
 
         // see note below about math.floor
         var expectedPosition = manager.calculatePositionForValue(Math.floor(max*0.5));
