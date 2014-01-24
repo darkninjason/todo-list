@@ -3,6 +3,7 @@ define(function (require, exports, module) {
     var marionette = require('marionette');
     var PopView = require('built/app/popovers').PopView;
     var WindowResponder = require('built/core/responders/window').WindowResponder;
+    var ScrollResponder = require('built/core/responders/scroll').ScrollResponder;
 
     _.extend(marionette.View.prototype, {
 
@@ -10,14 +11,14 @@ define(function (require, exports, module) {
             // If you are calling this method in your classes
             // constructor() be sure to call it BEFORE you call
             // super.constructor(). The events must be in place
-            // before this.delegateEvents() is called. 
-            // 
+            // before this.delegateEvents() is called.
+            //
             // Marionette.View.constructor() calls
             // Backbone.View.constructor() which calls
             // Backbone.View.initialize() after which
             // Backbone.View.delegateEvents() is called.
             //
-            // So This call can be safely done in initialize() or in 
+            // So This call can be safely done in initialize() or in
             // constructor(). But again, if done in constructor()
             // you must call it prior to calling super.constructor().
             if(this.contextMenu){
@@ -59,13 +60,56 @@ define(function (require, exports, module) {
                 }
             });
 
+            // disable srolling
+            // but keep the scrollbars:
+            // http://stackoverflow.com/questions/8701754/just-disable-scroll-not-hide-it
+            //
+            // There are other solutions
+            // http://stackoverflow.com/questions/4770025/how-to-disable-scrolling-temporarily
+            // DOMMouseScroll in the above is FireFox only.
+
+            var _origStyles = {};
+            var _$body = $('body');
+            var _scrollTop = $(window).scrollTop();
+
+            function disableScroll(){
+                var targets = ['position', 'top', 'overflow-y', 'width'];
+                _.each(targets, function(key){
+                    // Go though the style property not css
+                    // if the style was not set, it will be empty
+                    // via .style where as .css() will present a
+                    // calculated value.
+                    _origStyles[key] = _$body.prop('style')[key];
+                });
+
+                _$body.css({
+                    position: 'fixed',
+                    width: '100%',
+                    overflowY: 'scroll',
+                    top: (-1 * _scrollTop) + 'px'
+                });
+            }
+
+            function enableScroll(){
+                _$body.css(_origStyles);
+                $(window).scrollTop(_scrollTop);
+            }
+
+            disableScroll();
+
+            // using clientX and clientY so we get normalized
+            // coords regardless of scroll position.
+            // We will factor in the scroll position in our
+            // _contextMenuAnchorAction()
             menu.show(view, {
                 rect: {x: evt.clientX,  y: evt.clientY},
                 anchor: 'top'})
 
             .then(function(view){
                 windowResponder.close();
+                enableScroll();
                 completeHandler(view);
+
             });
 
             // let window know about this event.
@@ -83,22 +127,32 @@ define(function (require, exports, module) {
         },
 
         _contextMenuAnchorAction: function(anchorRect, $anchorElement, viewRect, css){
+            // our rects are calculated using the clientX and clientY
+            // which do not take into account scroll position.
+            // We add back in the scroll position so we position ourselves
+            // onto the screen properly.
+
             var expandedX = anchorRect.x + viewRect.width;
             var expandedY = anchorRect.y + viewRect.height;
+            var $window = $(window);
 
-
-            if(expandedX > $(window).width()){
-                css.left = $(window).width() - viewRect.width;
+            if(expandedX > $window.width()){
+                css.left = ($window.width() - viewRect.width) + $window.scrollLeft();
             } else {
-                css.left = anchorRect.x;
+                css.left = anchorRect.x + $window.scrollLeft();
             }
 
-
-            if(expandedY > $(window).height()){
-                css.top = $(window).height() - viewRect.height;
+            if(expandedY > $window.height()){
+                css.top = ($window.height() - viewRect.height) + $window.scrollTop();
             } else {
-                css.top = anchorRect.y;
+                css.top = anchorRect.y + $window.scrollTop();
             }
+
+            // due to the way we are blocking scrolling with styles.
+            // specifically setting the top positions to -$(window).scrollTop()
+            // we need to add back in that value to ensure a proper position;
+            var top = parseInt($('body').css('top'), 10);
+            css.top = css.top + (-1 * top);
 
         }
     });
