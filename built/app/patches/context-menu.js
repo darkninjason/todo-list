@@ -7,6 +7,19 @@ define(function (require, exports, module) {
     _.extend(marionette.View.prototype, {
 
         contextMenus: function(){
+            // If you are calling this method in your classes
+            // constructor() be sure to call it BEFORE you call
+            // super.constructor(). The events must be in place
+            // before this.delegateEvents() is called. 
+            // 
+            // Marionette.View.constructor() calls
+            // Backbone.View.constructor() which calls
+            // Backbone.View.initialize() after which
+            // Backbone.View.delegateEvents() is called.
+            //
+            // So This call can be safely done in initialize() or in 
+            // constructor(). But again, if done in constructor()
+            // you must call it prior to calling super.constructor().
             if(this.contextMenu){
                 this.events['contextmenu'] = '_contextMenuOnRightClick';
             }
