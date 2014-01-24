@@ -23,11 +23,12 @@ var ClickTestResponder = marionette.Controller.extend({
 
     initializeWindowListener: function(){
         $(window).on('click', this.onWindowPress);
+        // context menu events are counted as clicks
+        $(window).on('contextmenu', this.onWindowPress);
     },
 
     onWindowPress: function(e){
         var isChild = this.targetIsChild($(e.target));
-
         if(isChild){
             this.clickInside(this, e);
             return;
@@ -50,6 +51,7 @@ var ClickTestResponder = marionette.Controller.extend({
 
     onClose: function(){
         $(window).off('click', this.onWindowPress);
+        $(window).off('contextmenu', this.onWindowPress);
     }
 
 
