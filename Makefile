@@ -1,5 +1,6 @@
 SHELL=/bin/bash
 JS_TEST_LOC = $(shell find ./tests/spec/ -name '*.js' | xargs cat | sed '/^$$/d' | wc -l)
+JS_FILES = $(shell find ./built/ -name '*.js' | wc -l)
 JS_LOC = $(shell find ./built/ -name '*.js' | xargs cat | sed '/^$$/d' | wc -l)
 
 .PHONY: count-js
@@ -7,6 +8,7 @@ count-js:
 	@echo ''
 	@echo 'JavaScript Test LOC:' $(JS_TEST_LOC)
 	@echo '     JavaScript LOC:' $(JS_LOC)
+	@echo '   JavaScript Files:' $(JS_FILES)
 	@echo '              -----------'
 	@echo '                     '$$(( $(JS_TEST_LOC) + $(JS_LOC) ))
 	@echo ''
