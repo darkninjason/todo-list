@@ -23,13 +23,19 @@ var ClickTestResponder = marionette.Controller.extend({
 
     initializeWindowListener: function(){
         $(window).on('click', this.onWindowPress);
-        // context menu events are counted as clicks
         $(window).on('contextmenu', this.onWindowPress);
     },
 
     onWindowPress: function(e){
-        var isChild = this.targetIsChild($(e.target));
-        if(isChild){
+        var $target = $(e.target);
+        var isInside = false;
+
+        if($target[0] == this.$el[0])
+            isInside = true;
+        else
+            isInside = this.targetIsChild($target);
+
+        if(isInside){
             this.clickInside(this, e);
             return;
         }
