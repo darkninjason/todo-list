@@ -31,5 +31,8 @@ release:
 css:
 	compass watch ./static/css --poll -c ./static/css/config.rb
 
+update-deps:
+	git subtree pull --prefix tests/lib/vendor git@github.com:blitzagency/built-deps.git master --squash
+
 serve:
 	python -m SimpleHTTPServer
