@@ -34,7 +34,6 @@ css:
 update-deps:
 	git subtree pull --prefix tests/lib/vendor git@github.com:blitzagency/built-deps.git master --squash
 
-
 install-test-reqs:
 	npm install karma --save-dev
 	npm install karma-jasmine@2_0 karma-chrome-launcher --save-dev
@@ -42,6 +41,9 @@ install-test-reqs:
 
 install-test-cli:
 	npm install -g karma-cli
+
+install-test-coverage:
+	npm install istanbul karma-coverage --save-dev
 
 serve:
 	python -m SimpleHTTPServer
