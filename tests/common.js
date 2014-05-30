@@ -3,16 +3,6 @@ require.config({
 
   paths : {
     'marionette': 'lib/vendor/backbone/marionette',
-    'hbs': 'lib/vendor/require/hbs/hbs',
-
-    // used for hbs plugin, name is remapped to
-    // lowercase as well for convenience. The optimizer
-    // dies, even with the map in place, if we do this
-    // any other way.
-    //
-    // see:
-    // https://github.com/SlexAxton/require-handlebars-plugin/issues/144
-    'Handlebars': 'lib/vendor/handlebars/handlebars'
   },
 
    packages: [
@@ -32,19 +22,19 @@ require.config({
             location: 'lib/vendor/backbone',
             name: 'backbone',
             main:'backbone'
+        },
+
+        {
+            location: 'lib/vendor/require/hbs',
+            name: 'hbs',
+            main:'hbs'
         }
     ],
 
     map: {
         '*': {
             'underscore': 'lib/vendor/underscore/lodash',
-            'handlebars': 'Handlebars',
-        },
-
-        'hbs':{
-            'i18nprecompile' : 'lib/vendor/require/hbs/i18nprecompile',
-            'json2' : 'lib/vendor/require/hbs/json2',
-            'underscore': 'lib/vendor/require/hbs/underscore'
+            'handlebars': 'hbs/handlebars'
         }
     },
 
@@ -53,7 +43,6 @@ require.config({
         // if disableI18n is `true` it won't load locales and the i18n helper
         // won't work as well.
         disableI18n : true,
-        helperDirectory: 'app/shared/hbs'
   },
 
   shim : {

@@ -3,6 +3,7 @@ var tests = [
     // Load mocks and vendor init
     //'tests/mocks/init',
 
+    'spec/built-hbs',
     'spec/built-calendar',
     'spec/built-control-drag-drop-list',
     'spec/built-control-input-select',
