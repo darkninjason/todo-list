@@ -31,6 +31,9 @@ release:
 css:
 	compass watch ./static/css --poll -c ./static/css/config.rb
 
+push-deps:
+	git subtree push --prefix tests/lib/vendor git@github.com:blitzagency/built-deps.git master
+
 update-deps:
 	git subtree pull --prefix tests/lib/vendor git@github.com:blitzagency/built-deps.git master --squash
 
