@@ -11,7 +11,12 @@
     "istanbul": "~0.1.44"
   },
   "devDependencies": {
-    "karma-cli": "0.0.4"
+    "karma-cli": "0.0.4",
+    "karma": "~0.12.16",
+    "karma-chrome-launcher": "~0.1.4",
+    "karma-jasmine": "~0.2.2",
+    "requirejs": "~2.1.13",
+    "karma-requirejs": "~0.2.2"
   },
   "repository": {
     "type": "git",
