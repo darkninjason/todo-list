@@ -66,7 +66,7 @@ var MyNewTodoView = marionette.ItemView.extend({
     },
 
     addTodo: function(e){
-        if(e.keyCode == 13){
+        if(e.keyCode == 13 && (this.ui.newTodo.val().length > 0)){
             var todo = new Todo({title: this.ui.newTodo.val()});
             Todos.add(todo);
             this.ui.newTodo.val('');;
@@ -79,11 +79,9 @@ var MyTodoCollectionView = marionette.CollectionView.extend({
     itemView: MyTodoView,
     initialize: function(){
         this.listenTo(Todos, "add", this.todoAdded);
-        this.listenTo(Todos, "remove", this.todoRemoved);
     },
 
     todoAdded: function(model){
-        // console.log(model);
         var view = new MyTodoView({model: model});
         view.render();
         this.$el.append(view.$el);
