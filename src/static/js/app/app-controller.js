@@ -8,9 +8,9 @@ var activity = require('built/app/activity');
 var keys = require('built/app/keys');
 var app = require('app/app');
 
-
-var MySampleView        = require('app/sample/views').MySampleView;
-var MyModalView         = require('app/sample/views').MyModalView;
+var MyTodoView          = require('app/sample/views').MyTodoView;
+var MyNewTodoView       = require('app/sample/views').MyNewTodoView;
+var MyTodoCollectionView       = require('app/sample/views').MyTodoCollectionView;
 var Model               = require('backbone').Model;
 
 
@@ -31,13 +31,31 @@ var AppController = marionette.Controller.extend({
         /* Ready. Set. Go! */
         // Your Application's Regions are set in the app/app.js
         // everything else starts here. (or in another route :)
+        Todo = Backbone.Model.extend({
+           defaults: {
+            title: 'Default task',
+            completed: false
+           },
 
-
-        var model = new Model({
-            message: 'Build something! Press Shift + M to display a Modal'
+           toggleState: function(){
+            this.set('completed', !this.get('completed'));
+           }
         });
 
-        this.app.window.show(new MySampleView({model: model}));
+        var TodoList = Backbone.Collection.extend({
+            model: Todo
+        });
+
+        Todos = new TodoList();
+
+        var model = new Model({
+            placeholder: 'What needs to be done?'
+        });
+
+        var TodoCollectionView = new MyTodoCollectionView;
+
+        this.app.header.show(new MyNewTodoView({model: model}));
+        this.app.main.show(TodoCollectionView);
         /* ---------- */
         
     },

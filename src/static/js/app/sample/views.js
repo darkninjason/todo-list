@@ -1,40 +1,97 @@
 define(function(require, exports, module) {
 
 var marionette = require('marionette');
-var modals = require('built/app/modals');
 
-var templateSample = require('hbs!app/sample/templates/sample');
-var templateModal = require('hbs!app/sample/templates/modal');
+var templateTodo = require('hbs!app/sample/templates/todo');
+var templateNewTodo = require('hbs!app/sample/templates/newTodo');
 
-var MySampleView = marionette.ItemView.extend({
-    template: templateSample
-});
+var MyTodoView = marionette.ItemView.extend({
+    tagName: 'li',
+    template: templateTodo,
 
-
-var MyModalView = marionette.ItemView.extend({
-    template: templateModal,
-
-    events:{
-        'click .actions .btn.close': 'wantsCloseModal'
+    ui: {
+        taskName: 'input.edit'
     },
 
-    // Required Method
-    // Enables you to pass any information from this
-    // modal view to the thing that cares about it.
-    //
-    // This is your bridge.
-    getData: function(){
-        return {foo: 'foo', bar: 'bar'};
+    events: {
+        'click .destroy' : 'removeTodo',
+        'dblclick label' : 'editMode',
+        'keypress .edit' : 'updateOnEnter',
+        'click .toggle'  : 'toggleState'
     },
 
-    wantsCloseModal: function(){
-        this.trigger(modals.events.COMPLETE);
+    removeTodo: function(e){
+        this.model.destroy();
+        this.remove();
+    },
+
+    initialize: function(){
+        this.listenTo(this.model, 'change:title', this.changeTitle);
+    },
+
+    editMode: function(){
+        this.$el.find('.view').hide();
+        this.$el.find('.edit').show().focus();
+    },
+
+    updateOnEnter: function(e){
+        if(e.keyCode == 13){
+            this.model.set('title', this.ui.taskName.val());
+        }
+    },
+
+    changeTitle: function(e){
+        this.$el.find('.view').show();
+        this.$el.find('.edit').hide();
+        this.render();
+        console.log(this.model.attributes);
+    },
+
+    toggleState: function(){
+        this.model.toggleState();
+        this.$el.toggleClass('completed');
     }
 });
 
+var MyNewTodoView = marionette.ItemView.extend({
+    template: templateNewTodo,
+    placeholder: "",
 
+    ui: {
+        newTodo: '#new-todo'
+    },
 
-exports.MySampleView = MySampleView;
-exports.MyModalView = MyModalView;
+    events:{
+        'keypress input' : 'addTodo'
+    },
+
+    addTodo: function(e){
+        if(e.keyCode == 13){
+            var todo = new Todo({title: this.ui.newTodo.val()});
+            Todos.add(todo);
+            this.ui.newTodo.val('');;
+        }
+    }
+});
+
+var MyTodoCollectionView = marionette.CollectionView.extend({
+    tagName: "ul",
+    itemView: MyTodoView,
+    initialize: function(){
+        this.listenTo(Todos, "add", this.todoAdded);
+        this.listenTo(Todos, "remove", this.todoRemoved);
+    },
+
+    todoAdded: function(model){
+        // console.log(model);
+        var view = new MyTodoView({model: model});
+        view.render();
+        this.$el.append(view.$el);
+    },
+});
+
+exports.MyTodoView = MyTodoView;
+exports.MyNewTodoView = MyNewTodoView;
+exports.MyTodoCollectionView = MyTodoCollectionView;
 
 });

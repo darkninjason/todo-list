@@ -6,7 +6,7 @@ var AppController = require('app/app-controller').AppController;
 var AppRouter  =  marionette.AppRouter.extend({
     controller: new AppController(),
     appRoutes:{
-        '*index':'index',
+        '*index':'index'
     }
 });
 

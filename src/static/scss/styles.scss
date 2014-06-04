@@ -1,0 +1,38 @@
+body {
+	text-align: center;
+	padding: 20px;
+
+}
+
+ul {
+	margin: 0 auto;
+	padding: 0;
+	list-style: none;
+	text-align: left;
+	width: 215px;
+
+	li {
+		padding: 10px;
+		position: relative;
+
+		.view {
+			button {
+				float: right;
+			}
+		}
+
+		.edit {
+			display: none;
+		}
+
+		&.completed {
+			text-decoration: line-through;
+		}
+
+		.toggle {
+			position: absolute;
+			left: -20px;
+		}
+
+	}
+}
