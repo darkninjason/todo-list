@@ -36,3 +36,18 @@ ul {
 
 	}
 }
+
+footer {
+	font-size: 12px;
+	width: 500px;
+	margin: 20px auto;
+	text-align: center;
+
+	.items-left {
+		float: left;
+	}
+
+	.clear-completed {
+		float: right;
+	}
+}

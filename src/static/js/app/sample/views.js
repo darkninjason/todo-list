@@ -4,6 +4,7 @@ var marionette = require('marionette');
 
 var templateTodo = require('hbs!app/sample/templates/todo');
 var templateNewTodo = require('hbs!app/sample/templates/newTodo');
+var templateTodoFooter = require('hbs!app/sample/templates/todoFooter');
 
 var MyTodoView = marionette.ItemView.extend({
     tagName: 'li',
@@ -44,7 +45,6 @@ var MyTodoView = marionette.ItemView.extend({
         this.$el.find('.view').show();
         this.$el.find('.edit').hide();
         this.render();
-        console.log(this.model.attributes);
     },
 
     toggleState: function(){
@@ -62,7 +62,8 @@ var MyNewTodoView = marionette.ItemView.extend({
     },
 
     events:{
-        'keypress input' : 'addTodo'
+        'keypress input' : 'addTodo',
+        'click .complete-all' : 'completeAll'
     },
 
     addTodo: function(e){
@@ -71,6 +72,12 @@ var MyNewTodoView = marionette.ItemView.extend({
             Todos.add(todo);
             this.ui.newTodo.val('');;
         }
+    },
+
+    completeAll: function(){
+        Todos.forEach(function(model){
+            model.set('completed', true);
+        });
     }
 });
 
@@ -85,11 +92,25 @@ var MyTodoCollectionView = marionette.CollectionView.extend({
         var view = new MyTodoView({model: model});
         view.render();
         this.$el.append(view.$el);
+    }
+});
+
+var MyTodoFooterView = marionette.ItemView.extend({
+    template: templateTodoFooter,
+
+    initialize: function(){
+       this.listenTo(Todos, "add remove change:completed", this.updateCount);
     },
+
+    updateCount: function(){
+        this.model.set('itemsLeft', Todos.where({completed: false}).length);
+        this.render();
+    }
 });
 
 exports.MyTodoView = MyTodoView;
 exports.MyNewTodoView = MyNewTodoView;
 exports.MyTodoCollectionView = MyTodoCollectionView;
+exports.MyTodoFooterView = MyTodoFooterView; 
 
 });

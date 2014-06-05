@@ -10,6 +10,7 @@ var app = require('app/app');
 
 var MyTodoView          = require('app/sample/views').MyTodoView;
 var MyNewTodoView       = require('app/sample/views').MyNewTodoView;
+var MyTodoFooterView    = require('app/sample/views').MyTodoFooterView;
 var MyTodoCollectionView       = require('app/sample/views').MyTodoCollectionView;
 var Model               = require('backbone').Model;
 
@@ -42,6 +43,10 @@ var AppController = marionette.Controller.extend({
            }
         });
 
+        var TodoFooter = new Model({
+            itemsLeft: 0
+        });
+
         var TodoList = Backbone.Collection.extend({
             model: Todo
         });
@@ -56,6 +61,7 @@ var AppController = marionette.Controller.extend({
 
         this.app.header.show(new MyNewTodoView({model: model}));
         this.app.main.show(TodoCollectionView);
+        this.app.footer.show(new MyTodoFooterView({model: TodoFooter}));
         /* ---------- */
         
     },
