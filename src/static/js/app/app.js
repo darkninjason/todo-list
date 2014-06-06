@@ -10,7 +10,8 @@ define(function(require, exports, module) {
 
     app.addInitializer(function() {
         Backbone.history.start({
-            pushState: false
+            pushState: true,
+            root: '#'
         });
     });
 

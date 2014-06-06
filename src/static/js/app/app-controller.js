@@ -12,6 +12,7 @@ var MyTodoView          = require('app/sample/views').MyTodoView;
 var MyNewTodoView       = require('app/sample/views').MyNewTodoView;
 var MyTodoFooterView    = require('app/sample/views').MyTodoFooterView;
 var MyTodoCollectionView       = require('app/sample/views').MyTodoCollectionView;
+var MyTodoFilteredCollectionView       = require('app/sample/views').MyTodoCollectionView;
 var Model               = require('backbone').Model;
 
 
@@ -47,23 +48,49 @@ var AppController = marionette.Controller.extend({
             itemsLeft: 0
         });
 
-        var TodoList = Backbone.Collection.extend({
+        this.app.TodoList = Backbone.Collection.extend({
             model: Todo
         });
 
-        Todos = new TodoList();
+        Todos = new this.app.TodoList();
 
         var model = new Model({
             placeholder: 'What needs to be done?'
         });
 
-        var TodoCollectionView = new MyTodoCollectionView;
+        this.app.TodoCollectionView = new MyTodoCollectionView;
+        this.app.CompletedTodoCollectionView = new MyTodoCollectionView;
 
         this.app.header.show(new MyNewTodoView({model: model}));
-        this.app.main.show(TodoCollectionView);
+        this.app.main.show(this.app.TodoCollectionView);
         this.app.footer.show(new MyTodoFooterView({model: TodoFooter}));
-        /* ---------- */
-        
+        /* ---------- */        
+    },
+
+    showAll: function(){
+        this.app.main.show(this.app.TodoCollectionView);
+    },
+
+    showActive: function(){
+        var ActiveTodos = new this.app.TodoList(Todos.where({'completed': false})),
+            ActiveTodosCollectionView = new MyTodoFilteredCollectionView;
+
+        ActiveTodos.forEach(function(model, index){
+            ActiveTodosCollectionView.addTodo(model);
+        });
+
+        this.app.main.show(ActiveTodosCollectionView);
+    },
+
+    showCompleted: function(){
+        var CompletedTodos = new this.app.TodoList(Todos.where({'completed': true})),
+            CompletedTodosCollectionView = new MyTodoFilteredCollectionView;
+
+        CompletedTodos.forEach(function(model, index){
+            CompletedTodosCollectionView.addTodo(model);
+        });
+
+        this.app.main.show(CompletedTodosCollectionView);
     },
     
     // Demo of handling Key Presses

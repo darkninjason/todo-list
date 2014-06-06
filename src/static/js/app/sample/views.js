@@ -28,6 +28,8 @@ var MyTodoView = marionette.ItemView.extend({
 
     initialize: function(){
         this.listenTo(this.model, 'change:title', this.changeTitle);
+        this.listenTo(this.model, 'change:completed', this.toggleRender);
+        this.listenTo(this.model, 'remove', this.removeTodo);
     },
 
     editMode: function(){
@@ -49,7 +51,11 @@ var MyTodoView = marionette.ItemView.extend({
 
     toggleState: function(){
         this.model.toggleState();
-        this.$el.toggleClass('completed');
+    },
+
+    toggleRender: function(){
+         this.$el.toggleClass('completed');
+         this.render();
     }
 });
 
@@ -63,7 +69,7 @@ var MyNewTodoView = marionette.ItemView.extend({
 
     events:{
         'keypress input' : 'addTodo',
-        'click .complete-all' : 'completeAll'
+        'click .toggle-all' : 'toggleAll'
     },
 
     addTodo: function(e){
@@ -74,9 +80,29 @@ var MyNewTodoView = marionette.ItemView.extend({
         }
     },
 
+    toggleAll: function(){
+        if(Todos.where({completed: true}).length === Todos.length){
+            this.uncompleteAll();
+        } else {
+            this.completeAll();
+        }
+    },
+
     completeAll: function(){
+
         Todos.forEach(function(model){
-            model.set('completed', true);
+            if(!model.get('completed')){
+                model.toggleState();
+            }
+        });
+    },
+
+    uncompleteAll: function(){
+
+        Todos.forEach(function(model){
+            if(model.get('completed')){
+                model.toggleState();
+            }
         });
     }
 });
@@ -85,18 +111,36 @@ var MyTodoCollectionView = marionette.CollectionView.extend({
     tagName: "ul",
     itemView: MyTodoView,
     initialize: function(){
-        this.listenTo(Todos, "add", this.todoAdded);
+        this.listenTo(Todos, "add", this.addTodo);
     },
 
-    todoAdded: function(model){
+    addTodo: function(model){
         var view = new MyTodoView({model: model});
         view.render();
         this.$el.append(view.$el);
     }
 });
 
+var MyTodoFilteredCollectionView = marionette.CollectionView.extend({
+    tagName: "ul",
+    itemView: MyTodoView,
+    initialize: function(){
+        console.log('haa');
+        console.log(this.collection);
+        this.listenTo(this.collection, "change:completed", this.removeTodo);
+    },
+
+    removeTodo: function(model){
+        console.log('haa');
+    }
+});
+
 var MyTodoFooterView = marionette.ItemView.extend({
     template: templateTodoFooter,
+
+    events: {
+        'click .clear-completed' : 'clearCompleted'
+    },
 
     initialize: function(){
        this.listenTo(Todos, "add remove change:completed", this.updateCount);
@@ -105,12 +149,27 @@ var MyTodoFooterView = marionette.ItemView.extend({
     updateCount: function(){
         this.model.set('itemsLeft', Todos.where({completed: false}).length);
         this.render();
+    },
+
+    clearCompleted: function(){
+        var completedIndexes = [];
+
+        Todos.forEach(function(model, index){
+            if(model.get('completed')){
+                completedIndexes.push(index);
+            }
+        });
+        
+        for(var i = Todos.length - 1; i >= 0; i--){
+            Todos.remove(Todos.at(completedIndexes[i]));
+        }
     }
 });
 
 exports.MyTodoView = MyTodoView;
 exports.MyNewTodoView = MyNewTodoView;
 exports.MyTodoCollectionView = MyTodoCollectionView;
+exports.MyTodoFilteredCollectionView = MyTodoFilteredCollectionView;
 exports.MyTodoFooterView = MyTodoFooterView; 
 
 });
