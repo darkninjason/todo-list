@@ -6,6 +6,10 @@
 [Backbone v1.1.2]: http://backbonejs.org/
 [Backbone : Marionette v1.8.2]: http://marionettejs.com/
 [Backbone : Stickit v0.8.0]: http://nytimes.github.io/backbone.stickit/
+[Handlebars : v1.3.0]: http://handlebarsjs.com/
+[HBS : v0.4.0]: https://github.com/SlexAxton/require-handlebars-plugin
+[RequireJS : 2.1.14]: http://github.com/jrburke/requirejs
+
 
 A UI Foundation with a Unix-like philosophy.
 
@@ -33,6 +37,10 @@ Below is a list of dependencies as of June 18th, 2014:
 - [Lodash v2.4.1]
 - [Backbone v1.1.2]
 - [Backbone : Marionette v1.8.2]
+- [Backbone : Stickit v0.8.0]
+- [Handlebars : v1.3.0]
+- [HBS : v0.4.0]
+- [RequireJS : 2.1.14]
 
 ## Components that need to be built
 - Marquee/Carousel
