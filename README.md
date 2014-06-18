@@ -34,6 +34,19 @@ Below is a list of dependencies as of June 18th, 2014:
 - [Backbone v1.1.2]
 - [Backbone : Marionette v1.8.2]
 
+## Components that need to be built
+- Marquee/Carousel
+
+
+## Additional common libs we use
+- YepNope
+- famous
+- greensock
+- scroll magic
+- velocity
+- d3.js
+
+
 ## Version
 
 0.0.0

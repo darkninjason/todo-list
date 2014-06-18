@@ -23,11 +23,6 @@ release:
 	git commit -am "release"
 	git branch -D release
 
-	# git subtree split --prefix built -b release
-	# git checkout master
-	# git merge -s subtree --no-commit --squash release
-	# git branch -D release
-
 css:
 	compass watch ./static/css --poll -c ./static/css/config.rb
 
@@ -37,7 +32,7 @@ push-deps:
 update-deps:
 	git subtree pull --prefix tests/lib/vendor git@github.com:blitzagency/built-deps.git master --squash
 
-install-test-reqs:
+install-test-reqs: install-test-coverage
 	npm install karma --save-dev
 	npm install karma-jasmine@2_0 karma-chrome-launcher --save-dev
 	npm install karma-requirejs --save-dev
