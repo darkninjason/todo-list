@@ -20,7 +20,7 @@ release:
 	git commit -am "release"
 	git checkout master
 	git merge -s recursive -X theirs --squash --no-commit release
-	git ca "release"
+	git commit -am "release"
 	git branch -D release
 
 	# git subtree split --prefix built -b release
