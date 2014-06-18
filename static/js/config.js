@@ -9,11 +9,11 @@ require.config({
    packages: [
 
         {
-            location: '/static/js/app',
+            location: 'static/js/app',
             name: 'app'
         },
         {
-            location: '/static/tpl',
+            location: 'static/tpl',
             name: 'tpl'
         },
 
