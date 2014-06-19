@@ -9,6 +9,7 @@
 [Handlebars : v1.3.0]: http://handlebarsjs.com/
 [HBS : v0.4.0]: https://github.com/SlexAxton/require-handlebars-plugin
 [RequireJS : 2.1.14]: http://github.com/jrburke/requirejs
+[Famo.us : 0.2.1]: http://github.com/famous/famous
 
 
 A UI Foundation with a Unix-like philosophy.
