@@ -5,13 +5,3 @@
         @extend .col-md-5;
     }
 }
-
-#input-select-scrollable{
-    .list-group {
-        max-height: 300px;
-        overflow: hidden;
-        overflow-y: scroll;
-        border-bottom: 1px solid $gray-lighter;
-    }
-}
-

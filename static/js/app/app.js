@@ -3,9 +3,7 @@ define(function(require, exports, module) {
     var app = new Backbone.Marionette.Application();
 
     app.addRegions({
-        scroller: '#scroller',
         inputSelect: '#input-select',
-        inputSelectScrollable: '#input-select-scrollable',
         horizontalSliderFluid: '#horizontal-slider-fluid',
         horizontalSliderSnapping: '#horizontal-slider-snapping',
         horizontalRangeSliderFluid: '#horizontal-range-slider-fluid',

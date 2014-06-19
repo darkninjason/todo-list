@@ -1,60 +1,86 @@
-requirejs.config({
-    // Karma serves files from '/base'
-    baseUrl: './',
+require.config({
+  baseUrl: './',
 
-    paths: {
-        'lib': 'tests/lib',
-        'tpl': 'static/tpl',
-        'app': 'static/js/app',
-        'vendor': 'tests/lib/vendor',
-        'jasmine': 'tests/lib/jasmine',
-        'spec': 'tests/spec',
-        'built': 'built',
-        'jquery': 'tests/lib/vendor/jquery',
+  paths : {
+    'marionette': 'tests/lib/vendor/backbone/marionette',
+    'stickit': 'tests/lib/vendor/backbone/stickit',
+  },
 
-    },
+   packages: [
+
+        {
+            location: 'static/js/app',
+            name: 'app'
+        },
+        {
+            location: 'static/tpl',
+            name: 'tpl'
+        },
+
+        {
+            location: 'tests/lib/vendor/jquery',
+            name: 'jquery',
+            main:'jquery'
+        },
+
+        {
+            location: 'tests/lib/vendor/backbone',
+            name: 'backbone',
+            main:'backbone'
+        },
+
+        {
+            location: 'built',
+            name: 'built'
+        },
+
+        {
+            location: 'tests/lib/vendor/require/hbs',
+            name: 'hbs',
+            main:'hbs'
+        }
+    ],
 
     map: {
         '*': {
-            'underscore'        : 'vendor/lodash',
-            'backbone'          : 'vendor/backbone',
-            'marionette'        : 'vendor/marionette',
-            'stickit'           : 'vendor/stickit',
-            'Handlebars'        : 'vendor/handlebars',
-            'hbs'               : 'vendor/hbs',
-            'i18nprecompile'    : 'vendor/i18nprecompile',
-            'i18n'              : 'vendor/i18n',
-            'json2'             : 'vendor/json2',
-        }
-    },
-
-
-    shim: {
-
-
-        // Vendor shims
-
-        'vendor/backbone': {
-            'deps': ['jquery', 'underscore'],
-            'exports': 'Backbone'
+            'underscore': 'tests/lib/vendor/underscore/lodash',
+            'handlebars': 'hbs/handlebars',
         },
-
-        'vendor/marionette': {
-            'deps': ['jquery', 'underscore', 'backbone'],
-            'exports': 'Marionette'
-        },
-
-        'vendor/stickit': {
-            'deps' : ['backbone'],
-            'exports' : 'Stickit'
-        }
     },
 
-    hbs : {
-        templateExtension: "html",
-        disableHelpers: false,
-        disableI18n: true
+  hbs: {
+        templateExtension : 'html',
+        // if disableI18n is `true` it won't load locales and the i18n helper
+        // won't work as well.
+        disableI18n : true,
+        helperDirectory: 'app/shared/hbs'
+  },
+
+  shim : {
+
+    'backbone': {
+        'deps': ['jquery', 'underscore'],
+        'exports': 'Backbone'
     },
+
+    'backbone/stickit' : {
+      'deps' : ['backbone'],
+      'exports' : 'Stickit'
+    },
+
+    'jquery/mockjax': {
+        'deps': ['jquery'],
+        'exports': 'jquery'
+    },
+
+    'marionette': {
+        'deps': ['jquery', 'underscore', 'backbone'],
+        'exports': 'Marionette'
+    }
+  },
+
+  // introduced in requirejs 2.1.11, helps Backbone along.
+  // http://jrburke.com/2014/02/16/requirejs-2.1.11-released/
+  wrapShim: true,
+
 });
-
-
