@@ -41,6 +41,7 @@ Below is a list of dependencies as of June 18th, 2014:
 - [Handlebars : v1.3.0]
 - [HBS : v0.4.0]
 - [RequireJS : 2.1.14]
+- [Famo.us : 0.2.1]
 
 ## Components that need to be built
 - Marquee/Carousel
