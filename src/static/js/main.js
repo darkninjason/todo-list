@@ -12,10 +12,5 @@ app.appRouter = new AppRouter();
 
 app.start();
 
-$(document).on('click', 'a', function(event){
-    event.preventDefault();
-    app.appRouter.navigate($(event.target).attr('href').substring(2), {trigger: true});
-});
-
 }); // eof define
 

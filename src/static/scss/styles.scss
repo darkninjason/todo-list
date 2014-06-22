@@ -27,6 +27,18 @@ ul {
 
 		&.completed {
 			text-decoration: line-through;
+
+			.active & {
+				display: none;
+			}
+		}
+
+		.completed & {
+			display: none;
+
+			&.completed {
+				display: block;
+			}
 		}
 
 		.toggle {
@@ -49,5 +61,11 @@ footer {
 
 	.clear-completed {
 		float: right;
+	}
+
+	ul.filters {
+		li {
+			display: inline-block;
+		}
 	}
 }
