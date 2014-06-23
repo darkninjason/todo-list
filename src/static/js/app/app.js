@@ -10,7 +10,7 @@ define(function(require, exports, module) {
 
     app.addInitializer(function() {
         Backbone.history.start({
-            pushState: true
+            pushState: false
         });
     });
 
