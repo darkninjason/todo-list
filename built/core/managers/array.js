@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.managers.array
+ */
 define(function(require, exports, module){
 
 // Imports
@@ -9,8 +13,18 @@ var events = require('built/core/events/event');
 
 // Module
 
-var ArrayManager = marionette.Controller.extend({
+var ArrayManager = marionette.Controller.extend(
+/** @lends built.core.managers.array.ArrayManager.prototype */
+{
 
+    /**
+     * Creates a new ArrayManager
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
+     */
     initialize: function(options){
         this.setArray(options.list || []);
     },
