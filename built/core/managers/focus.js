@@ -30,7 +30,7 @@ var FocusManager =  array.ArrayManager.extend(
      *
      */
     constructor: function(options){
-        array.ArrayManager.prototype.constructor.call(this, options);
+        array.ArrayManager.prototype.constructor.apply(this, arguments);
         this.listenTo(this, 'close', this.deinit);
 
         this.allowsDeselect = options.allowsDeselect;
