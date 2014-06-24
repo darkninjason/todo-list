@@ -42,9 +42,11 @@ var RangeManager = marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options) {
-        this.options = options;
-        _.defaults(options, this._getDefaults());
+    constructor: function(options) {
+        marionette.Controller.prototype.constructor.apply(this, arguments);
+
+        this.options = options || {};
+        _.defaults(this.options, this._getDefaults());
 
         this._markers         = [];
         this._lastDispatched  = [];
