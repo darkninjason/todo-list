@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.controls.gestures.swipe
+ */
 define(function(require, exports, module){
 
 // Imports
@@ -8,7 +12,9 @@ var TouchResponder = require('built/core/responders/touches').TouchResponder;
 
 // Module
 
-var SwipeGesture = marionette.Controller.extend({
+var SwipeGesture = marionette.Controller.extend(
+/** @lends built.core.controls.gestures.swipe.SwipeGesture.prototype */
+{
 
     // Object vars
 
@@ -21,8 +27,15 @@ var SwipeGesture = marionette.Controller.extend({
     // of the target view in the selected direction to count.
     threshold: 0.3,
 
-    // Initializtion
 
+    /**
+     * Creates a new SwipeGesture
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
+     */
     initialize: function(options){
         _.extend(this, options);
         _.bindAll(this, 'touchStart', 'touchMove', 'touchEnd');
