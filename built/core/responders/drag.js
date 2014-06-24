@@ -6,14 +6,14 @@ define(function(require, exports, module){
 
 // Imports
 
-var Marionette = require('marionette');
+var marionette = require('marionette');
 var _          = require('underscore');
 var helpers    = require('built/core/utils/helpers');
 var dndutils   = require('built/core/utils/dndutils');
 
 // Module
 
-var DragResponder = Marionette.Controller.extend(
+var DragResponder = marionette.Controller.extend(
 /** @lends built.core.responders.drag.DragResponder.prototype */
 {
 
@@ -43,7 +43,10 @@ var DragResponder = Marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, arguments);
+        this.listenTo(this, 'close', this.deinit);
+
         _.extend(this, options);
         _.bindAll(this, '_dragStart', '_dragEnd');
         this._managedElements = {};
@@ -194,7 +197,7 @@ var DragResponder = Marionette.Controller.extend(
         }
     },
 
-    onClose: function(){
+    deinit: function(){
         this.reset();
     }
 

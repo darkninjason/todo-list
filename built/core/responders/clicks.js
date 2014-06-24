@@ -21,7 +21,10 @@ var ClickTestResponder = marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, arguments);
+        this.listenTo(this, 'close', this.deinit);
+
         _.bindAll(this, 'onWindowPress', 'initializeWindowListener');
         this.$el = helpers.registerElement(options.el);
 
@@ -69,7 +72,7 @@ var ClickTestResponder = marionette.Controller.extend(
         // noop
     },
 
-    onClose: function(){
+    deinit: function(){
         $(window).off('click', this.onWindowPress);
         $(window).off('contextmenu', this.onWindowPress);
     }
