@@ -1,3 +1,7 @@
+/**
+ * Datetime formatters
+ * @module built.core.datetime.datetime-formats
+ */
 define(function(require, exports, module){
 
     var datetime = require('built/core/datetime/datetime');
@@ -15,6 +19,15 @@ define(function(require, exports, module){
     var daysShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 
+    /**
+     * format12HourTime
+     *
+     * @function
+     * @memberOf built.core.datetime.datetime-formats
+     * @param  {String} value Date String
+     * @return {Date}       #TODO ADD THIS
+     *
+     */
     function format12HourTime(hours, minutes, ampm){
         var fmtSuffix = '',
             fmtHours,
@@ -32,6 +45,15 @@ define(function(require, exports, module){
         return fmtHours + ':' + fmtMinutes + fmtSuffix;
     }
 
+    /**
+     * daySuffix
+     *
+     * @function
+     * @memberOf built.core.datetime.datetime-formats
+     * @param  {String} value Date String
+     * @return {Date}       #TODO ADD THIS
+     *
+     */
     function daySuffix(day){
         switch (day)
         {
@@ -50,6 +72,15 @@ define(function(require, exports, module){
         }
     }
 
+    /**
+     * monthDayYearStringForDate
+     *
+     * @function
+     * @memberOf built.core.datetime.datetime-formats
+     * @param  {String} value Date String
+     * @return {Date}       #TODO ADD THIS
+     *
+     */
     function monthDayYearStringForDate(date){
         // August 29th 2012
         var dayValue = date.getDate();
@@ -59,6 +90,15 @@ define(function(require, exports, module){
         return months[date.getMonth()] + ' ' + day + ' ' + date.getFullYear();
     }
 
+    /**
+     * shortDayMonthTimeStringForDate
+     *
+     * @function
+     * @memberOf built.core.datetime.datetime-formats
+     * @param  {String} value Date String
+     * @return {Date}       #TODO ADD THIS
+     *
+     */
     function shortDayMonthTimeStringForDate(date){
         // Wed 29 Aug 12:58 PM
         var dayLabel = daysShort[date.getDay()];
@@ -72,17 +112,44 @@ define(function(require, exports, module){
         return dayLabel + ' ' + dayDate + ' ' + monthLabel + ' ' + time;
     }
 
+    /**
+     * monthDayYearStringForUTCString
+     *
+     * @function
+     * @memberOf built.core.datetime.datetime-formats
+     * @param  {String} value Date String
+     * @return {Date}       #TODO ADD THIS
+     *
+     */
     function monthDayYearStringForUTCString(value){
         var date = datetime.UTCStringToLocalDate(value);
         return monthDayYearStringForDate(date);
     }
 
+    /**
+     * shortDayMonthTimeStringForUTCString
+     *
+     * @function
+     * @memberOf built.core.datetime.datetime-formats
+     * @param  {String} value Date String
+     * @return {Date}       #TODO ADD THIS
+     *
+     */
     function shortDayMonthTimeStringForUTCString(value){
         var date = datetime.UTCStringToLocalDate(value);
         return shortDayMonthTimeStringForDate(date);
     }
 
 
+    /**
+     * relativeDate
+     *
+     * @function
+     * @memberOf built.core.datetime.datetime-formats
+     * @param  {String} value Date String
+     * @return {Date}       #TODO ADD THIS
+     *
+     */
     function relativeDate(value){
         // compatibility for older browsers
         var now = +new Date();

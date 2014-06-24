@@ -1,3 +1,7 @@
+/**
+ * Datetime formatters
+ * @module built.core.datetime.datetime
+ */
 define(function(require, exports, module){
 
 
@@ -8,6 +12,15 @@ define(function(require, exports, module){
     // 2013-08-29T14:29:30.123+0000
     var isoRegex = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?:\:(\d{2})(?:\.(\d+))?)?(?:Z|\+0000)?/;
 
+    /**
+     * format12HourTime
+     *
+     * @function
+     * @memberOf built.core.datetime.datetime
+     * @param  {String} value Date String
+     * @return {Number}       #TODO ADD THIS
+     *
+     */
     function UTCStringToMilliseconds(value){
         // 2013-08-29T15:02:00Z
         // milliseconds and seconds are optional
@@ -25,11 +38,29 @@ define(function(require, exports, module){
         return Date.UTC(year, month, day, hour, minute, second, millisecond);
     }
 
+    /**
+     * format12HourTime
+     *
+     * @function
+     * @memberOf built.core.datetime.datetime
+     * @param  {String} value Date String
+     * @return {Number}       #TODO ADD THIS
+     *
+     */
     function UTCStringToSeconds(value){
         var utcMilliSeconds = UTCStringToMilliseconds(value);
         return parseInt((utcMilliSeconds / 1000), 10);
     }
 
+    /**
+     * format12HourTime
+     *
+     * @function
+     * @memberOf built.core.datetime.datetime
+     * @param  {String} value Date String
+     * @return {Date}       #TODO ADD THIS
+     *
+     */
     function UTCStringToLocalDate(value){
         var utcSeconds = UTCStringToMilliseconds(value);
 
