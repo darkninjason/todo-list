@@ -17,7 +17,6 @@ var composeAll = require('built/core/utils/helpers').composeAll;
 
 var HorizontalSliderControl = marionette.Controller.extend(
 /** @lends built.core.controls.sliders.horizontal.HorizontalSliderControl.prototype */
-
 {
 
     _rangeManagers : null,
