@@ -36,7 +36,10 @@ var SwipeGesture = marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, options);
+        this.listenTo(this, 'close', this.deinit);
+
         _.extend(this, options);
         _.bindAll(this, 'touchStart', 'touchMove', 'touchEnd');
 
@@ -160,7 +163,7 @@ var SwipeGesture = marionette.Controller.extend(
 
     // Marionette overrides
 
-    onClose: function(){
+    deinit: function(){
         this.reset();
         this.responder.close();
     }
