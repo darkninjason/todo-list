@@ -192,7 +192,10 @@ var InputSelect = marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, options);
+        this.listenTo(this, 'close', this.deinit);
+
         _.defaults(options, this._defaults);
         this.options = options;
 
@@ -429,7 +432,7 @@ var InputSelect = marionette.Controller.extend(
         this._dispatchSelect($(obj));
     },
 
-    onClose: function(){
+    deinit: function(){
         this.endNavigationPhase();
         this._$elements = [];
     },
