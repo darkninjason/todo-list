@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.responders.touches
+ */
 define(function(require, exports, module){
 
 // Imports
@@ -8,15 +12,23 @@ var helpers    = require('built/core/utils/helpers');
 
 // Module
 
-var TouchResponder = marionette.Controller.extend({
+var TouchResponder = marionette.Controller.extend(
+/** @lends built.core.responders.touches.TouchResponder.prototype */
+{
 
     // Object vars
 
     el: null,
     clickCountTimeout: 350,
 
-    // Initialization
-
+    /**
+     * Creates a new TouchResponder
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
+     */
     initialize: function(options){
         _.extend(this, options);
         _.bindAll(this, '_touchStart', '_touchMove', '_touchEnd', '_touchCancel');

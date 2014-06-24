@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.responders.mouse
+ */
 define(function(require, exports, module){
 
 // Imports
@@ -8,7 +12,9 @@ var helpers    = require('built/core/utils/helpers');
 
 // Module
 
-var MouseResponder = marionette.Controller.extend({
+var MouseResponder = marionette.Controller.extend(
+/** @lends built.core.responders.mouse.MouseResponder.prototype */
+{
 
     // Object vars
 
@@ -40,7 +46,14 @@ var MouseResponder = marionette.Controller.extend({
     // Time window, in milliseconds,  to count clicks
     clickCountTimeout: 350,
 
-    // Initialization
+    /**
+     * Creates a new MouseResponder
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
+     */
     initialize: function(options){
 
         _.bindAll(this, '_mouseDown', '_mouseUp',

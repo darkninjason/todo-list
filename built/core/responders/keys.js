@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.responders.keys
+ */
 define(function(require, exports, module){
 
 // Imports
@@ -10,11 +14,21 @@ var helpers              = require('built/core/utils/helpers');
 
 // Module
 
-var KeyResponder = Marionette.Controller.extend({
+var KeyResponder = Marionette.Controller.extend(
+/** @lends built.core.responders.keys.KeyResponder.prototype */
+{
     el: null,
     inputManager: null,
     equivalentManager: null,
 
+    /**
+     * Creates a new KeyResponder
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
+     */
     initialize: function(options){
         _.extend(this, options);
         _.bindAll(this, '_keyDown', '_keyUp');
