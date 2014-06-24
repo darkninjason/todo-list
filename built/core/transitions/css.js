@@ -1,8 +1,22 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.transitions.css
+ */
 define(function(require, exports, module){
     var Marionette = require('marionette');
     var _ = require('underscore');
     var Modernizr = require('modernizr');
 
+    /**
+     * Add a css transition to an element
+     *
+     * @function
+     * @memberOf built.core.transitions.css
+     * @param  {Element} $el jquery Element
+     * @param  {String} animationClass css class to animate
+     * @return {$.Promise}
+     *
+     */
     function cssTransition($el, transitionClass){
 
 
@@ -13,9 +27,19 @@ define(function(require, exports, module){
         };
 
         var transitionEndEvent = transitionEndEventNames[Modernizr.prefixed('transition')];
-        return applyStyle($el, transitionClass, transitionEndEvent);
+        return _applyStyle($el, transitionClass, transitionEndEvent);
     }
 
+    /**
+     * add a css animation to an element
+     *
+     * @function
+     * @memberOf built.core.transitions.css
+     * @param  {Element} $el jquery Element
+     * @param  {String} animationClass css class to animate
+     * @return {$.Promise}
+     *
+     */
     function cssAnimation($el, animationClass){
         var animationEndEventNames = {
             'WebkitAnimation' : 'webkitAnimationEnd',// Saf 6, Android Browser
@@ -24,10 +48,10 @@ define(function(require, exports, module){
         };
 
         var animationEndEvent = animationEndEventNames[Modernizr.prefixed('animation')];
-        return applyStyle($el, animationClass, animationEndEvent);
+        return _applyStyle($el, animationClass, animationEndEvent);
     }
 
-    function applyStyle($el, cssClass, endEvent){
+    function _applyStyle($el, cssClass, endEvent){
         var deferred = $.Deferred();
 
         $el.addClass(cssClass)
