@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.managers.focus
+ */
 define(function(require, exports, module){
 
 // Imports
@@ -10,13 +14,21 @@ var helpers        = require('built/core/utils/helpers');
 var focus          = require('built/core/events/focus');
 // Module
 
-var FocusManager =  array.ArrayManager.extend({
+var FocusManager =  array.ArrayManager.extend(
+/** @lends built.core.managers.focus.FocusManager.prototype */
+{
 
     // Object vars
     allowsDeselect: false,
 
-    // Initialization
-
+    /**
+     * Creates a new FocusManager
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
+     */
     initialize: function(options){
         array.ArrayManager.prototype.initialize.call(this, options);
         this.allowsDeselect = options.allowsDeselect;

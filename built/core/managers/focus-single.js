@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.managers.focus-single
+ */
 define(function(require, exports, module){
 
 // Imports
@@ -5,7 +9,21 @@ var FocusManager     = require('built/core/managers/focus').FocusManager;
 
 // Module
 
-var SingleFocusManager = FocusManager.extend({
+var SingleFocusManager = FocusManager.extend(
+/** @lends built.core.managers.focus-single.SingleFocusManager.prototype */
+{
+
+    /**
+     * Creates a new SingleFocusManager
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
+     */
+    constructor: function(options){
+        SingleFocusManager.prototype.constructor.apply(this, options);
+    },
 
     getFocusedIndex: function(){
         var index = -1;
