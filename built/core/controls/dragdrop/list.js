@@ -14,17 +14,17 @@ var dndutils = require('built/core/utils/dndutils');
 var getElementBounds = require('built/ui/helpers/dom').getElementBounds;
 
 
-var DragDropList = marionette.Controller.extend({
-    /** @lends marionette.Controller.prototype */
+var DragDropList = marionette.Controller.extend(
+/** @lends built.core.controls.dragdrop.list.DragDropList.prototype */
+{
     el: null,
     dataType: 'com.built.data',
     operation: 'move',
     exitDelay: 150,
     supressChildPointerEvents: false,
 
-
     /**
-     * Creates new DragDropList
+     * Creates a new DragDropList
      *
      * @constructs
      * @extends marionette.Controller
