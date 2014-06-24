@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.controls.jquery.collection
+ */
 define(function(require, exports, module){
 
 // Imports
@@ -5,10 +9,20 @@ var $          = require('jquery');
 var marionette = require('marionette');
 
 // Module
-var Collection =  marionette.Controller.extend({
+var Collection =  marionette.Controller.extend(
+/** @lends built.core.controls.jquery.collection.Collection.prototype */
 
-    // Initialization
+{
 
+
+    /**
+     * Creates a new Collection
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
+     */
     initialize: function(options){
         this.reset();
     },
