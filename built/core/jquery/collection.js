@@ -1,6 +1,6 @@
 /**
  * Drag and Drop List Controller
- * @module built.core.controls.jquery.collection
+ * @module built.core.jquery.collection
  */
 define(function(require, exports, module){
 
@@ -10,7 +10,7 @@ var marionette = require('marionette');
 
 // Module
 var Collection =  marionette.Controller.extend(
-/** @lends built.core.controls.jquery.collection.Collection.prototype */
+/** @lends built.core.jquery.collection.Collection.prototype */
 
 {
 

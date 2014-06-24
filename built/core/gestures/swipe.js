@@ -1,6 +1,6 @@
 /**
  * Drag and Drop List Controller
- * @module built.core.controls.gestures.swipe
+ * @module built.core.gestures.swipe
  */
 define(function(require, exports, module){
 
@@ -13,7 +13,7 @@ var TouchResponder = require('built/core/responders/touches').TouchResponder;
 // Module
 
 var SwipeGesture = marionette.Controller.extend(
-/** @lends built.core.controls.gestures.swipe.SwipeGesture.prototype */
+/** @lends built.core.gestures.swipe.SwipeGesture.prototype */
 {
 
     // Object vars
