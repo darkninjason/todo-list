@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.responders.drop
+ */
 define(function(require, exports, module){
 
 // Imports
@@ -8,7 +12,9 @@ var helpers    = require('built/core/utils/helpers');
 var dndutils    = require('built/core/utils/dndutils');
 
 // Module
-var DropResponder = Marionette.Controller.extend({
+var DropResponder = Marionette.Controller.extend(
+/** @lends built.core.responders.drop.DropResponder.prototype */
+{
 
     // Object vars
     el: null,
@@ -26,7 +32,14 @@ var DropResponder = Marionette.Controller.extend({
     // -    'all'
     operation: 'all',
 
-    // Initialization
+     /**
+     * Creates a new DropResponder
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
+     */
     initialize: function(options){
         _.extend(this, options);
 

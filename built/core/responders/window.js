@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.responders.window
+ */
 define(function(require, exports, module) {
 
 // Imports
@@ -7,7 +11,9 @@ var _          = require('underscore');
 
 // Module
 
-var WindowResponder = Marionette.Controller.extend({
+var WindowResponder = Marionette.Controller.extend(
+/** @lends built.core.responders.window.WindowResponder.prototype */
+{
 
     EVENT_ORIENTATION: 'orientationchange.built.responders.orientation',
     EVENT_RESIZE     : 'resize.built.responder.resize',
@@ -19,9 +25,7 @@ var WindowResponder = Marionette.Controller.extend({
     // Backbone & Marionette overrides
 
     /**
-     * Initialize WindowResponder
-     * @param  {object} options options literal
-     * @return {undefined}
+     * Creates a new WindowResponder
      *
      * @example
      * var windowResponder = new WindowResponder(
@@ -31,6 +35,12 @@ var WindowResponder = Marionette.Controller.extend({
      *         resizeDebounce    : 600,  // optional, default 300, debounces (or throttles) resize delegate calls. Pass in 0 to disable.
      *     }
      * );
+     *
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
      */
     initialize: function(options) {
         _.extend(this, options);
