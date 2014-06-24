@@ -36,6 +36,7 @@ nextMonthForYearMonth
 
     var calendar = require('built/core/calendar/calendar');
     var first = calendar.nextMonthForYearMonth(2012, 9);
+    // first == Date object
 
 
 .. _example.calendar.previousMonthForDate:
@@ -46,7 +47,7 @@ previousMonthForDate
 
     var calendar = require('built/core/calendar/calendar');
     var first = calendar.previousMonthForDate(new Date());
-
+    // first == Date object
 
 .. _example.calendar.nextMonthForDate:
 
@@ -55,7 +56,12 @@ nextMonthForDate
 .. code-block:: js
 
     var calendar = require('built/core/calendar/calendar');
-    var first = calendar.nextMonthForDate(new Date());
+    var date = new Date(2012, 6, 29);
+    var first = calendar.nextMonthForDate(date);
+    // first == Date object
+    // first.getFullYear() == 2012
+    // first.getMonth() == 7
+    // first.getDate() == 1
 
 
 .. _example.calendar.daysInJavaScriptMonth:
@@ -65,7 +71,8 @@ daysInJavaScriptMonth
 .. code-block:: js
 
     var calendar = require('built/core/calendar/calendar');
-    var first = calendar.daysInJavaScriptMonth(2013, 4);
+    var first = calendar.daysInJavaScriptMonth(2013, 1);
+    // first == 28
 
 
 
