@@ -23,8 +23,7 @@ var HorizontalRangeSliderControl =  HorizontalSliderControl.extend(
      *
      */
     constructor: function(options) {
-        //HorizontalSliderControl.prototype.constructor.apply(this, options);
-        this.constructor.__super__.initialize.apply(this, arguments);
+        HorizontalSliderControl.prototype.constructor.apply(this, arguments);
     },
 
     // HorizontalSliderControl overrides
