@@ -7,7 +7,6 @@ define(function(require, exports, module){
 
 // Imports
 
-var Marionette             = require('marionette');
 var _                      = require('underscore');
 var SingleSelectionManager = require('auf/ui/managers/focus-single').SingleFocusManager;
 
@@ -27,7 +26,7 @@ var ModelBoundSingleSelectionManager = SingleSelectionManager.extend(
      *
      */
     initialize: function(options){
-        SingleSelectionManager.prototype.initialize.call(this, options);
+        SingleSelectionManager.prototype.initialize.apply(this, arguments);
         this.initializeModelBinding();
     },
 

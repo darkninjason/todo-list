@@ -22,7 +22,7 @@ var SingleFocusManager = FocusManager.extend(
      *
      */
     constructor: function(options){
-        SingleFocusManager.prototype.constructor.apply(this, options);
+        FocusManager.prototype.constructor.apply(this, arguments);
     },
 
     getFocusedIndex: function(){

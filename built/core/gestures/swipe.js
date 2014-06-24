@@ -37,7 +37,7 @@ var SwipeGesture = marionette.Controller.extend(
      *
      */
     constructor: function(options){
-        marionette.Controller.prototype.constructor.apply(this, options);
+        marionette.Controller.prototype.constructor.apply(this, arguments);
         this.listenTo(this, 'close', this.deinit);
 
         _.extend(this, options);

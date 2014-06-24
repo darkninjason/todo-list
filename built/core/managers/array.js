@@ -25,7 +25,9 @@ var ArrayManager = marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, arguments);
+        options = options || {};
         this.setArray(options.list || []);
     },
 
@@ -88,10 +90,6 @@ var ArrayManager = marionette.Controller.extend(
 
     _dispatchChange: function() {
         this.trigger(events.CHANGE, this);
-    },
-
-    onClose: function(){
-
     }
 
 });

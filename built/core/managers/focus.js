@@ -29,8 +29,10 @@ var FocusManager =  array.ArrayManager.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
-        array.ArrayManager.prototype.initialize.call(this, options);
+    constructor: function(options){
+        array.ArrayManager.prototype.constructor.call(this, options);
+        this.listenTo(this, 'close', this.deinit);
+
         this.allowsDeselect = options.allowsDeselect;
         this._focusedObjects = [];
     },
@@ -104,9 +106,8 @@ var FocusManager =  array.ArrayManager.extend(
 
     // marionette overrides
 
-    onClose: function(){
+    deinit: function(){
         this._focusedObjects = null;
-        array.ArrayManager.prototype.onClose.call(this);
     }
 
 }); // eof FocusManager
