@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.managers.index
+ */
 define(function(require, exports, module){
 
 // Imports
@@ -9,8 +13,18 @@ var events       = require('built/core/events/event');
 
 // Module
 
-var IndexManager = marionette.Controller.extend({
+var IndexManager = marionette.Controller.extend(
+/** @lends built.core.managers.index.IndexManager.prototype */
+{
 
+    /**
+     * Creates a new IndexManager
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
+     */
     initialize: function(options){
         this.range = new RangeManager();
         this.setLength(options.length || 0);
