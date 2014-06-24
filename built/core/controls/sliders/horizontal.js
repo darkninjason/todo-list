@@ -47,7 +47,7 @@ var HorizontalSliderControl = marionette.Controller.extend(
      *
      */
     constructor: function(options){
-        marionette.Controller.prototype.constructor.apply(this, options);
+        marionette.Controller.prototype.constructor.apply(this, arguments);
         this.listenTo(this, 'close', this.deinit);
 
         this.options = _.defaults(options, this._getDefaults());

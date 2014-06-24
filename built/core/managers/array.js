@@ -26,7 +26,8 @@ var ArrayManager = marionette.Controller.extend(
      *
      */
     constructor: function(options){
-        marionette.Controller.prototype.constructor.apply(this, options);
+        marionette.Controller.prototype.constructor.apply(this, arguments);
+        options = options || {};
         this.setArray(options.list || []);
     },
 
