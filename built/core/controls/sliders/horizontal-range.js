@@ -11,7 +11,8 @@ var HorizontalRangeSliderControl =  HorizontalSliderControl.extend({
      *
      * @see built/core/controls/sliders/horizontal.js
      */
-    initialize: function(options) {
+    constructor: function(options) {
+        //HorizontalSliderControl.prototype.constructor.apply(this, options);
         this.constructor.__super__.initialize.apply(this, arguments);
     },
 
