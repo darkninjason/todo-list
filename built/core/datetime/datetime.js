@@ -17,7 +17,7 @@ define(function(require, exports, module){
      *
      * @function
      * @memberOf built.core.datetime.datetime
-     * @param  {String} value Date String
+     * @param  {String} value ISO 8601 DateTime String (UTC)
      * @return {Number}       #TODO ADD THIS
      *
      */
@@ -43,7 +43,7 @@ define(function(require, exports, module){
      *
      * @function
      * @memberOf built.core.datetime.datetime
-     * @param  {String} value Date String
+     * @param  {String} value ISO 8601 DateTime String (UTC)
      * @return {Number}       #TODO ADD THIS
      *
      */
@@ -57,7 +57,7 @@ define(function(require, exports, module){
      *
      * @function
      * @memberOf built.core.datetime.datetime
-     * @param  {String} value Date String
+     * @param  {String} value ISO 8601 DateTime String (UTC)
      * @return {Date}       #TODO ADD THIS
      *
      */
