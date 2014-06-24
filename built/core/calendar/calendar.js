@@ -1,3 +1,7 @@
+/**
+ * Calender helpers
+ * @module built.core.calendar.calendar
+ */
 define(function(require, exports, module){
 
     function _isDate(obj){
@@ -6,6 +10,18 @@ define(function(require, exports, module){
         return Object.prototype.toString.call(obj) == '[object Date]';
     }
 
+    /**
+     * used to get the first day of the month for a date
+     *
+     * Example :ref:`example.calendar.firstOfMonth`
+     *
+     * @function
+     * @memberOf built.core.calendar.calendar
+     * @param  {Date|Number} [year]  any date
+     * @param  {Number} [month] Date object
+     * @return {Date}       the first day of the month passed in
+     *
+     */
     function firstOfMonth(year, month){
 
         if(_isDate(year)){
@@ -26,21 +42,67 @@ define(function(require, exports, module){
         return new Date(year, month, 1);
     }
 
+    /**
+     * get the previous month for given year and month
+     *
+     * Example :ref:`example.calendar.previousMonthForYearMonth`
+     *
+     * @function
+     * @memberOf built.core.calendar.calendar
+     * @param  {Date} year  any date
+     * @param  {Date} month Date object
+     * @return {Date}       previous month
+     *
+     */
     function previousMonthForYearMonth(year, month){
         var date = new Date(year, (month - 1), 1);
         return previousMonthForDate(date);
     }
 
+    /**
+     * get the next month for given year and month
+     *
+     * Example :ref:`example.calendar.nextMonthForYearMonth`
+     *
+     * @function
+     * @memberOf built.core.calendar.calendar
+     * @param  {Number} year  Year
+     * @param  {Number} month Month
+     * @return {Date}       next month
+     *
+     */
     function nextMonthForYearMonth(year, month){
         var date = new Date(year, (month - 1), 1);
         return nextMonthForDate(date);
     }
 
+    /**
+     * get the previous month for given date
+     *
+     * Example :ref:`example.calendar.previousMonthForDate`
+     *
+     * @function
+     * @memberOf built.core.calendar.calendar
+     * @param  {Date} [date]  any date
+     * @return {Date}       previous month
+     *
+     */
     function previousMonthForDate(date){
         // day zero represents the last day of the previous month
         return new Date(date.getFullYear(), date.getMonth(), 0);
     }
 
+    /**
+     * get the next month for given date
+     *
+     * Example :ref:`example.calendar.nextMonthForDate`
+     *
+     * @function
+     * @memberOf built.core.calendar.calendar
+     * @param  {Date} [date]  any date
+     * @return {Date}       next month
+     *
+     */
     function nextMonthForDate(date){
 
         if(date.getDate() != 1){
@@ -59,10 +121,29 @@ define(function(require, exports, module){
         return new Date(result.getTime() + tzShift);
     }
 
+
+    /**
+     * returns a 0 based index version of the month
+     *
+     * Example :ref:`example.calendar.daysInJavaScriptMonth`
+     *
+     * * .. note ::
+     *
+     *     JS is 0 based months, 0 = January
+     *     passing 0 for the day in the below is syaing
+     *     give me the last day of the previous month.
+     *     So we need to add 1 to our month, so that
+     *     "last month", is effectively the request month.
+     *
+     * @function
+     * @memberOf built.core.calendar.calendar
+     * @param  {Number} year  any date
+     * @param  {Number} month  any date
+     * @return {Date}       next month
+     *
+     */
     function daysInJavaScriptMonth(year, month){
-        /* month here is a JavaScript month,
-        aka 0 based index starting from January
-        */
+
 
         if (!year && !month){
             var now = new Date();
@@ -70,17 +151,25 @@ define(function(require, exports, module){
             month = now.getMonth();
         }
 
-        // JS is 0 based months, 0 = January
-        // passing 0 for the day in the below is syaing
-        // give me the last day of the previous month.
-        // So we need to add 1 to our month, so that
-        // "last month", is effectively the request month.
-
         month = month + 1;
 
         var d = new Date(year, month, 0);
         return d.getDate();
     }
+
+    /**
+     * gets you the number of days in a given month
+     *
+     * Example :ref:`example.calendar.calendarMonthDays`
+     *
+     * @function
+     * @memberOf built.core.calendar.calendar
+     * @param  {Number} year  desired year
+     * @param  {Number} month  desired month
+     * @param  {Object} options  { firstDayOfWeek: Number, useDates: Boolean}
+     * @return {Date}       next month
+     *
+     */
 
     function calendarMonthDays(year, month, options){
         options = options || {};
@@ -116,15 +205,31 @@ define(function(require, exports, module){
         return result;
     }
 
-    function bufferedCalendarMonthDays(year, month, options){
-        /* Returns a 42 (7x6) item array representing the last
-        days of the previous month, the days of the desired month
-        and the first days of the next month.
+    /**
+     * get a buffered (42 days (6 weeks * 7 days)) array of date objects
+     * for any given year and month
+     *
+     * Example :ref:`example.calendar.bufferedCalendarMonthDays`
+     *
+     * .. note ::
+     *     Returns a 42 (7x6) item array representing the last
+     *     days of the previous month, the days of the desired month
+     *     and the first days of the next month.
+     *
+     *     This is intended to be used to build a 7x6 block calendar
+     *     representation. If you just want the days for the current month,
+     *     omitting the prefix and duffix days, use calendarMonthDays()
+     *
+     * @function
+     * @memberOf built.core.calendar.calendar
+     * @param  {Number} year  desired year
+     * @param  {Number} month  desired month
+     * @param  {Object} options  { firstDayOfWeek: Number, useDates: Boolean}
+     * @return {Date}       next month
+     *
+     */
 
-        This is intended to be used to build a 7x6 block calendar
-        representation. If you just want the days for the current month,
-        omitting the prefix and duffix days, use calendarMonthDays()
-        */
+    function bufferedCalendarMonthDays(year, month, options){
         options = options || {};
         options.firstDayOfWeek = options.firstDayOfWeek || 0;
         options.useDates = options.useDates || false;
@@ -179,6 +284,23 @@ define(function(require, exports, module){
 
         return results;
     }
+
+
+    /**
+     * returns back an array of arrays for a given year/month with all
+     * of the dates populated in each slot.  used for building calendars
+     *
+     * Example :ref:`example.calendar.bufferedCalendarMonthWeeks`
+     *
+     *
+     * @function
+     * @memberOf built.core.calendar.calendar
+     * @param  {Number} year  desired year
+     * @param  {Number} month  desired month
+     * @param  {Object} options  { firstDayOfWeek: Number, useDates: Boolean}
+     * @return {Date}       next month
+     *
+     */
 
     function bufferedCalendarMonthWeeks(year, month, options){
         var days = bufferedCalendarMonthDays(year, month, options);
