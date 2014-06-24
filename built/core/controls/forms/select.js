@@ -31,7 +31,10 @@ var Select = marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, options);
+        this.listenTo(this, 'close', this.deinit);
+
         _.extend(this, options);
         _.bindAll(this,
             'insertText',
@@ -114,7 +117,7 @@ var Select = marionette.Controller.extend(
         this.focusManager.focusIndex(this.indexManager.getIndex());
     },
 
-    onClose: function(){
+    deinit: function(){
         this.closeManagers();
         this.keyResponder.close();
     },
