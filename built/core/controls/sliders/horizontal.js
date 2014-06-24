@@ -47,7 +47,10 @@ var HorizontalSliderControl = marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, options);
+        this.listenTo(this, 'close', this.deinit);
+
         this.options = _.defaults(options, this._getDefaults());
 
         this.$container = registerElement(this.options.container, true);
@@ -64,7 +67,7 @@ var HorizontalSliderControl = marionette.Controller.extend(
         }
     },
 
-    onClose: function() {
+    deinit: function() {
         var controllers;
 
         function iterator (controller, i, list) {

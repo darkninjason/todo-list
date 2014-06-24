@@ -22,8 +22,8 @@ var HorizontalRangeSliderControl =  HorizontalSliderControl.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options) {
-        this.constructor.__super__.initialize.apply(this, arguments);
+    constructor: function(options) {
+        HorizontalSliderControl.prototype.constructor.apply(this, arguments);
     },
 
     // HorizontalSliderControl overrides
