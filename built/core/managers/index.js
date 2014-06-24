@@ -25,7 +25,10 @@ var IndexManager = marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, arguments);
+        options = options || {};
+
         this.range = new RangeManager();
         this.setLength(options.length || 0);
     },
