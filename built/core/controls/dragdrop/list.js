@@ -31,7 +31,8 @@ var DragDropList = marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, options);
         _.extend(this, options);
 
         this.dragResponder = null;
