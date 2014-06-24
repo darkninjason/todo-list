@@ -45,3 +45,18 @@ install-test-coverage:
 
 serve:
 	python -m SimpleHTTPServer
+
+
+doc: clean rst-doc html-doc
+
+clean:
+	rm -rf ./docs/html
+
+rst-doc:
+	node_modules/.bin/jsdoc -t ./node_modules/jsdoc-rst-template/template/ --recurse built -d ./docs/rst
+
+html-doc:
+	sphinx-build -b html -c ./ ./docs/rst ./docs/html
+
+serve-doc:
+	cd ./docs/html && python -m SimpleHTTPServer

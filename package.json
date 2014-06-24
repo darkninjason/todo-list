@@ -18,7 +18,8 @@
     "requirejs": "~2.1.14",
     "karma-requirejs": "~0.2.2",
     "istanbul": "~0.1.46",
-    "karma-coverage": "~0.1.5"
+    "karma-coverage": "~0.1.5",
+    "jsdoc-rst-template": "0.0.4"
   },
   "repository": {
     "type": "git",

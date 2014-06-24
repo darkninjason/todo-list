@@ -57,6 +57,17 @@ Below is a list of dependencies as of June 18th, 2014:
 - d3.js
 
 
+
+## Want docs? ok... ##
+``` bash
+npm install
+pip install sphinx sphinx_rtd_theme
+make doc
+make serve-doc
+```
+[view local docs](http://localhost:8000/)
+
+
 ## Version
 
 0.0.0
