@@ -11,6 +11,7 @@ firstOfMonth
     var calendar = require('built/core/calendar/calendar');
     var date = new Date(2012, 7, 29);
     var first = calendar.firstOfMonth(date);
+    // first == Date object
 
 .. code-block:: js
 
@@ -26,6 +27,7 @@ previousMonthForYearMonth
 
     var calendar = require('built/core/calendar/calendar');
     var first = calendar.previousMonthForYearMonth(2012, 9);
+    // first == Date object
 
 
 .. _example.calendar.nextMonthForYearMonth:
