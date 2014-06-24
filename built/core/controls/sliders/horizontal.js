@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.controls.sliders.horizontal
+ */
 define(function(require, exports, module){
 
 var _ = require('underscore');
@@ -11,7 +15,10 @@ var getElementBounds = require('built/ui/helpers/dom').getElementBounds;
 var registerElement = require('built/core/utils/helpers').registerElement;
 var composeAll = require('built/core/utils/helpers').composeAll;
 
-var HorizontalSliderControl = marionette.Controller.extend({
+var HorizontalSliderControl = marionette.Controller.extend(
+/** @lends built.core.controls.sliders.horizontal.HorizontalSliderControl.prototype */
+
+{
 
     _rangeManagers : null,
     _mouseResponders : null,
@@ -19,11 +26,10 @@ var HorizontalSliderControl = marionette.Controller.extend({
     _handleOffsets : [],
 
     /**
-     * Initialize HorizontalSliderControl
-     * @param  {object} options options literal
-     * @return {undefined}
+     * Creates a new HorizontalSliderControl
      *
      * @example
+     *
      * horizontalSliderControl = new HorizontalSliderControl(
      *     {
      *         container    : $('.slider'),           // required, string or jquery
@@ -35,6 +41,11 @@ var HorizontalSliderControl = marionette.Controller.extend({
      *         acceptsTouch : false                   // default false
      *     }
      * );
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
      */
     initialize: function(options){
         this.options = _.defaults(options, this._getDefaults());
