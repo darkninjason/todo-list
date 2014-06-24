@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.managers.range
+ */
 define(function(require, exports, module){
 
 // Imports
@@ -9,7 +13,9 @@ var events     = require('built/core/events/event');
 
 // Module
 
-var RangeManager = marionette.Controller.extend({
+var RangeManager = marionette.Controller.extend(
+/** @lends built.core.managers.range.RangeManager.prototype */
+{
 
     _defaults: null,
     _range   : null,
@@ -20,10 +26,8 @@ var RangeManager = marionette.Controller.extend({
     _markers: null,
     _lastDispatched: null,
 
-    /**
-     * Initialize RangeManager
-     * @param  {object} options options literal
-     * @return {undefined}
+     /**
+     * Creates a new RangeManager
      *
      * @example
      * rangeManager = new RangeManager(
@@ -32,6 +36,11 @@ var RangeManager = marionette.Controller.extend({
      *         max: 1, // default 1
      *     }
      * );
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
      */
     initialize: function(options) {
         this.options = options;
