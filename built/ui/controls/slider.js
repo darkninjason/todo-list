@@ -32,7 +32,9 @@ var SliderContainer = marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, arguments);
+
         this.options = _.defaults(options, this._getDefaults());
         this._driver = this._initializeDriver(this.options);
         this._uiUpdater = this._initializeUiUpdater(this._driver.options);

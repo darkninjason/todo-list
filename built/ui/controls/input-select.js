@@ -25,7 +25,9 @@ var InputSelectMarionette = InputSelect.extend(
      * @extends built.core.controls.forms.input-select.InputSelect
      *
      */
-    initialize : function() {
+    constructor : function() {
+        InputSelect.prototype.constructor.apply(this, arguments);
+
         this.on(focus.BLUR, this._onItemBlur);
         this.on(focus.FOCUS, this._onItemFocus);
         this.on(events.SELECT, this._onItemSelect);
