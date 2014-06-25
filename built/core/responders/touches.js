@@ -29,7 +29,10 @@ var TouchResponder = marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, arguments);
+        this.listenTo(this, 'close', this.deinit);
+
         _.extend(this, options);
         _.bindAll(this, '_touchStart', '_touchMove', '_touchEnd', '_touchCancel');
 
@@ -149,9 +152,7 @@ var TouchResponder = marionette.Controller.extend(
         });
     },
 
-    // Marionette overrides
-
-    onClose: function(){
+    deinit: function(){
         this.$el.off('touchstart.built.responders.touch', this._touchStart);
         this.$el.off('touchmove.built.responders.touch', this._touchMove);
         this.$el.off('touchend.built.responders.touch', this._touchEnd);
