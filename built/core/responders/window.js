@@ -6,12 +6,12 @@ define(function(require, exports, module) {
 
 // Imports
 
-var Marionette = require('marionette');
+var marionette = require('marionette');
 var _          = require('underscore');
 
 // Module
 
-var WindowResponder = Marionette.Controller.extend(
+var WindowResponder = marionette.Controller.extend(
 /** @lends built.core.responders.window.WindowResponder.prototype */
 {
 
@@ -42,7 +42,10 @@ var WindowResponder = Marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options) {
+    constructor: function(options) {
+        marionette.Controller.prototype.constructor.apply(this, arguments);
+        this.listenTo(this, 'close', this.deinit);
+
         _.extend(this, options);
 
         _.bindAll(
@@ -68,7 +71,7 @@ var WindowResponder = Marionette.Controller.extend(
         }
     },
 
-    onClose: function() {
+    deinit: function() {
         if(this.acceptsOrientation) {
             $(window).off(this.EVENT_ORIENTATION, this._orientationChange);
         }
