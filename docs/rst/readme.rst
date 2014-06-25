@@ -18,7 +18,7 @@ properly setup. We recommend the following
         packages:[
             {
                 name: 'built'
-                location: '<path to your built forlder>',
+                location: '<path to your BUILT folder>',
             },
         ],
 
