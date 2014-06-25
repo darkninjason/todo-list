@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.ui.controls.input-select
+ */
 define(function (require, exports, module) {
 
 var _            = require('underscore');
@@ -7,12 +11,21 @@ var focus        = require('built/core/events/focus');
 var events       = require('built/core/events/event');
 var getElementId = require('built/core/utils/helpers').getElementId;
 
-var InputSelectMarionette = InputSelect.extend({
+var InputSelectMarionette = InputSelect.extend(
+/** @lends built.ui.controls.input-select.InputSelectMarionette.prototype */
+{
 
     onClose : function(){
         this.marionetteDict = [];
     },
 
+    /**
+     * Creates a new InputSelectMarionette
+     *
+     * @constructs
+     * @extends built.core.controls.forms.input-select.InputSelect
+     *
+     */
     initialize : function() {
 
         InputSelect.prototype.initialize.apply(this,arguments);
