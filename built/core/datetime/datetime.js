@@ -1,15 +1,19 @@
 /**
  * Datetime formatters
+ *
+ * .. note::
+ *     All values assumed to be ISO 8601 and in UTC
+ *
+ *     |  2013-08-29T14:29Z
+ *     |  2013-08-29T14:29.000Z
+ *     |  2013-08-29T14:29+0000
+ *     |  2013-08-29T14:29:30.123+0000
+ *
  * @module built.core.datetime.datetime
  */
 define(function(require, exports, module){
 
 
-    // All values assumed to be ISO 8601 and in UTC
-    // 2013-08-29T14:29Z
-    // 2013-08-29T14:29.000Z
-    // 2013-08-29T14:29+0000
-    // 2013-08-29T14:29:30.123+0000
     var isoRegex = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?:\:(\d{2})(?:\.(\d+))?)?(?:Z|\+0000)?/;
 
     /**
