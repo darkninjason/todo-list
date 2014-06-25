@@ -9,7 +9,7 @@ define(function(require, exports, module){
      * Data constant
      * @var
      * @type {String}
-     * @default 'data:data'
+     * @default
      * @memberOf built.core.events.data
      */
     exports.DATA = 'data:data';
