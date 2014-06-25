@@ -3,6 +3,7 @@ require.config({
 
   paths : {
     'marionette': 'vendor/backbone/marionette',
+    'localstorage': 'vendor/backbone/backbone.localStorage'
   },
 
    packages: [

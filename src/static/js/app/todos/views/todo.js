@@ -28,6 +28,10 @@ define(function(require, exports, module) {
 	        this.listenTo(this.model, 'change:title', this.changeTitle);
 	        this.listenTo(this.model, 'change:completed', this.toggleRender);
 	        this.listenTo(this.model, 'remove', this.removeTodo);
+
+	        if(this.model.get('completed')){
+	        	this.$el.addClass('completed');
+	        }
 	    },
 
 	    editMode: function(){
@@ -37,7 +41,7 @@ define(function(require, exports, module) {
 
 	    updateOnEnter: function(e){
 	        if(e.keyCode == 13){
-	            this.model.set('title', this.ui.taskName.val());
+	            this.model.save('title', this.ui.taskName.val());
 	        }
 	    },
 
@@ -52,8 +56,8 @@ define(function(require, exports, module) {
 	    },
 
 	    toggleRender: function(){
-	         this.$el.toggleClass('completed');
-	         this.render();
+			this.$el.toggleClass('completed');
+			this.render();
 	    }
     });
 

@@ -3,9 +3,7 @@ define(function(require, exports, module) {
     var app = new marionette.Application();
 
     app.addRegions({
-        header: '#header',
-        main: '#main',
-        footer: '#footer'
+        todos: '#todoapp'
     });
 
     app.addInitializer(function() {

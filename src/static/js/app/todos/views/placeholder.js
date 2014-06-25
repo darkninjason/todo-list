@@ -2,9 +2,7 @@ define(function(require, exports, module) {
 
     var marionette = require('marionette'),
         templatePlaceholder = require('hbs!app/todos/templates/placeholder'),
-        Todo = require('app/todos/models/todo').Todo,
-        TodoList = require('app/todos/collections/todo-list').TodoList,
-        app = require('app/app');
+        Todo = require('app/todos/models/todo').Todo;
 
     var PlaceholderView = marionette.ItemView.extend({
         template: templatePlaceholder,
@@ -21,13 +19,14 @@ define(function(require, exports, module) {
         addTodo: function(e){
             if(e.keyCode == 13 && (this.ui.newTodo.val().length > 0)){
                 var todo = new Todo({title: this.ui.newTodo.val()});
-                app.Todos.addTodo(todo);
+                this.collection.addTodo(todo);
                 this.ui.newTodo.val('');
+                todo.save();
             }
         },
 
         toggleAll: function(){
-            if(app.Todos.where({completed: true}).length === app.Todos.length){
+            if(this.collection.where({completed: true}).length === this.collection.length){
                 this.uncompleteAll();
             } else {
                 this.completeAll();
@@ -36,7 +35,7 @@ define(function(require, exports, module) {
 
         completeAll: function(){
 
-            app.Todos.forEach(function(model){
+            this.collection.forEach(function(model){
                 if(!model.get('completed')){
                     model.toggleState();
                 }
@@ -45,7 +44,7 @@ define(function(require, exports, module) {
 
         uncompleteAll: function(){
 
-            app.Todos.forEach(function(model){
+            this.collection.forEach(function(model){
                 if(model.get('completed')){
                     model.toggleState();
                 }

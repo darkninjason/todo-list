@@ -1,8 +1,7 @@
 define(function(require, exports, module) {
 
     var marionette = require('marionette'),
-        templateTodoFooter = require('hbs!app/todos/templates/todo-footer'),
-        app = require('app/app');
+        templateTodoFooter = require('hbs!app/todos/templates/todo-footer');
 
     var TodoFooterView = marionette.ItemView.extend({
         template: templateTodoFooter,
@@ -13,25 +12,25 @@ define(function(require, exports, module) {
         },
 
         initialize: function(){
-            this.listenTo(app.Todos, "add remove change:completed", this.updateCount);
+            this.listenTo(this.collection, "add remove change:completed", this.updateCount);
         },
 
         updateCount: function(){
-            this.model.set('itemsLeft', app.Todos.where({completed: false}).length);
+            this.model.set('itemsLeft', this.collection.where({completed: false}).length);
             this.render();
         },
 
         clearCompleted: function(){
             var completedIndexes = [];
 
-            app.Todos.forEach(function(model, index){
+            this.collection.forEach(function(model, index){
                 if(model.get('completed')){
                     completedIndexes.push(index);
                 }
             });
             
-            for(var i = app.Todos.length - 1; i >= 0; i--){
-                app.Todos.remove(app.Todos.at(completedIndexes[i]));
+            for(var i = this.collection.length - 1; i >= 0; i--){
+                this.collection.remove(this.collection.at(completedIndexes[i]));
             }
         },
 

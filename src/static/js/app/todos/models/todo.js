@@ -9,7 +9,7 @@ define(function(require, exports, module) {
 	   },
 
 	   toggleState: function(){
-	    this.set('completed', !this.get('completed'));
+	    this.save({completed: !this.get('completed')});
 	   }
 	});
 
