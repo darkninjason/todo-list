@@ -5,7 +5,6 @@
 define(function (require, exports, module) {
 
 var _            = require('underscore');
-var Marionette   = require('marionette');
 var InputSelect  = require('built/core/controls/forms/input-select').InputSelect;
 var focus        = require('built/core/events/focus');
 var events       = require('built/core/events/event');
@@ -27,8 +26,6 @@ var InputSelectMarionette = InputSelect.extend(
      *
      */
     initialize : function() {
-
-        InputSelect.prototype.initialize.apply(this,arguments);
         this.on(focus.BLUR, this._onItemBlur);
         this.on(focus.FOCUS, this._onItemFocus);
         this.on(events.SELECT, this._onItemSelect);
