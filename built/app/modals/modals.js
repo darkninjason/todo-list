@@ -1,3 +1,7 @@
+/**
+ * Modal Helpers
+ * @module built.app.modals.views.modals
+ */
 define(function(require, exports, module) {
 
 var vent = require('built/app/vent').vent;
@@ -7,14 +11,36 @@ var events = require('./events');
 var currentModal = null;
 var queue = [];
 
+/**
+ * Get the current Modal View
+ *
+ * @function
+ * @memberOf built.app.modals.views.modals
+ *
+ */
 function getCurrentModal(){
     return currentModal;
 }
 
+/**
+ * Dismiss the current Modal
+ *
+ * @function
+ * @memberOf built.app.modals.views.modals
+ *
+ */
 function dismissModal(){
     vent.trigger(events.DISMISS, currentModal);
 }
 
+/**
+ * Present a modal
+ *
+ * @function
+ * @memberOf built.app.modals.views.modals
+ *
+ * @param  {View} view Any Marionette based view
+ */
 function presentModal(view){
 
     var deferred = $.Deferred();
@@ -27,17 +53,25 @@ function presentModal(view){
     });
 
     if(queue.length === 1){
-        triggerModal(modalView);
+        _triggerModal(modalView);
     }
 
     return deferred.promise();
 }
 
-function triggerModal(modalView){
+
+function _triggerModal(modalView){
     currentModal = modalView;
     vent.trigger(events.PRESENT, currentModal);
 }
 
+/**
+ * Move to the next modal view in the queue
+ *
+ * @function
+ * @memberOf built.app.modals.views.modals
+ *
+ */
 function nextModal(){
 
     if(queue.length > 0) {
@@ -46,7 +80,7 @@ function nextModal(){
     }
 
     if(queue.length === 0) return;
-    triggerModal(queue[0]);
+    _triggerModal(queue[0]);
 }
 
 
