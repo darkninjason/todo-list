@@ -1,7 +1,21 @@
+/**
+ * Calender helpers
+ * @module built.ui.helpers.dom
+ */
 define(function (require, exports, module) {
 
 var marionette = require('marionette');
 
+/**
+ * #TODO update this function
+ *
+ * @function
+ * @memberOf built.ui.helpers.dom
+ * @param  {Date|Number} [year]  any date
+ * @param  {Number} [month] Date object
+ * @return {Date}       the first day of the month passed in
+ *
+ */
 function getElement(value, $context){
     var $el;
 
@@ -19,9 +33,22 @@ function getElement(value, $context){
     return $el;
 }
 
+/**
+ * #TODO update this function
+ *
+ * .. note ::
+ *     http://stackoverflow.com/questions/4500758/getting-relative-mouse-x-y-in-javascript
+ *     http://www.quirksmode.org/js/findpos.html
+ *
+ * @function
+ * @memberOf built.ui.helpers.dom
+ * @param  {Date|Number} [year]  any date
+ * @param  {Number} [month] Date object
+ * @return {Date}       the first day of the month passed in
+ *
+ */
 function getElementPosition ($el) {
-    // http://stackoverflow.com/questions/4500758/getting-relative-mouse-x-y-in-javascript
-    // http://www.quirksmode.org/js/findpos.html
+
 
     var curleft = 0;
     var curtop = 0;
@@ -43,6 +70,16 @@ function getElementPosition ($el) {
     }
 }
 
+/**
+ * #TODO update this function
+ *
+ * @function
+ * @memberOf built.ui.helpers.dom
+ * @param  {Date|Number} [year]  any date
+ * @param  {Number} [month] Date object
+ * @return {Date}       the first day of the month passed in
+ *
+ */
 function getElementBounds($el) {
     // https://developer.mozilla.org/en-US/docs/XPCOM_Interface_Reference/nsIDOMClientRect
     // returns ClientRect: {'bottom', 'height', 'left', 'right', 'top', 'width'}
@@ -57,6 +94,16 @@ function getElementBounds($el) {
 
 
 
+/**
+ * #TODO update this function
+ *
+ * @function
+ * @memberOf built.ui.helpers.dom
+ * @param  {Date|Number} [year]  any date
+ * @param  {Number} [month] Date object
+ * @return {Date}       the first day of the month passed in
+ *
+ */
 function objectFromElement($element, map){
     var key;
     map = map || {};
@@ -74,6 +121,16 @@ function objectFromElement($element, map){
     return attrs;
 }
 
+/**
+ * #TODO update this function
+ *
+ * @function
+ * @memberOf built.ui.helpers.dom
+ * @param  {Date|Number} [year]  any date
+ * @param  {Number} [month] Date object
+ * @return {Date}       the first day of the month passed in
+ *
+ */
 function modelFromElement($element, Model, map){
     Model = Model || Backbone.Model;
     map = map || {};
@@ -82,6 +139,16 @@ function modelFromElement($element, Model, map){
     return new Model(obj);
 }
 
+/**
+ * #TODO update this function
+ *
+ * @function
+ * @memberOf built.ui.helpers.dom
+ * @param  {Date|Number} [year]  any date
+ * @param  {Number} [month] Date object
+ * @return {Date}       the first day of the month passed in
+ *
+ */
 function modelFromElements($elements, Model, map){
     var arr = [];
     _.each($elements, function(element){
