@@ -1,10 +1,27 @@
+/**
+ * Popup View
+ * @module built.app.popovers.views.popup
+ */
 define(function(require, exports, module) {
 
 var PopView = require('./pop').PopView;
 
-var PopupView = PopView.extend({
+var PopupView = PopView.extend(
+/** @lends built.app.popovers.views.popup.PopupView.prototype */
+{
     defaultEdge: 'top',
 
+    /**
+     * Creates a new PopupView
+     *
+     * @constructs
+     * @extends marionette.View
+     * @param {object} [options] Options for Initialization
+     *
+     */
+    constructor: function(){
+        marionette.View.prototype.constructor.apply(this, arguments);
+    },
 
     anchorBottom: function(anchorRect, $anchorElement, viewRect, css){
         this.anchorTop(anchorRect, $anchorElement, viewRect, css);

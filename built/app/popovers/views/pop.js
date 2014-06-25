@@ -1,3 +1,7 @@
+/**
+ * Pop View
+ * @module built.app.popovers.views.pop
+ */
 define(function(require, exports, module) {
 
 var _ = require('underscore');
@@ -6,9 +10,23 @@ var dom = require('built/ui/helpers/dom');
 var keys = require('built/app/keys');
 var ClickTestResponder = require('built/core/responders/clicks').ClickTestResponder;
 
-var PopView = marionette.View.extend({
+var PopView = marionette.View.extend(
+/** @lends built.app.popovers.views.pop.PopView.prototype */
+{
     view: null,
     defaultEdge: 'bottom',
+
+    /**
+     * Creates a new PopView
+     *
+     * @constructs
+     * @extends marionette.View
+     * @param {object} [options] Options for Initialization
+     *
+     */
+    constructor: function(){
+        marionette.View.prototype.constructor.apply(this, arguments);
+    },
 
     show: function(view, options){
         options = options || {};
