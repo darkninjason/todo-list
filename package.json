@@ -19,7 +19,7 @@
     "karma-requirejs": "~0.2.2",
     "istanbul": "~0.1.46",
     "karma-coverage": "~0.1.5",
-    "jsdoc-rst-template": "0.0.16",
+    "jsdoc-rst-template": "0.0.17",
     "jsdoc": "~3.3.0-alpha8"
   },
   "repository": {

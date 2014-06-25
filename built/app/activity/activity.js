@@ -1,3 +1,7 @@
+/**
+ * Utility functions for activity monitor presentation
+ * @module built.app.activity.activity
+ */
 define(function(require, exports, module) {
 
 var vent = require('built/app/vent').vent;
@@ -5,6 +9,12 @@ var events = require('./events');
 var count = 0;
 
 
+/**
+ * called to trigger activity monitor to be presented
+ * should be called every time you want to display indicator
+ * @function
+ * @memberOf built.app.activity.activity
+ */
 function presentNetworkActivityIndicator(){
     count++;
     vent.trigger(events.PRESENT);
