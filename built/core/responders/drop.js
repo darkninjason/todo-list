@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * Responders - Dropping
  * @module built.core.responders.drop
  */
 define(function(require, exports, module){

@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * Responders - Keys
  * @module built.core.responders.keys
  */
 define(function(require, exports, module){

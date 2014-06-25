@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * Responders - Window
  * @module built.core.responders.window
  */
 define(function(require, exports, module) {

@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * Responders - Touches
  * @module built.core.responders.touches
  */
 define(function(require, exports, module){

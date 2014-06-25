@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * JQuery Collections
  * @module built.core.jquery.collection
  */
 define(function(require, exports, module){

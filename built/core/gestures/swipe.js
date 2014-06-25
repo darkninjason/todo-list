@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * Swipe Gesture
  * @module built.core.gestures.swipe
  */
 define(function(require, exports, module){

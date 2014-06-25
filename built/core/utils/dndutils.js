@@ -1,5 +1,5 @@
 /**
- * Calender helpers
+ * Drag and Drop Utilities
  * @module built.core.utils.dndutils
  */
 define(function(require, exports, module){

@@ -1,9 +1,8 @@
 /**
- * Drag and Drop List Controller
+ * CSS Transitions
  * @module built.core.transitions.css
  */
 define(function(require, exports, module){
-    var Marionette = require('marionette');
     var _ = require('underscore');
     var Modernizr = require('modernizr');
 
