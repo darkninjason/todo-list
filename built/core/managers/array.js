@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * Managers - Array
  * @module built.core.managers.array
  */
 define(function(require, exports, module){

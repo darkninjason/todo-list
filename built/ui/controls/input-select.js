@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * UI Input Select Implementation
  * @module built.ui.controls.input-select
  */
 define(function (require, exports, module) {

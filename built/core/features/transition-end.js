@@ -1,5 +1,5 @@
 /**
- * Calender helpers
+ * Feature Detection - Transitions
  * @module built.core.features.transition-end
  */
 define(function(require, exports, module){

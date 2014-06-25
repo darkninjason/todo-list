@@ -1,5 +1,5 @@
 /**
- * Calender helpers
+ * General Helpers
  * @module built.core.utils.helpers
  */
 define(function(require, exports, module){

@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * Inversion of Control Container
  * @module built.core.utils.ioc
  */
 define(function(require, exports, module){

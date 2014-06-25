@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * Responders - Mouse
  * @module built.core.responders.mouse
  */
 define(function(require, exports, module){

@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * Managers - Single Focus
  * @module built.core.managers.focus-single
  */
 define(function(require, exports, module){

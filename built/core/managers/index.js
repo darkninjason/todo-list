@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * Managers - Index Manager
  * @module built.core.managers.index
  */
 define(function(require, exports, module){

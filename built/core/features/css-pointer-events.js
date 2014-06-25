@@ -1,5 +1,5 @@
 /**
- * Calender helpers
+ * CFeature Detection - CSS Pointer Events
  * @module built.core.features.css-pointer-events
  */
 define(function(require, exports, module){

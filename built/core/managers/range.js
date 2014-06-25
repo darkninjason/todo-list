@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * Managers - Range
  * @module built.core.managers.range
  */
 define(function(require, exports, module){

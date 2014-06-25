@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * UI Slider Implementation
  * @module built.ui.controls.slider
  */
 define(function(require, exports, module){

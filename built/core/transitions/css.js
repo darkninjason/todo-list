@@ -1,5 +1,5 @@
 /**
- * Drag and Drop List Controller
+ * CSS Transitions
  * @module built.core.transitions.css
  */
 define(function(require, exports, module){
