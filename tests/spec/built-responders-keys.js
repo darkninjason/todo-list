@@ -50,19 +50,19 @@ describe('Key Responder', function() {
 
     });
 
-    it('expects onClose to be called', function() {
+    it('expects deinit to be called', function() {
         // note the local assignment to of a scopedResponder
         // not using the suite's setup 'responder' var
         // we want to explicitely test close()
+
+        spyOn(KeyResponder.prototype, 'deinit').and.callThrough();
 
         var scopedResponder = new KeyResponder({
             el: $input
         });
 
-        spyOn(scopedResponder, 'onClose').and.callThrough();
-
         scopedResponder.close();
-        expect(scopedResponder.onClose).toHaveBeenCalled();
+        expect(scopedResponder.deinit).toHaveBeenCalled();
     });
 
     it('expects alternate KeyInputManager to be used (for Aubrey)', function() {

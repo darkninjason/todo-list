@@ -7,14 +7,14 @@ define(function(require, exports, module){
 // Imports
 
 var _                    = require('underscore');
-var Marionette           = require('marionette');
+var marionette           = require('marionette');
 var KeyInputManager      = require('built/core/managers/key-input').KeyInputManager;
 var KeyEquivalentManager = require('built/core/managers/key-equivalent').KeyEquivalentManager;
 var helpers              = require('built/core/utils/helpers');
 
 // Module
 
-var KeyResponder = Marionette.Controller.extend(
+var KeyResponder = marionette.Controller.extend(
 /** @lends built.core.responders.keys.KeyResponder.prototype */
 {
     el: null,
@@ -29,7 +29,11 @@ var KeyResponder = Marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, arguments);
+        this.listenTo(this, 'close', this.deinit);
+
+
         _.extend(this, options);
         _.bindAll(this, '_keyDown', '_keyUp');
 
@@ -143,7 +147,7 @@ var KeyResponder = Marionette.Controller.extend(
         }
     },
 
-    onClose: function(){
+    deinit: function(){
         this.inputManager = null;
         this.equivalentManager = null;
 

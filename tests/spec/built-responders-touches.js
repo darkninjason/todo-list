@@ -85,14 +85,14 @@ describe('Responder: Touch', function() {
         // not using the suite's setup 'responder' var
         // We want to explicitely test close()
 
+        spyOn(TouchResponder.prototype, 'deinit').and.callThrough();
+
         var scopedResponder = new TouchResponder({
             el: $input
         });
 
-        spyOn(scopedResponder, 'onClose').and.callThrough();
-
         scopedResponder.close();
-        expect(scopedResponder.onClose).toHaveBeenCalled();
+        expect(scopedResponder.deinit).toHaveBeenCalled();
     });
 
     it('removes touch events', function() {

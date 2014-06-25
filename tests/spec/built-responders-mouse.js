@@ -109,14 +109,14 @@ describe('Mouse Responder', function() {
         // not using the suite's setup 'responder' var.
         // We want to explicitely test close().
 
+        spyOn(MouseResponder.prototype, 'deinit').and.callThrough();
+
         var scopedResponder = new MouseResponder({
             el: $input
         });
 
-        spyOn(scopedResponder, 'onClose').and.callThrough();
-
         scopedResponder.close();
-        expect(scopedResponder.onClose).toHaveBeenCalled();
+        expect(scopedResponder.deinit).toHaveBeenCalled();
     });
 
     it('expects mouse up and mouse down to be called', function() {

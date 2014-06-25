@@ -6,13 +6,13 @@ define(function(require, exports, module){
 
 // Imports
 
-var Marionette = require('marionette');
+var marionette = require('marionette');
 var _          = require('underscore');
 var helpers    = require('built/core/utils/helpers');
 var dndutils    = require('built/core/utils/dndutils');
 
 // Module
-var DropResponder = Marionette.Controller.extend(
+var DropResponder = marionette.Controller.extend(
 /** @lends built.core.responders.drop.DropResponder.prototype */
 {
 
@@ -40,10 +40,11 @@ var DropResponder = Marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, arguments);
+        this.listenTo(this, 'close', this.deinit);
+
         _.extend(this, options);
-
-
         this.$el = helpers.registerElement(this.el);
 
         if(helpers.isMSIE && helpers.MSIEVersion <= this._minIE){
@@ -191,9 +192,7 @@ var DropResponder = Marionette.Controller.extend(
     draggingExited: function(responder, e){},
     performDragOperation: function(responder, e){},
 
-    // Marionette overrides
-
-    onClose: function(){
+    deinit: function(){
         this.$el.off('dragenter.built.responders.drop', this._dragEnter);
         this.$el.off('dragover.built.responders.drop', this._dragOver);
         this.$el.off('dragleave.built.responders.drop', this._dragLeave);
