@@ -1,3 +1,7 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.ui.controls.slider
+ */
 define(function(require, exports, module){
 
 var _ = require('underscore');
@@ -6,23 +10,27 @@ var dragEvents = require('built/core/events/drag');
 var events = require('built/core/events/event');
 var composeAll = require('built/core/utils/helpers').composeAll;
 
-var SliderContainer = marionette.Controller.extend({
+var SliderContainer = marionette.Controller.extend(
+/** @lends built.ui.controls.slider.SliderContainer.prototype */
+{
 
     _driver: null,
     _uiUpdater: null,
 
     /**
-     * Initialize slider container
-     * @param  {options} options options literal
-     * @return {undefined}
-     *
+     * Creates a new SliderContainer
+
      * @example
      * var sliderContainer = new SliderContainer({
      *     driver: new HorizontalSliderControl({
      *         // slider options
      *         // see built/core/controls/horizontal.js
      *     })
-     * });
+     *
+     * @constructs
+     * @extends marionette.Controller
+     * @param {object} [options] Options for Initialization
+     *
      */
     initialize: function(options){
         this.options = _.defaults(options, this._getDefaults());
