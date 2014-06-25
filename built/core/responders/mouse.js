@@ -54,7 +54,9 @@ var MouseResponder = marionette.Controller.extend(
      * @param {object} [options] Options for Initialization
      *
      */
-    initialize: function(options){
+    constructor: function(options){
+        marionette.Controller.prototype.constructor.apply(this, arguments);
+        this.listenTo(this, 'close', this.deinit);
 
         _.bindAll(this, '_mouseDown', '_mouseUp',
             '_mouseEntered', '_mouseExited',
@@ -225,7 +227,7 @@ var MouseResponder = marionette.Controller.extend(
 
     // marionette overrides
 
-    onClose: function(){
+    deinit: function(){
         // to ensure it's gone
         $('body').off('mousemove.built.responders.mouse', this._mouseDragged);
 
