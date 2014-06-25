@@ -1,8 +1,12 @@
+/**
+ * Drag and Drop List Controller
+ * @module built.core.utils.ioc
+ */
 define(function(require, exports, module){
 
     var Marionette = require('marionette');
     var _ = require('underscore');
-    
+
 
     var Component = Marionette.Controller.extend({
         cls: null,
@@ -33,19 +37,33 @@ define(function(require, exports, module){
             });
 
             target = this.cls;
-            
+
             if(_.isFunction(target)){
                 obj = new target(_.extend(args, kwargs));
                 return obj;
             } else {
                 return target;
             }
-            
+
         }
     });
 
-    var Container = Marionette.Controller.extend({
+    var Container = Marionette.Controller.extend(
+    /** @lends built.core.utils.ioc.Container.prototype */
+    {
         registry: {},
+
+        /**
+         * Creates a new Container
+         *
+         * @constructs
+         * @extends marionette.Controller
+         * @param {object} [options] Options for Initialization
+         *
+         */
+        constructor: function(options) {
+            Marionette.Controller.prototype.constructor.apply(this, arguments);
+        },
 
         register: function(name, cls, kwargs){
             var component = new Component({cls:cls});
