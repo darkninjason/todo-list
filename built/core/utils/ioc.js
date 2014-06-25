@@ -4,18 +4,20 @@
  */
 define(function(require, exports, module){
 
-    var Marionette = require('marionette');
+    var marionette = require('marionette');
     var _ = require('underscore');
 
 
-    var Component = Marionette.Controller.extend({
+    var Component = marionette.Controller.extend({
         cls: null,
         kwargs:null,
         key:null,
         container: null,
         dependencies: null,
 
-        initialize: function(options){
+        constructor: function(options){
+            marionette.Controller.prototype.constructor.apply(this, arguments);
+
             this.dependencies = [];
             _.extend(this, options);
         },
@@ -48,7 +50,7 @@ define(function(require, exports, module){
         }
     });
 
-    var Container = Marionette.Controller.extend(
+    var Container = marionette.Controller.extend(
     /** @lends built.core.utils.ioc.Container.prototype */
     {
         registry: {},
@@ -62,7 +64,7 @@ define(function(require, exports, module){
          *
          */
         constructor: function(options) {
-            Marionette.Controller.prototype.constructor.apply(this, arguments);
+            marionette.Controller.prototype.constructor.apply(this, arguments);
         },
 
         register: function(name, cls, kwargs){
@@ -78,6 +80,7 @@ define(function(require, exports, module){
             return component.call();
         }
     });
+
     exports.Container = Container;
 });
 
