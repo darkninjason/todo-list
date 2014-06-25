@@ -55,11 +55,11 @@ describe('Key Responder', function() {
         // not using the suite's setup 'responder' var
         // we want to explicitely test close()
 
+        spyOn(KeyResponder.prototype, 'deinit').and.callThrough();
+
         var scopedResponder = new KeyResponder({
             el: $input
         });
-
-        spyOn(KeyResponder.prototype, 'deinit').and.callThrough();
 
         scopedResponder.close();
         expect(scopedResponder.deinit).toHaveBeenCalled();
