@@ -20,6 +20,11 @@ function presentNetworkActivityIndicator(){
     vent.trigger(events.PRESENT);
 }
 
+/**
+ * called to trigger dismissal of the activity monitor
+ * @function
+ * @memberOf built.app.activity.activity
+ */
 function dismissNetworkActivityIndicator(){
     count--;
 
