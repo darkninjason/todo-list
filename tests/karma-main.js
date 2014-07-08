@@ -20,6 +20,7 @@ var tests = [
     'spec/built-managers-key-equivalent',
     'spec/built-managers-range',
     'spec/built-responders-drag',
+    'spec/built-managers-scroll',
     'spec/built-responders-drop',
     'spec/built-responders-keys',
     'spec/built-responders-mouse',
@@ -31,6 +32,8 @@ var tests = [
     'spec/built-utils-helpers',
     'spec/built-utils-ioc',
     'spec/built-control-select'
+
+
 ];
 
 requirejs.config({

@@ -19,6 +19,12 @@ require.config({
         },
 
         {
+            location: 'lib/vendor/animation/greensock',
+            name: 'greensock',
+            main:'greensock'
+        },
+
+        {
             location: 'lib/vendor/backbone',
             name: 'backbone',
             main:'backbone'
@@ -59,6 +65,16 @@ require.config({
 
     'jquery/mockjax': {
         'deps': ['jquery'],
+        'exports': 'jquery'
+    },
+
+    'jquery/jquery.scrollmagic': {
+        'deps': ['jquery'],
+        'exports': 'jquery'
+    },
+
+    'jquery/jquery.scrollmagic.debug': {
+        'deps': ['jquery', 'jquery/jquery.scrollmagic'],
         'exports': 'jquery'
     },
 
