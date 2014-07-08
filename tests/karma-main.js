@@ -24,6 +24,7 @@ var tests = [
     'spec/built-responders-drop',
     'spec/built-responders-keys',
     'spec/built-responders-mouse',
+    'spec/built-responders-scroll',
     'spec/built-responders-touches',
     'spec/built-responders-window',
     'spec/built-ui-helpers-dom-getElement',
