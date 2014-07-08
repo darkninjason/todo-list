@@ -67,6 +67,15 @@ make serve-doc
 ```
 [view local docs](http://localhost:8000/)
 
+## How to write docs
+1. clone this repo and switch over to the 'docs-controls' branch
+2. check out the 'Want docs? ok...' bit above and make sure you can build the docs/view them locally
+3. after picking what you want to work on, check out either built/core/calendar/calendar.js or built/core/controls/dragdrop/list.js to see how to format the code that will be used to create the docs
+4. create a new .rst file in the docs/examples folder (ie dragdrop.rst)
+5. again, look at the other files in here and model your examples after them
+6. dive into the source code and start doc'ing away!  it is super helpful to find the page with unit tests corresponding to your feature/module (these are found at built/tests/spec/built-control-drag-drop-list.js, for example)
+7. when writing docs/examples, be as verbose as possible.  you can use my list examples as a guide.  generally, i will do something like put a console.log(whatever) in the example, and then show the expected output in a comment
+8. IMPORTANT: You really should spin up another devbot instance/project so that you can test things out and really get a feel for it.  When you're writing examples, put them into your new project, run them, and confirm that they work!
 
 ## Version
 
