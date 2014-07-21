@@ -21,7 +21,6 @@ define(function(require, exports, module) {
 
 	    removeTodo: function(e){
 	        this.model.destroy();
-	        this.remove();
 	    },
 
 	    initialize: function(){
