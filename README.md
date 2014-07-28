@@ -4,7 +4,7 @@
 [Modernizr v2.6.2 : Custom Build]: http://modernizr.com/download/#-fontface-backgroundsize-borderimage-borderradius-boxshadow-flexbox-flexboxlegacy-hsla-multiplebgs-opacity-rgba-textshadow-cssanimations-csscolumns-generatedcontent-cssgradients-cssreflections-csstransforms-csstransforms3d-csstransitions-applicationcache-canvas-canvastext-draganddrop-hashchange-history-audio-video-indexeddb-input-inputtypes-localstorage-postmessage-sessionstorage-websockets-websqldatabase-webworkers-geolocation-inlinesvg-smil-svg-svgclippaths-touch-webgl-cssclasses-teststyles-testprop-testallprops-hasevent-prefixes-domprefixes
 [Lodash v2.4.1]: http://lodash.com/
 [Backbone v1.1.2]: http://backbonejs.org/
-[Backbone : Marionette v1.8.2]: http://marionettejs.com/
+[Backbone : Marionette v2.0.3]: http://marionettejs.com/
 [Backbone : Stickit v0.8.0]: http://nytimes.github.io/backbone.stickit/
 [Handlebars : v1.3.0]: http://handlebarsjs.com/
 [HBS : v0.4.0]: https://github.com/SlexAxton/require-handlebars-plugin
@@ -32,12 +32,12 @@ Development Status :: 2 - Pre-Alpha
 
 Vendor dependencies are not versioned with the main AUF codebase. Check out `tests/lib/vendor/` for an up to date list.
 
-Below is a list of dependencies as of June 18th, 2014:
+Below is a list of dependencies as of July 28th, 2014:
 
 - [jQuery v2.1.1]
 - [Lodash v2.4.1]
 - [Backbone v1.1.2]
-- [Backbone : Marionette v1.8.2]
+- [Backbone : Marionette v2.0.3]
 - [Backbone : Stickit v0.8.0]
 - [Handlebars : v1.3.0]
 - [HBS : v0.4.0]
