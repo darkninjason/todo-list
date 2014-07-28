@@ -107,7 +107,7 @@ describe('Mouse Responder', function() {
     it('expects onDestroy to be called', function() {
         // Note the local assignment to of a scopedResponder,
         // not using the suite's setup 'responder' var.
-        // We want to explicitely test.destroy().
+        // We want to explicitely test destroy().
 
         spyOn(MouseResponder.prototype, 'deinit').and.callThrough();
 

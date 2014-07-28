@@ -374,7 +374,7 @@ describe('Horizontal Slider Control', function() {
 
     // Marionette
 
-    it('destroys all responders on destroy', function(){
+    it('closes all responders on destroy', function(){
         var elements, trackWidth, control, pos, spy;
 
         spy = jasmine.createSpy('drag');

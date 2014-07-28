@@ -53,7 +53,7 @@ describe('Key Responder', function() {
     it('expects deinit to be called', function() {
         // note the local assignment to of a scopedResponder
         // not using the suite's setup 'responder' var
-        // we want to explicitely test.destroy()
+        // we want to explicitely test destroy()
 
         spyOn(KeyResponder.prototype, 'deinit').and.callThrough();
 

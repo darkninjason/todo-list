@@ -298,7 +298,7 @@ define(['module'], function (module) {
                 //Make sure we return a JavaScript string and not a Java string.
                 content = String(stringBuffer.toString()); //String
             } finally {
-                input.destroy();
+                input.close();
             }
             callback(content);
         };

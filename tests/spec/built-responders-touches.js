@@ -83,7 +83,7 @@ describe('Responder: Touch', function() {
     it('triggered TouchResponder.onDestroy', function() {
         // Note the local assignment to of a scopedResponder,
         // not using the suite's setup 'responder' var
-        // We want to explicitely test.destroy()
+        // We want to explicitely test destroy()
 
         spyOn(TouchResponder.prototype, 'deinit').and.callThrough();
 
