@@ -19,7 +19,7 @@ A UI Foundation with a Unix-like philosophy.
     $ make install-test-cli
 
 ## Run Tests
-	$ karma start
+    $ karma start
 
 - open browser at: http://localhost:9876/
 - Click Debug button
