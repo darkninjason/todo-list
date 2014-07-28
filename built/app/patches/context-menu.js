@@ -55,7 +55,7 @@ define(function (require, exports, module) {
                 acceptsResize: true,
                 resizeDebounce: 0,
                 resize: function(){
-                    menu.close();
+                    menu.destroy();
                 }
             });
 
@@ -105,7 +105,7 @@ define(function (require, exports, module) {
                 anchor: 'top'})
 
             .then(function(view){
-                windowResponder.close();
+                windowResponder.destroy();
                 enableScroll();
                 completeHandler(view);
 
@@ -114,7 +114,7 @@ define(function (require, exports, module) {
             // let window know about this event.
             // When a context menu is displayed it uses the PopView
             // and a ClickTestResponder. Clicking anywhere not on the
-            // will trigger it to close, but we also count a 'contextmenu'
+            // will trigger it to destroy, but we also count a 'contextmenu'
             // event as a 'click'. ClickTestResponder monitors both
             // 'click' and 'contextmenu' events on window. So lets be
             // sure to let it know.

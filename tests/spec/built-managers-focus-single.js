@@ -19,7 +19,7 @@ describe('Single Focus Manager', function() {
 
     afterEach(function() {
         if(manager){
-            manager.close();
+            manager.destroy();
             manager = null;
         }
     });

@@ -11,7 +11,7 @@ var DragAndDropDemoView = DragAndDropCollectionView.extend({
     tagName:'ul',
     className:'list-group',
     attributes: {'data-droptype': 'com.built.data'},
-    itemView: DragItemView,
+    childView: DragItemView,
     initialize: function(){
         // always call super when implementing!
         DragAndDropCollectionView.prototype.initialize.apply(this, arguments);
@@ -45,9 +45,9 @@ var DragAndDropDemoView = DragAndDropCollectionView.extend({
 var DragAndDropDemoCompositeView = DragAndDropCompositeView.extend({
     tagName:'ul',
     className:'list-group',
-    itemViewContainer : '.list-group',
+    childViewContainer : '.list-group',
     template:template,
-    itemView: DragItemView,
+    childView: DragItemView,
     initialize: function(){
         // always call super when implementing!
         DragAndDropCollectionView.prototype.initialize.apply(this, arguments);

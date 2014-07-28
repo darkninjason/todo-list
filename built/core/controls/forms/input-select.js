@@ -114,7 +114,7 @@ var data               = require('built/core/events/data');
 //
 //                   this.myCollectionView = new marionette.CollectionView({
 //                       el: '.items ul',
-//                       itemView: MyItemView,
+//                       childView: MyItemView,
 //                       collection: new Backbone.Collection()
 //                   });
 //
@@ -194,7 +194,7 @@ var InputSelect = marionette.Controller.extend(
      */
     constructor: function(options){
         marionette.Controller.prototype.constructor.apply(this, arguments);
-        this.listenTo(this, 'close', this.deinit);
+        this.listenTo(this, 'destroy', this.deinit);
 
         _.defaults(options, this._defaults);
         this.options = options;
@@ -271,19 +271,19 @@ var InputSelect = marionette.Controller.extend(
 
     endNavigationPhase: function(){
         if(this.focusManager){
-            this.focusManager.close();
+            this.focusManager.destroy();
         }
 
         if(this.indexManager){
-            this.indexManager.close();
+            this.indexManager.destroy();
         }
 
         if(this.mouseResponder){
-            this.mouseResponder.close();
+            this.mouseResponder.destroy();
         }
 
         if(this.keyNavigation){
-            this.keyNavigation.close();
+            this.keyNavigation.destroy();
         }
 
         this.focusManager = null;

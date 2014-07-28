@@ -2069,7 +2069,7 @@ function addCombinator( matcher, combinator, base ) {
         doneName = done++;
 
     return combinator.first ?
-        // Check against closest ancestor/preceding element
+        // Check against destroyst ancestor/preceding element
         function( elem, context, xml ) {
             while ( (elem = elem[ dir ]) ) {
                 if ( elem.nodeType === 1 || checkNonElements ) {
@@ -2864,7 +2864,7 @@ jQuery.fn.extend({
         });
     },
 
-    closest: function( selectors, context ) {
+    destroyst: function( selectors, context ) {
         var cur,
             i = 0,
             l = this.length,
@@ -4895,7 +4895,7 @@ var
     rscriptTypeMasked = /^true\/(.*)/,
     rcleanScript = /^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g,
 
-    // We have to close these tags to support XHTML (#13200)
+    // We have to destroy these tags to support XHTML (#13200)
     wrapMap = {
 
         // Support: IE 9
@@ -5497,7 +5497,7 @@ function defaultDisplay( nodeName ) {
 
             // Support: IE
             doc.write();
-            doc.close();
+            doc.destroy();
 
             display = actualDisplay( nodeName, doc );
             iframe.detach();

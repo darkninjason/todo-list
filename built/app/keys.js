@@ -60,7 +60,7 @@ function _removeFromResponderChain(view){
  */
 function registerInResponderChain(view){
     if (view.once){
-        view.once('close', function(){
+        view.once('destroy', function(){
             _removeFromResponderChain(view);
         });
     }
@@ -116,7 +116,7 @@ function _processKeys(sender, e){
     //
     // https://developer.apple.com/librarY/mac/documentation/Cocoa/Conceptual/EventOverview/HandlingKeyEvents/HandlingKeyEvents.html#//apple_ref/doc/uid/10000060i-CH7-SW1
     //
-    // result here will be the itemView that handeled this
+    // result here will be the childView that handeled this
     // event.
 
     result = _.find(chain, function(item){

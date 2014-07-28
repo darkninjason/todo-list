@@ -310,11 +310,11 @@ describe('Drop Responder', function() {
 
     });
 
-    it('disables all drop related events on close', function(){
+    it('disables all drop related events on destroy', function(){
 
         var actionSpy = jasmine.createSpy('eventSpy');
         var manager = getManager({el:$dropZone});
-        manager.close();
+        manager.destroy();
 
         // draggingStarted is a defered call,
         // so we need an async test

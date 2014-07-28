@@ -39,13 +39,13 @@ describe('Input Select Control', function() {
         $collection = $ctx.find('#collection');
 
         MyItemView = marionette.ItemView.extend({
-            template: '#itemView',
+            template: '#childView',
             tagName: 'li'
         });
 
         myCollectionView = new marionette.CollectionView({
             el: $collection,
-            itemView: MyItemView,
+            childView: MyItemView,
             collection: new Backbone.Collection()
         });
 
@@ -93,7 +93,7 @@ describe('Input Select Control', function() {
     });
 
     afterEach(function(){
-        control.close();
+        control.destroy();
     });
 
 
@@ -186,26 +186,26 @@ describe('Input Select Control', function() {
         var obj = new InputSelect({el: $input});
         expect(obj.options.debounceDelay).toEqual(obj._defaults.debounceDelay);
         expect(obj.options.minLength).toEqual(obj._defaults.minLength);
-        obj.close();
+        obj.destroy();
     });
 
     it('sets debounceDelay on init', function(){
         var obj = new InputSelect({el: $input, debounceDelay: 1000});
         expect(obj.options.debounceDelay).toEqual(1000);
-        obj.close();
+        obj.destroy();
     });
 
     it('sets minLength on init', function(){
         var obj = new InputSelect({el: $input, minLength: 30});
         expect(obj.options.minLength).toEqual(30);
-        obj.close();
+        obj.destroy();
     });
 
     it('sets debounceDelay and minLength on init', function(){
         var obj = new InputSelect({el: $input, debounceDelay: 1000, minLength: 30});
         expect(obj.options.minLength).toEqual(30);
         expect(obj.options.debounceDelay).toEqual(1000);
-        obj.close();
+        obj.destroy();
     });
 
     // Input Event

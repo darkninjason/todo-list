@@ -16,7 +16,7 @@ describe('Dependency Injection', function() {
     });
 
     afterEach(function() {
-        container.close();
+        container.destroy();
     });
 
     // Helpers

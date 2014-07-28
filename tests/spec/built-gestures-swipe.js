@@ -19,7 +19,7 @@ describe('Gesture: Swipe', function() {
 
     afterEach(function() {
         if(gesture){
-            gesture.close();
+            gesture.destroy();
         }
     });
 

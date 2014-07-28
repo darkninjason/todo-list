@@ -55,7 +55,7 @@ var ScrollManager = marionette.Controller.extend(
         return sceneId;
     },
 
-    onClose: function(){
+    onDestroy: function(){
         _.each(this._markers, function(marker, key){
             marker.destroy();
             delete this._markers[key];

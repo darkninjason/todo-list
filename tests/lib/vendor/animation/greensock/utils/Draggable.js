@@ -1054,7 +1054,7 @@
 						if (snap instanceof Array) {
 							return function(n) {
 								var i = snap.length,
-									closest = 0,
+									destroyst = 0,
 									absDif = _max,
 									val, dif;
 								while (--i > -1) {
@@ -1064,11 +1064,11 @@
 										dif = -dif;
 									}
 									if (dif < absDif && val >= min && val <= max) {
-										closest = i;
+										destroyst = i;
 										absDif = dif;
 									}
 								}
-								return snap[closest];
+								return snap[destroyst];
 							};
 						}
 						return isNaN(snap) ? function(n) { return n; } : function() { return snap * factor; };

@@ -20,7 +20,7 @@ describe('Key Responder', function() {
 
     afterEach(function() {
         if(responder){
-            responder.close();
+            responder.destroy();
         }
     });
 
@@ -53,7 +53,7 @@ describe('Key Responder', function() {
     it('expects deinit to be called', function() {
         // note the local assignment to of a scopedResponder
         // not using the suite's setup 'responder' var
-        // we want to explicitely test close()
+        // we want to explicitely test.destroy()
 
         spyOn(KeyResponder.prototype, 'deinit').and.callThrough();
 
@@ -61,7 +61,7 @@ describe('Key Responder', function() {
             el: $input
         });
 
-        scopedResponder.close();
+        scopedResponder.destroy();
         expect(scopedResponder.deinit).toHaveBeenCalled();
     });
 
@@ -93,7 +93,7 @@ describe('Key Responder', function() {
     it('expects key events to be removed', function() {
         // note the local assignment to of a scopedResponder
         // not using the suite's setup 'responder' var
-        // we want to explicitely test onClose behavior()
+        // we want to explicitely test onDestroy behavior()
 
         var keyDown = jasmine.createSpy('keyDown');
         var keyUp = jasmine.createSpy('keyUp');
@@ -104,7 +104,7 @@ describe('Key Responder', function() {
             keyUp: keyUp
         });
 
-        scopedResponder.close();
+        scopedResponder.destroy();
 
         var downEvent = jQuery.Event('keydown');
         downEvent.which = 40;

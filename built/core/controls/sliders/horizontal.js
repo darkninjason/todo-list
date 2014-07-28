@@ -48,7 +48,7 @@ var HorizontalSliderControl = marionette.Controller.extend(
      */
     constructor: function(options){
         marionette.Controller.prototype.constructor.apply(this, arguments);
-        this.listenTo(this, 'close', this.deinit);
+        this.listenTo(this, 'destroy', this.deinit);
 
         this.options = _.defaults(options, this._getDefaults());
 
@@ -70,7 +70,7 @@ var HorizontalSliderControl = marionette.Controller.extend(
         var controllers;
 
         function iterator (controller, i, list) {
-            if(controller) controller.close();
+            if(controller) controller.destroy();
         }
 
         controllers = (this._mouseResponders || [])

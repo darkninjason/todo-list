@@ -88,7 +88,7 @@ define(function(require, exports, module) {
                 scroll: scroll
             });
 
-            responder.close();
+            responder.destroy();
 
             EventHelpers.simulateScrollEvent($(window));
             expect(scroll).not.toHaveBeenCalled();
@@ -154,7 +154,7 @@ define(function(require, exports, module) {
 
                 // end it
                 if(i+1 == scrollCount){
-                    responder.close();
+                    responder.destroy();
                     done();
                 }
             }
@@ -172,7 +172,7 @@ define(function(require, exports, module) {
                     var d = target.getDirection();
                     expect(d.x).toEqual(-1);
                     expect(d.y).toEqual(-1);
-                    responder.close();
+                    responder.destroy();
                 }
                 count ++;
             }
@@ -193,7 +193,7 @@ define(function(require, exports, module) {
                     var d = target.getDirection();
                     expect(d.x).toEqual(0);
                     expect(d.y).toEqual(-1);
-                    responder.close();
+                    responder.destroy();
                 }
                 count ++;
             }
@@ -214,7 +214,7 @@ define(function(require, exports, module) {
                     var d = target.getDirection();
                     expect(d.x).toEqual(1);
                     expect(d.y).toEqual(0);
-                    responder.close();
+                    responder.destroy();
                 }
                 count ++;
             }

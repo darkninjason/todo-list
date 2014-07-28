@@ -9,8 +9,8 @@ require('stickit');
 
 var SelectDemoComposite = SelectCompositeView.extend({
     template : template,
-    itemView : SelectItem,
-    itemViewContainer : '.list-group',
+    childView : SelectItem,
+    childViewContainer : '.list-group',
     className : 'built-select',
     ui:{
         list:'.list-group'

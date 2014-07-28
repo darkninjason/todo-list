@@ -50,13 +50,13 @@ describe('Select control', function() {
 
     it('initializes', function(){
         expect(select).not.toEqual(undefined);
-        select.close();
+        select.destroy();
     });
 
     it('sets elements through setElements', function(){
         select.setElements($selectItems);
         expect(select._$elements).not.toEqual(undefined);
-        select.close();
+        select.destroy();
     });
 
 
@@ -68,7 +68,7 @@ describe('Select control', function() {
         select.on(data.DATA, inputSpy);
         eventHelpers.insertChar(select.$input, 'l');
         expect(inputSpy).toHaveBeenCalled();
-        select.close();
+        select.destroy();
     });
 
     it('selects first element if open and you click down key', function(){
@@ -78,7 +78,7 @@ describe('Select control', function() {
         select.on(focus.FOCUS, focusSpy);
         eventHelpers.simulateKeyDown(select.$input, KeyCodes.downArrow);
         expect(focusSpy).toHaveBeenCalled();
-        select.close();
+        select.destroy();
     });
 
     it('selects the 2nd option when hitting down twice', function(){
@@ -89,7 +89,7 @@ describe('Select control', function() {
             expect($selectItems.eq(1)[0]).toEqual(obj);
         });
         eventHelpers.simulateKeyDown(select.$input, KeyCodes.downArrow);
-        select.close();
+        select.destroy();
     });
 
     it('selects first element if enter key is pressed when in focus', function(){
@@ -100,7 +100,7 @@ describe('Select control', function() {
         select.on(event.SELECT , selectSpy);
         eventHelpers.simulateKeyDown(select.$input, KeyCodes.return);
         expect(selectSpy).toHaveBeenCalled();
-        select.close();
+        select.destroy();
     });
 
 
@@ -111,7 +111,7 @@ describe('Select control', function() {
             expect($selectItems.last()[0]).toEqual(obj);
         });
         eventHelpers.simulateKeyDown(select.$input, KeyCodes.upArrow);
-        select.close();
+        select.destroy();
     });
 
     it('selects an option if it is clicked', function(){
@@ -124,7 +124,7 @@ describe('Select control', function() {
         eventHelpers.simulateMouseDown($last);
         eventHelpers.simulateMouseUp($last);
         expect(clickSpy).toHaveBeenCalled();
-        select.close();
+        select.destroy();
     });
 
     it('fires setSelectedOption when you click an option', function(){
@@ -135,7 +135,7 @@ describe('Select control', function() {
         eventHelpers.simulateMouseDown($last);
         eventHelpers.simulateMouseUp($last);
         expect(select.setSelectedOption).toHaveBeenCalled();
-        select.close();
+        select.destroy();
     });
 
     it('handles mouse entering an option', function(){
@@ -145,7 +145,7 @@ describe('Select control', function() {
             expect($selectItems.eq(0)[0]).toEqual(obj);
         });
         eventHelpers.simulateMouseExit($selectItems.eq(0));
-        select.close();
+        select.destroy();
     });
 
     it('handles mouse exiting an option', function(){
@@ -155,7 +155,7 @@ describe('Select control', function() {
             expect($selectItems.eq(0)[0]).toEqual(obj);
         });
         eventHelpers.simulateMouseEnter($selectItems.eq(0));
-        select.close();
+        select.destroy();
     });
 
     it('sets selected option', function(){
@@ -165,7 +165,7 @@ describe('Select control', function() {
             expect($selectItems.eq(0)[0]).toEqual(obj);
         });
         select.setSelectedOption($selectItems.eq(0)[0]);
-        select.close();
+        select.destroy();
     });
 
 

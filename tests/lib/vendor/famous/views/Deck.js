@@ -15,10 +15,10 @@ define(function(require, exports, module) {
     var SequentialLayout = require('./SequentialLayout');
 
     /**
-     * A Sequential Layout that can be opened and closed with animations.
+     * A Sequential Layout that can be opened and destroy with animations.
      *
      *   Takes the same options as SequentialLayout
-     *   as well as options for the open/close transition
+     *   as well as options for the open/destroy transition
      *   and the rotation you want your Deck instance to layout in.
      *
      * @class Deck
@@ -75,7 +75,7 @@ define(function(require, exports, module) {
      *
      * @method getSize
      * @return {Array} A two value array of Deck's current width and height (in that order).
-     *   Scales as Deck opens and closes.
+     *   Scales as Deck opens and destroys.
      */
     Deck.prototype.getSize = function getSize() {
         var originalSize = SequentialLayout.prototype.getSize.apply(this, arguments);
@@ -97,10 +97,10 @@ define(function(require, exports, module) {
     }
 
     /**
-     * An accesor method to find out if the messaged Deck instance is open or closed.
+     * An accesor method to find out if the messaged Deck instance is open or destroy.
      *
      * @method isOpen
-     * @return {Boolean} Returns true if the instance is open or false if it's closed.
+     * @return {Boolean} Returns true if the instance is open or false if it's destroy.
      */
     Deck.prototype.isOpen = function isOpen() {
         return this._isOpen;
@@ -120,10 +120,10 @@ define(function(require, exports, module) {
     /**
      * Sets the Deck instance to an open state.
      *
-     * @method close
-     * @param {function} [callback] Executes after transitioning to a fully closed state.
+     * @method destroy
+     * @param {function} [callback] Executes after transitioning to a fully destroy state.
      */
-    Deck.prototype.close = function close(callback) {
+    Deck.prototype.destroy = function.destroy(callback) {
         this._isOpen = false;
         _setState.call(this, 0, this.options.transition, callback);
     };
@@ -131,11 +131,11 @@ define(function(require, exports, module) {
     /**
      * Sets the Deck instance from its current state to the opposite state.
      *
-     * @method close
+     * @method destroy
      * @param {function} [callback] Executes after transitioning to the toggled state.
      */
     Deck.prototype.toggle = function toggle(callback) {
-        if (this._isOpen) this.close(callback);
+        if (this._isOpen) this.destroy(callback);
         else this.open(callback);
     };
 

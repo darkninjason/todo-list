@@ -5075,7 +5075,7 @@ function addCombinator( matcher, combinator, base ) {
 		doneName = done++;
 
 	return combinator.first ?
-		// Check against closest ancestor/preceding element
+		// Check against destroyst ancestor/preceding element
 		function( elem, context, xml ) {
 			while ( (elem = elem[ dir ]) ) {
 				if ( elem.nodeType === 1 || checkNonElements ) {
@@ -5592,7 +5592,7 @@ jQuery.fn.extend({
 				this.filter( selector ).length > 0 );
 	},
 
-	closest: function( selectors, context ) {
+	destroyst: function( selectors, context ) {
 		var cur,
 			i = 0,
 			l = this.length,
@@ -5826,7 +5826,7 @@ var nodeNames = "abbr|article|aside|audio|bdi|canvas|data|datalist|details|figca
 	rscriptTypeMasked = /^true\/(.*)/,
 	rcleanScript = /^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g,
 
-	// We have to close these tags to support XHTML (#13200)
+	// We have to destroy these tags to support XHTML (#13200)
 	wrapMap = {
 		option: [ 1, "<select multiple='multiple'>", "</select>" ],
 		legend: [ 1, "<fieldset>", "</fieldset>" ],
@@ -7094,7 +7094,7 @@ function css_defaultDisplay( nodeName ) {
 			// Always write a new HTML skeleton so Webkit and Firefox don't choke on reuse
 			doc = ( iframe[0].contentWindow || iframe[0].contentDocument ).document;
 			doc.write("<!doctype html><html><body>");
-			doc.close();
+			doc.destroy();
 
 			display = actualDisplay( nodeName, doc );
 			iframe.detach();

@@ -139,7 +139,7 @@ describe('Window Responder', function() {
             landscape: actionSpy
         });
 
-        responder.close();
+        responder.destroy();
 
         EventHelpers.simulateOrientationPortrait($(window));
         EventHelpers.simulateOrientationLandscapeRight($(window));

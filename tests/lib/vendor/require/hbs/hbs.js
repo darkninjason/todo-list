@@ -155,7 +155,7 @@ define([
       while ((line = reader.readLine()) !== null) {
         text += new String(line) + '\n';
       }
-      reader.close();
+      reader.destroy();
       callback(text, path);
     };
   }
@@ -500,7 +500,7 @@ define([
                     // Then I use a tool to inline my import statements afterwards. (you can run r.js on it too)
                     fs.open(__dirname + buildStyleDirectory + buildCSSFileName, filecode, '0666', function( e, id ) {
                       fs.writeSync(id, str, null, encoding='utf8');
-                      fs.close(id);
+                      fs.destroy(id);
                     });
                     filecode = 'a';
                   })();

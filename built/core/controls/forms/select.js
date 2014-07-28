@@ -33,7 +33,7 @@ var Select = marionette.Controller.extend(
      */
     constructor: function(options){
         marionette.Controller.prototype.constructor.apply(this, arguments);
-        this.listenTo(this, 'close', this.deinit);
+        this.listenTo(this, 'destroy', this.deinit);
 
         _.extend(this, options);
         _.bindAll(this,
@@ -118,8 +118,8 @@ var Select = marionette.Controller.extend(
     },
 
     deinit: function(){
-        this.closeManagers();
-        this.keyResponder.close();
+        this.destroyManagers();
+        this.keyResponder.destroy();
     },
 
     onOptionClicked: function(e){
@@ -135,7 +135,7 @@ var Select = marionette.Controller.extend(
 
     setElements: function($elements){
         this._$elements = $elements;
-        this.closeManagers();
+        this.destroyManagers();
 
         helpers.registerElement($elements);
 
@@ -166,16 +166,16 @@ var Select = marionette.Controller.extend(
             });
     },
 
-    closeManagers: function(){
+    destroyManagers: function(){
         if(this.focusManager){
-            this.focusManager.close();
+            this.focusManager.destroy();
         }
 
         if(this.indexManager){
-            this.indexManager.close();
+            this.indexManager.destroy();
         }
         if(this.mouseResponder){
-            this.mouseResponder.close();
+            this.mouseResponder.destroy();
         }
 
 

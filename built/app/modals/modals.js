@@ -45,7 +45,7 @@ function presentModal(view){
 
     var deferred = $.Deferred();
 
-    var modalView = new ModalView({itemView: view});
+    var modalView = new ModalView({childView: view});
     queue.push(modalView);
 
     modalView.once(events.COMPLETE, function(){

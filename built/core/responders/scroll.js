@@ -79,7 +79,7 @@ var ScrollResponder = marionette.Controller.extend(
         marionette.Controller.prototype.constructor.apply(this, arguments);
     },
 
-    onClose: function() {
+    onDestroy: function() {
         this.$el.off(this.EVENT_SCROLL, this._didReceiveScroll);
     },
 
@@ -89,7 +89,7 @@ var ScrollResponder = marionette.Controller.extend(
     // whatever the user passes in for "scroll" allows a known,
     // single-point to detach listeners. This should prevent most
     // memory leaks typically associated with event delegates when
-    // "close" is run on this object.
+    // "destroy" is run on this object.
     _didReceiveScroll: function(event) {
         var currTime = _now();
         var prevTime = this._prevTime || currTime;

@@ -19,7 +19,7 @@ describe('Responder: Touch', function() {
 
     afterEach(function() {
         if(responder) {
-            responder.close();
+            responder.destroy();
         }
     });
 
@@ -80,10 +80,10 @@ describe('Responder: Touch', function() {
         $input.off('touchcancel', actionSpy);
     });
 
-    it('triggered TouchResponder.onClose', function() {
+    it('triggered TouchResponder.onDestroy', function() {
         // Note the local assignment to of a scopedResponder,
         // not using the suite's setup 'responder' var
-        // We want to explicitely test close()
+        // We want to explicitely test.destroy()
 
         spyOn(TouchResponder.prototype, 'deinit').and.callThrough();
 
@@ -91,14 +91,14 @@ describe('Responder: Touch', function() {
             el: $input
         });
 
-        scopedResponder.close();
+        scopedResponder.destroy();
         expect(scopedResponder.deinit).toHaveBeenCalled();
     });
 
     it('removes touch events', function() {
         // Note the local assignment to of a scopedResponder,
         // not using the suite's setup 'responder' var
-        // We want to explicitely test onClose behavior.
+        // We want to explicitely test onDestroy behavior.
 
         var touchStart      = jasmine.createSpy('touchStart');
         var touchEnd        = jasmine.createSpy('touchEnd');
@@ -108,7 +108,7 @@ describe('Responder: Touch', function() {
                 touchEnd: touchEnd
             });
 
-        scopedResponder.close();
+        scopedResponder.destroy();
 
         setTimeout(function(){
 

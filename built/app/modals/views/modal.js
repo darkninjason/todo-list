@@ -16,7 +16,7 @@ var ModalView = marionette.ItemView.extend(
 /** @lends built.app.modals.views.modal.ModalView.prototype */
 {
     className: 'view',
-    itemView: null,
+    childView: null,
 
     /**
      * Creates a new ModalView
@@ -27,7 +27,7 @@ var ModalView = marionette.ItemView.extend(
      *
      */
     initialize: function(options){
-        this.view = options.itemView;
+        this.view = options.childView;
     },
 
     onShow: function(){
@@ -45,8 +45,8 @@ var ModalView = marionette.ItemView.extend(
         return this._data;
     },
 
-    onClose: function(){
-        this.view.close();
+    onDestroy: function(){
+        this.view.destroy();
     }
 });
 

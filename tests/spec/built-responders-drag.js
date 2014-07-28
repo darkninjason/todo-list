@@ -200,14 +200,14 @@ describe('Drag Responder', function() {
         });
     });
 
-    it('disables all dragging events on close', function(done){
+    it('disables all dragging events on destroy', function(done){
 
         var actionSpy = jasmine.createSpy('eventSpy');
         var manager = getManager();
         var flag = false;
 
         manager.reset($actionTargets);
-        manager.close();
+        manager.destroy();
 
         // draggingStarted is a defered call,
         // so we need an async test

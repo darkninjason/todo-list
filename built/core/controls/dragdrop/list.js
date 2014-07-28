@@ -87,7 +87,7 @@ var DragDropList = marionette.Controller.extend(
 
     setDropElement: function($el){
         if(this.dropResponder){
-            this.dropResponder.close();
+            this.dropResponder.destroy();
         }
 
         this.dropResponder = new DropResponder({

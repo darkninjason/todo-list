@@ -20,12 +20,12 @@ var DragAndDropCompositeView = marionette.CompositeView.extend(
      */
     initialize: function(){
         DragAndDropCollectionView.prototype.initialize.apply(this,arguments);
-        if(this.itemViewContainer){
-            this.on('composite:model:rendered', this.onCompositeModelRendered);
+        if(this.childViewContainer){
+            this.on('render:template', this.onRenderTemplate);
         }
     },
-    onCompositeModelRendered: function(){
-        this.dragDropList.setDropElement(this.$el.find(this.itemViewContainer));
+    onRenderTemplate: function(){
+        this.dragDropList.setDropElement(this.$el.find(this.childViewContainer));
     },
 });
 
@@ -39,7 +39,7 @@ mixins(DragAndDropCollectionView, DragAndDropCompositeView,
     'getViewForId',
     'getDragDataForElement',
     'getDragImage',
-    'onClose',
+    'onDestroy',
     'onShow',
     'removeChildView',
     'renderPlaceholderForData',

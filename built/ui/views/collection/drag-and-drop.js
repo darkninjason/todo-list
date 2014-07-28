@@ -43,8 +43,8 @@ var DragAndDropCollectionView =  marionette.CollectionView.extend(
         this.on('show', this.onShow);
     },
 
-    onClose: function(){
-        this.dragDropList.close();
+    onDestroy: function(){
+        this.dragDropList.destroy();
     },
 
     onShow: function(){
@@ -101,10 +101,10 @@ var DragAndDropCollectionView =  marionette.CollectionView.extend(
         this.collection.add(model, {at: position});
     },
 
-    appendHtml: function(collectionView, itemView, index){
+    appendHtml: function(collectionView, childView, index){
         // insertDragElement will register the element for
         // BUILT and add it to the DragResponder.
-        this.dragDropList.insertDragElement(index, itemView.$el);
+        this.dragDropList.insertDragElement(index, childView.$el);
     },
 
     removeChildView: function(view){

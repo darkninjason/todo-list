@@ -96,10 +96,10 @@ var SelectCompositeView = marionette.CompositeView.extend(
         this.collectionViewDidCancel();
     },
 
-    onClose: function(){
+    onDestroy: function(){
         this.$el.off('click', this.onWantsOpen);
         this.enableWindowListener(false);
-        this.select.close();
+        this.select.destroy();
     },
 
     enableWindowListener: function(bool){
@@ -107,7 +107,7 @@ var SelectCompositeView = marionette.CompositeView.extend(
 
         if(bool){
 
-            if(this._clickTest) this._clickTest.close();
+            if(this._clickTest) this._clickTest.destroy();
 
             this._clickTest = new ClickTestResponder({
                 el: this.$el,
@@ -117,7 +117,7 @@ var SelectCompositeView = marionette.CompositeView.extend(
         }else{
 
             if(this._clickTest){
-                this._clickTest.close();
+                this._clickTest.destroy();
                 this._clickTest = null;
             }
         }

@@ -14,7 +14,7 @@ var InputSelectMarionette = InputSelect.extend(
 /** @lends built.ui.controls.input-select.InputSelectMarionette.prototype */
 {
 
-    onClose : function(){
+    onDestroy : function(){
         this.marionetteDict = [];
     },
 
@@ -50,9 +50,9 @@ var InputSelectMarionette = InputSelect.extend(
 
     _triggerEventOnViewForElement : function(event, $element){
         var key = getElementId($element);
-        var itemView = this.marionetteDict[key];
-        if(itemView){
-            itemView.trigger(event);
+        var childView = this.marionetteDict[key];
+        if(childView){
+            childView.trigger(event);
         }
     },
 

@@ -1201,7 +1201,7 @@
 							skewX += (skewX <= 0) ? 180 : -180;
 						}
 					}
-					difR = (rotation - tm.rotation) % 180; //note: matching ranges would be very small (+/-0.0001) or very close to 180.
+					difR = (rotation - tm.rotation) % 180; //note: matching ranges would be very small (+/-0.0001) or very destroy to 180.
 					difS = (skewX - tm.skewX) % 180;
 					//if there's already a recorded _gsTransform in place for the target, we should leave those values in place unless we know things changed for sure (beyond a super small amount). This gets around ambiguous interpretations, like if scaleX and scaleY are both -1, the matrix would be the same as if the rotation was 180 with normal scaleX/scaleY. If the user tweened to particular values, those must be prioritized to ensure animation is consistent.
 					if (tm.skewX === undefined || difX > min || difX < -min || difY > min || difY < -min || (difR > -minAngle && difR < minAngle && (difR * rnd) | 0 !== 0) || (difS > -minAngle && difS < minAngle && (difS * rnd) | 0 !== 0)) {

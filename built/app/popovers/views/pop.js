@@ -41,7 +41,7 @@ var PopView = marionette.View.extend(
 
         if (!options.rect) throw new Error('Must provide at least a \'rect\' option');
 
-        if(this.currentView) this.close();
+        if(this.currentView) this.destroy();
 
         rect = options.rect;
 
@@ -205,7 +205,7 @@ var PopView = marionette.View.extend(
         // if escape is pressed while this pop view is
         // displayed, auto wire up closing it.
         if (e.keyCode == 27){ // ESCAPE
-            this.close();
+            this.destroy();
         }
 
         // no matter what we stop the key event
@@ -214,7 +214,7 @@ var PopView = marionette.View.extend(
     },
 
     wantsDismissFromClick: function(){
-        this.close();
+        this.destroy();
     },
 
     open: function(view){
@@ -228,26 +228,26 @@ var PopView = marionette.View.extend(
         keys.registerInResponderChain(view);
 
         // if we click anywhere outside of this
-        // pop view, we want this view to close.
+        // pop view, we want this view to destroy.
         this._clicks = new ClickTestResponder({
             el: view.$el,
             clickOutside: _.bind(this.wantsDismissFromClick, this)
         });
 
-        view.once('complete', _.bind(this.close, this));
+        view.once('complete', _.bind(this.destroy, this));
     },
 
-    close: function(){
+    destroy: function(){
         keys.removeFromResponderChain(this.currentView);
         keys.removeFromResponderChain(this);
-        this._clicks.close();
+        this._clicks.destroy();
 
         this.$el.remove();
 
-        // save the view as Region.close will
+        // save the view as Region.destroy will
         // delete this.currentView
         var view = this.currentView;
-        marionette.Region.prototype.close.call(this);
+        marionette.Region.prototype.destroy.call(this);
 
         this.deferred.resolve(view);
         this.deferred = null;

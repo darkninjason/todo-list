@@ -10,8 +10,8 @@ var ResultItem                      = require('./result-item').ResultItem;
 var InputResults                    = require('../collections').InputResults;
 
 var InputSelectView = InputSelectComposite.extend({
-    itemView: ResultItem,
-    itemViewContainer: '.list-group',
+    childView: ResultItem,
+    childViewContainer: '.list-group',
     template : template,
 
     ui : {

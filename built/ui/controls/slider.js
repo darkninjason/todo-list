@@ -40,8 +40,8 @@ var SliderContainer = marionette.Controller.extend(
         this._uiUpdater = this._initializeUiUpdater(this._driver.options);
     },
 
-    onClose: function() {
-        this._driver.close();
+    onDestroy: function() {
+        this._driver.destroy();
     },
 
     _getDefaults: function() {

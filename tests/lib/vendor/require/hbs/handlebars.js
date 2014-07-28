@@ -640,11 +640,11 @@ var __module7__ = (function(__dependency1__) {
       this.strip = strip;
     },
 
-    BlockNode: function(mustache, program, inverse, close, locInfo) {
+    BlockNode: function(mustache, program, inverse, destroy, locInfo) {
       LocationInfo.call(this, locInfo);
 
-      if(mustache.sexpr.id.original !== close.path.original) {
-        throw new Exception(mustache.sexpr.id.original + " doesn't match " + close.path.original, this);
+      if(mustache.sexpr.id.original !== destroy.path.original) {
+        throw new Exception(mustache.sexpr.id.original + " doesn't match " + destroy.path.original, this);
       }
 
       this.type = 'block';
@@ -654,11 +654,11 @@ var __module7__ = (function(__dependency1__) {
 
       this.strip = {
         left: mustache.strip.left,
-        right: close.strip.right
+        right: destroy.strip.right
       };
 
       (program || inverse).strip.left = mustache.strip.right;
-      (inverse || program).strip.right = close.strip.left;
+      (inverse || program).strip.right = destroy.strip.left;
 
       if (inverse && !program) {
         this.isInverse = true;
@@ -771,7 +771,7 @@ var __module9__ = (function() {
   var handlebars = (function(){
   var parser = {trace: function trace() { },
   yy: {},
-  symbols_: {"error":2,"root":3,"statements":4,"EOF":5,"program":6,"simpleInverse":7,"statement":8,"openInverse":9,"closeBlock":10,"openBlock":11,"mustache":12,"partial":13,"CONTENT":14,"COMMENT":15,"OPEN_BLOCK":16,"sexpr":17,"CLOSE":18,"OPEN_INVERSE":19,"OPEN_ENDBLOCK":20,"path":21,"OPEN":22,"OPEN_UNESCAPED":23,"CLOSE_UNESCAPED":24,"OPEN_PARTIAL":25,"partialName":26,"partial_option0":27,"sexpr_repetition0":28,"sexpr_option0":29,"dataName":30,"param":31,"STRING":32,"INTEGER":33,"BOOLEAN":34,"OPEN_SEXPR":35,"CLOSE_SEXPR":36,"hash":37,"hash_repetition_plus0":38,"hashSegment":39,"ID":40,"EQUALS":41,"DATA":42,"pathSegments":43,"SEP":44,"$accept":0,"$end":1},
+  symbols_: {"error":2,"root":3,"statements":4,"EOF":5,"program":6,"simpleInverse":7,"statement":8,"openInverse":9,"destroyBlock":10,"openBlock":11,"mustache":12,"partial":13,"CONTENT":14,"COMMENT":15,"OPEN_BLOCK":16,"sexpr":17,"CLOSE":18,"OPEN_INVERSE":19,"OPEN_ENDBLOCK":20,"path":21,"OPEN":22,"OPEN_UNESCAPED":23,"CLOSE_UNESCAPED":24,"OPEN_PARTIAL":25,"partialName":26,"partial_option0":27,"sexpr_repetition0":28,"sexpr_option0":29,"dataName":30,"param":31,"STRING":32,"INTEGER":33,"BOOLEAN":34,"OPEN_SEXPR":35,"CLOSE_SEXPR":36,"hash":37,"hash_repetition_plus0":38,"hashSegment":39,"ID":40,"EQUALS":41,"DATA":42,"pathSegments":43,"SEP":44,"$accept":0,"$end":1},
   terminals_: {2:"error",5:"EOF",14:"CONTENT",15:"COMMENT",16:"OPEN_BLOCK",18:"CLOSE",19:"OPEN_INVERSE",20:"OPEN_ENDBLOCK",22:"OPEN",23:"OPEN_UNESCAPED",24:"CLOSE_UNESCAPED",25:"OPEN_PARTIAL",32:"STRING",33:"INTEGER",34:"BOOLEAN",35:"OPEN_SEXPR",36:"CLOSE_SEXPR",40:"ID",41:"EQUALS",42:"DATA",44:"SEP"},
   productions_: [0,[3,2],[3,1],[6,2],[6,3],[6,2],[6,1],[6,1],[6,0],[4,1],[4,2],[8,3],[8,3],[8,1],[8,1],[8,1],[8,1],[11,3],[9,3],[10,3],[12,3],[12,3],[13,4],[7,2],[17,3],[17,1],[31,1],[31,1],[31,1],[31,1],[31,1],[31,3],[37,1],[39,3],[26,1],[26,1],[26,1],[30,2],[21,1],[43,3],[43,1],[27,0],[27,1],[28,0],[28,2],[29,0],[29,1],[38,1],[38,2]],
   performAction: function anonymous(yytext,yyleng,yylineno,yy,yystate,$$,_$) {
@@ -979,10 +979,10 @@ var __module9__ = (function() {
   };
 
 
-  function stripFlags(open, close) {
+  function stripFlags(open, destroy) {
     return {
       left: open.charAt(2) === '~',
-      right: close.charAt(0) === '~' || close.charAt(1) === '~'
+      right: destroy.charAt(0) === '~' || destroy.charAt(1) === '~'
     };
   }
 

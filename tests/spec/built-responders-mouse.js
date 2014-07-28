@@ -20,7 +20,7 @@ describe('Mouse Responder', function() {
 
     afterEach(function() {
         if(responder){
-            responder.close();
+            responder.destroy();
         }
     });
 
@@ -104,10 +104,10 @@ describe('Mouse Responder', function() {
         $input.off('mouseleave', actionSpy);
     });
 
-    it('expects onClose to be called', function() {
+    it('expects onDestroy to be called', function() {
         // Note the local assignment to of a scopedResponder,
         // not using the suite's setup 'responder' var.
-        // We want to explicitely test close().
+        // We want to explicitely test.destroy().
 
         spyOn(MouseResponder.prototype, 'deinit').and.callThrough();
 
@@ -115,7 +115,7 @@ describe('Mouse Responder', function() {
             el: $input
         });
 
-        scopedResponder.close();
+        scopedResponder.destroy();
         expect(scopedResponder.deinit).toHaveBeenCalled();
     });
 
@@ -167,7 +167,7 @@ describe('Mouse Responder', function() {
     it('expects mouse up and mouse down to be removed', function() {
         // Note the local assignment to of a scopedResponder,
         // not using the suite's setup 'responder' var.
-        // We want to explicitely test onClose() behavior.
+        // We want to explicitely test onDestroy() behavior.
 
         var mouseDown       = jasmine.createSpy('mouseDown');
         var mouseUp         = jasmine.createSpy('mouseUp');
@@ -178,7 +178,7 @@ describe('Mouse Responder', function() {
                 acceptsUpDown: true
             });
 
-        scopedResponder.close();
+        scopedResponder.destroy();
 
         EventHelpers.simulateMouseDown($input, 0, 0);
         EventHelpers.simulateMouseUp($input, 0, 0);
@@ -238,7 +238,7 @@ describe('Mouse Responder', function() {
     it('expects mouse enter and mouse exit to be removed', function() {
         // Note the local assignment to of a scopedResponder,
         // not using the suite's setup 'responder' var.
-        // We want to explicitely test onClose() behavior.
+        // We want to explicitely test onDestroy() behavior.
 
         var mouseEntered = jasmine.createSpy('mouseEntered');
         var mouseExited = jasmine.createSpy('mouseExited');
@@ -250,7 +250,7 @@ describe('Mouse Responder', function() {
                 acceptsEnterExit: true
         });
 
-        scopedResponder.close();
+        scopedResponder.destroy();
 
         EventHelpers.simulateMouseEnter($input, 0, 0);
         EventHelpers.simulateMouseExit($input, 0, 0);
@@ -300,7 +300,7 @@ describe('Mouse Responder', function() {
     it('expects mouse move to be removed', function() {
         // Note the local assignment to of a scopedResponder,
         // not using the suite's setup 'responder' var.
-        // We want to explicitely test onClose() behavior.
+        // We want to explicitely test onDestroy() behavior.
 
         var mouseMoved = jasmine.createSpy('mouseMoved');
 
@@ -310,7 +310,7 @@ describe('Mouse Responder', function() {
                 acceptsMove: true
         });
 
-        scopedResponder.close();
+        scopedResponder.destroy();
 
         EventHelpers.simulateMouseMove($input, 0, 0);
 

@@ -31,7 +31,7 @@ var KeyResponder = marionette.Controller.extend(
      */
     constructor: function(options){
         marionette.Controller.prototype.constructor.apply(this, arguments);
-        this.listenTo(this, 'close', this.deinit);
+        this.listenTo(this, 'destroy', this.deinit);
 
 
         _.extend(this, options);

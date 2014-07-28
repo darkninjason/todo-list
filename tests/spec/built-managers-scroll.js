@@ -51,11 +51,11 @@ describe('Scroller', function() {
         var marker = scrollManager.addMarker(options);
     });
 
-    it('closes', function(){
+    it('destroys', function(){
         var scrollManager = new ScrollManager();
         var options = {trigger: "#trigger", duration: 150};
         var marker = scrollManager.addMarker(options);
-        scrollManager.close();
+        scrollManager.destroy();
         // don't call this...only doing this for tests
         expect(scrollManager._getMarker(marker)).toBe(undefined);
     });

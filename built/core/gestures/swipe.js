@@ -38,7 +38,7 @@ var SwipeGesture = marionette.Controller.extend(
      */
     constructor: function(options){
         marionette.Controller.prototype.constructor.apply(this, arguments);
-        this.listenTo(this, 'close', this.deinit);
+        this.listenTo(this, 'destroy', this.deinit);
 
         _.extend(this, options);
         _.bindAll(this, 'touchStart', 'touchMove', 'touchEnd');
@@ -165,7 +165,7 @@ var SwipeGesture = marionette.Controller.extend(
 
     deinit: function(){
         this.reset();
-        this.responder.close();
+        this.responder.destroy();
     }
 
 }); // eof SwipeGesture
