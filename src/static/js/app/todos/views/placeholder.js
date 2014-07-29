@@ -18,7 +18,7 @@ define(function(require, exports, module) {
 
         addTodo: function(e){
             if(e.keyCode == 13 && (this.ui.newTodo.val().length > 0)){
-                var todo = new Todo({title: this.ui.newTodo.val()});
+                var todo = new Todo({title: this.ui.newTodo.val(), order: this.collection.length});
                 this.collection.addTodo(todo);
                 this.ui.newTodo.val('');
                 todo.save();

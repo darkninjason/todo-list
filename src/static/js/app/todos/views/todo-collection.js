@@ -8,7 +8,8 @@ define(function(require, exports, module) {
 
     var TodoCollectionView = DragAndDropCollectionView.extend({
         tagName: "ul",
-        itemView: TodoView,
+        childView: TodoView,
+
         renderPlaceholderForData: function(){
             return $('<li class="row placeholder">--> HERE <--</li>');
         }

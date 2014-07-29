@@ -15,7 +15,7 @@ define(function(require, exports, module) {
         TodoFooterView    = require('app/todos/views/todo-footer').TodoFooterView,
         TodoCollectionView       = require('app/todos/views/todo-collection').TodoCollectionView;
 
-    var TodoLayoutView = marionette.Layout.extend({
+    var TodoLayoutView = marionette.LayoutView.extend({
         template: templateLayout,
 
         regions: {

@@ -5,7 +5,8 @@ define(function(require, exports, module) {
 	var Todo = backbone.Model.extend({
 	   defaults: {
 	    title: 'Default task',
-	    completed: false
+	    completed: false,
+	    order: 0
 	   },
 
 	   toggleState: function(){

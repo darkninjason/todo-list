@@ -24,9 +24,10 @@ var DragAndDropCollectionView =  marionette.CollectionView.extend({
             dropResponderPerformDragOperation: this.dropResponderPerformDragOperation,
             draggingEndedRestoreElementAtPosition: this.draggingEndedRestoreElementAtPosition,
             dataType:options.dataType
-        });
+        });  
         this.dragDropList.setDropElement(this.$el);
         this.on('show', this.onShow);
+        this.getDragImage();
     },
 
     onClose: function(){
