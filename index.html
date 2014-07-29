@@ -1,0 +1,196 @@
+<!doctype html><!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>index</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="static/css/styles.css">
+        <script src="static/js/libs/require.js" data-main="static/js/main"></script>
+    </head>
+    <body>
+        <div class="container">
+            <section class='row'>
+                <h2>Select</h2>
+                <select id="select-data" class='col-md-4'>
+                    <option value="fooval">fooopt</option>
+                    <option value="barval">baropt</option>
+                    <option value="bazval">bazopt</option>
+                    <option value="zapval">zapopt</option>
+                </select>
+                <div id="select" class='col-md-4'></div>
+            </section>
+            <section class="built-breakdown">
+                <h6>BUILT Breakdown</h6>
+                <ul>
+                    <li class="view">SelectDemoComposite
+                        <ul>
+                            <li class="view extend">SelectCompositeView
+                                <ul>
+                                    <li class="control compose">SelectControl
+                                        <ul>
+                                            <li class="responder compose">KeyResponder</li>
+                                            <li class="responder compose">MouseResponder</li>
+                                            <li class="manager compose">IndexManager
+                                                <ul>
+                                                    <li class="manager compose">RangeManager</li>
+                                                </ul>
+                                            </li>
+                                            <li class="manager compose">SingleFocusManager
+                                                <ul>
+                                                    <li class="manager compose extend">FocusManager
+                                                        <ul>
+                                                            <li class="manager compose extend">ArrayManager</li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+            <hr/>
+            <section>
+                <h2>Slider Management <small>Touch Enabled</small></h2>
+                <h5>Fluid</h5>
+                <div id="horizontal-slider-fluid"></div>
+                <h5>Snapping (N Steps)</h5>
+                <div id="horizontal-slider-snapping"></div>
+                <section class="built-breakdown">
+                    <h6>BUILT Breakdown</h6>
+                    <ul>
+                        <li class="view">DemoHorizontalSlider
+                            <ul>
+                                <li class="view extend">HorizontalSliderView
+                                    <ul>
+                                        <li class="view extend">SliderView
+                                            <ul>
+                                                <li class="control compose">HorizontalSliderControl
+                                                    <ul>
+                                                        <li class="manager compose">RangeManager</li>
+                                                        <li class="responder compose">MouseResponder</li>
+                                                        <li class="responder compose">TouchResponder</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+            </section>
+            <hr/>
+            <section>
+                <h2>Range Slider Management <small>Touch Enabled</small></h2>
+                <h5>Fluid</h5>
+                <div id="horizontal-range-slider-fluid"></div>
+                <h5>Snapping (N Steps)</h5>
+                <div id="horizontal-range-slider-snapping"></div>
+                <section class="built-breakdown">
+                    <h6>BUILT Breakdown</h6>
+                    <ul>
+                        <li class="view">DemoHorizontalRangeSlider
+                            <ul>
+                                <li class="view extend">HorizontalRangeSliderView
+                                    <ul>
+                                        <li class="view extend">SliderView
+                                            <ul>
+                                                <li class="control compose">HorizontalSliderControl
+                                                    <ul>
+                                                        <li class="manager compose">RangeManager</li>
+                                                        <li class="responder compose">MouseResponder</li>
+                                                        <li class="responder compose">TouchResponder</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+            </section>
+            <hr/>
+            <section class="dnd row">
+                <h2>Drag and Drop <small>Collection Views</small></h2>
+                <div class="target col-md-4 info" id="dnd-top"></div>
+                <div class="target col-md-4 info" id="dnd-mid"></div>
+            </section>
+            <section class="dnd row">
+                <div class="target col-md-4 success" id="dnd-bottom"></div>
+            </section>
+            <section class="built-breakdown">
+                <h6>BUILT Breakdown</h6>
+                <ul>
+                    <li class="view">DemoDragAndDropDemoView
+                        <ul>
+                            <li class="view extend">DragAndDropCollectionView
+                                <ul>
+                                    <li class="control compose">DragDropList
+                                        <ul>
+                                            <li class="responder compose">DragResponder</li>
+                                            <li class="responder compose">DropResponder</li>
+                                            <li class="manager compose">ArrayManager</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+            <hr/>
+            <section>
+                <h2>Input Select</h2>
+                <section>
+                    <h5>Input Select</h5>
+                    <div id="input-select"></div>
+                </section>
+                <section class="built-breakdown">
+                    <h6>BUILT Breakdown</h6>
+                    <ul>
+                        <li class="view">InputSelectView
+                            <ul>
+                                <li class="view extend">InputSelectComposite
+                                    <ul>
+                                        <li class="control compose">InputSelect
+                                            <ul>
+                                                <li class="responder compose">KeyResponder</li>
+                                                <li class="responder compose">MouseResponder</li>
+                                                <li class="manager compose">IndexManager
+                                                    <ul>
+                                                        <li class="manager compose">RangeManager</li>
+                                                    </ul>
+                                                </li>
+                                                <li class="manager compose">SingleFocusManager
+                                                    <ul>
+                                                        <li class="manager extend">FocusManager
+                                                            <ul>
+                                                                <li class="manager extend">ArrayManager</li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+            </section>
+            <hr/>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,7 @@
+#input-select-scrollable,
+#input-select{
+    @extend .row;
+    >div{
+        @extend .col-md-5;
+    }
+}

@@ -1,0 +1,157 @@
+section.built-breakdown{
+    h6{
+        font-size: 14px;
+        background-color: #dedede;
+        padding:10px;
+        margin-bottom:0;
+        border-bottom: 1px solid #ccc;
+    }
+    +ul{
+        margin-left: 5px;
+    }
+
+    ul{
+        list-style-type: none;
+        margin: 0;
+
+        font-size: 13px;
+        background-color: #efefef;
+        padding: 5px 0 10px 5px;
+
+        .view{
+            border-radius: 7px;
+            background-color: rgba(66, 139, 202, 0.5);
+            color: #fff;
+            font-weight: normal;
+            width: 300px;
+            border: 1px solid #357ebd;
+            padding: 5px 0 10px 5px;
+
+
+            box-shadow:
+            rgba(255, 255, 255, 0.1) 0 1px 1px 1px inset,
+            rgba(255, 255, 255, 0.2) 0 1px inset,
+            rgba(40, 98, 122, 0.1) 0 0px 0px inset,
+            rgba(0, 0, 0, 0.05) 0 0 0px 3px;
+        }
+
+        .control{
+            color: #fff;
+            font-weight: normal;
+            border-radius: 7px;
+
+            // yellow
+            //background-color: rgba(240, 173, 78, 0.75);
+            //border: 1px solid #eea236;
+
+            //teal
+            //background-color: rgba(91, 192, 222, 0.75);
+            //border: 1px solid #46b8da;
+
+            // red
+            background-color: rgba(217, 83, 79, 0.5);
+            border: 1px solid #d43f3a;
+
+            padding: 5px 0 10px 5px;
+
+            width: 300px;
+
+            box-shadow:
+            rgba(255, 255, 255, 0.1) 0 1px 1px 1px inset,
+            rgba(255, 255, 255, 0.2) 0 1px inset,
+            rgba(40, 98, 122, 0.1) 0 0px 0px inset,
+            rgba(0, 0, 0, 0.05) 0 0 0px 3px;
+        }
+
+        .manager, .responder{
+            color: #fff;
+            font-weight: normal;
+            border-radius: 7px;
+            background-color: rgba(92, 184, 92, 0.5);
+            padding: 5px 0 10px 5px;
+            border: 1px solid #4cae4c;
+            width: 300px;
+
+            box-shadow:
+            rgba(255, 255, 255, 0.1) 0 1px 1px 1px inset,
+            rgba(255, 255, 255, 0.2) 0 1px inset,
+            rgba(40, 98, 122, 0.1) 0 0px 0px inset,
+            rgba(0, 0, 0, 0.05) 0 0 0px 3px;
+        }
+
+        .manager .manager, .responder .responder{
+            width: 85%;
+            padding: 3px 0 0 3px;
+
+            box-shadow:
+            rgba(255, 255, 255, 0.1) 0 1px 1px 1px inset,
+            rgba(255, 255, 255, 0.2) 0 1px inset,
+            rgba(40, 98, 122, 0.1) 0 0px 0px inset,
+            rgba(0, 0, 0, 0.05) 0 0 0px 1px;
+        }
+
+        .view .manager, .view .responder{
+            background-color: rgba(92, 184, 92, 0.75);
+            width: 85%;
+            padding: 3px 0 0 3px;
+
+            box-shadow:
+            rgba(255, 255, 255, 0.1) 0 1px 1px 1px inset,
+            rgba(255, 255, 255, 0.2) 0 1px inset,
+            rgba(40, 98, 122, 0.1) 0 0px 0px inset,
+            rgba(0, 0, 0, 0.05) 0 0 0px 1px;
+
+
+            .manager.compose, .responder.compose{
+                margin-left: 15px;
+                //margin-bottom: 1px;
+            }
+        }
+
+        .manager.compose, .responder.compose{
+            margin-left: 15px;
+            margin-bottom: 1px;
+        }
+
+        .view.extend{
+            margin-left: 5px;
+            padding-bottom: 5px;
+        }
+
+        .view.extend:before{
+            content: '└ ';
+            padding-left: 10px;
+        }
+
+        .compose.extend, .manager.extend{
+            margin-left: 5px;
+            padding-bottom: 5px;
+        }
+
+        .compose.extend:before, .manager.extend:before{
+            content: '└ ';
+            padding-left: 10px;
+        }
+
+        // li:before{
+        //     content: '└ ';
+        //     font-weight: normal;
+        // }
+
+        li{
+            font-weight: bold;
+        }
+
+        li ul{
+            padding: 0 0 0 0;
+            background-color: transparent;
+        }
+
+        li ul li{
+            padding-left: 10px;
+            font-style:italic;
+            font-size: 0.95em;
+            font-weight: normal;
+        }
+    }
+}
