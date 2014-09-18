@@ -24,5 +24,8 @@ requirejs.config({
 
     deps: tests,
 
-    callback: window.__karma__.start
+    callback: function(){
+        jasmine.getFixtures().fixturesPath = '/base/src/static/js/app/todos/templates';
+        window.__karma__.start();
+    } 
 });

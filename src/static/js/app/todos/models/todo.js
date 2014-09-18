@@ -9,7 +9,10 @@ define(function(require, exports, module) {
 	   },
 
 	   toggleState: function(){
-	    this.save({completed: !this.get('completed')});
+	   	// commenting out for unit testing
+	    // this.save({completed: !this.get('completed')});
+
+	    this.set('completed', !this.get('completed'));
 	   }
 	});
 

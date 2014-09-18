@@ -6,7 +6,8 @@ define(function(require, exports, module) {
     var TodoList = backbone.Collection.extend({
         model: Todo,
 
-        localStorage: new backbone.LocalStorage('Todos'),
+        // commented out for unit testing
+        // localStorage: new backbone.LocalStorage('Todos'),
 
         addTodo: function(Todo) {
         	this.push(Todo);
