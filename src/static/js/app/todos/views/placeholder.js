@@ -8,20 +8,20 @@ define(function(require, exports, module) {
         template: templatePlaceholder,
 
         ui: {
-            newTodo: '#new-todo'
+            newTodo: '#new-todo',
+            toggleAll: '.toggle-all'
         },
 
         events:{
-            'keypress input' : 'addTodo',
-            'click .toggle-all' : 'toggleAll'
+            'keypress @ui.newTodo' : 'addTodo',
+            'click @ui.toggleAll' : 'toggleAll'
         },
 
         addTodo: function(e){
-            if(e.keyCode == 13 && (this.ui.newTodo.val().length > 0)){
-                var todo = new Todo({title: this.ui.newTodo.val()});
+            if(e.keyCode == 13 && ($(this.ui.newTodo).val().length > 0)){
+                var todo = new Todo({title: $(this.ui.newTodo).val()});
                 this.collection.addTodo(todo);
                 this.ui.newTodo.val('');
-                todo.save();
             }
         },
 

@@ -9,11 +9,12 @@ define(function(require, exports, module) {
 	    template: templateTodo,
 
 	    ui: {
-	        taskName: 'input.edit'
+	        taskName: 'input.edit',
+	        destroy: '.destroy'
 	    },
 
 	    events: {
-	        'click .destroy' : 'removeTodo',
+	        'click @ui.destroy' : 'removeTodo',
 	        'dblclick label' : 'editMode',
 	        'keypress .edit' : 'updateOnEnter',
 	        'click .toggle'  : 'toggleState'
