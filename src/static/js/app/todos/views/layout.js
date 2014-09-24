@@ -31,7 +31,7 @@ define(function(require, exports, module) {
             this.main.show(new TodoCollectionView({collection: todoList}));
             this.footer.show(new TodoFooterView({collection: todoList, model: new TodoFooter()}));
 
-            todoList.fetch();
+            // todoList.fetch();
         }
     });
 

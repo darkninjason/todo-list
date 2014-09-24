@@ -10,14 +10,16 @@ define(function(require, exports, module) {
 
 	    ui: {
 	        taskName: 'input.edit',
-	        destroy: '.destroy'
+	        destroy: '.destroy',
+	        label: 'label',
+	        toggle: '.toggle'
 	    },
 
 	    events: {
 	        'click @ui.destroy' : 'removeTodo',
-	        'dblclick label' : 'editMode',
+	        'dblclick @ui.label' : 'editMode',
 	        'keypress .edit' : 'updateOnEnter',
-	        'click .toggle'  : 'toggleState'
+	        'change @ui.toggle'  : 'toggleState'
 	    },
 
 	    removeTodo: function(e){
@@ -41,7 +43,8 @@ define(function(require, exports, module) {
 
 	    updateOnEnter: function(e){
 	        if(e.keyCode == 13){
-	            this.model.save('title', this.ui.taskName.val());
+	            // this.model.save('title', this.ui.taskName.val());
+	            this.model.set('title', this.ui.taskName.val());
 	        }
 	    },
 

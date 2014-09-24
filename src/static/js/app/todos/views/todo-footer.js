@@ -6,13 +6,18 @@ define(function(require, exports, module) {
     var TodoFooterView = marionette.ItemView.extend({
         template: templateTodoFooter,
 
+        ui: {
+            clearCompleted : '.clear-completed'
+        },
+
         events: {
-            'click .clear-completed' : 'clearCompleted',
+            'click @ui.clearCompleted' : 'clearCompleted',
             'click a' : 'filterCollection'
         },
 
         initialize: function(){
             this.listenTo(this.collection, "add remove change:completed", this.updateCount);
+            this.path = '';
         },
 
         updateCount: function(){
@@ -36,8 +41,8 @@ define(function(require, exports, module) {
 
         filterCollection: function(e){
             e.preventDefault();
-            var path = $(e.target).attr('href');
-            Backbone.history.navigate( path, {trigger: true});
+            this.path = $(e.target).attr('href');
+            Backbone.history.navigate( this.path, {trigger: true});
         }
     });
 
